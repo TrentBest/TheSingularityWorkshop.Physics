@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Multi-rate physics process-group scheduling</title>
+  <desc id="desc">A fixed logical simulation heartbeat named TickAll feeds independent FSM_API domain schedulers. Each scheduler invokes its own physical domain process group at its configured cadence. Events can wake a domain early. All domains exchange explicit quantities and events through shared physical state, while rendering observes rather than owns physical truth.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#526579"/>
+    </marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#152437}
+      .heading{font-size:30px;font-weight:700}
+      .sub{font-size:17px;fill:#526579}
+      .label{font-size:21px;font-weight:700}
+      .body{font-size:16px}
+      .small{font-size:14px;fill:#526579}
+      .box{stroke-width:2;rx:18}
+      .edge{fill:none;stroke:#526579;stroke-width:2.5;marker-end:url(#arrow)}
+      .dash{stroke-dasharray:8 7}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <text x="52" y="54" class="heading">Physics is multi-rate, not one giant frame loop</text>
+  <text x="52" y="84" class="sub">FSM_API schedules domain work; physics models calculate; the host presents the result.</text>
+
+  <rect x="350" y="112" width="500" height="88" class="box" fill="#e5edf7" stroke="#526579"/>
+  <text x="600" y="146" text-anchor="middle" class="label">Fixed logical heartbeat</text>
+  <text x="600" y="174" text-anchor="middle" class="body">TickAll · explicit simulation cadence</text>
+
+  <path d="M600 200 V230 H190 V254" class="edge"/>
+  <path d="M600 230 H490 V254" class="edge"/>
+  <path d="M600 230 H790 V254" class="edge"/>
+  <path d="M600 230 H1010 V254" class="edge"/>
+
+  <rect x="52" y="254" width="276" height="126" class="box" fill="#dcece3" stroke="#31734c"/>
+  <text x="190" y="286" text-anchor="middle" class="label">Electricity FSM</text>
+  <text x="190" y="314" text-anchor="middle" class="body">Example: every ~1 s</text>
+  <text x="190" y="340" text-anchor="middle" class="small">Bulk generation and loads</text>
+  <text x="190" y="360" text-anchor="middle" class="small">Events can wake it sooner</text>
+
+  <rect x="352" y="254" width="276" height="126" class="box" fill="#f9e8c9" stroke="#a56a13"/>
+  <text x="490" y="286" text-anchor="middle" class="label">Thermodynamics FSM</text>
+  <text x="490" y="314" text-anchor="middle" class="body">Example: every ~2 s</text>
+  <text x="490" y="340" text-anchor="middle" class="small">Bulk heat exchange</text>
+  <text x="490" y="360" text-anchor="middle" class="small">Thresholds can wake it sooner</text>
+
+  <rect x="652" y="254" width="276" height="126" class="box" fill="#e8e1f5" stroke="#7252a0"/>
+  <text x="790" y="286" text-anchor="middle" class="label">Mechanics FSM</text>
+  <text x="790" y="314" text-anchor="middle" class="body">Fixed-step / adaptive</text>
+  <text x="790" y="340" text-anchor="middle" class="small">Motion and contact detection</text>
+  <text x="790" y="360" text-anchor="middle" class="small">Must not miss fast collisions</text>
+
+  <rect x="952" y="254" width="196" height="126" class="box" fill="#f4dddd" stroke="#a54848"/>
+  <text x="1050" y="286" text-anchor="middle" class="label">Impact</text>
+  <text x="1050" y="314" text-anchor="middle" class="body">Event-driven</text>
+  <text x="1050" y="340" text-anchor="middle" class="small">Consequences</text>
+  <text x="1050" y="360" text-anchor="middle" class="small">on detected contact</text>
+
+  <path d="M190 380 V422 H600 V454" class="edge"/>
+  <path d="M490 380 V422" class="edge"/>
+  <path d="M790 380 V422" class="edge"/>
+  <path d="M1050 380 V422 H600" class="edge"/>
+
+  <rect x="300" y="454" width="600" height="92" class="box" fill="#ffffff" stroke="#526579"/>
+  <text x="600" y="489" text-anchor="middle" class="label">Explicit physical state and event exchange</text>
+  <text x="600" y="518" text-anchor="middle" class="body">Power → heat · temperature → resistance · impact → damage</text>
+
+  <rect x="52" y="590" width="520" height="100" class="box" fill="#ffffff" stroke="#a56a13"/>
+  <text x="312" y="624" text-anchor="middle" class="label">Event wake-ups & local detail</text>
+  <text x="312" y="651" text-anchor="middle" class="body">Faults, thresholds, nearby interaction, fast motion</text>
+  <text x="312" y="673" text-anchor="middle" class="small">Never wait for a coarse tick when causality demands action.</text>
+  <path d="M312 590 V566 H190 V380" class="edge dash"/>
+
+  <rect x="628" y="590" width="520" height="100" class="box" fill="#e5edf7" stroke="#526579"/>
+  <text x="888" y="624" text-anchor="middle" class="label">Presentation observes state</text>
+  <text x="888" y="651" text-anchor="middle" class="body">Renderer / player UI does not invent physical results</text>
+  <text x="888" y="673" text-anchor="middle" class="small">Track logical time, work cost, events, and model error.</text>
+  <path d="M900 500 H1010 V590" class="edge"/>
+</svg>
