@@ -33,7 +33,7 @@ Replay must record model versions, input/event order, logical timestep, determin
 
 A branch preserves its ancestry. It must not mutate the parent's event history or checkpoints. A branch may refer to shared immutable history until divergence and then store only its own events/checkpoints. Garbage collection of unreachable branches is a separate, explicit retention policy; it must not silently erase a branch the user still owns.
 
-The `TimelineBranch` type currently represents only validated lineage metadata and a represented logical head. It does not serialize physical state, execute a solver, store events, or promise replay fidelity.
+The `TimelineBranch` type represents validated lineage metadata and a represented logical head. `PhysicsCheckpoint` now provides an immutable envelope for opaque serialized state bytes, identity/version metadata, and a SHA-256 payload digest. `TimelineEvent` represents one ordered input/event record, and `TimelineHistorySegment` validates an event sequence against a checkpoint and target tick. These are contracts and validation primitives only: there is still no durable store, model-specific serializer, replay executor, solver restoration, or proof of replay fidelity.
 
 ## Parallel realities and multiverse scale
 
@@ -49,7 +49,7 @@ Reality creation and timeline branching are data-model operations; the physical 
 
 ## Validation gates
 
-Before claiming time travel or multiverse simulation is implemented, test:
+Initial data-contract tests now cover checkpoint payload isolation/digest, identity and tick validation, event ordering, and checkpoint-relative event bounds. Before claiming time travel or multiverse simulation is implemented, also test:
 
 - restoring a checkpoint and replaying the same event stream reproduces the declared deterministic contract;
 - forking at tick *t* leaves the parent unchanged and both branches share only pre-fork history;
