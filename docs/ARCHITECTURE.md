@@ -39,13 +39,13 @@ A bounded fire experiment might compose units and time, material/fuel data, heat
 
 The initial implemented experiment is intentionally narrow: one-dimensional constant acceleration. Its definition captures the initial kinematic state, constant acceleration, positive logical timestep, and step count. The result retains the exact definition and a state sample for the initial condition plus every completed step.
 
-This gives callers a repeatable sequence of observations and a final state without coupling the solver to a host loop. It does **not** yet provide a durable serialized run record, reference-data provenance, uncertainty analysis, a ramp constraint, collision handling, or a general rigid-body simulation.
+A run can be converted into a versioned JSON record containing model/schema identifiers, explicit units, the declared definition, all actual samples, completed-step count, and final observed state. Repeated serialization of the same record is tested for stable output. This is a first record format, not yet a general provenance system: source-data citations, uncertainty analysis, external reference comparisons, and full model-build provenance remain future work.
 
 ## Execution contract
 
 A complete future run record should declare model/data versions, initial state, boundary conditions, external inputs, logical timestep, solver configuration, deterministic ordering, measurements, stopping conditions, provenance, and validation references.
 
-The numerical kernel must be callable independently of host frame rate. FSM_API can coordinate discrete modes such as ready, advancing, paused, completed, or invalid. Fixed-step numerical integration remains explicit in the physics layer. The current scalar experiment runner is pure .NET code; an FSM_API adapter and MicroBundle/FSM_COS composition are not yet implemented in this repository.
+The numerical kernel must be callable independently of host frame rate. FSM_API can coordinate discrete modes such as ready, advancing, paused, completed, or invalid. Fixed-step numerical integration remains explicit in the physics layer. The current scalar experiment runner and JSON record are pure .NET code; an FSM_API adapter and MicroBundle/FSM_COS composition are not yet implemented in this repository.
 
 ## State and measurements
 
