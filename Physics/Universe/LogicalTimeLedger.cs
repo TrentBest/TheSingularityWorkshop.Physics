@@ -6,6 +6,8 @@ namespace TheSingularityWorkshop.Physics.Universe;
 /// </summary>
 public sealed class LogicalTimeLedger
 {
+    /// <summary>Creates a ledger whose committed and requested time begin at the same tick.</summary>
+    /// <param name="initialTick">The non-negative initial logical tick.</param>
     public LogicalTimeLedger(long initialTick = 0)
     {
         if (initialTick < 0)
@@ -26,6 +28,7 @@ public sealed class LogicalTimeLedger
     /// <summary>Number of requested ticks still awaiting processing.</summary>
     public long PendingTicks => TargetTick - CurrentTick;
 
+    /// <summary>Whether every requested tick has been committed.</summary>
     public bool IsCaughtUp => CurrentTick == TargetTick;
 
     /// <summary>
@@ -85,5 +88,6 @@ public sealed class LogicalTimeLedger
 /// <summary>An inclusive-start, exclusive-end range of logical ticks to process.</summary>
 public readonly record struct LogicalTickBatch(long StartTick, long EndTick)
 {
+    /// <summary>Number of logical ticks in this start-inclusive, end-exclusive batch.</summary>
     public long TickCount => EndTick - StartTick;
 }
