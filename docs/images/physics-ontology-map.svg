@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Ontology-aligned physics capability map</title>
+  <desc id="desc">Shared foundations support independent physical process domains. Coupled experiments request only the capabilities and data they need.</desc>
+  <defs><style>
+    .bg{fill:#101820}.base{fill:#17333c;stroke:#36c9c6;stroke-width:4}.domain{fill:#28233a;stroke:#d78cff;stroke-width:3}.evidence{fill:#2b2a22;stroke:#f3c969;stroke-width:3}
+    .h{font:700 25px sans-serif;fill:#f4f7fa}.t{font:18px sans-serif;fill:#d7e2e9}.s{font:15px sans-serif;fill:#a9becb}.link{stroke:#c8d9e3;stroke-width:3;fill:none}
+  </style><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#c8d9e3"/></marker></defs>
+  <rect class="bg" width="1200" height="760" rx="24"/>
+  <text class="h" x="600" y="52" text-anchor="middle">Physics is an extensible set of semantic capability domains</text>
+  <rect class="base" x="70" y="95" width="1060" height="105" rx="18"/>
+  <text class="h" x="600" y="133" text-anchor="middle">Shared foundations</text>
+  <text class="t" x="600" y="170" text-anchor="middle">Quantities &amp; units · Logical time · Spatial substrate · State &amp; conservation · Materials · Provenance</text>
+  <path class="link" d="M600 200 V235 M150 235 H1050 M150 235 V260 M420 235 V260 M690 235 V260 M960 235 V260" />
+  <rect class="domain" x="45" y="260" width="210" height="120" rx="16"/>
+  <text class="h" x="150" y="300" text-anchor="middle">Mechanics</text><text class="t" x="150" y="335" text-anchor="middle">Motion · Forces</text><text class="t" x="150" y="360" text-anchor="middle">Gravity · Contact</text>
+  <rect class="domain" x="315" y="260" width="210" height="120" rx="16"/>
+  <text class="h" x="420" y="300" text-anchor="middle">Energy &amp; heat</text><text class="t" x="420" y="335" text-anchor="middle">Thermodynamics</text><text class="t" x="420" y="360" text-anchor="middle">Phase changes</text>
+  <rect class="domain" x="585" y="260" width="210" height="120" rx="16"/>
+  <text class="h" x="690" y="300" text-anchor="middle">Fluids &amp; transport</text><text class="t" x="690" y="335" text-anchor="middle">Flow · Pressure</text><text class="t" x="690" y="360" text-anchor="middle">Diffusion · Mixing</text>
+  <rect class="domain" x="855" y="260" width="300" height="120" rx="16"/>
+  <text class="h" x="1005" y="300" text-anchor="middle">Fields &amp; reactions</text><text class="t" x="1005" y="335" text-anchor="middle">Electromagnetism · Chemistry</text><text class="t" x="1005" y="360" text-anchor="middle">Combustion · Ionization</text>
+  <path class="link" d="M150 380 V420 H1050 V450 M420 380 V420 M690 380 V420 M1005 380 V420" marker-end="url(#a)"/>
+  <rect class="domain" x="130" y="450" width="290" height="110" rx="16"/>
+  <text class="h" x="275" y="490" text-anchor="middle">Material response</text><text class="t" x="275" y="525" text-anchor="middle">Elasticity · Fracture</text>
+  <rect class="domain" x="455" y="450" width="290" height="110" rx="16"/>
+  <text class="h" x="600" y="490" text-anchor="middle">Waves &amp; optics</text><text class="t" x="600" y="525" text-anchor="middle">Acoustics · Emission</text>
+  <rect class="domain" x="780" y="450" width="290" height="110" rx="16"/>
+  <text class="h" x="925" y="490" text-anchor="middle">Geophysics</text><text class="t" x="925" y="525" text-anchor="middle">Geology · Coupled fields</text>
+  <path class="link" d="M275 560 V600 H925 V560 M600 560 V600"/>
+  <rect class="evidence" x="190" y="625" width="820" height="90" rx="16"/>
+  <text class="h" x="600" y="660" text-anchor="middle">Experiments compose the subset they need</text>
+  <text class="t" x="600" y="693" text-anchor="middle">Models + boundary conditions + measurements + validation + living theory</text>
+</svg>
