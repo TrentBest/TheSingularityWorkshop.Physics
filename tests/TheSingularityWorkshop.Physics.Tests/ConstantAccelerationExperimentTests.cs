@@ -44,6 +44,42 @@ public sealed class ConstantAccelerationExperimentTests
     }
 
     [Test]
+    public void Run_EachSampleMatchesIndependentClosedFormPrediction()
+    {
+        const double initialPosition = 12.5d;
+        const double initialVelocity = -3.25d;
+        const double initialElapsedTime = 7d;
+        const double acceleration = -1.75d;
+        const double deltaTime = 0.125d;
+        const int stepCount = 40;
+
+        var definition = new ConstantAccelerationExperimentDefinition(
+            new KinematicState(initialPosition, initialVelocity, initialElapsedTime),
+            Acceleration: acceleration,
+            DeltaTime: deltaTime,
+            StepCount: stepCount);
+
+        var result = ConstantAccelerationExperiment.Run(definition);
+
+        for (var step = 0; step <= stepCount; step++)
+        {
+            var elapsed = step * deltaTime;
+            var expectedPosition = initialPosition + (initialVelocity * elapsed) +
+                (0.5d * acceleration * elapsed * elapsed);
+            var expectedVelocity = initialVelocity + (acceleration * elapsed);
+            var expectedElapsedTime = initialElapsedTime + elapsed;
+            var sample = result.Samples[step];
+
+            Assert.That(sample.Position, Is.EqualTo(expectedPosition).Within(1e-12),
+                $"Position mismatch at sample {step}.");
+            Assert.That(sample.Velocity, Is.EqualTo(expectedVelocity).Within(1e-12),
+                $"Velocity mismatch at sample {step}.");
+            Assert.That(sample.ElapsedTime, Is.EqualTo(expectedElapsedTime).Within(1e-12),
+                $"Elapsed-time mismatch at sample {step}.");
+        }
+    }
+
+    [Test]
     public void Run_RejectsZeroStepCount()
     {
         var definition = new ConstantAccelerationExperimentDefinition(
