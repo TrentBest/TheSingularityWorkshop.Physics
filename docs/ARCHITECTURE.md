@@ -47,6 +47,14 @@ A complete future run record should declare model/data versions, initial state, 
 
 The numerical kernel must be callable independently of host frame rate. FSM_API can coordinate discrete modes such as ready, advancing, paused, completed, or invalid. Fixed-step numerical integration remains explicit in the physics layer. The current scalar experiment runner and JSON record are pure .NET code; an FSM_API adapter and MicroBundle/FSM_COS composition are not yet implemented in this repository.
 
+## Process-group scheduling
+
+Physical capabilities should be scheduled independently through FSM_API processing groups. A domain FSM may invoke its domain group when its process-rate policy says it is due; a canonical `TickAll` group can provide the fixed logical heartbeat from which those rates are counted. The heartbeat is simulation time, not implicitly a render frame.
+
+Initial cadence hypotheses differ by domain: bulk electricity may update around once per logical second, bulk heat around every two seconds, mechanics according to stability/contact requirements, and impact consequences in response to detected events. These are design examples, not implemented rates. Local interactions, faults, threshold crossings, and other causally important events can wake a model earlier than its background cadence.
+
+The [process-group scheduling contract](PROCESS_GROUP_SCHEDULING.md) defines time accounting, catch-up, cross-domain exchange, relevance tiers, and the validation data required before optimizing. A slower schedule must not silently lose elapsed time or skip an event that changes the physical outcome.
+
 ## State and measurements
 
 Prefer explicit state over hidden global state. Events record transitions; they are not a second source of truth. Measurements identify quantity/unit, logical time or step, source model/state, method, and uncertainty or numerical residual where known.
