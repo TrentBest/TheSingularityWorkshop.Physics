@@ -31,6 +31,18 @@ This roadmap separates architecture from completed functionality. Items move to 
 
 The scheduling contract is documented in [Process-group scheduling](PROCESS_GROUP_SCHEDULING.md). These implementation tasks remain incomplete until code and integration tests exist.
 
+## Stage 1.75 — Articulated mechanics integration
+
+- [x] Define the proposed Physics-to-controller contract for achieved state, contact observations, constraint loads, structural failure, and topology ownership ([articulated mechanics contract](ARTICULATED_MECHANICS_CONTRACT.md)).
+- [ ] Define spatial conventions, vector/pose types, and rigid-body state with explicit units and coordinate frames.
+- [ ] Implement a bounded articulated rigid-body/constraint scenario with documented solver scope.
+- [ ] Emit per-step contact observations and constraint reaction loads with stable body/constraint identities.
+- [ ] Define threshold semantics for peak/sustained loads versus impulse before structural failure depends on them.
+- [ ] Validate a structural failure scenario without conflating failure detection, body-topology mutation, and injury.
+- [ ] Add deterministic/replay and cross-package contract tests showing Gestures can consume Physics observations without a Physics-to-Gestures dependency.
+
+This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The contract is documented; the spatial solver, observations, and integration tests are not yet implemented.
+
 ## Stage 2 — Material identity and energy
 
 - [ ] Define elements versus compounds, mixtures, and alloys.
