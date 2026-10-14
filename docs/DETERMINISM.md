@@ -41,3 +41,15 @@ A fidelity transition records the model change and preserves declared aggregate 
 - pause/render cadence does not affect logical stepping;
 - conservation/invariant checks run where applicable;
 - coarse-to-fine transitions disclose and test their mapping.
+
+---
+
+## Resources & Support
+
+[Physics home](../README.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
+</p>
+
+<p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
