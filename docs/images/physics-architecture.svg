@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">Physics capability architecture</title>
+  <desc id="desc">Physical state and numerical models are coordinated by FSM API, composed as MicroBundles by FSM COS, and observed by hosts and living theory. Presentation does not own physical truth.</desc>
+  <defs>
+    <style>
+      .bg{fill:#101820}.panel{fill:#172833;stroke:#36c9c6;stroke-width:4}.support{fill:#1b2539;stroke:#d78cff;stroke-width:4}.observe{fill:#242d35;stroke:#f3c969;stroke-width:4}
+      .title{font:700 30px sans-serif;fill:#f4f7fa}.head{font:700 23px sans-serif;fill:#f4f7fa}.body{font:18px sans-serif;fill:#d7e2e9}.note{font:16px sans-serif;fill:#a9becb}.arrow{stroke:#eaf3f8;stroke-width:4;fill:none}.dash{stroke:#f3c969;stroke-width:3;stroke-dasharray:9 8;fill:none}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#eaf3f8"/></marker>
+  </defs>
+  <rect class="bg" width="1200" height="640" rx="24"/>
+  <text class="title" x="600" y="54" text-anchor="middle">Physics owns causal state; the Workshop composes and explains it</text>
+  <rect class="panel" x="70" y="100" width="310" height="170" rx="18"/>
+  <text class="head" x="225" y="140" text-anchor="middle">Physics domain</text>
+  <text class="body" x="225" y="180" text-anchor="middle">Models · State · Units</text>
+  <text class="body" x="225" y="210" text-anchor="middle">Numerical solvers</text>
+  <text class="body" x="225" y="240" text-anchor="middle">Measurements · Validation</text>
+  <rect class="support" x="445" y="100" width="310" height="170" rx="18"/>
+  <text class="head" x="600" y="140" text-anchor="middle">FSM_API</text>
+  <text class="body" x="600" y="180" text-anchor="middle">Lifecycle · Transitions</text>
+  <text class="body" x="600" y="210" text-anchor="middle">Deferred execution</text>
+  <text class="body" x="600" y="240" text-anchor="middle">Discrete orchestration</text>
+  <rect class="support" x="820" y="100" width="310" height="170" rx="18"/>
+  <text class="head" x="975" y="140" text-anchor="middle">MicroBundles + FSM_COS</text>
+  <text class="body" x="975" y="180" text-anchor="middle">Select capabilities</text>
+  <text class="body" x="975" y="210" text-anchor="middle">Compose an experience</text>
+  <text class="body" x="975" y="240" text-anchor="middle">Keep domain optional</text>
+  <path class="arrow" d="M380 185 H435" marker-end="url(#arrow)"/>
+  <path class="arrow" d="M755 185 H810" marker-end="url(#arrow)"/>
+  <rect class="observe" x="160" y="360" width="380" height="150" rx="18"/>
+  <text class="head" x="350" y="400" text-anchor="middle">Host / renderer</text>
+  <text class="body" x="350" y="440" text-anchor="middle">Interaction · Visualization</text>
+  <text class="body" x="350" y="470" text-anchor="middle">Reads state; never invents it</text>
+  <rect class="panel" x="660" y="360" width="380" height="150" rx="18"/>
+  <text class="head" x="850" y="400" text-anchor="middle">Living theory</text>
+  <text class="body" x="850" y="440" text-anchor="middle">Equations · Runs · Measurements</text>
+  <text class="body" x="850" y="470" text-anchor="middle">Sources · Limits · SVG diagrams</text>
+  <path class="arrow" d="M975 270 V315 H850 V350" marker-end="url(#arrow)"/>
+  <path class="arrow" d="M600 270 V315 H350 V350" marker-end="url(#arrow)"/>
+  <path class="dash" d="M540 435 H650"/>
+  <text class="note" x="600" y="570" text-anchor="middle">Model and data versions travel with the result. Presentation remains a consumer.</text>
+</svg>
