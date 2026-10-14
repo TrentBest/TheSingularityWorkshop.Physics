@@ -80,9 +80,9 @@ public sealed class ConstantAccelerationSolverTests
     [Test]
     public void Advance_ThrowsWhenCalculationOverflows()
     {
-        var initial = new KinematicState(double.MaxValue, 0d, 0d);
+        var initial = new KinematicState(0d, double.MaxValue, 0d);
 
         Assert.Throws<OverflowException>(
-            () => ConstantAccelerationSolver.Advance(initial, 0d, 1d));
+            () => ConstantAccelerationSolver.Advance(initial, 0d, 2d));
     }
 }
