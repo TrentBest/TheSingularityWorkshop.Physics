@@ -1,6 +1,6 @@
 # Universe Representation & Observer-Driven Resolution
 
-**Status:** architectural proposal for staged implementation. The mechanisms in this document are not yet implemented physics capabilities or performance claims.
+**Status:** partially implemented foundation. Deterministic finite-grid addressing, seeded cell-value derivation, finite axis-aligned bounds, swept bounds for linear translation, and a deterministic sweep-and-prune candidate generator are implemented and tested. Persistence, evolving universe state, observer policy, wake-up reconciliation, narrowphase collision response, and multiscale solvers remain future work. No performance claim is implied.
 
 ## The central rule
 
@@ -87,13 +87,18 @@ Cross-scale coupling must exchange explicit quantities, units, time intervals, a
 - **Renderer:** presents state and may report observer/input information; it does not author physical truth.
 - **Measurements:** update counts, elapsed-time debt, candidate-pair counts, wake-up reasons, conservation residuals, error estimates, and compute cost.
 
+Implemented foundations:
+- `UniverseGrid` defines stable zero-based finite-grid addressing with X varying fastest.
+- `DeterministicCellGenerator` derives repeatable initial-condition values from universe seed and coordinates; it does not generate or evolve a complete universe.
+- `AxisAlignedBounds` validates finite ordered bounds and supports intersection, union, expansion, and swept bounds for linear translation.
+- `SweepAndPruneBroadphase` deterministically returns intersecting AABB candidate pairs, given bounds that conservatively cover the interval. Candidate pairs are not confirmed collisions.
+
 Recommended increments:
-1. Add deterministic cell addressing and seeded generation as a separate, testable world layer.
-2. Prove stable revisit behavior: generate, evolve, leave, advance logical time, return, and reconcile.
-3. Implement a conservative AABB/cube broadphase with tests for false-negative avoidance under declared assumptions.
-4. Add observer-driven promotion/demotion with state-preserving handoffs.
-5. Compare coarse advancement against finer-step references and measure cost against error.
-6. Add coupled domains and global accounting only after their ownership and validation contracts are explicit.
+1. Prove stable revisit behavior: generate, evolve, leave, advance logical time, return, and reconcile.
+2. Add narrowphase contact confirmation and appropriate collision/constraint response.
+3. Add observer-driven promotion/demotion with state-preserving handoffs and explicit wake-up reasons.
+4. Compare coarse advancement against finer-step references and measure cost against error.
+5. Add coupled domains and global accounting only after their ownership and validation contracts are explicit.
 
 This is a direction for the architecture, not a claim that the universe generator, observer policy, broadphase, or multiscale solvers already exist.
 
