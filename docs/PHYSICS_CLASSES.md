@@ -67,3 +67,15 @@ The Workshop ontology supports addressable definitions, relationships, and index
 3. **Thermal:** heating/cooling and one declared phase-transition model.
 4. **Hydrodynamics:** a deliberately bounded water-flow scenario.
 5. **Coupled phenomena:** volcano lifecycle, combustion, and Ring of Fire demonstrations as their models become supportable.
+
+---
+
+## Resources & Support
+
+[Physics home](../README.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
+</p>
+
+<p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
