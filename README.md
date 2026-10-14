@@ -30,6 +30,7 @@ The Workshop needs one causal foundation that can explain its results, support r
 - **Ontology-aligned capabilities** keep mechanics, thermodynamics, hydrodynamics, materials, and other domains independently composable.
 - **MicroBundles** describe the smallest useful combination of models and data for a particular experiment.
 - **Deterministic inputs and explicit time** make runs replayable and comparable.
+- **Conservative broadphase screening** finds potential AABB contacts, including linear swept bounds, without treating candidates as confirmed collisions.
 - **Measurements, provenance, and validation** connect every result to its model and evidence.
 - **Living theory** grows from the same model definitions and observations used by the simulation.
 
