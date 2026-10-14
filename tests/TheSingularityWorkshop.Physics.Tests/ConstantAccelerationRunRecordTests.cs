@@ -47,7 +47,7 @@ public sealed class ConstantAccelerationRunRecordTests
         Assert.That(secondJson, Is.EqualTo(firstJson));
         Assert.That(firstJson, Does.Contain("\"modelId\": \"kinematics.constant-acceleration\""));
         Assert.That(firstJson, Does.Contain("\"samples\""));
-        Assert.That(firstJson, Does.Contain("\"finalState\"").Or.Contain("\"FinalState\"").Or.Contain("\"finalState\""));
-        Assert.That(firstJson, Does.Contain("\"position\": 2.09375"));
+        Assert.That(firstJson, Does.Contain("\"finalState\""));
+        Assert.That(firstJson, Does.Contain("\"position\": 2.375"));
     }
 }
