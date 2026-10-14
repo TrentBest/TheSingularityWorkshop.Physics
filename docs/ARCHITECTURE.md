@@ -1,3 +1,5 @@
+![Physics capability architecture](images/physics-architecture.svg)
+
 # Physics Architecture
 
 **Status:** architecture contract; implementation is incremental. This document describes intended boundaries, not claims that every solver already exists.
