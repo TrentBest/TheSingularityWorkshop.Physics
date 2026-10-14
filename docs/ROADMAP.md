@@ -68,12 +68,13 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 
 ## Stage 5 — Persistent universe & multiscale worlds
 
-- [ ] Define stable universe/cell addressing and deterministic seeded generation, including versioned generation parameters.
+- [x] Define stable finite-grid addressing and deterministic coordinate/seed derivation; versioned generation parameters remain future work.
 - [ ] Define persistent cell/region state, checkpoints, pending events, and leave/revisit reconciliation.
 - [ ] Define observer-driven resolution tiers without making observation the source of physical truth.
 - [ ] Define coarse/fine model interfaces and conservative handoff requirements.
 - [ ] Preserve aggregate state while distant processes continue evolving and account for elapsed logical time on wake-up.
-- [ ] Implement a conservative spatial broadphase; test moving-bound coverage and candidate refinement.
+- [x] Implement AABB intersection/union/expansion, linear swept bounds, and deterministic sweep-and-prune candidate pairs with tests.
+- [ ] Add narrowphase contact confirmation and response; validate conservative bounds for supported motion models.
 - [ ] Test approach/leave/revisit scenarios and transitions that occur while unobserved.
 - [ ] Measure computational cost against physical error, not visual quality alone.
 
