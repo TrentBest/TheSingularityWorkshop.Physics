@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>true</IsPackable>
+    <PackageId>TheSingularityWorkshop.Physics</PackageId>
+    <Version>0.1.0-alpha.1</Version>
+    <Authors>TheSingularityWorkshop</Authors>
+    <Company>The Singularity Workshop</Company>
+    <Description>Deterministic, composable physics models and evidence-linked simulation foundations for The Singularity Workshop.</Description>
+    <PackageTags>physics;deterministic;simulation;mechanics;thermodynamics;hydrodynamics;microbundle</PackageTags>
+    <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Physics</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/TrentBest/TheSingularityWorkshop.Physics</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="LICENSE" Pack="true" PackagePath="" />
+    <None Include="docs/**/*.md" Pack="true" PackagePath="docs/" />
+  </ItemGroup>
+</Project>
