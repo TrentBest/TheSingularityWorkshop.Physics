@@ -83,7 +83,8 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 
 - [x] Define immutable timeline lineage metadata and validated historical fork points.
 - [x] Document the checkpoint/replay/branch contract and separate reality, timeline, and checkpoint identities.
-- [ ] Implement versioned authoritative-state checkpoints and ordered event/input history.
+- [x] Define immutable checkpoint envelopes with state payload digest and model/schema identity, plus validated checkpoint-relative event-history segments.
+- [ ] Implement durable versioned authoritative-state checkpoint storage and ordered event/input history.
 - [ ] Implement deterministic reconstruction from checkpoint plus replay, with compatibility checks and state verification.
 - [ ] Implement persistent reality identities and isolated mutable state across parallel realities.
 - [ ] Test that post-fork changes remain isolated and parent history remains unchanged.
