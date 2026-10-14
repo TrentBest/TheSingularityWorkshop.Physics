@@ -29,18 +29,30 @@ The Workshop needs one causal foundation that can explain its results, support r
 - **Measurements, provenance, and validation** connect every result to its model and evidence.
 - **Living theory** grows from the same model definitions and observations used by the simulation.
 
-Physics has no dependency on Unity, a renderer, or a particular host application.
+Physics has no dependency on Unity, a renderer, or a particular host application. The initial library is a renderer-independent analytical mechanics kernel; higher-level capability domains are being added in deliberate, testable increments.
 
 ## 03 ▷ See it in a minute
 
-The first executable proof will be a small, reproducible mechanics experiment: predict the motion, state the assumptions, advance fixed logical steps, and compare the measured result with an analytical reference.
+The first executable kernel is now a constant-acceleration solver with immutable state, SI units, finite-value validation, and analytical tests. It advances logical time explicitly and does not use a render-frame delta.
 
-This repository is currently establishing the contracts and ontology map. The experiment is not advertised as implemented until the solver and tests exist.
+```csharp
+using TheSingularityWorkshop.Physics.Kinematics;
 
-## 04 ○ Documentation & theory
+var initial = new KinematicState(Position: 0d, Velocity: 0d, ElapsedTime: 0d);
+var afterTwoSeconds = ConstantAccelerationSolver.Advance(
+    initial,
+    acceleration: 9.81d,
+    deltaTime: 2d);
+
+// Position = 19.62 m; velocity = 19.62 m/s; elapsed time = 2 s.
+```
+
+This is an analytical one-dimensional model—not a general-purpose rigid-body engine. The ramp experiment, additional physical classes, and coupled models remain future work.
+
+![Physics architecture](docs/images/physics-architecture.svg)\n\n## 04 ○ Documentation & theory
 
 - [Architecture](docs/ARCHITECTURE.md) — boundaries, determinism, and execution model
-- [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
+- [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships\n- [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
 - [Determinism contract](docs/DETERMINISM.md) — replay, time, ordering, and numerical limits
 - [Roadmap](docs/ROADMAP.md) — staged path from mechanics to coupled phenomena
