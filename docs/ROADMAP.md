@@ -22,6 +22,7 @@ This roadmap separates architecture from completed functionality. Items move to 
 
 ## Stage 1.5 — Multi-rate physical execution
 
+- [x] Add a bounded logical-time ledger that separates committed current tick from requested target tick and preserves catch-up debt ([logical time ledger](LOGICAL_TIME_LEDGER.md)).
 - [ ] Define a logical simulation heartbeat distinct from render-frame timing.
 - [ ] Add an FSM_API adapter with one scheduler FSM per capability and explicit domain processing groups.
 - [ ] Define elapsed-time, catch-up, and event-triggered wake-up policies per model.
@@ -29,7 +30,7 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [ ] Test cadence boundaries, delayed events, coupled-domain ordering, and conservation across handoffs.
 - [ ] Measure cost and physical error against a finer-step reference before selecting default rates.
 
-The scheduling contract is documented in [Process-group scheduling](PROCESS_GROUP_SCHEDULING.md). These implementation tasks remain incomplete until code and integration tests exist.
+The scheduling contract is documented in [Process-group scheduling](PROCESS_GROUP_SCHEDULING.md). The ledger accounts for requested versus committed ticks but does not execute physics or schedule groups; those integration tasks remain incomplete until code and tests exist.
 
 ## Stage 1.75 — Articulated mechanics integration
 
