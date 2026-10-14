@@ -1,3 +1,5 @@
+![Ontology-aligned physics capability map](images/physics-ontology-map.svg)
+
 # Physics Classes & Ontology Map
 
 Physics is organized into interoperable capability domains. These are not a universal fixed-layer ontology: they are addressable concepts that can coexist, be extended, and be composed into MicroBundles.
