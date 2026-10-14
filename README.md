@@ -73,9 +73,11 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 ## ○ 04 Documentation & theory
 
 - [Architecture](docs/ARCHITECTURE.md) — boundaries, determinism, and execution model
+- [Logical time ledger](docs/LOGICAL_TIME_LEDGER.md) — bounded catch-up, committed ticks, and explicit time debt
 - [Process-group scheduling](docs/PROCESS_GROUP_SCHEDULING.md) — multi-rate physical domains, logical time, event wake-ups, and validation
 - [Articulated mechanics contract](docs/ARTICULATED_MECHANICS_CONTRACT.md) — proposed Physics-to-controller observations for contacts, joint loads, structural failure, and topology ownership
 - [Universe & observer resolution](docs/UNIVERSE_AND_OBSERVER_RESOLUTION.md) — persistent universe state, deterministic cells, relevance tiers, conservative broadphase, and multiscale handoffs
+- [Timelines & multiverse](docs/TIMELINES_AND_MULTIVERSE.md) — immutable timeline lineage and the still-unimplemented checkpoint/replay/isolation contract
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
