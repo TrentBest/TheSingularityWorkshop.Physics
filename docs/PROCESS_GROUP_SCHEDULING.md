@@ -8,6 +8,8 @@ Each physical capability owns its model state and update work. FSM_API coordinat
 
 A domain FSM can act as a small scheduler: its update callback invokes the matching physics processing group with `FSM_API.Interaction.Update(groupName)`. Its FSM_API process rate determines how often that callback is evaluated **relative to invocations of its assigned processing group**.
 
+![Multi-rate physics process-group scheduling](images/physics-process-group-scheduling.svg)
+
 Use a dedicated, fixed logical simulation heartbeat (for example, `TickAll`) as the parent group for cadence controllers. Do not silently equate a rendered frame with a unit of simulated time. If a host uses a 60 Hz fixed heartbeat, a process rate of 60 means every 60 heartbeat invocations; it approximates one second only while that heartbeat really represents 1/60 second of logical time. Variable-rate hosts must drive the simulation clock deliberately.
 
 ## Proposed capability groups
