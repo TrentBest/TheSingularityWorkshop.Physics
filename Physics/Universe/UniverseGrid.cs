@@ -7,11 +7,18 @@ namespace TheSingularityWorkshop.Physics.Universe;
 /// </summary>
 public sealed class UniverseGrid
 {
+    /// <summary>Number of cells along the X axis.</summary>
     public int Width { get; }
+    /// <summary>Number of cells along the Y axis.</summary>
     public int Height { get; }
+    /// <summary>Number of cells along the Z axis.</summary>
     public int Depth { get; }
+    /// <summary>Total number of cells in the grid.</summary>
     public int CellCount { get; }
 
+    /// <summary>Creates a grid with positive dimensions and a representable total cell count.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">A dimension is not positive.</exception>
+    /// <exception cref="OverflowException">The total cell count exceeds the range of a 32-bit integer.</exception>
     public UniverseGrid(int width, int height, int depth)
     {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width), "Width must be positive.");
