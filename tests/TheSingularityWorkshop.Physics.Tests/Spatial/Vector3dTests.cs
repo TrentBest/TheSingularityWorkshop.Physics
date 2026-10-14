@@ -66,7 +66,7 @@ public sealed class Vector3dTests
         Assert.Throws<ArgumentOutOfRangeException>(() => _ = value * double.NaN);
         Assert.Throws<ArgumentOutOfRangeException>(() => _ = value / 0d);
         Assert.Throws<ArgumentOutOfRangeException>(() => _ = value / double.PositiveInfinity);
-        Assert.Throws<ArgumentOutOfRangeException>(() => _ = value + new Vector3d(double.MaxValue, 0d, 0d));
+        Assert.Throws<ArgumentOutOfRangeException>(() => _ = new Vector3d(double.MaxValue, 0d, 0d) + new Vector3d(double.MaxValue, 0d, 0d));
         Assert.Throws<ArithmeticException>(() => _ = new Vector3d(double.MaxValue, 0d, 0d).Dot(new Vector3d(2d, 0d, 0d)));
     }
 
