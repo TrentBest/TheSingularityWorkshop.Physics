@@ -65,12 +65,15 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 
 ![Multi-rate physics process-group scheduling](docs/images/physics-process-group-scheduling.svg)
 
+![Universe and observer-driven resolution](docs/images/universe-observer-resolution.svg)
+
 ---
 
 ## ○ 04 Documentation & theory
 
 - [Architecture](docs/ARCHITECTURE.md) — boundaries, determinism, and execution model
 - [Process-group scheduling](docs/PROCESS_GROUP_SCHEDULING.md) — multi-rate physical domains, logical time, event wake-ups, and validation
+- [Universe & observer resolution](docs/UNIVERSE_AND_OBSERVER_RESOLUTION.md) — persistent universe state, deterministic cells, relevance tiers, conservative broadphase, and multiscale handoffs
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
