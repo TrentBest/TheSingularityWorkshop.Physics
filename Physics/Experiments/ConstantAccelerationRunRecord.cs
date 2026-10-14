@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using TheSingularityWorkshop.Physics.Kinematics;
 
 namespace TheSingularityWorkshop.Physics.Experiments;
@@ -27,12 +26,12 @@ public sealed record ConstantAccelerationRunRecord
 
     /// <summary>Units used by this model.</summary>
     public IReadOnlyDictionary<string, string> Units { get; init; } =
-        new Dictionary<string, string>
+        new SortedDictionary<string, string>(StringComparer.Ordinal)
         {
-            ["position"] = "m",
-            ["velocity"] = "m/s",
             ["acceleration"] = "m/s^2",
-            ["time"] = "s"
+            ["position"] = "m",
+            ["time"] = "s",
+            ["velocity"] = "m/s"
         };
 
     /// <summary>The declared inputs that produced the run.</summary>
