@@ -17,7 +17,8 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [x] Define explicit logical timestep for the initial mechanics kernel.
 - [x] Implement a bounded analytical case: one-dimensional constant acceleration.
 - [x] Test analytical outcomes, repeatability, invalid inputs, and unit consistency.
-- [ ] Generate a durable run record explainable from its actual measurements.
+- [x] Generate a versioned JSON run record from actual experiment samples, with explicit units and repeat-serialization tests.
+- [ ] Add reference-data provenance, uncertainty/residual reporting, and an independently checkable validation record.
 
 ## Stage 2 — Material identity and energy
 
