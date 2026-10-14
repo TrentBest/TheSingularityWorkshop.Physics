@@ -8,13 +8,13 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [x] Define core/host boundaries and deterministic execution principles.
 - [x] Map physics capability classes to the Workshop ontology.
 - [x] Establish theory, provenance, and living-documentation contracts.
-- [ ] Confirm target frameworks, package identity, and integration versions from adjacent projects.
-- [ ] Add project, solution, CI, and baseline tests.
+- [x] Confirm initial target framework (net8.0) and repository/package identity.
+- [x] Add project, solution, CI, and baseline tests.
 
 ## Stage 1 — First executable proof: mechanics
 
-- [ ] Implement unit-aware, renderer-independent mechanics contracts.
-- [ ] Define fixed logical stepping and replay inputs.
+- [x] Implement an initial renderer-independent, SI-unit constant-acceleration kernel with input validation.
+- [x] Define explicit logical timestep for the initial mechanics kernel.
 - [ ] Implement one bounded analytical case (constant acceleration or an inclined-plane/ramp experiment).
 - [ ] Test analytical outcomes, repeatability, invalid inputs, and unit consistency.
 - [ ] Generate a run record explainable from its actual measurements.
