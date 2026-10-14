@@ -54,11 +54,15 @@ The scheduling contract is documented in [Process-group scheduling](PROCESS_GROU
 - [ ] Model electrical heating/arc effects through energy transfer and supported ionization approximations.
 - [ ] Validate ignition, propagation, extinction, and conservation within the declared scope.
 
-## Stage 5 — Multiscale worlds
+## Stage 5 — Persistent universe & multiscale worlds
 
+- [ ] Define stable universe/cell addressing and deterministic seeded generation, including versioned generation parameters.
+- [ ] Define persistent cell/region state, checkpoints, pending events, and leave/revisit reconciliation.
+- [ ] Define observer-driven resolution tiers without making observation the source of physical truth.
 - [ ] Define coarse/fine model interfaces and conservative handoff requirements.
-- [ ] Preserve aggregate state while distant processes continue evolving.
-- [ ] Test approach/leave/revisit scenarios.
+- [ ] Preserve aggregate state while distant processes continue evolving and account for elapsed logical time on wake-up.
+- [ ] Implement a conservative spatial broadphase; test moving-bound coverage and candidate refinement.
+- [ ] Test approach/leave/revisit scenarios and transitions that occur while unobserved.
 - [ ] Measure computational cost against physical error, not visual quality alone.
 
 ## Stage 6 — Singularity Laboratory
