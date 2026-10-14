@@ -38,3 +38,15 @@ Every generated artifact points to the run configuration and model versions used
 6. Let the Workshop host combine those pages into the Singularity Laboratory's navigable research spaces.
 
 The first useful living document is one small experiment whose assumptions, equations, run, measurements, and explanation stay connected.
+
+---
+
+## Resources & Support
+
+[Physics home](../README.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
+</p>
+
+<p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
