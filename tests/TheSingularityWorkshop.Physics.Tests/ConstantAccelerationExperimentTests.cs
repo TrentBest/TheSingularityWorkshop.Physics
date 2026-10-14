@@ -21,7 +21,7 @@ public sealed class ConstantAccelerationExperimentTests
         Assert.That(result.CompletedSteps, Is.EqualTo(4));
         Assert.That(result.Samples.Count, Is.EqualTo(5));
         Assert.That(result.Samples[0], Is.EqualTo(definition.InitialState));
-        Assert.That(result.FinalState.Position, Is.EqualTo(1d).Within(1e-12));
+        Assert.That(result.FinalState.Position, Is.EqualTo(4d).Within(1e-12));
         Assert.That(result.FinalState.Velocity, Is.EqualTo(4d).Within(1e-12));
         Assert.That(result.FinalState.ElapsedTime, Is.EqualTo(2d).Within(1e-12));
         Assert.That(result.Definition, Is.EqualTo(definition));
