@@ -1,0 +1,40 @@
+name: Physics Build and Tests
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore TheSingularityWorkshop.Physics.slnx
+
+      - name: Test with coverage
+        run: dotnet test TheSingularityWorkshop.Physics.slnx --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
+
+      - name: Verify package can be created
+        run: dotnet pack TheSingularityWorkshop.Physics.csproj --configuration Release --no-restore --output ./artifacts
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-nuget-package
+          path: ./artifacts/*.nupkg
