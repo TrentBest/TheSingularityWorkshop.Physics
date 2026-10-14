@@ -56,6 +56,7 @@ public sealed class SweepAndPruneBroadphaseTests
         Assert.That(pairs, Is.EqualTo(new[]
         {
             new BroadphasePair(10, 30),
+            new BroadphasePair(10, 40),
             new BroadphasePair(30, 40)
         }));
     }
