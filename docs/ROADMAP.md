@@ -15,9 +15,9 @@ This roadmap separates architecture from completed functionality. Items move to 
 
 - [x] Implement an initial renderer-independent, SI-unit constant-acceleration kernel with input validation.
 - [x] Define explicit logical timestep for the initial mechanics kernel.
-- [ ] Implement one bounded analytical case (constant acceleration or an inclined-plane/ramp experiment).
-- [ ] Test analytical outcomes, repeatability, invalid inputs, and unit consistency.
-- [ ] Generate a run record explainable from its actual measurements.
+- [x] Implement a bounded analytical case: one-dimensional constant acceleration.
+- [x] Test analytical outcomes, repeatability, invalid inputs, and unit consistency.
+- [ ] Generate a durable run record explainable from its actual measurements.
 
 ## Stage 2 — Material identity and energy
 
