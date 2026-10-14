@@ -78,6 +78,18 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 - [ ] Test approach/leave/revisit scenarios and transitions that occur while unobserved.
 - [ ] Measure computational cost against physical error, not visual quality alone.
 
+## Stage 5.5 — Historical timelines & parallel realities
+
+- [x] Define immutable timeline lineage metadata and validated historical fork points.
+- [x] Document the checkpoint/replay/branch contract and separate reality, timeline, and checkpoint identities.
+- [ ] Implement versioned authoritative-state checkpoints and ordered event/input history.
+- [ ] Implement deterministic reconstruction from checkpoint plus replay, with compatibility checks and state verification.
+- [ ] Implement persistent reality identities and isolated mutable state across parallel realities.
+- [ ] Test that post-fork changes remain isolated and parent history remains unchanged.
+- [ ] Measure storage/replay trade-offs for shared history, checkpoint frequency, and branch count.
+
+The initial lineage type is metadata only. Time travel and multiverse simulation are not complete until persistence, replay, isolation, and validation are implemented.
+
 ## Stage 6 — Singularity Laboratory
 
 - [ ] Connect experiments to MicroBundles and FSM_COS composition.
