@@ -63,6 +63,8 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 
 ![Physics architecture](docs/images/physics-architecture.svg)
 
+![Multi-rate physics process-group scheduling](docs/images/physics-process-group-scheduling.svg)
+
 ---
 
 ## ○ 04 Documentation & theory
