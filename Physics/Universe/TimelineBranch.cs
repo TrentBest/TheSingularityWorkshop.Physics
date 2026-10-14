@@ -54,6 +54,20 @@ public sealed record TimelineBranch
         new(id, realityId, null, 0, 0);
 
     /// <summary>
+    /// Returns a new descriptor with a later represented head. The existing descriptor remains unchanged.
+    /// Advancing this metadata does not execute physics or create a checkpoint.
+    /// </summary>
+    public TimelineBranch WithHeadTick(long headTick)
+    {
+        if (headTick < HeadTick)
+        {
+            throw new ArgumentOutOfRangeException(nameof(headTick), "Timeline history cannot move backward; fork a child to represent an alternate past.");
+        }
+
+        return new TimelineBranch(Id, RealityId, ParentTimelineId, ForkTick, headTick);
+    }
+
+    /// <summary>
     /// Creates a child timeline at a historical tick represented by the parent.
     /// The parent remains unchanged; shared history and physical snapshots are managed by a persistence layer.
     /// </summary>
