@@ -75,3 +75,15 @@ Cross-platform bitwise identity is distinct from deterministic replay on a suppo
 - No silent assumptions about units, material data, or boundary conditions.
 - No claim of atomistic, quantum, plasma, combustion, or turbulent-flow fidelity unless the model supports it.
 - No generated explanation that exceeds the evidence of the model that produced it.
+
+---
+
+## Resources & Support
+
+[Physics home](../README.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
+</p>
+
+<p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
