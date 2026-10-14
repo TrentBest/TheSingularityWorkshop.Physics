@@ -68,6 +68,7 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 ## ○ 04 Documentation & theory
 
 - [Architecture](docs/ARCHITECTURE.md) — boundaries, determinism, and execution model
+- [Process-group scheduling](docs/PROCESS_GROUP_SCHEDULING.md) — multi-rate physical domains, logical time, event wake-ups, and validation
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
