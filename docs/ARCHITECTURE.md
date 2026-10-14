@@ -55,6 +55,16 @@ Initial cadence hypotheses differ by domain: bulk electricity may update around 
 
 The [process-group scheduling contract](PROCESS_GROUP_SCHEDULING.md) defines time accounting, catch-up, cross-domain exchange, relevance tiers, and the validation data required before optimizing. A slower schedule must not silently lose elapsed time or skip an event that changes the physical outcome.
 
+## Persistent universe and observer-driven resolution
+
+The intended large-scale model is one persistent universe with variable computational resolution, not a detailed bubble surrounded by frozen or regenerated scenery. A universe/world layer owns stable addresses, deterministic generation inputs, region identity, relationships, observer requests, and persistence. Physics owns physical state and model advancement; the FSM_API adapter coordinates scheduled work; renderers report input and present results.
+
+Observer containment can promote a cell or object to higher detail because of proximity, direct interaction, a predicted contact, a threshold event, or a dependency from another active model. Background and distant regions continue to account for elapsed logical time using only methods valid for their model: analytical advancement, aggregate integration, bounded substeps, or event/checkpoint reconciliation. If the model cannot safely catch up within its budget, it must report debt or slowdown rather than silently discard time.
+
+A conservative broadphase can periodically identify possible contact pairs using bounds that cover the declared motion interval. Candidate overlap triggers more detailed checks; it does not itself establish collision. Swept bounds or continuous collision methods may be required for fast motion. Broadphase detection and impact consequence processing have separate cadence requirements.
+
+The 10 × 10 × 10 grid with a deterministic check at linear index 42 is a useful test fixture, not a fixed universe topology or canonical special location. Generation must depend on stable coordinates, a recorded seed, and a versioned algorithm—not visitation order. Revisiting a cell must restore its evolved history rather than regenerate the initial state. The full proposal, including multiscale and microscopic-to-macroscopic boundaries, is in [Universe & observer resolution](UNIVERSE_AND_OBSERVER_RESOLUTION.md). These are architectural goals, not yet implemented functionality.
+
 ## State and measurements
 
 Prefer explicit state over hidden global state. Events record transitions; they are not a second source of truth. Measurements identify quantity/unit, logical time or step, source model/state, method, and uncertainty or numerical residual where known.
