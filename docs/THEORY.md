@@ -30,6 +30,12 @@ Keep these distinct:
 
 A visually persuasive result is not, by itself, a validated physical result.
 
+## First implemented evidence link
+
+The constant-acceleration experiment runner records the initial state and each resulting state sample. Its JSON run record includes the model identifier/version, record-schema version, input definition, explicit SI units, all samples, completed step count, and final observed state. Tests verify the record comes from actual experiment output and that serializing the same record twice yields identical text.
+
+This first format is intentionally narrow. It does not yet include external reference sources, source-data licenses, uncertainty estimates, model build hashes, independent reference comparisons, or a generated narrative with citations. Those are future additions, not implied capabilities.
+
 ## Generated explanations
 
 Living theory should be generated from versioned model metadata and actual experiment records, not from visual appearance alone. An explanation can show equations and symbol definitions, labeled diagrams with units, interactive parameter changes, expected/observed curves, conservation checks, numerical residuals, references, licenses, and explicit “not modeled” disclosures.
