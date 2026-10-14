@@ -57,6 +57,19 @@ public sealed class ConstantAccelerationExperimentTests
     }
 
     [Test]
+    public void Run_RejectsStepCountWhoseSampleArrayLengthWouldOverflow()
+    {
+        var definition = new ConstantAccelerationExperimentDefinition(
+            new KinematicState(0d, 0d, 0d),
+            Acceleration: 1d,
+            DeltaTime: 0.1d,
+            StepCount: int.MaxValue);
+
+        Assert.Throws<OverflowException>(
+            () => ConstantAccelerationExperiment.Run(definition));
+    }
+
+    [Test]
     public void Run_RejectsInvalidInitialStateBeforeSampling()
     {
         var definition = new ConstantAccelerationExperimentDefinition(
