@@ -39,21 +39,24 @@ Physics has no dependency on Unity, a renderer, or a particular host application
 
 ## ▷ 03 See it in a minute
 
-The first executable kernel is a constant-acceleration solver with immutable state, SI units, finite-value validation, and analytical tests. It advances logical time explicitly and does not use a render-frame delta.
+The constant-acceleration model includes a repeatable experiment runner. Each run captures the initial state and every subsequent logical-step sample. It uses SI units and explicit time—not a render-frame delta.
 
 ```csharp
+using TheSingularityWorkshop.Physics.Experiments;
 using TheSingularityWorkshop.Physics.Kinematics;
 
-var initial = new KinematicState(Position: 0d, Velocity: 0d, ElapsedTime: 0d);
-var afterTwoSeconds = ConstantAccelerationSolver.Advance(
-    initial,
-    acceleration: 9.81d,
-    deltaTime: 2d);
+var experiment = ConstantAccelerationExperiment.Run(
+    new ConstantAccelerationExperimentDefinition(
+        InitialState: new KinematicState(0d, 0d, 0d),
+        Acceleration: 9.81d,
+        DeltaTime: 0.1d,
+        StepCount: 20));
 
-// Position = 19.62 m; velocity = 19.62 m/s; elapsed time = 2 s.
+var finalState = experiment.FinalState;
+// 20 completed steps, 21 samples, 2 seconds of logical time.
 ```
 
-This is an analytical one-dimensional model—not a general-purpose rigid-body engine. The ramp experiment, additional physical classes, and coupled models remain future work.
+This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. The ramp experiment, additional physical classes, and coupled models remain future work.
 
 ![Physics architecture](docs/images/physics-architecture.svg)
 
