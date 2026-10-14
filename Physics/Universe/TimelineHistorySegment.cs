@@ -8,6 +8,10 @@ public sealed class TimelineHistorySegment
 {
     private readonly TimelineEvent[] _events;
 
+    /// <summary>Creates a validated history segment rooted at a checkpoint.</summary>
+    /// <param name="checkpoint">Authoritative starting checkpoint.</param>
+    /// <param name="events">Ordered events to replay after or at the checkpoint tick.</param>
+    /// <param name="throughTick">Target logical tick covered by the segment.</param>
     public TimelineHistorySegment(PhysicsCheckpoint checkpoint, IEnumerable<TimelineEvent> events, long throughTick)
     {
         ArgumentNullException.ThrowIfNull(checkpoint);
@@ -46,8 +50,11 @@ public sealed class TimelineHistorySegment
         }
     }
 
+    /// <summary>Checkpoint from which this history segment begins.</summary>
     public PhysicsCheckpoint Checkpoint { get; }
+    /// <summary>Inclusive logical target through which this segment is defined.</summary>
     public long ThroughTick { get; }
+    /// <summary>Number of validated event records in the segment.</summary>
     public int EventCount => _events.Length;
 
     /// <summary>Returns a read-only wrapper over a defensive copy of the event list.</summary>
