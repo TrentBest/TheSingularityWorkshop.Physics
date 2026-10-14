@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="TheSingularityWorkshop.Physics.csproj" />
-  <Project Path="tests/TheSingularityWorkshop.Physics.Tests/TheSingularityWorkshop.Physics.Tests.csproj" />
-</Solution>
