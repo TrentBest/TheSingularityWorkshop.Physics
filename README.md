@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/docs/images/avatar.png" alt="The Singularity Workshop" width="200" />
-</p>
-
 # The Singularity Workshop · Physics
 
 **Physics is the study of what changes, why it changes, and what must follow.** This package is the Workshop's foundation for deterministic, composable physical models—so experiments, simulations, and eventually entire worlds share explainable rules rather than disconnected visual effects.
@@ -65,5 +61,9 @@ The long-term goal is not a library of static pages about physics. It is living 
 - [GitHub profile](https://github.com/TrentBest) · [Coder Legion](https://coderlegion.com/)
 - [Support the Workshop on Patreon](https://www.patreon.com/)
 - [Support the Workshop on PayPal](https://www.paypal.com/)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
+</p>
 
 <p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
