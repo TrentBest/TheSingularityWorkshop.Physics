@@ -6,7 +6,7 @@
 
 ---
 
-## 00 ✳ What
+## ✳ 00 What
 
 TheSingularityWorkshop.Physics is the physics domain for the Singularity Workshop. It will provide small, composable physical capabilities that can be selected for an experiment or world: mechanics, energy, thermodynamics, fluids, materials, electromagnetism, reactions, combustion, waves, and more.
 
@@ -14,13 +14,17 @@ Physics state is authoritative. Rendering and interaction observe that state; th
 
 > **Status:** foundation and architecture in development. A capability is considered implemented only when its model, assumptions, units, deterministic behavior, and validation are represented in code and tests.
 
-## 01 ◇ Why
+---
+
+## ◇ 01 Why
 
 A spark should be more than a sprite. A fire should change its fuel, temperature, gases, and surroundings. A copper object should not behave like iron merely because both have a metallic shader. A distant fire may use a cheaper representation, but it must continue to evolve and remain coherent when approached again.
 
 The Workshop needs one causal foundation that can explain its results, support repeatable experiments, and scale the detail of computation without silently rewriting history.
 
-## 02 △ How
+---
+
+## △ 02 How
 
 - **FSM_API** coordinates discrete lifecycle and state transitions; numerical solvers calculate physical changes.
 - **Ontology-aligned capabilities** keep mechanics, thermodynamics, hydrodynamics, materials, and other domains independently composable.
@@ -31,9 +35,11 @@ The Workshop needs one causal foundation that can explain its results, support r
 
 Physics has no dependency on Unity, a renderer, or a particular host application. The initial library is a renderer-independent analytical mechanics kernel; higher-level capability domains are being added in deliberate, testable increments.
 
-## 03 ▷ See it in a minute
+---
 
-The first executable kernel is now a constant-acceleration solver with immutable state, SI units, finite-value validation, and analytical tests. It advances logical time explicitly and does not use a render-frame delta.
+## ▷ 03 See it in a minute
+
+The first executable kernel is a constant-acceleration solver with immutable state, SI units, finite-value validation, and analytical tests. It advances logical time explicitly and does not use a render-frame delta.
 
 ```csharp
 using TheSingularityWorkshop.Physics.Kinematics;
@@ -49,10 +55,15 @@ var afterTwoSeconds = ConstantAccelerationSolver.Advance(
 
 This is an analytical one-dimensional model—not a general-purpose rigid-body engine. The ramp experiment, additional physical classes, and coupled models remain future work.
 
-![Physics architecture](docs/images/physics-architecture.svg)\n\n## 04 ○ Documentation & theory
+![Physics architecture](docs/images/physics-architecture.svg)
+
+---
+
+## ○ 04 Documentation & theory
 
 - [Architecture](docs/ARCHITECTURE.md) — boundaries, determinism, and execution model
-- [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships\n- [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
+- [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
+- [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
 - [Determinism contract](docs/DETERMINISM.md) — replay, time, ordering, and numerical limits
 - [Roadmap](docs/ROADMAP.md) — staged path from mechanics to coupled phenomena
