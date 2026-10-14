@@ -106,3 +106,6 @@ The long-term goal is not a library of static pages about physics. It is living 
 </p>
 
 <p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
+
+
+Timeline history contracts (checkpoint envelopes, ordered event records, and validated history segments) are documented in [Timelines & multiverse](docs/TIMELINES_AND_MULTIVERSE.md).
