@@ -39,7 +39,7 @@ Physics has no dependency on Unity, a renderer, or a particular host application
 
 ## ▷ 03 See it in a minute
 
-The constant-acceleration model includes a repeatable experiment runner. Each run captures the initial state and every subsequent logical-step sample. It uses SI units and explicit time—not a render-frame delta.
+The constant-acceleration model includes a repeatable experiment runner. Each run captures the initial state and every subsequent logical-step sample. A versioned JSON record can preserve those actual samples with the inputs and units that produced them.
 
 ```csharp
 using TheSingularityWorkshop.Physics.Experiments;
@@ -53,10 +53,13 @@ var experiment = ConstantAccelerationExperiment.Run(
         StepCount: 20));
 
 var finalState = experiment.FinalState;
+var runRecord = ConstantAccelerationRunRecord.FromResult(experiment);
+var json = runRecord.ToJson();
+
 // 20 completed steps, 21 samples, 2 seconds of logical time.
 ```
 
-This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. The ramp experiment, additional physical classes, and coupled models remain future work.
+This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. The run-record format is an initial schema; broad source provenance, uncertainty analysis, the ramp experiment, and coupled models remain future work.
 
 ![Physics architecture](docs/images/physics-architecture.svg)
 
