@@ -1,0 +1,61 @@
+# Physics Roadmap
+
+This roadmap separates architecture from completed functionality. Items move to “implemented” only with code, tests, and documented scope.
+
+## Stage 0 — Establish the domain
+
+- [x] Create a dedicated Physics repository.
+- [x] Define core/host boundaries and deterministic execution principles.
+- [x] Map physics capability classes to the Workshop ontology.
+- [x] Establish theory, provenance, and living-documentation contracts.
+- [ ] Confirm target frameworks, package identity, and integration versions from adjacent projects.
+- [ ] Add project, solution, CI, and baseline tests.
+
+## Stage 1 — First executable proof: mechanics
+
+- [ ] Implement unit-aware, renderer-independent mechanics contracts.
+- [ ] Define fixed logical stepping and replay inputs.
+- [ ] Implement one bounded analytical case (constant acceleration or an inclined-plane/ramp experiment).
+- [ ] Test analytical outcomes, repeatability, invalid inputs, and unit consistency.
+- [ ] Generate a run record explainable from its actual measurements.
+
+## Stage 2 — Material identity and energy
+
+- [ ] Define elements versus compounds, mixtures, and alloys.
+- [ ] Add source/version/license provenance and valid property ranges.
+- [ ] Add energy and heat-capacity contracts.
+- [ ] Model heating/cooling with declared assumptions.
+- [ ] Add one supported phase-transition model and tests.
+
+## Stage 3 — Coupled physical processes
+
+- [ ] Add heat transfer with explicit boundary conditions.
+- [ ] Add a bounded hydrodynamics scenario and convergence/limitation notes.
+- [ ] Connect mechanics, material response, and measurements.
+- [ ] Add deformation, fracture, and causal deconstruction in increments.
+
+## Stage 4 — Reactive phenomena
+
+- [ ] Add reaction-model contracts and explicit species/stoichiometry.
+- [ ] Couple combustion with heat transfer and material/fuel state.
+- [ ] Add gas transport and buoyancy only with a declared model.
+- [ ] Model electrical heating/arc effects through energy transfer and supported ionization approximations.
+- [ ] Validate ignition, propagation, extinction, and conservation within the declared scope.
+
+## Stage 5 — Multiscale worlds
+
+- [ ] Define coarse/fine model interfaces and conservative handoff requirements.
+- [ ] Preserve aggregate state while distant processes continue evolving.
+- [ ] Test approach/leave/revisit scenarios.
+- [ ] Measure computational cost against physical error, not visual quality alone.
+
+## Stage 6 — Singularity Laboratory
+
+- [ ] Connect experiments to MicroBundles and FSM_COS composition.
+- [ ] Generate explainers from model/run metadata.
+- [ ] Bind SVG diagrams, plots, and controls to real model state.
+- [ ] Expand into the laboratory's experiment catalog with clear accuracy labels.
+
+## Release gate
+
+No package release or publication occurs from this roadmap without explicit authorization. A capability or demo must not be marked complete merely because documentation describes it.
