@@ -22,16 +22,26 @@ public sealed class TimelineBranchTests
     public void ForkAtHistoricalTick_CreatesChildAndLeavesParentUnchanged()
     {
         var root = TimelineBranch.CreateRoot("timeline-a", "reality-1");
-        var advancedParent = root with { };
-        // A branch's represented head is immutable; a persistence/replay layer will later publish
-        // a new descriptor as the parent history advances.
-        var historical = TimelineBranch.Fork("timeline-b", advancedParent, 0);
+        var advancedParent = root.WithHeadTick(100);
+        var historical = TimelineBranch.Fork("timeline-b", advancedParent, 42);
 
         Assert.That(historical.ParentTimelineId, Is.EqualTo("timeline-a"));
         Assert.That(historical.RealityId, Is.EqualTo(root.RealityId));
-        Assert.That(historical.ForkTick, Is.Zero);
-        Assert.That(historical.HeadTick, Is.Zero);
+        Assert.That(historical.ForkTick, Is.EqualTo(42));
+        Assert.That(historical.HeadTick, Is.EqualTo(42));
+        Assert.That(advancedParent.HeadTick, Is.EqualTo(100));
+        Assert.That(root.HeadTick, Is.Zero);
         Assert.That(root.ParentTimelineId, Is.Null);
+    }
+
+    [Test]
+    public void TimelineHeadCannotMoveBackward()
+    {
+        var root = TimelineBranch.CreateRoot("timeline-a", "reality-1").WithHeadTick(10);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => root.WithHeadTick(9));
+        Assert.That(root.WithHeadTick(20).HeadTick, Is.EqualTo(20));
+        Assert.That(root.HeadTick, Is.EqualTo(10));
     }
 
     [Test]
