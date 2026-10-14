@@ -55,7 +55,7 @@ public sealed record ConstantAccelerationRunRecord
         return new ConstantAccelerationRunRecord
         {
             Definition = result.Definition,
-            Samples = result.Samples.ToArray()
+            Samples = Array.AsReadOnly(result.Samples.ToArray())
         };
     }
 
