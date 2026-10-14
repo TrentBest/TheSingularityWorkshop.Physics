@@ -20,6 +20,17 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [x] Generate a versioned JSON run record from actual experiment samples, with explicit units and repeat-serialization tests.
 - [ ] Add reference-data provenance, uncertainty/residual reporting, and an independently checkable validation record.
 
+## Stage 1.5 — Multi-rate physical execution
+
+- [ ] Define a logical simulation heartbeat distinct from render-frame timing.
+- [ ] Add an FSM_API adapter with one scheduler FSM per capability and explicit domain processing groups.
+- [ ] Define elapsed-time, catch-up, and event-triggered wake-up policies per model.
+- [ ] Add separate background and local/high-detail work where relevance requires it.
+- [ ] Test cadence boundaries, delayed events, coupled-domain ordering, and conservation across handoffs.
+- [ ] Measure cost and physical error against a finer-step reference before selecting default rates.
+
+The scheduling contract is documented in [Process-group scheduling](PROCESS_GROUP_SCHEDULING.md). These implementation tasks remain incomplete until code and integration tests exist.
+
 ## Stage 2 — Material identity and energy
 
 - [ ] Define elements versus compounds, mixtures, and alloys.
