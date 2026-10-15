@@ -34,14 +34,14 @@ The scheduling contract is documented in [Process-group scheduling](PROCESS_GROU
 ## Stage 1.75 — Articulated mechanics integration
 
 - [x] Define the proposed Physics-to-controller contract for achieved state, contact observations, constraint loads, structural failure, and topology ownership ([articulated mechanics contract](ARTICULATED_MECHANICS_CONTRACT.md)).
-- [ ] Define spatial conventions, vector/pose types, and rigid-body state with explicit units and coordinate frames.
+- [x] Define spatial conventions, vector/pose types, and rigid-body state with explicit units and coordinate frames.
 - [ ] Implement a bounded articulated rigid-body/constraint scenario with documented solver scope.
 - [ ] Emit per-step contact observations and constraint reaction loads with stable body/constraint identities.
 - [ ] Define threshold semantics for peak/sustained loads versus impulse before structural failure depends on them.
 - [ ] Validate a structural failure scenario without conflating failure detection, body-topology mutation, and injury.
 - [ ] Add deterministic/replay and cross-package contract tests showing Gestures can consume Physics observations without a Physics-to-Gestures dependency.
 
-This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The contract is documented; the spatial solver, observations, and integration tests are not yet implemented.
+This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The spatial state types and a bounded 3D compliant distance-link experiment exist on the current review branch. They do not yet implement a rigid-joint solver, contact observations, rigid-constraint reaction loads, structural failure, or the complete articulated acceptance criteria.
 
 ## Stage 2 — Material identity and energy
 
