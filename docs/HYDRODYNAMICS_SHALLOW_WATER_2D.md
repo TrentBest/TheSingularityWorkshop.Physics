@@ -22,6 +22,10 @@ The flat-bed prototype and the terrain-aware increment are renderer-independent,
 - Automated tests cover still-water equilibrium over an uneven bed, evolution of a free-surface disturbance over terrain, closed-basin water-volume conservation, and defensive snapshots.
 - The flat-bed solver's tests additionally cover disturbance propagation, repeatability, and CFL rejection.
 
+## Wet/dry shoreline increment
+
+The terrain-aware model now accepts zero depth for dry cells. Dry-cell velocity samples return zero, dry cells carry no momentum, and hydrostatic reconstruction supports a still free surface terminating against bed elevations above that surface. Automated coverage checks that a lake at rest remains balanced with a dry shoreline and conserves total water volume. This is an initial shoreline treatment, not yet a claim of validated wetting fronts under energetic transients.
+
 ## Explicit limitations
 
-The terrain-aware model currently requires positive depth in every cell. It does not yet implement wet/dry shorelines, friction, obstacles, buildings, boats, moving terrain, erosion, sediment transport, open boundaries, breaking-wave physics, or three-dimensional flow. The terrain field is fixed during a run. Rusanov fluxes are robust but diffusive; grid-refinement and convergence evidence is still required before making stronger accuracy claims. This increment is a coupled numerical foundation, not a complete world or ocean simulator.
+The terrain-aware model does not yet implement friction, obstacles, buildings, boats, moving terrain, erosion, sediment transport, open boundaries, breaking-wave physics, or three-dimensional flow. The terrain field is fixed during a run. Rusanov fluxes are robust but diffusive; grid-refinement and convergence evidence is still required before making stronger accuracy claims. This increment is a coupled numerical foundation, not a complete world or ocean simulator.
