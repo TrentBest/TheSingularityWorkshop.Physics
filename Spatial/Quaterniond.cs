@@ -99,14 +99,15 @@ public readonly struct Quaterniond : IEquatable<Quaterniond>
         var twiceCross = 2d * vectorPart.Cross(scaledValue);
         var rotated = scaledValue + (rotation.W * twiceCross) + vectorPart.Cross(twiceCross);
 
-        // Rotation preserves vector magnitude. Bound each computed component by
-        // that magnitude to prevent roundoff from turning a representable boundary
-        // result (for example, double.MaxValue rotated onto another axis) into infinity.
-        var magnitude = scaledValue.Magnitude;
+        // A rotation preserves magnitude, but floating-point roundoff can put a
+        // component a few ulps beyond the largest representable scaled component.
+        // Correct only that tiny excess; genuinely unrepresentable results fail
+        // explicitly instead of leaking infinity into a Vector3d.
+        var limit = double.MaxValue / scale;
         return new Vector3d(
-            Math.Clamp(rotated.X, -magnitude, magnitude) * scale,
-            Math.Clamp(rotated.Y, -magnitude, magnitude) * scale,
-            Math.Clamp(rotated.Z, -magnitude, magnitude) * scale);
+            ScaleRotatedComponent(rotated.X, scale, limit),
+            ScaleRotatedComponent(rotated.Y, scale, limit),
+            ScaleRotatedComponent(rotated.Z, scale, limit));
     }
 
     /// <summary>Multiplies quaternions using the Hamilton product.</summary>
@@ -135,6 +136,22 @@ public readonly struct Quaterniond : IEquatable<Quaterniond>
 
     /// <inheritdoc />
     public override string ToString() => $"({W:R}, {X:R}, {Y:R}, {Z:R})";
+
+    private static double ScaleRotatedComponent(double component, double scale, double representableLimit)
+    {
+        var magnitude = Math.Abs(component);
+        if (magnitude > representableLimit)
+        {
+            const double machineEpsilon = 2.2204460492503131e-16;
+            var roundingTolerance = 8d * machineEpsilon * Math.Max(1d, representableLimit);
+            if (magnitude - representableLimit > roundingTolerance)
+                throw new ArithmeticException("Rotated vector component is outside the finite double range.");
+
+            component = Math.CopySign(representableLimit, component);
+        }
+
+        return component * scale;
+    }
 
     private static double CheckedFinite(double value, string operation)
     {
