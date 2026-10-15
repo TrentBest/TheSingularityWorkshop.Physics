@@ -24,7 +24,7 @@ The flat-bed prototype and the terrain-aware increment are renderer-independent,
 
 ## Wet/dry shoreline increment
 
-The terrain-aware model now accepts zero depth for dry cells. Dry-cell velocity samples return zero, dry cells carry no momentum, and hydrostatic reconstruction supports a still free surface terminating against bed elevations above that surface. Automated coverage checks that a lake at rest remains balanced with a dry shoreline and conserves total water volume. This is an initial shoreline treatment, not yet a claim of validated wetting fronts under energetic transients.
+The terrain-aware model now accepts zero depth for dry cells. Dry-cell velocity samples return zero, dry cells carry no momentum, and hydrostatic reconstruction supports a still free surface terminating against bed elevations above that surface. Automated coverage checks that a lake at rest remains balanced with a dry shoreline, and that a single controlled time step advances water into an adjacent dry cell while preserving non-negative finite depths and total water volume. This is an initial wetting-front sanity check, not yet a claim of validated multi-step wetting fronts under energetic transients.
 
 ## Explicit limitations
 
