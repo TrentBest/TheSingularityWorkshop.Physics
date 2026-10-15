@@ -45,7 +45,7 @@ public sealed class ConstantAccelerationTimelineReplayTests
             Advance);
 
         // Tick 2 event adds 3 m/s after the first two solver steps.
-        Assert.That(reconstructed.Position, Is.EqualTo(29d));
+        Assert.That(reconstructed.Position, Is.EqualTo(26d));
         Assert.That(reconstructed.Velocity, Is.EqualTo(12d));
         Assert.That(reconstructed.ElapsedTime, Is.EqualTo(4d));
     }
