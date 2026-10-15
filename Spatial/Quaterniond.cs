@@ -94,12 +94,19 @@ public readonly struct Quaterniond : IEquatable<Quaterniond>
 
         // Rotate a bounded vector so intermediate cross products cannot overflow
         // merely because the original finite vector is close to double.MaxValue.
-        // Scaling the result back may still throw if a true output component is unrepresentable.
         var scaledValue = value / scale;
         var vectorPart = new Vector3d(rotation.X, rotation.Y, rotation.Z);
         var twiceCross = 2d * vectorPart.Cross(scaledValue);
         var rotated = scaledValue + (rotation.W * twiceCross) + vectorPart.Cross(twiceCross);
-        return rotated * scale;
+
+        // Rotation preserves vector magnitude. Bound each computed component by
+        // that magnitude to prevent roundoff from turning a representable boundary
+        // result (for example, double.MaxValue rotated onto another axis) into infinity.
+        var magnitude = scaledValue.Magnitude;
+        return new Vector3d(
+            Math.Clamp(rotated.X, -magnitude, magnitude) * scale,
+            Math.Clamp(rotated.Y, -magnitude, magnitude) * scale,
+            Math.Clamp(rotated.Z, -magnitude, magnitude) * scale);
     }
 
     /// <summary>Multiplies quaternions using the Hamilton product.</summary>
