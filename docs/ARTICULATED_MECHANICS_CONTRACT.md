@@ -79,10 +79,10 @@ The simplest model that validates the contract is preferable to an expansive but
 
 ## Relationship to current implementation
 
-The current Physics implementation provides a one-dimensional constant-acceleration analytical kernel and deterministic experiment/run-record foundations. It does not yet implement spatial rigid bodies, articulated constraints, collision/contact solving, joint reaction loads, or structural failure. The proposed slice above is future work, not an implemented capability.
+The current review stack now includes spatial value types, timestamped rigid-body snapshots, a bounded 3D compliant distance-link experiment, and a validated `ContactObservation` data contract. The contact record defines how a producing model can report a body-pair contact, but it does not detect contacts or compute contact forces/impulses. There is still no rigid-joint solver, collision/contact solver, articulated reaction-load solver, or structural-failure/topology implementation. The complete proposed slice remains future work.
 
 ---
 
 ## Resources
 
-[Physics architecture](ARCHITECTURE.md) · [Determinism contract](DETERMINISM.md) · [Physics roadmap](ROADMAP.md) · [Gestures](https://github.com/TrentBest/TheSingularityWorkshop.Gestures)
+[Physics architecture](ARCHITECTURE.md) · [Determinism contract](DETERMINISM.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [Physics roadmap](ROADMAP.md) · [Gestures](https://github.com/TrentBest/TheSingularityWorkshop.Gestures)
