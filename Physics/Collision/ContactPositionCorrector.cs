@@ -82,10 +82,10 @@ public static class ContactPositionCorrector
 
         var achievedA = new RigidBodyState(
             bodyA.BodyId, new Pose3d(positionA, bodyA.Pose.Orientation),
-            bodyA.LinearVelocity, bodyA.AngularVelocity, contact.StepIndex, contact.ElapsedTime);
+            bodyA.LinearVelocity, bodyA.AngularVelocity, bodyA.StepIndex, bodyA.ElapsedTime);
         var achievedB = new RigidBodyState(
             bodyB.BodyId, new Pose3d(positionB, bodyB.Pose.Orientation),
-            bodyB.LinearVelocity, bodyB.AngularVelocity, contact.StepIndex, contact.ElapsedTime);
+            bodyB.LinearVelocity, bodyB.AngularVelocity, bodyB.StepIndex, bodyB.ElapsedTime);
 
         var correctedContact = new ContactObservation(
             contact.ContactId, contact.BodyAId, contact.BodyBId,
