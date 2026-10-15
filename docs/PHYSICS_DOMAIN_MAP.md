@@ -58,7 +58,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Key exchanges:** heat and work; temperature-dependent material properties; latent heat; reaction energy.
 - **First usable slice:** validated material thermal properties plus a closed, lumped thermal body whose energy/temperature relation is explicit. Then heating/cooling and phase-change cases.
 - **Guardrail:** temperature is not energy; heat is energy transfer, not a stored substance. Do not assume constant heat capacity or a single phase outside the model's declared range.
-- **Current status:** planned on `development`; a first bounded lumped thermal-state primitive is proposed in [PR #12](https://github.com/TrentBest/TheSingularityWorkshop.Physics/pull/12), with implementation and validation pending review/CI.
+- **Current status:** planned on `development`; a first bounded lumped thermal-state primitive is proposed in [PR #12](https://github.com/TrentBest/TheSingularityWorkshop.Physics/pull/12), with CI passing but the PR still unmerged; it is not yet part of `development`.
 
 ### C. Heat transfer
 - **Covers:** conduction, convection, and radiation as distinct mechanisms with explicit assumptions.
