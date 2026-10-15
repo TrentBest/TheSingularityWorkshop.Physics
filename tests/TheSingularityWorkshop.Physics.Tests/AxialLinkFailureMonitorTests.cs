@@ -63,6 +63,27 @@ public sealed class AxialLinkFailureMonitorTests
     }
 
     [Test]
+    public void Observe_RejectsNonFiniteForceAndTime()
+    {
+        var monitor = new AxialLinkFailureMonitor("link-1", 10d);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            monitor.Observe(Observation(0, double.NaN, 0d)));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            monitor.Observe(Observation(0, 0d, double.PositiveInfinity)));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            monitor.Observe(Observation(0, -0.01d, 0d)));
+    }
+
+    [Test]
+    public void Observe_RejectsNullObservation()
+    {
+        var monitor = new AxialLinkFailureMonitor("link-1", 10d);
+
+        Assert.Throws<ArgumentNullException>(() => monitor.Observe(null!));
+    }
+
+    [Test]
     public void Constructor_RejectsInvalidThreshold()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new AxialLinkFailureMonitor("link-1", -1d));
