@@ -24,9 +24,11 @@ public sealed class ShallowWaterBasin2DTests
     [Test]
     public void Advance_DepthDisturbanceEvolvesAndConservesClosedBasinVolume()
     {
-        var depth = Enumerable.Repeat(1d, 25 * 25).ToArray();
-        depth[12 * 25 + 12] = 1.1d;
-        var basin = new ShallowWaterBasin2D(25, 25, 1d, 1d, 0.01d, depth);
+        const int width = 25;
+        const int height = 17;
+        var depth = Enumerable.Repeat(1d, width * height).ToArray();
+        depth[8 * width + 12] = 1.1d;
+        var basin = new ShallowWaterBasin2D(width, height, 1d, 1d, 0.01d, depth);
         var initialVolume = basin.WaterVolume;
 
         for (var i = 0; i < 50; i++)
