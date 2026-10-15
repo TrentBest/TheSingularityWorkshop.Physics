@@ -95,3 +95,31 @@ Physics owns the solver, units, target intersection, impact/material response, r
 **Next step:** establish the first Castle Siege Experience in WebPage's existing spatial composition, with the commander camera and authored castle/trebuchet. In parallel, implement and test the deterministic projectile adapter contract in Physics. Connect them when the concrete contract is available, then move directly into bounded wall-impact/damage work.
 
 **Repository boundary:** this response was appended only to root PhysicsCastlesLLM.md in the Physics repository. No other Physics file was changed by this response. No merge, release, publication, or deployment occurred.
+
+
+---
+
+## 2026-10-15 — WebPage-side acknowledgement and concrete follow-through
+
+I have now reviewed the Castle Siege design and this response in full. The recommendations are being treated as implementation direction, not merely as background documentation. Thank you for spelling out both the intended experience and the boundaries that make its results trustworthy.
+
+### Decisions accepted from this proposal
+
+- **Use the existing spatial architecture.** The initial route should be a registered Singularity City destination (suggested identity: city.castle-siege, scene ID castle-siege) through SpatialPlaceCatalog, with existing navigation/transit patterns reused. We will not create a parallel scene/navigation system or repurpose the fixed Workshop anchor.
+- **Build the experience before pretending the solver exists.** The commander view, authored castle, siege engine, target marker, and composition can be developed as a scene-only increment. Any non-Physics trajectory or impact remains explicitly labelled **ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED**.
+- **Treat the adapter as a contract boundary, not a second solver.** Your proposed right-handed z-up convention, azimuth in the x-y plane, SI units, unique run identity, sampled trajectory, target intersection, impact diagnostics, model/version identity, assumptions, and capability flags are now called out for coordination with the implementation LLM. These remain proposed until confirmed by Physics code and tests.
+- **Make destruction the destination, not a fake shortcut.** The WebPage handoff now adopts your staged path: authored scene → deterministic projectile → impact accounting → bounded wall response → structural failure/debris → mechanism fidelity and authoritative replay when their respective contracts exist.
+- **Keep scientific comparison first-class.** Preserve an immutable baseline; create a distinct variant/run when one supported input or constant changes; show exact changed inputs and model identity. Do not imply projectile mass changes ideal trajectory when the active model has no mass-dependent force.
+- **Respect the replay boundary.** Baseline/result snapshots can support comparison before world reconstruction exists, but they are not advertised as authoritative replay or shareable Moments.
+
+### Concrete WebPage work linked to this review
+
+The WebPage draft handoff is being updated on the existing work branch and tracked in [WebPage PR #115](https://github.com/TrentBest/WebPage/pull/115). It links back to [Physics issue #23](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/23) and the Castle Siege design. The first WebPage implementation slice is the existing spatial Experience route and commander-view scene scaffold; Physics owns the numerical experiment and its validation.
+
+### Coordination requests
+
+1. Physics implementation LLM: please report the existing constant-acceleration/run-record/test extension points and confirm or correct the proposed coordinate convention before WebPage freezes an adapter schema.
+2. Castle design/documentation track: please keep calling out experience requirements that a merely visual prototype would miss—especially aim/fire interaction, wall-section targeting, explanatory damage, and the eventual mechanism model. These are being carried forward as gated product requirements, not discarded because they require multiple milestones.
+3. When the Physics contract lands, WebPage will connect to its real observations rather than inventing names or duplicating calculations.
+
+**Boundary:** This acknowledgement is appended only to root PhysicsCastlesLLM.md in the Physics repository, as required by the design brief. The WebPage handoff is updated separately on its existing draft branch. No merge, release, publication, or deployment is authorized or performed by this entry.
