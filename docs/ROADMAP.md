@@ -18,7 +18,7 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [ ] Establish a tested minimum vertical slice for thermodynamics, hydrodynamics, materials, reactions, fields, and waves before deepening only one domain.
 - [ ] Use a bounded fire/combustion experiment as a cross-domain integration test after its prerequisite models exist; it is not a substitute for broader domain coverage.
 
-The domain map is architecture, not implementation. Thermodynamics, hydrodynamics, heat transfer, material response, chemical reactions, and combustion remain unimplemented on `development` until their models, tests, and scope are present.
+The domain map is architecture, not implementation. Thermodynamics, hydrodynamics, heat transfer, material response, chemical reactions, and combustion remain unimplemented on `development` until their models, tests, and scope are present. The [Hydrodynamics World Demonstrator](HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) specifies a staged, testable route to the wave-filled basin/terrain/boats experience; it is a plan, not a completed solver.
 
 ## Stage 1 — First executable proof: mechanics
 
@@ -64,7 +64,10 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 ## Stage 3 — Coupled physical processes
 
 - [ ] Add heat transfer with explicit boundary conditions.
-- [ ] Add a bounded hydrodynamics scenario and convergence/limitation notes.
+- [ ] Add a bounded hydrodynamics scenario and convergence/limitation notes ([Hydrodynamics World Demonstrator](HYDRODYNAMICS_WORLD_DEMONSTRATOR.md)).
+- [ ] Verify an analytical wave reference, then a conservative 2D shallow-water basin with reflection, volume accounting, timestep limits, and grid-refinement evidence.
+- [ ] Add terrain/shoreline and solid-obstacle interactions, followed by bounded boat buoyancy and fluid/body coupling.
+- [ ] Deliver a renderer-independent, inspectable wave-world demo only after its underlying solver passes the documented validation gates.
 - [ ] Connect mechanics, material response, and measurements.
 - [ ] Add deformation, fracture, and causal deconstruction in increments.
 
