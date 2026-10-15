@@ -35,6 +35,36 @@ A branch preserves its ancestry. It must not mutate the parent's event history o
 
 The `TimelineBranch` type represents validated lineage metadata and a represented logical head. `TimelineLineage` validates a root-to-target ancestry within one reality and can assess whether a checkpoint is eligible as a starting point for a requested tick, including the shared-history boundary at each fork. This is only an ancestry/range check: it does not establish schema compatibility, event continuity, or replay fidelity. `PhysicsCheckpoint` provides an immutable envelope for opaque serialized state bytes, identity/version metadata, and a SHA-256 payload digest. `TimelineEvent` represents one ordered input/event record, and `TimelineHistorySegment` validates an event sequence against a checkpoint and target tick. `TimelineReplayPlan` adds a forward route from an eligible checkpoint through timeline-owned intervals, splitting at each fork and requiring exact schema/model version labels. Child-owned events begin strictly after the fork tick; the fork tick remains part of inherited history. This route is still a plan, not loaded event data or an executor. These are contracts and validation primitives only: there is still no durable store, model-specific serializer, replay executor, solver restoration, or proof of replay fidelity. See [Deterministic history and optional extensions](DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) for the distinction between replaying forward and reversing operations, plus the proposed seams for prediction and rollback.
 
+## Shareable moments: replay, scrub, and remix
+
+A replay should be more than a developer log. It should become a creator-owned, portable way to return to a clutch moment, inspect how it unfolded, and invite someone else to experience or remix it.
+
+Treat a **Moment** as a named, bounded view into a timeline, not as a screenshot and not necessarily as a whole saved world. A moment package should eventually carry:
+
+- **Identity and provenance:** stable moment ID, creator/attribution, source reality and timeline, capture tick, and parent/remix reference where applicable.
+- **A reconstruction anchor:** a compatible checkpoint reference or embedded checkpoint, plus the fork-aware replay route and the ordered inputs/events needed to reach the selected moment.
+- **A playable window:** a start tick, highlight tick, and end tick so a viewer can scrub before and after the clutch moment rather than land on one frozen frame.
+- **Compatibility declaration:** physics/model, schema, timestep, solver settings, deterministic random-stream identity, and required content/assets with versions or content hashes.
+- **Presentation hints:** optional camera/view state, annotations, captions, and a thumbnail or short preview. These enrich presentation but are not authoritative physical state.
+- **Integrity and limits:** payload digests, bounded resource declarations, and explicit status when content is missing, incompatible, or only approximately reproducible.
+
+A share link should resolve to a stable moment identifier and a versioned manifest. Depending on size and licensing, the manifest can reference content-addressed assets hosted by a provider or package a small self-contained replay. A link is not a substitute for durable storage, and a digest detects changed bytes but does not prove that a simulation is physically correct.
+
+### A creator-first sharing loop
+
+1. **Capture:** mark the moment, choose the scrub window, and optionally add a title, description, and annotations.
+2. **Preview:** reconstruct it locally and verify that the highlight and surrounding window behave as expected.
+3. **Share:** create a public, unlisted, or private share according to host capability; show required downloads and compatibility before loading.
+4. **Experience:** let the recipient scrub, inspect events, and understand the context without needing a developer toolchain.
+5. **Remix:** let the recipient fork from an authorized point, make changes on a child timeline, and credit/link back to the source without mutating the original.
+6. **Publish a derivative:** produce a new moment manifest with its own identity and explicit ancestry, so interesting branches can be discovered and shared again.
+
+Privacy and ownership are product requirements, not afterthoughts. A share must not expose private world state, hidden assets, personal data, or credentials merely because those bytes happened to be captured in a checkpoint. Hosts need access controls, retention/deletion rules, quota and abuse controls, and clear licensing/attribution. Private by default is safer until the creator chooses otherwise.
+
+For adoption, optimize the path from “that was amazing” to “watch this” to “try my version.” Keep a small replay lightweight enough to share, disclose large dependencies before download, and offer a clear fallback when exact reconstruction is unavailable. Do not silently substitute a different simulation and call it the same replay.
+
+This is an intended product direction, not a current feature claim. The current replay plan is routing metadata; it does not yet load durable history, restore a physical world, render a scrubber, generate share links, or host user content. The hosting and social layer should remain separable from the renderer-independent physics core.
+
 ## Parallel realities and multiverse scale
 
 A multiverse is a set of separately addressable realities and their timeline trees. It need not be a simultaneous full-fidelity simulation of every possibility.
