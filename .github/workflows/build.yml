@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - development
+      - work/rigid-body-state
   pull_request:
     branches:
       - development
