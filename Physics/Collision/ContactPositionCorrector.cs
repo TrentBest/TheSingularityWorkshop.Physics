@@ -71,8 +71,10 @@ public static class ContactPositionCorrector
         if (!double.IsFinite(inverseMassSum) || inverseMassSum <= 0d)
             throw new OverflowException("The combined inverse mass is not finite and positive.");
 
-        var displacementA = contact.NormalFromAToB * (-correction * inverseMassA / inverseMassSum);
-        var displacementB = contact.NormalFromAToB * (correction * inverseMassB / inverseMassSum);
+        var weightA = inverseMassA / inverseMassSum;
+        var weightB = inverseMassB / inverseMassSum;
+        var displacementA = contact.NormalFromAToB * (-correction * weightA);
+        var displacementB = contact.NormalFromAToB * (correction * weightB);
         var positionA = bodyA.Pose.Position + displacementA;
         var positionB = bodyB.Pose.Position + displacementB;
         if (!IsFinite(positionA) || !IsFinite(positionB))
