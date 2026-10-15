@@ -7,6 +7,15 @@ namespace TheSingularityWorkshop.Physics.Tests;
 public sealed class LinearWaveBasin1DTests
 {
     [Test]
+    public void Constructor_RejectsFiniteProfileWhoseRestInitializationOverflows()
+    {
+        var extremeProfile = new[] { double.MaxValue, -double.MaxValue, double.MaxValue };
+
+        Assert.Throws<ArgumentException>(() =>
+            new LinearWaveBasin1D(3, 1d, 1d, 0.1d, extremeProfile));
+    }
+
+    [Test]
     public void Advance_PropagatesLocalizedDisturbanceDeterministically()
     {
         var initial = CreatePulse(41, 20);
