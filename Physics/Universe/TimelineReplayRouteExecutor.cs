@@ -19,8 +19,8 @@ public static class TimelineReplayRouteExecutor
     /// <returns>Reconstructed model state at the plan's target tick.</returns>
     /// <remarks>
     /// This coordinator does not own persistence or model semantics. A boundary comparison is required because
-    /// every interval is independently anchored by its supplied checkpoint. For exact replay, the adapter must
-    /// provide deterministic operations and a comparison appropriate to its state representation.
+    /// every interval after the first is independently anchored by its supplied checkpoint. For exact replay,
+    /// the adapter must provide deterministic operations and a comparison appropriate to its state representation.
     /// </remarks>
     public static TState Reconstruct<TState>(
         TimelineReplayPlan plan,
@@ -73,44 +73,28 @@ public static class TimelineReplayRouteExecutor
         TState? previousBoundaryState = default;
         bool hasPreviousBoundary = false;
 
-        for (int i = 0; i < segments.Count; i++)
+        foreach (TimelineReplaySegment segment in segments)
         {
-            TimelineReplaySegment segment = segments[i];
-            TState boundaryState = TimelineReplayExecutor.Reconstruct(
-                segment,
-                segment.Interval.StartExclusiveTick,
-                restore,
-                applyEvent,
-                advance);
-
-            if (hasPreviousBoundary && !statesMatch(previousBoundaryState!, boundaryState))
+            if (hasPreviousBoundary)
             {
-                throw new InvalidOperationException(
-                    $"The checkpoint state at timeline boundary tick {segment.Interval.StartExclusiveTick} " +
-                    $"does not match the state reconstructed from the preceding interval.");
+                TState checkpointBoundaryState = restore(segment.History.Checkpoint);
+                if (!statesMatch(previousBoundaryState!, checkpointBoundaryState))
+                {
+                    throw new InvalidOperationException(
+                        $"The checkpoint state at timeline boundary tick {segment.Interval.StartExclusiveTick} " +
+                        "does not match the state reconstructed from the preceding interval.");
+                }
             }
 
-            TState reconstructed = TimelineReplayExecutor.Reconstruct(
+            previousBoundaryState = TimelineReplayExecutor.Reconstruct(
                 segment,
                 segment.Interval.EndInclusiveTick,
                 restore,
                 applyEvent,
                 advance);
-
-            previousBoundaryState = reconstructed;
             hasPreviousBoundary = true;
-
-            if (i == segments.Count - 1)
-            {
-                return TimelineReplayExecutor.Reconstruct(
-                    segment,
-                    plan.TargetTick,
-                    restore,
-                    applyEvent,
-                    advance);
-            }
         }
 
-        throw new InvalidOperationException("The replay route did not produce a target state.");
+        return previousBoundaryState!;
     }
 }
