@@ -80,6 +80,7 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Timelines & multiverse](docs/TIMELINES_AND_MULTIVERSE.md) — immutable timeline lineage and the still-unimplemented checkpoint/replay/isolation contract
 - [Deterministic history & extensions](docs/DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) — reverse-order limits, replay, optional prediction, rollback, and branch isolation
 - [Physics domain map](docs/PHYSICS_DOMAIN_MAP.md) — broad physical territory, domain coupling, primitive foundations, and build order
+- [Hydrodynamics World Demonstrator](docs/HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) — staged plan for a wave-filled basin, terrain, buildings, floating boats, validation gates, and eventual large-world scaling
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
