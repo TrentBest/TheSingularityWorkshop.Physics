@@ -66,8 +66,9 @@ public static class ContactImpulseResolver
         var impulse = contact.NormalFromAToB * impulseMagnitude;
         var velocityA = bodyA.LinearVelocity - (impulse * inverseMassA);
         var velocityB = bodyB.LinearVelocity + (impulse * inverseMassB);
-        if (!IsFinite(velocityA) || !IsFinite(velocityB))
-            throw new OverflowException("Contact response produced a non-finite body velocity.");
+        var achievedRelativeVelocity = velocityB - velocityA;
+        if (!IsFinite(velocityA) || !IsFinite(velocityB) || !IsFinite(achievedRelativeVelocity))
+            throw new OverflowException("Contact response produced a non-finite body or relative velocity.");
 
         var achievedA = new RigidBodyState(
             bodyA.BodyId, bodyA.Pose, velocityA, bodyA.AngularVelocity,
@@ -77,7 +78,7 @@ public static class ContactImpulseResolver
             contact.StepIndex, contact.ElapsedTime);
         var resolvedContact = new ContactObservation(
             contact.ContactId, contact.BodyAId, contact.BodyBId,
-            contact.Point, contact.NormalFromAToB, velocityB - velocityA,
+            contact.Point, contact.NormalFromAToB, achievedRelativeVelocity,
             contact.SignedSeparation, contact.IsActive, contact.StepIndex,
             contact.ElapsedTime, contact.NormalForceNewtons, impulseMagnitude);
 
