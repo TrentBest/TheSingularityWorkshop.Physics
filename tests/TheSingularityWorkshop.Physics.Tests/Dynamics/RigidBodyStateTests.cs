@@ -29,6 +29,13 @@ public sealed class RigidBodyStateTests
         Assert.That(state.AngularVelocity, Is.EqualTo(new Vector3d(0d, 0d, 0.5d)));
         Assert.That(state.StepIndex, Is.EqualTo(12));
         Assert.That(state.ElapsedTime, Is.EqualTo(0.6d));
+        Assert.That(state.IsValid, Is.True);
+    }
+
+    [Test]
+    public void DefaultSnapshot_IsExplicitlyInvalid()
+    {
+        Assert.That(default(RigidBodyState).IsValid, Is.False);
     }
 
     [Test]
@@ -36,6 +43,13 @@ public sealed class RigidBodyStateTests
     {
         Assert.Throws<ArgumentException>(() =>
             new RigidBodyState(" ", IdentityPose, Vector3d.Zero, Vector3d.Zero, 0, 0d));
+    }
+
+    [Test]
+    public void Constructor_RejectsDefaultPose()
+    {
+        Assert.Throws<ArgumentException>(() =>
+            new RigidBodyState("body", default, Vector3d.Zero, Vector3d.Zero, 0, 0d));
     }
 
     [Test]
