@@ -15,7 +15,7 @@ This roadmap separates architecture from completed functionality. Items move to 
 
 - [x] Map the full planned domain space, its major couplings, first usable slices, guardrails, and implementation status ([Physics Domain Map](PHYSICS_DOMAIN_MAP.md)).
 - [ ] Define reusable quantity/state conventions, model provenance, boundary conditions, conservation diagnostics, and observation contracts across domains.
-- [ ] Establish a tested minimum vertical slice for thermodynamics, hydrodynamics, materials, reactions, fields, and waves before deepening only one domain.
+- [ ] Establish a tested minimum vertical slice for thermodynamics, hydrodynamics, materials, reactions, fields, and waves before deepening only one domain. A first lumped thermal-state primitive is proposed separately; it is not complete until its CI validation succeeds.
 - [ ] Use a bounded fire/combustion experiment as a cross-domain integration test after its prerequisite models exist; it is not a substitute for broader domain coverage.
 
 The domain map is architecture, not implementation. Thermodynamics, hydrodynamics, heat transfer, material response, chemical reactions, and combustion remain unimplemented on `development` until their models, tests, and scope are present.
