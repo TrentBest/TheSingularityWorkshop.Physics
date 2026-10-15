@@ -61,7 +61,7 @@ public sealed class ConstantAccelerationTimelineReplayTests
         return new KinematicState(
             ReadDouble(payload.AsSpan(0, sizeof(double))),
             ReadDouble(payload.AsSpan(sizeof(double), sizeof(double))),
-            ReadDouble(payload.AsSpan(sizeof(double) * 2, sizeof(double)));
+            ReadDouble(payload.AsSpan(sizeof(double) * 2, sizeof(double))));
     }
 
     private static KinematicState ApplyEvent(KinematicState state, TimelineEvent item)
