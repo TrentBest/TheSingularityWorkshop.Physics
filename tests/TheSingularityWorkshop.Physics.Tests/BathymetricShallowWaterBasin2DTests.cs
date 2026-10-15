@@ -112,6 +112,44 @@ public sealed class BathymetricShallowWaterBasin2DTests
     }
 
     [Test]
+    public void Advance_WaterFlowsDownhillAcrossMultipleStepsAndConservesVolume()
+    {
+        const int width = 5;
+        const int height = 3;
+        var bed = new double[width * height];
+        var depth = new double[bed.Length];
+        var elevations = new[] { 0.4d, 0.3d, 0.2d, 0.1d, 0d };
+
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
+        {
+            var i = y * width + x;
+            bed[i] = elevations[x];
+            if (x < 2)
+                depth[i] = 0.3d;
+        }
+
+        var basin = new BathymetricShallowWaterBasin2D(width, height, 1d, 1d, 0.002d, depth, bed);
+        var initialVolume = basin.WaterVolume;
+        var initialHighGroundDepth = basin.SampleDepth(0, 1);
+
+        for (var step = 0; step < 80; step++)
+            basin.Advance();
+
+        var finalDepth = basin.SnapshotDepth();
+        for (var i = 0; i < finalDepth.Length; i++)
+            Assert.That(double.IsFinite(finalDepth[i]) && finalDepth[i] >= 0d, Is.True,
+                $"Cell {i} has invalid depth after multi-step wetting.");
+        Assert.That(basin.SampleDepth(2, 1), Is.GreaterThan(0d),
+            "Water should reach the initially dry, lower-elevation cell over multiple steps.");
+        Assert.That(basin.SampleDepth(0, 1), Is.LessThan(initialHighGroundDepth),
+            "The initially wet upper cell should lose some water as downhill flow develops.");
+        Assert.That(basin.WaterVolume, Is.EqualTo(initialVolume).Within(1e-10),
+            "Closed boundaries must conserve water during downhill redistribution.");
+        Assert.That(basin.StepCount, Is.EqualTo(80));
+    }
+
+    [Test]
     public void Advance_SurfaceDisturbanceEvolvesAndConservesWaterOverTerrain()
     {
         const int width = 15;
