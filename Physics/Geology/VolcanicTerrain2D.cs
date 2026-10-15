@@ -81,7 +81,7 @@ public sealed class VolcanicTerrain2D
     /// <exception cref="ArithmeticException">The deposition cannot be represented as finite terrain state.</exception>
     public double DepositEruption(int ventX, int ventY, double radius, double eruptedVolume)
     {
-        var ventIndex = GetIndex(ventX, ventY);
+        _ = GetIndex(ventX, ventY);
         if (!double.IsFinite(radius) || radius <= 0d)
             throw new ArgumentOutOfRangeException(nameof(radius), "Radius must be finite and positive.");
         if (!double.IsFinite(eruptedVolume) || eruptedVolume <= 0d)
@@ -129,7 +129,6 @@ public sealed class VolcanicTerrain2D
 
         _elevation = nextElevation;
         NetDepositedVolume = nextNetVolume;
-        _ = ventIndex;
         return maximumRise;
     }
 
