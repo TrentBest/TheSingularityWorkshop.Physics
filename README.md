@@ -78,6 +78,7 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Articulated mechanics contract](docs/ARTICULATED_MECHANICS_CONTRACT.md) — proposed Physics-to-controller observations for contacts, joint loads, structural failure, and topology ownership
 - [Universe & observer resolution](docs/UNIVERSE_AND_OBSERVER_RESOLUTION.md) — persistent universe state, deterministic cells, relevance tiers, conservative broadphase, and multiscale handoffs
 - [Timelines & multiverse](docs/TIMELINES_AND_MULTIVERSE.md) — immutable timeline lineage and the still-unimplemented checkpoint/replay/isolation contract
+- [Deterministic history & extensions](docs/DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) — reverse-order limits, replay, optional prediction, rollback, and branch isolation
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
