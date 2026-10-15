@@ -15,6 +15,13 @@ public sealed class Pose3dTests
 
         Assert.That(pose.Position, Is.EqualTo(new Vector3d(1d, 2d, 3d)));
         Assert.That(pose.Orientation, Is.EqualTo(Quaterniond.Identity));
+        Assert.That(pose.IsValid, Is.True);
+    }
+
+    [Test]
+    public void DefaultPose_IsExplicitlyInvalid()
+    {
+        Assert.That(default(Pose3d).IsValid, Is.False);
     }
 
     [Test]
