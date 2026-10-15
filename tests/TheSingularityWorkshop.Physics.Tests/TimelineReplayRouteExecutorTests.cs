@@ -11,12 +11,12 @@ public sealed class TimelineReplayRouteExecutorTests
     public void ReconstructCarriesStateAcrossForkAndValidatesBoundaryCheckpoint()
     {
         TimelineReplayPlan plan = MakePlan();
-        IReadOnlyList<TimelineReplaySegment> segments = MakeSegments(plan, childCheckpointValue: 40);
+        IReadOnlyList<TimelineReplaySegment> segments = MakeSegments(plan, childCheckpointValue: 44);
 
         int result = TimelineReplayRouteExecutor.Reconstruct(
             plan, segments, Restore, ApplyEvent, Advance, (left, right) => left == right);
 
-        // Parent reaches fork tick 4 with value 40; child adds 7 at tick 6 and reaches tick 7.
+        // Parent reaches fork tick 4 with value 44; child advances two ticks, adds 7 at tick 6, and reaches tick 7.
         Assert.That(result, Is.EqualTo(53));
     }
 
