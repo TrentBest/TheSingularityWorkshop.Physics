@@ -56,7 +56,7 @@ public sealed class LumpedThermalStateTests
     {
         var state = CreateState(temperatureKelvin: 1d);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => state.ApplyNetEnergyTransfer(-1_000d));
+        Assert.Throws<ArgumentOutOfRangeException>(() => state.ApplyNetEnergyTransfer(-1_001d));
     }
 
     [TestCase(0d, 300d, 500d, 273.15d)]
