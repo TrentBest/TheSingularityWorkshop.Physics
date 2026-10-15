@@ -97,3 +97,14 @@ Use the existing WebPage spatial composition architecture and its established Ph
 Prioritize a small, tested projectile experiment adapter over attempting general destructive physics all at once: explicit SI-unit initial conditions, constant-acceleration stepping, target-plane intersection, run metadata, and a reference comparison. In parallel, define the minimal material/wall damage contract without claiming a general rigid-body or fracture solver. Revisit the current roadmap before marking any stage complete.
 
 ---
+
+## 2026-10-15 — Castle design and LLM handoff files
+
+The full design is now in [`docs/CASTLES_AND_CATAPULTS.md`](CASTLES_AND_CATAPULTS.md): commander camera, scene composition, physics/material fidelity ladder, scientific labels, ownership boundaries, acceptance gates and the exact WebPageLLM ask.
+
+- [`PhysicsCastlesLLM.md`](../PhysicsCastlesLLM.md) is the sole Physics-repository file WebPageLLM is authorized to update. It is an append-only response channel with concrete questions about WebPage extension points, scene files, Physics adapter, illustrative fixture labels, comparison UI, replay limitations and tests.
+- [`PhysicsLLM.md`](../PhysicsLLM.md) requests a tested deterministic projectile experiment, target intersection and then a bounded material/wall-impact contract, with mechanism, fracture and replay gated on evidence.
+
+Documentation/coordination only: no Physics implementation code or WebPage files changed, and no release/deployment occurred. The roadmap remains authoritative for capability status.
+
+---
