@@ -24,3 +24,74 @@ Please report:
 ## Response log
 
 _No WebPageLLM response has been recorded yet._
+
+---
+
+## 2026-10-15 — WebPageLLM response: Castle Siege experience
+
+**Intent:** Facilitate the destructive demonstration as a first-class, visually compelling experience. The castle is meant to be struck; the trebuchet is meant to be operated and experimented with; wall damage and failure are central outcomes to build toward. This response defines a concrete integration path, not a reason to defer the experience.
+
+### 1. Existing WebPage composition points
+
+- The WebPage spatial architecture is documented in [TheSingularityWorkshop/Workshop/Spatial/README.md](https://github.com/TrentBest/WebPage/blob/master/TheSingularityWorkshop/Workshop/Spatial/README.md): manifest → composition → generic renderer → Experience. Use this architecture rather than creating a parallel scene/navigation system.
+- [SpatialPlaceCatalog.cs](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Workshop/Spatial/SpatialPlaceCatalog.cs) defines authoritative SpatialPlace records and distinguishes SpatialDomain.Workshop from SpatialDomain.SingularityCity. Register Castle Siege as a city destination (suggested stable identity: city.castle-siege, scene ID castle-siege) if it is presented as a city attraction; place any solver-building/experiment tooling in Workshop only if a separate tool destination is useful.
+- [SpatialUniverseManifest.cs](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Workshop/Spatial/SpatialUniverseManifest.cs) already reserves an island core and declares open north/east/south/west parcels. A castle experience can occupy a dedicated Experience parcel; do not repurpose the fixed Workshop anchor.
+- The existing Grand Central destination pattern is represented by SpatialTransitManifest and its destination IDs. Once registered, Castle Siege can be added as a transit destination through the existing manifest pattern rather than a new station renderer.
+- The existing [Physics Replay / Shareable Moments handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/PHYSICS_REPLAY_WEBPAGELLM_HANDOFF.md) is the correct boundary for future replay UX. It does not yet provide a ready-made browser physics-world reconstruction adapter.
+
+### 2. Minimal scene plan
+
+Compose one scene with: terrain/approach; one recognizable stone castle (curtain wall, tower, battlements, distinct gate/target section); one foreground trebuchet with visible arm/release region; one projectile; one commander camera behind and offset to the engine; one target marker; compact controls and a small telemetry overlay. Keep the castle silhouette and projectile path readable together. Camera, lighting, dust, decals, and animation remain presentation state, not solver state.
+
+The scene should be attractive and explorable immediately. If trajectory/impact output is not yet connected to Physics, show a visible **ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED** label for those specific outputs. Do not let that label diminish the authored castle, siege engine, camera, or interaction design.
+
+### 3. WebPage adapter proposal
+
+Use a small replaceable boundary between scene controls and the Physics-owned contract. Names below are proposals, not existing APIs:
+
+- ProjectileExperimentInput: schema/model version; unique run ID; initial position in metres; launch speed in m/s for the first ideal-projectile stage; elevation/azimuth with explicitly declared stored units; projectile mass in kg; gravity vector in m/s²; logical timestep in seconds; target geometry and coordinate-frame identity.
+- ProjectileExperimentResult: matching run/input/model identity; ordered trajectory samples with logical time in seconds, position in metres and velocity in m/s; computed target intersection (or explicit no-hit); impact point/normal; flight time; impact velocity; momentum in kg·m/s; kinetic energy in joules; model assumptions, validity/limitations, and capability flags.
+- Coordinate frame: right-handed, z-up; azimuth measured in the x-y plane; elevation measured from the x-y plane. Record the convention with the run and test it.
+- Use SI units at the adapter boundary. Convert only for display/input widgets, never silently inside the contract. Camera movement must not change the run.
+- Target intersection must be calculated from the trajectory and target geometry. Compare deterministic stepping to the analytical constant-acceleration solution within a declared tolerance.
+- The first stage uses an explicit launch-speed experiment. A draw-back/tension/counterweight control becomes a physical control only after a tested mechanism model maps it to launch state; before that, make it explicitly visual-only or omit it.
+- Capability flags should distinguish at least ideal-projectile integration, target intersection, impact diagnostics, material damage, structural failure, and authoritative replay. Unsupported flags stay false; the UI can still show the intended future progression.
+
+### 4. Build toward destruction in visible increments
+
+1. **Scene and controls:** castle, engine, camera, target selection, and clear input readouts.
+2. **Deterministic projectile:** aim/fire using the Physics result; show trajectory and target hit/miss with model/version and assumptions.
+3. **Impact diagnostics:** impact point, velocity, momentum, and energy. These explain the strike but are not themselves a masonry damage law.
+4. **Bounded wall damage:** a small wall section with declared material parameters and tested thresholds; expose the reason for each damage transition.
+5. **Structural failure and debris:** add failure/topology events only after the wall-response contract is tested; drive dust/sound/debris presentation from those events.
+6. **Trebuchet mechanism:** evolve the launch-speed proxy into a tested mechanism model covering the declared scope (arm geometry/inertia, counterweight or tension, release condition and losses).
+7. **Replay and branching:** connect after a concrete world adapter and persistence/checkpoint reconstruction can restore the same experiment.
+
+The first scene need not wait for stages 4–7 to be visually useful. Implement each stage as a meaningful increment and label the active physics capability.
+
+### 5. Baseline / variant / constants
+
+Keep the baseline immutable. A variant copies the input record and changes one selected supported parameter at a time (e.g. elevation, launch speed, mass, gravity, or a validated material parameter). Give each run its own ID and retain model/schema version, units, assumptions, and exact changed field. Compare trajectory, target intersection, flight time, impact velocity, momentum/energy, and—only when implemented—damage state. A changed gravity value is an alternate model experiment, not a claim about the actual universe.
+
+### 6. Replay / moments boundary
+
+Do not call a fixture scrubber authoritative replay. The existing replay executor is a model-driven seam requiring caller-supplied checkpoint decoding/event application; it is not a castle-world serializer or browser reconstruction adapter. Until those exist, retain baseline/variant inputs and computed result snapshots for comparison, and label replay/scrubbing as unavailable or illustrative. Later, persist initial state, ordered parameter changes/events, model versions, checkpoints, and world/solver identity; then test deterministic restoration before advertising replay or shareable Moments.
+
+### 7. Proposed WebPage work and acceptance checks
+
+**Likely WebPage touchpoints** (confirm current branch layout before implementation):
+- TheSingularityWorkshop/Workshop/Spatial/SpatialPlaceCatalog.cs — register the city destination.
+- TheSingularityWorkshop/Workshop/Spatial/SpatialUniverseManifest.cs — reserve/assign an Experience parcel only if the existing Experience composition needs it.
+- Existing transit destination manifest — add a route from Grand Central when the destination is registered.
+- A dedicated Castle Siege manifest/builder/Experience using existing spatial composition patterns; do not put physics equations in Razor or duplicate solver behavior.
+- Focused tests for stable place identity and resolution, manifest bounds/non-overlap, input bounds/units, deterministic same-input runs, analytical comparison, target hit/miss, immutable baseline versus variant, honest capability labels, and lazy load/navigation cleanup.
+
+Acceptance: a visitor can reach the scene through existing navigation; the commander view shows engine and target; every control works or clearly reports its status; physics-backed values originate from the Physics adapter; a repeated input reproduces the declared deterministic result; damage is shown only when the wall-response model returns it; no fake replay claim; no release/deployment.
+
+### 8. Ownership and next step
+
+Physics owns the solver, units, target intersection, impact/material response, run record, and tests. WebPage owns the scene, camera, controls, overlays, comparison UI, and lazy loading. FSM_API/FSM_COS can later own appropriate lifecycle/composition and cadence boundaries; browser frame rate is not physics time. Visualize/Renderer remain downstream presentation consumers, and Gestures may choreograph crew from declared events without becoming a Physics dependency.
+
+**Next step:** establish the first Castle Siege Experience in WebPage's existing spatial composition, with the commander camera and authored castle/trebuchet. In parallel, implement and test the deterministic projectile adapter contract in Physics. Connect them when the concrete contract is available, then move directly into bounded wall-impact/damage work.
+
+**Repository boundary:** this response was appended only to root PhysicsCastlesLLM.md in the Physics repository. No other Physics file was changed by this response. No merge, release, publication, or deployment occurred.
