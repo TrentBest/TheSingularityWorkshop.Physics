@@ -1,29 +1,27 @@
-# Hydrodynamics: 2D shallow-water basin (first increment)
+# Hydrodynamics: shallow-water basin and bathymetry
 
-This increment introduces a renderer-independent, depth-averaged two-dimensional shallow-water model on a regular grid. It advances water depth and depth-integrated horizontal momentum using conservative Rusanov interface fluxes. All four outer boundaries are impermeable walls. The initial domain is a flat bed with strictly positive water depth in every cell.
+The flat-bed prototype and the terrain-aware increment are renderer-independent, depth-averaged two-dimensional shallow-water models on a regular rectangular grid. They advance water depth and depth-integrated horizontal momentum with finite-volume Rusanov fluxes and impermeable outer walls.
+
+## Bathymetric increment
+
+`BathymetricShallowWaterBasin2D` accepts a cell-centered bed-elevation field as well as initial water depth. It reconstructs the left and right water depths at each face against the higher of the two bed elevations, evaluates the Rusanov flux on those reconstructed states, then applies side-specific hydrostatic pressure corrections. This hydrostatic reconstruction is designed to preserve a still lake with a constant free-surface elevation over uneven terrain.
 
 ## State and units
 
-- Depth \(h\): metres.
-- Depth-integrated momenta \(hu, hv\): metres squared per second.
+- Bed elevation and free-surface elevation: metres.
+- Water depth (h): metres; depth-integrated momenta (hu,hv): square metres per second.
 - Cell dimensions: metres; time step: seconds; gravity: metres per second squared.
-- Water volume diagnostic: sum of cell depth multiplied by cell area, in cubic metres.
-- Flux update: conservative finite-volume form on a uniform rectangular grid.
-- Stability: fixed time step must satisfy the implementation's 2D CFL rate bound, \(\Delta t \sum_d (|u_d|+\sqrt{gh})/\Delta x_d \le 0.45\).
+- Water volume: sum of cell depths multiplied by cell area, in cubic metres.
+- Fixed-step stability guard: (Delta t sum_d (|u_d|+sqrt{gh})/Delta x_d le 0.45).
 
-## Boundaries and numerical guardrails
+## Numerical guardrails and current evidence
 
-The outer faces have zero normal mass flux and hydrostatic pressure flux, representing an impermeable wall. Interior face fluxes use local Lax-Friedrichs/Rusanov dissipation. The model validates its CFL bound before each step and computes the candidate state before committing it; non-finite values or non-positive depth reject the step without replacing the current state.
-
-## Demonstrated by tests
-
-- Uniform still water remains still.
-- A localized depth perturbation evolves.
-- Closed-wall volume remains constant within floating-point tolerance.
-- Depth remains positive and finite for the tested run.
-- Unsafe CFL input is rejected.
-- Snapshot arrays cannot mutate solver state.
+- Outer faces impose zero normal mass flux and hydrostatic pressure flux.
+- The terrain-aware model rejects non-finite bed elevations and invalid initial depths.
+- Each step builds a candidate state and commits only after all cells pass finite/positive-depth checks.
+- Automated tests cover a still lake over a non-flat bed, water-volume balance, and defensive snapshots.
+- The flat-bed solver's tests additionally cover disturbance propagation, repeatability, and CFL rejection.
 
 ## Explicit limitations
 
-This is an initial shallow-water core, not a complete world simulator. It currently assumes a flat bed and positive depth everywhere. It does not yet implement variable terrain, dry cells/shorelines, friction, buildings, obstacles, boats, open boundaries, breaking waves, spray, or full three-dimensional fluid dynamics. The Rusanov flux is deliberately robust and diffusive; later accuracy work should add grid-refinement and convergence evidence before making stronger fidelity claims.
+The terrain-aware model currently requires positive depth in every cell. It does not yet implement wet/dry shorelines, friction, obstacles, buildings, boats, moving terrain, erosion, sediment transport, open boundaries, breaking-wave physics, or three-dimensional flow. The terrain field is fixed during a run. Rusanov fluxes are robust but diffusive; grid-refinement and convergence evidence is still required before making stronger accuracy claims. This increment is a coupled numerical foundation, not a complete world or ocean simulator.
