@@ -97,6 +97,7 @@ public sealed class TimelineLineage
 
         if (!string.Equals(checkpoint.RealityId, RealityId, StringComparison.Ordinal)
             || targetTick < checkpoint.Tick
+            || targetTick < Target.ForkTick
             || targetTick > Target.HeadTick)
         {
             return false;
