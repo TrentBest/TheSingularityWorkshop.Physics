@@ -11,6 +11,39 @@ This must not be a pre-rendered destruction animation presented as simulation. E
 
 The showcase should demonstrate deterministic repeatable experiments; inspectable inputs, units, assumptions and model versions; baseline-versus-variant comparison; materials and bounded damage before broad fracture claims; multirate scheduling separate from render cadence; and history/replay only when authoritative reconstruction is implemented.
 
+### Where Castle Siege belongs in the larger world
+
+Castle Siege is a **Singularity City destination that consumes Workshop capabilities**. It is not itself the Workshop, and the Workshop is not the entire city.
+
+The intended product relationship is:
+
+- **The Workshop is the tool-making and experiment-making environment.** Its laboratory lets a visitor configure, run, inspect, and reuse Physics capabilities without inheriting every constraint of a particular game or venue. The same projectile/material models should be reusable in other experiences where their contracts apply.
+- **Singularity City is the persistent science-fiction world.** Its buildings, public spaces, transit, services, and events give Digitens and visitors reasons to travel, gather, work, and participate. The Workshop remains a central creation/composition hub within the City, not a substitute for its destinations.
+- **Castle Siege is a hosted attraction/experience.** Think of the destination pattern of a Medieval Times-style venue: travel to a place for a spectacle, then discover that this particular spectacle is also an honest, inspectable experiment. Do not copy its branding or turn the experience into a disconnected game page.
+- **“Extreme Larping” is a proposed name for a central downtown park or public gathering district**, not yet a registered destination or implemented feature. The park can be a recognizable civic landmark for meetups, scheduled demonstrations, reenactment events, and groups of Digitens. Castle Siege may be a venue within that district or a nearby attraction reached from it. Keep the park and the castle venue as separate spatial concepts so the park can host other experiences later.
+
+#### Visitor journey
+
+1. The visitor enters the existing Singularity City/Explore spatial experience and sees the city as a place, not just a list of laboratory demos.
+2. They discover the central park provisionally named **Extreme Larping** through city wayfinding, a city map, an event listing, or a transit stop. Do not add a parallel navigation system.
+3. From the park, they select the **Castle Siege** attraction. If the city transit experience is the appropriate existing route, travel is represented through that shared transit/world model rather than a hard-coded teleport disguised as travel. A direct destination selection may remain available for usability.
+4. Arrival resolves to a registered city SpatialPlace and its Experience/scene. The existing SpatialPlaceCatalog already separates SpatialDomain.SingularityCity from SpatialDomain.Workshop; WebPageLLM should confirm the exact registration and scene-extension path before implementing. Candidate identities such as city.castle-siege / castle-siege are proposals, not current registrations.
+5. The attraction opens with the commander’s view behind and offset from the siege engine, facing the castle. The visitor can observe the spectacle first, then inspect or configure only the experiment parameters supported by the Physics model.
+6. A clear **“Explore this experiment in the Workshop Lab”** path opens the reusable laboratory/tooling experience with the same model contract and a copied or referenced run configuration. The lab is where users deliberately study and reuse Physics; the venue remains the immersive context that motivates the experiment.
+7. A result can be brought back to the venue as a run summary/variant, but it must retain its run/model identity and disclose model limitations. Do not imply that a lab experiment changes a persistent city/castle state unless a real, authorized persistence contract connects them.
+
+#### World and capability boundaries
+
+- Digitens can attend public events, work as venue staff, gather in the park, or travel between places when those behaviors are supported by the City’s actual simulation. Do not invent a crowd simulation or attendance economy as a prerequisite for the first Castle Siege slice.
+- The city attraction owns its place, scene, visitor journey, and presentation. Physics owns equations, model state, run records, and observations. Workshop tooling owns reusable experiment workflows; it should not fork the equations for a special castle-only version.
+- The same Physics capability may be consumed by Castle Siege, a Workshop Lab experiment, and future materials/engineering experiences. Each consumer must state what it actually uses; shared Physics does not imply that every consumer has every capability.
+- “Extreme Larping,” the park, venue operations, city travel, Digitens attendance, and the link back to the Lab are design proposals until registered and tested in WebPage. The current catalog has existing city places such as Singularity Transit and Singularity Station, but no confirmed Castle Siege or Extreme Larping registration in the inspected SpatialPlaceCatalog.cs.
+- Keep this visitor journey aligned with the existing manifest → composition → generic renderer → Experience architecture and authoritative spatial destination resolution. Do not implement a new navigation framework in the Physics repository.
+
+#### WebPageLLM follow-up
+
+In the authorized append-only response channel PhysicsCastlesLLM.md, please confirm how this city/venue/lab relationship fits the existing Explore host and SpatialPlace/Experience extension points. Specifically identify whether the park should be a separate registered city destination, how the attraction should be discoverable from city wayfinding/transit, and how a run configuration can be carried into the Workshop Lab without duplicating the Physics model. Do not claim these routes or registrations exist until verified in WebPage source. This Physics-side brief is the design request; WebPageLLM remains responsible for its own response and WebPage implementation.
+
 ## 2. Scene composition and camera
 
 - **Foreground:** one readable trebuchet/catapult, arm and release area, projectile, compact controls.
