@@ -110,7 +110,15 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Guardrail:** generated elevation is physical state; labels such as “cliff,” “ridge,” or “volcanic cone” are expert-domain interpretations of measured geometry and material evidence. Do not confuse a procedural shape kernel with a full tectonic or eruption model.
 - **Current status:** the volcanic deposition primitive is implemented on the open `work/volcanic-terrain-source` branch; tectonic motion, magma dynamics, and erosion remain future work.
 
-### K. Persistent worlds, scale, and history
+### K. Stellar physics and planetary energy
+- **Covers:** stellar energy generation and structure at declared levels of fidelity; luminosity and spectral output; radiation through space; planetary absorption, reflection, thermal storage, and later atmosphere/ocean coupling.
+- **Key exchanges:** luminosity and spectrum; irradiance at distance; absorbed/emitted power; thermal energy; orbital and surface geometry.
+- **First usable slice:** a source model with explicit luminosity and a tested inverse-square radiation law, coupled to an energy-accounted planetary thermal budget.
+- **Deeper model:** a spherically symmetric stellar-structure solver using mass continuity, hydrostatic equilibrium, energy generation, an equation of state, opacity, and radiative/convective transport assumptions; later compare with trusted stellar reference models.
+- **Guardrail:** do not simulate microscopic fusion events when an effective model preserves the required observables. Distinguish luminosity, irradiance, and received energy; a radiation source alone is not a stellar interior or a climate model.
+- **Current status:** planned; see [Stellar physics and planetary energy roadmap](STELLAR_PHYSICS_AND_PLANETARY_ENERGY.md). No stellar solver or planetary irradiation coupling is claimed implemented.
+
+### L. Persistent worlds, scale, and history
 - **Covers:** deterministic spatial addressing, multirate simulation, coarse/fine representations, persistence, checkpointing, replay, and isolated timeline branches.
 - **Key exchanges:** conservative state handoffs, elapsed logical time, provenance, and authoritative state.
 - **Current status:** deterministic grid, logical-time ledger, and timeline/replay contracts exist; durable world persistence, conservative multiscale handoffs, and complete world reconstruction remain future work.
