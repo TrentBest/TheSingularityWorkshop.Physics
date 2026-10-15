@@ -61,10 +61,10 @@ public readonly record struct ContactObservation
         !string.IsNullOrWhiteSpace(BodyAId) &&
         !string.IsNullOrWhiteSpace(BodyBId) &&
         !string.Equals(BodyAId, BodyBId, StringComparison.Ordinal) &&
-        Point.IsFinite() &&
-        NormalFromAToB.IsFinite() &&
+        IsFinite(Point) &&
+        IsFinite(NormalFromAToB) &&
         IsUnitNormal(NormalFromAToB) &&
-        RelativeVelocity.IsFinite() &&
+        IsFinite(RelativeVelocity) &&
         double.IsFinite(SignedSeparation) &&
         IsOptionalNonNegativeFinite(NormalForceNewtons) &&
         IsOptionalNonNegativeFinite(NormalImpulseNewtonSeconds) &&
@@ -133,6 +133,9 @@ public readonly record struct ContactObservation
             return false;
         }
     }
+
+    private static bool IsFinite(Vector3d value) =>
+        double.IsFinite(value.X) && double.IsFinite(value.Y) && double.IsFinite(value.Z);
 
     private static bool IsOptionalNonNegativeFinite(double? value) =>
         value is null || (double.IsFinite(value.Value) && value.Value >= 0d);
