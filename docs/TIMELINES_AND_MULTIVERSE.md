@@ -1,6 +1,6 @@
 # Timelines, Time Travel, and Parallel Realities
 
-**Status:** design contract with immutable lineage and replay-route planning types. Checkpoint storage, event replay, physical restoration, and reality orchestration are not implemented yet.
+**Status:** validated lineage/replay contracts plus a model-driven single-segment replay executor. Durable checkpoint storage, solver-specific restoration, multi-segment branch execution, portable moment packages, and reality orchestration are not implemented yet.
 
 ## The core idea
 
@@ -33,7 +33,7 @@ Replay must record model versions, input/event order, logical timestep, determin
 
 A branch preserves its ancestry. It must not mutate the parent's event history or checkpoints. A branch may refer to shared immutable history until divergence and then store only its own events/checkpoints. Garbage collection of unreachable branches is a separate, explicit retention policy; it must not silently erase a branch the user still owns.
 
-The `TimelineBranch` type represents validated lineage metadata and a represented logical head. `TimelineLineage` validates a root-to-target ancestry within one reality and can assess whether a checkpoint is eligible as a starting point for a requested tick, including the shared-history boundary at each fork. This is only an ancestry/range check: it does not establish schema compatibility, event continuity, or replay fidelity. `PhysicsCheckpoint` provides an immutable envelope for opaque serialized state bytes, identity/version metadata, and a SHA-256 payload digest. `TimelineEvent` represents one ordered input/event record, and `TimelineHistorySegment` validates an event sequence against a checkpoint and target tick. `TimelineReplayPlan` adds a forward route from an eligible checkpoint through timeline-owned intervals, splitting at each fork and requiring exact schema/model version labels. Child-owned events begin strictly after the fork tick; the fork tick remains part of inherited history. This route is still a plan, not loaded event data or an executor. These are contracts and validation primitives only: there is still no durable store, model-specific serializer, replay executor, solver restoration, or proof of replay fidelity. See [Deterministic history and optional extensions](DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) for the distinction between replaying forward and reversing operations, plus the proposed seams for prediction and rollback.
+The `TimelineBranch` type represents validated lineage metadata and a represented logical head. `TimelineLineage` validates a root-to-target ancestry within one reality and can assess whether a checkpoint is eligible as a starting point for a requested tick, including the shared-history boundary at each fork. This is only an ancestry/range check: it does not establish schema compatibility, event continuity, or replay fidelity. `PhysicsCheckpoint` provides an immutable envelope for opaque serialized state bytes, identity/version metadata, and a SHA-256 payload digest. `TimelineEvent` represents one ordered input/event record, and `TimelineHistorySegment` validates an event sequence against a checkpoint and target tick. `TimelineReplayPlan` adds a forward route from an eligible checkpoint through timeline-owned intervals, splitting at each fork and requiring exact schema/model version labels. Child-owned events begin strictly after the fork tick; the fork tick remains part of inherited history. The route is still a plan rather than a history store. `TimelineReplaySegment` validates a history fragment against one route interval. `TimelineReplayExecutor` now restores that segment's checkpoint through a caller-provided decoder, applies its events in sequence, and advances the caller's model to an inclusive target tick; the target can be earlier than the interval end, which provides a tested foundation for scrubbing. The caller supplies event application and deterministic advancement, so this seam does not make a model deterministic or prove physical fidelity. Execution currently covers one validated segment at a time; a complete fork-aware multi-segment coordinator, durable store, model-specific serializer/solver restoration, and fidelity verification remain future work. See [Deterministic history and optional extensions](DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) for the distinction between replaying forward and reversing operations, plus the proposed seams for prediction and rollback.
 
 ## Shareable moments: replay, scrub, and remix
 
@@ -63,7 +63,7 @@ Privacy and ownership are product requirements, not afterthoughts. A share must 
 
 For adoption, optimize the path from “that was amazing” to “watch this” to “try my version.” Keep a small replay lightweight enough to share, disclose large dependencies before download, and offer a clear fallback when exact reconstruction is unavailable. Do not silently substitute a different simulation and call it the same replay.
 
-This is an intended product direction, not a current feature claim. The current replay plan is routing metadata; it does not yet load durable history, restore a physical world, render a scrubber, generate share links, or host user content. The hosting and social layer should remain separable from the renderer-independent physics core.
+This is an intended product direction, not a claim that the full experience exists. A validated single-segment history can now be replayed through caller-supplied model operations to an intermediate tick, but Physics does not yet load durable history, coordinate execution across a forked route, provide a concrete world/solver adapter, render a scrubber, generate share links, or host user content. The hosting and social layer should remain separable from the renderer-independent physics core.
 
 ## Parallel realities and multiverse scale
 
@@ -81,7 +81,7 @@ Reality creation and timeline branching are data-model operations; the physical 
 
 Initial data-contract tests now cover checkpoint payload isolation/digest, identity and tick validation, event ordering, and checkpoint-relative event bounds. Before claiming time travel or multiverse simulation is implemented, also test:
 
-- restoring a checkpoint and replaying the same event stream reproduces the declared deterministic contract;
+- restoring a checkpoint and replaying the same event stream reproduces the declared deterministic contract (initial generic executor tests cover ordered events and intermediate target ticks; model-specific fidelity remains to be demonstrated);
 - forking at tick *t* leaves the parent unchanged and both branches share only pre-fork history;
 - events after divergence affect only their own timeline;
 - a missing or incompatible checkpoint/model is surfaced explicitly;
