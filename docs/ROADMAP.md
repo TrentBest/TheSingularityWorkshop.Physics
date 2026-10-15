@@ -11,6 +11,15 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [x] Confirm initial target framework (net8.0) and repository/package identity.
 - [x] Add project, solution, CI, and baseline tests.
 
+## Stage 0.5 — Broad physical territory and shared primitives
+
+- [x] Map the full planned domain space, its major couplings, first usable slices, guardrails, and implementation status ([Physics Domain Map](PHYSICS_DOMAIN_MAP.md)).
+- [ ] Define reusable quantity/state conventions, model provenance, boundary conditions, conservation diagnostics, and observation contracts across domains.
+- [ ] Establish a tested minimum vertical slice for thermodynamics, hydrodynamics, materials, reactions, fields, and waves before deepening only one domain.
+- [ ] Use a bounded fire/combustion experiment as a cross-domain integration test after its prerequisite models exist; it is not a substitute for broader domain coverage.
+
+The domain map is architecture, not implementation. Thermodynamics, hydrodynamics, heat transfer, material response, chemical reactions, and combustion remain unimplemented on `development` until their models, tests, and scope are present.
+
 ## Stage 1 — First executable proof: mechanics
 
 - [x] Implement an initial renderer-independent, SI-unit constant-acceleration kernel with input validation.
