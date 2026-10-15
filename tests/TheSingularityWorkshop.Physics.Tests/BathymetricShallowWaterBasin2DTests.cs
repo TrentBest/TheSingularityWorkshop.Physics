@@ -78,6 +78,40 @@ public sealed class BathymetricShallowWaterBasin2DTests
     }
 
     [Test]
+    public void Advance_WettingFrontMovesIntoDryCellsAndConservesWater()
+    {
+        const int width = 5;
+        const int height = 3;
+        var bed = new double[width * height];
+        var depth = new double[bed.Length];
+        for (var y = 0; y < height; y++)
+        {
+            depth[y * width] = 1d;
+            depth[y * width + 1] = 1d;
+        }
+
+        var basin = new BathymetricShallowWaterBasin2D(width, height, 1d, 1d, 0.005d, depth, bed);
+        var initialVolume = basin.WaterVolume;
+
+        basin.Advance();
+
+        Assert.That(basin.SampleDepth(2, 1), Is.GreaterThan(0d),
+            "The initially dry cell next to the wet region should become wet.");
+        var finalDepth = basin.SnapshotDepth();
+        for (var i = 0; i < finalDepth.Length; i++)
+            Assert.That(double.IsFinite(finalDepth[i]) && finalDepth[i] >= 0d, Is.True,
+                $"Cell {i} has invalid wet/dry depth.");
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
+        {
+            Assert.That(double.IsFinite(basin.SampleVelocityX(x, y)), Is.True);
+            Assert.That(double.IsFinite(basin.SampleVelocityY(x, y)), Is.True);
+        }
+        Assert.That(basin.WaterVolume, Is.EqualTo(initialVolume).Within(1e-10));
+        Assert.That(basin.StepCount, Is.EqualTo(1));
+    }
+
+    [Test]
     public void Advance_SurfaceDisturbanceEvolvesAndConservesWaterOverTerrain()
     {
         const int width = 15;
