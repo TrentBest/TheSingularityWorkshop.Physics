@@ -10,6 +10,8 @@ namespace TheSingularityWorkshop.Physics.Dynamics;
 /// per second; angular velocity is in world-frame radians per second. The pose is
 /// the state reported by the model at this step, not a requested controller target.
 /// This snapshot does not itself implement integration, collision, or constraint solving.
+/// Since value types can be default-initialized, consumers should check <see cref="IsValid"/>
+/// before accepting snapshots from an untrusted or uninitialized source.
 /// </remarks>
 public readonly record struct RigidBodyState
 {
@@ -31,6 +33,14 @@ public readonly record struct RigidBodyState
     /// <summary>Gets elapsed logical simulation time in seconds.</summary>
     public double ElapsedTime { get; }
 
+    /// <summary>Gets whether this snapshot has valid identity, pose, step, and time fields.</summary>
+    public bool IsValid =>
+        !string.IsNullOrWhiteSpace(BodyId) &&
+        Pose.IsValid &&
+        StepIndex >= 0 &&
+        double.IsFinite(ElapsedTime) &&
+        ElapsedTime >= 0d;
+
     /// <summary>Creates a validated body-state snapshot.</summary>
     /// <param name="bodyId">Stable, non-empty identity within the owning model.</param>
     /// <param name="pose">Achieved pose in the declared world frame.</param>
@@ -48,6 +58,8 @@ public readonly record struct RigidBodyState
     {
         if (string.IsNullOrWhiteSpace(bodyId))
             throw new ArgumentException("A stable body identity is required.", nameof(bodyId));
+        if (!pose.IsValid)
+            throw new ArgumentException("A valid pose is required.", nameof(pose));
         if (stepIndex < 0)
             throw new ArgumentOutOfRangeException(nameof(stepIndex), "The logical step must be non-negative.");
         if (!double.IsFinite(elapsedTime) || elapsedTime < 0d)
