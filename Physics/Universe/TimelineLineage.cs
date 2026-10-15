@@ -106,7 +106,7 @@ public sealed class TimelineLineage
             _branches,
             branch => string.Equals(branch.Id, checkpoint.TimelineId, StringComparison.Ordinal));
 
-        if (checkpointIndex < 0)
+        if (checkpointIndex < 0 || checkpoint.Tick < _branches[checkpointIndex].ForkTick)
         {
             return false;
         }
