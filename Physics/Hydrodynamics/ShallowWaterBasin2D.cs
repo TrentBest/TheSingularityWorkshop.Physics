@@ -123,8 +123,8 @@ public sealed class ShallowWaterBasin2D
             var i = y * Width + x;
             var left = FluxX(x, y);
             var right = FluxX(x + 1, y);
-            var bottom = FluxY(x, y);
-            var top = FluxY(x, y + 1);
+            var bottom = FluxY(y, x);
+            var top = FluxY(y + 1, x);
 
             nextDepth[i] = _depth[i]
                 - _timeStep / _cellWidth * (right.Depth - left.Depth)
