@@ -59,6 +59,19 @@ public sealed class Vector3dTests
     }
 
     [Test]
+    public void Normalized_HandlesFiniteComponentsWhoseMagnitudeOverflows()
+    {
+        var value = new Vector3d(double.MaxValue, double.MaxValue, 0d);
+
+        var normalized = value.Normalized();
+
+        Assert.That(normalized.X, Is.EqualTo(Math.Sqrt(0.5d)).Within(1e-15));
+        Assert.That(normalized.Y, Is.EqualTo(Math.Sqrt(0.5d)).Within(1e-15));
+        Assert.That(normalized.Z, Is.EqualTo(0d));
+        Assert.That(normalized.Magnitude, Is.EqualTo(1d).Within(1e-15));
+    }
+
+    [Test]
     public void InvalidScalarsAndOverflow_AreRejected()
     {
         var value = new Vector3d(1d, 2d, 3d);
