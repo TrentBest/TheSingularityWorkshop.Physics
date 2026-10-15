@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Collision;
 using TheSingularityWorkshop.Physics.Dynamics;
 using TheSingularityWorkshop.Physics.Spatial;
