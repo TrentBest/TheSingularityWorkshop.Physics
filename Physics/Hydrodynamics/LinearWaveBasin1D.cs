@@ -7,9 +7,9 @@ namespace TheSingularityWorkshop.Physics.Hydrodynamics;
 /// </summary>
 public sealed class LinearWaveBasin1D
 {
-    private readonly double[] _elevation;
-    private readonly double[] _previousElevation;
-    private readonly double[] _nextElevation;
+    private double[] _elevation;
+    private double[] _previousElevation;
+    private double[] _nextElevation;
 
     public LinearWaveBasin1D(
         int cellCount,
@@ -87,11 +87,10 @@ public sealed class LinearWaveBasin1D
                 throw new OverflowException("Wave update produced a non-finite elevation.");
         }
 
-        Array.Copy(_previousElevation, _nextElevation, 0); // Keep array roles explicit without aliasing.
-        var oldPrevious = (double[])_previousElevation.Clone();
-        Array.Copy(_elevation, _previousElevation, _elevation.Length);
-        Array.Copy(_nextElevation, _elevation, _elevation.Length);
-        Array.Copy(oldPrevious, _nextElevation, _nextElevation.Length);
+        var reusable = _previousElevation;
+        _previousElevation = _elevation;
+        _elevation = _nextElevation;
+        _nextElevation = reusable;
         StepCount = checked(StepCount + 1);
     }
 
