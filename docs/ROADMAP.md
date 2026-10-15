@@ -81,7 +81,7 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 
 ## Stage 5.5 — Historical timelines & parallel realities
 
-- [x] Define immutable timeline lineage metadata and validated historical fork points.
+- [x] Define immutable timeline lineage metadata, validated root-to-target ancestry, checkpoint eligibility across shared history, and historical fork points.
 - [x] Document the checkpoint/replay/branch contract and separate reality, timeline, and checkpoint identities.
 - [x] Define immutable checkpoint envelopes with state payload digest and model/schema identity, plus validated checkpoint-relative event-history segments.
 - [x] Document deterministic replay versus true inverse-update semantics and optional extension boundaries ([deterministic history & extensions](DETERMINISTIC_HISTORY_AND_EXTENSIONS.md)).
