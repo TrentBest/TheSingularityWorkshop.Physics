@@ -36,12 +36,12 @@ The scheduling contract is documented in [Process-group scheduling](PROCESS_GROU
 - [x] Define the proposed Physics-to-controller contract for achieved state, contact observations, constraint loads, structural failure, and topology ownership ([articulated mechanics contract](ARTICULATED_MECHANICS_CONTRACT.md)).
 - [x] Define spatial conventions, vector/pose types, and rigid-body state with explicit units and coordinate frames.
 - [ ] Implement a bounded articulated rigid-body/constraint scenario with documented solver scope.
-- [ ] Emit per-step contact observations and constraint reaction loads with stable body/constraint identities.
+- [ ] Connect the contact-observation value contract to a real contact-producing model and emit per-step contact observations; emit constraint reaction loads with stable body/constraint identities.
 - [ ] Define threshold semantics for peak/sustained loads versus impulse before structural failure depends on them.
 - [ ] Validate a structural failure scenario without conflating failure detection, body-topology mutation, and injury.
 - [ ] Add deterministic/replay and cross-package contract tests showing Gestures can consume Physics observations without a Physics-to-Gestures dependency.
 
-This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The spatial state types and a bounded 3D compliant distance-link experiment exist on the current review branch. They do not yet implement a rigid-joint solver, contact observations, rigid-constraint reaction loads, structural failure, or the complete articulated acceptance criteria.
+This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The current review stack includes spatial state types, a bounded 3D compliant distance-link experiment, and a validated contact-observation value contract. The contract is not a contact detector or solver: the stack does not yet emit solver-produced contact observations, implement a rigid-joint solver, compute rigid-constraint reaction loads, or model structural failure. The complete articulated acceptance criteria remain open.
 
 ## Stage 2 — Material identity and energy
 
@@ -105,7 +105,7 @@ No package release or publication occurs from this roadmap without explicit auth
 
 ## Resources & Support
 
-[Physics home](../README.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
+[Physics home](../README.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
