@@ -11,8 +11,8 @@ public sealed class ContactPositionCorrectorTests
     [Test]
     public void Correct_EqualMassPenetration_AppliesBoundedOppositeTranslations()
     {
-        var a = Body("a", new Vector3d(1d, 2d, 3d));
-        var b = Body("b", new Vector3d(4d, 5d, 6d));
+        var a = Body("a", new Vector3d(1d, 2d, 3d), new Vector3d(1d, 2d, 3d));
+        var b = Body("b", new Vector3d(4d, 5d, 6d), new Vector3d(4d, 5d, 6d));
         var contact = Contact(-0.2d);
 
         var result = ContactPositionCorrector.Correct(
@@ -98,7 +98,7 @@ public sealed class ContactPositionCorrectorTests
         new("a-b", "a", "b", Vector3d.Zero, new Vector3d(1d, 0d, 0d),
             Vector3d.Zero, separation, true, 3, 0.3d);
 
-    private static RigidBodyState Body(string id, Vector3d velocity) =>
-        new(id, new Pose3d(Vector3d.Zero, Quaterniond.Identity), velocity,
+    private static RigidBodyState Body(string id, Vector3d position, Vector3d? velocity = null) =>
+        new(id, new Pose3d(position, Quaterniond.Identity), velocity ?? Vector3d.Zero,
             new Vector3d(0.1d, 0.2d, 0.3d), 2, 0.2d);
 }
