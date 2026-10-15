@@ -93,6 +93,10 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 - [ ] Define and test a trace-based reverse-step capability that refuses unsupported non-reversible operations.
 - [ ] Implement opt-in prediction and rollback/resimulation on isolated speculative branches.
 - [ ] Measure storage/replay trade-offs for shared history, checkpoint frequency, and branch count.
+- [ ] Define a versioned, portable shareable-moment manifest with bounded scrub windows, provenance, compatibility, integrity, and privacy rules.
+- [ ] Implement moment capture/preview/scrubbing over validated replay execution; distinguish exact reconstruction from approximate fallback.
+- [ ] Implement creator-controlled sharing and remix lineage without mutating source timelines; validate access control, attribution, retention, and deletion.
+- [ ] Prototype a lightweight hosted moment flow and measure package size, reconstruction latency, and first-time recipient success before scaling hosting.
 
 The initial lineage type is metadata only. Time travel and multiverse simulation are not complete until persistence, replay, isolation, and validation are implemented.
 
