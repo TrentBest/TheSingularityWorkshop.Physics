@@ -61,6 +61,32 @@ public sealed class ShallowWaterBasin2DTests
     }
 
     [Test]
+    public void Advance_IdenticalInitialStatesRemainDeterministic()
+    {
+        const int width = 13;
+        const int height = 9;
+        var depth = Enumerable.Repeat(1d, width * height).ToArray();
+        depth[4 * width + 6] = 1.08d;
+        depth[3 * width + 5] = 1.02d;
+        var first = new ShallowWaterBasin2D(width, height, 0.8d, 1.2d, 0.005d, depth);
+        var second = new ShallowWaterBasin2D(width, height, 0.8d, 1.2d, 0.005d, depth);
+
+        for (var i = 0; i < 40; i++)
+        {
+            first.Advance();
+            second.Advance();
+        }
+
+        Assert.That(first.SnapshotDepth(), Is.EqualTo(second.SnapshotDepth()));
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
+        {
+            Assert.That(first.SampleVelocityX(x, y), Is.EqualTo(second.SampleVelocityX(x, y)));
+            Assert.That(first.SampleVelocityY(x, y), Is.EqualTo(second.SampleVelocityY(x, y)));
+        }
+    }
+
+    [Test]
     public void Constructor_RejectsUnsafeCflBound()
     {
         Assert.Throws<InvalidOperationException>(() =>
