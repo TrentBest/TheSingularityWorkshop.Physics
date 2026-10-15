@@ -6,8 +6,6 @@ on:
       - development
       - work/rigid-body-state
   pull_request:
-    branches:
-      - development
   workflow_dispatch:
 
 permissions:
