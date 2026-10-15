@@ -79,10 +79,10 @@ The simplest model that validates the contract is preferable to an expansive but
 
 ## Relationship to current implementation
 
-The current review stack now includes spatial value types, timestamped rigid-body snapshots, a bounded 3D compliant distance-link experiment, and a validated `ContactObservation` data contract. The contact record defines how a producing model can report a body-pair contact, but it does not detect contacts or compute contact forces/impulses. There is still no rigid-joint solver, collision/contact solver, articulated reaction-load solver, or structural-failure/topology implementation. The complete proposed slice remains future work.
+The current review stack now includes spatial value types, timestamped rigid-body snapshots, a bounded 3D compliant distance-link experiment, a validated `ContactObservation` data contract, sphere-sphere contact detection, and a limited frictionless normal-impulse response for one contact at a time. The resolver reports the computed impulse and updates linear velocities, but does not correct penetration, account for angular inertia, solve friction, or couple simultaneous contacts. There is still no rigid-joint solver, articulated constraint-reaction-load model, or structural-failure/topology implementation. The complete proposed slice remains future work.
 
 ---
 
 ## Resources
 
-[Physics architecture](ARCHITECTURE.md) · [Determinism contract](DETERMINISM.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [Physics roadmap](ROADMAP.md) · [Gestures](https://github.com/TrentBest/TheSingularityWorkshop.Gestures)
+[Physics architecture](ARCHITECTURE.md) · [Determinism contract](DETERMINISM.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [Sphere-sphere contact detection](SPHERE_SPHERE_CONTACT.md) · [Normal contact impulse response](CONTACT_IMPULSE_RESPONSE.md) · [Physics roadmap](ROADMAP.md) · [Gestures](https://github.com/TrentBest/TheSingularityWorkshop.Gestures)
