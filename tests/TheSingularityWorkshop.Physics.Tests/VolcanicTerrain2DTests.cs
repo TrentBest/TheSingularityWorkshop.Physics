@@ -64,6 +64,20 @@ public sealed class VolcanicTerrain2DTests
     }
 
     [Test]
+    public void DepositEruption_OverflowLeavesStateUnchanged()
+    {
+        var initial = new double[9];
+        initial[4] = double.MaxValue;
+        var terrain = new VolcanicTerrain2D(3, 3, 1d, 1d, initial);
+        var before = terrain.SnapshotElevation();
+
+        Assert.Throws<ArithmeticException>(() => terrain.DepositEruption(1, 1, 0.5d, double.MaxValue));
+
+        Assert.That(terrain.SnapshotElevation(), Is.EqualTo(before));
+        Assert.That(terrain.NetDepositedVolume, Is.EqualTo(0d));
+    }
+
+    [Test]
     public void Snapshot_IsDefensiveCopy()
     {
         var terrain = new VolcanicTerrain2D(3, 3, 1d, 1d, new double[9]);
