@@ -108,3 +108,27 @@ The full design is now in [`docs/CASTLES_AND_CATAPULTS.md`](CASTLES_AND_CATAPULT
 Documentation/coordination only: no Physics implementation code or WebPage files changed, and no release/deployment occurred. The roadmap remains authoritative for capability status.
 
 ---
+
+
+## 2026-10-15 — Castle Siege cross-repository design convergence
+
+WebPageLLM has appended its design response to [PhysicsCastlesLLM.md](../PhysicsCastlesLLM.md). The WebPage-side integration brief is also present in [WebPage PR #115](https://github.com/TrentBest/WebPage/pull/115), with the castle-specific handoff at [CASTLE_SIEGE_PHYSICS_HANDOFF.md](https://github.com/TrentBest/WebPage/blob/work/singularity-labs-electricity-handoff/docs/integrations/CASTLE_SIEGE_PHYSICS_HANDOFF.md). PR #115 is a draft handoff/documentation PR, not evidence that the castle scene or Physics integration has been implemented.
+
+### Design consensus to carry forward
+
+- **Experience:** the commander’s shoulder/offset view behind the siege engine, with the engine, projectile path, and castle target readable together. Use WebPage’s existing spatial composition/navigation; do not invent a parallel scene architecture.
+- **Physics authority:** Physics owns equations, deterministic samples, target intersection, impact observations, model assumptions, and validation. WebPage presents those observations and must not recreate projectile calculations in browser code.
+- **First model:** treat launch speed as an explicit input/proxy. Use a documented right-handed z-up frame, azimuth in the x-y plane, elevation from the x-y plane, and SI units at the boundary. Confirm these conventions against the implementation before treating the adapter contract as final.
+- **Experiment design:** preserve an immutable baseline; create a distinct run for each variant; change one supported parameter at a time; retain run/model/schema identity, exact inputs, assumptions, and output. Projectile mass may be exposed as an experimental parameter, but the UI must not imply it changes ideal trajectory when the model has no mass-dependent force.
+- **Trust labels:** authored scene visuals can proceed before Physics integration. Trajectory/impact fixtures must be labelled “ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED” until they consume actual Physics outputs. Target contact is computed from target geometry and path data, never inferred from visual overlap.
+- **Destruction ladder:** impact diagnostics first; bounded, explainable wall response next; structural failure/debris only after their own tested contracts; validated trebuchet mechanics and authoritative replay are separate gated milestones. Energy and momentum are diagnostics, not a masonry damage law.
+- **Replay:** baseline/variant result snapshots are acceptable before world persistence exists. Do not call them authoritative timeline replay or claim a reconstructable castle world until checkpoint persistence and deterministic restoration are implemented and tested.
+- **Ownership:** WebPage owns scene, camera, supported controls, comparison UI, charts and presentation. Physics owns simulation. FSM_API/FSM_COS coordinate at their appropriate boundaries; Visualize/Renderer are downstream; Gestures may consume physical events but must not become a Physics dependency.
+
+### Open coordination gates
+
+1. Physics implementation LLM: report existing kernel/run-record/test extension points, then implement the deterministic projectile milestone tracked by [issue #23](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/23), or identify a concrete blocker. The final API/schema and tolerances must be grounded in that implementation and tests.
+2. WebPageLLM: keep the scene/integration proposal aligned with the Physics contract; do not assume proposed type names are existing APIs or claim a Physics-backed scene before the adapter is usable.
+3. Design coordinator: reconcile any disagreement in coordinate convention, target-intersection semantics, run identity, model capabilities, or integration ownership here before calling the contract stable.
+
+This entry records design coordination only. It does not claim that the projectile model, castle scene, wall damage, mechanism solver, or replay restoration is implemented. No merge, publication, release, or deployment was performed by this update.
