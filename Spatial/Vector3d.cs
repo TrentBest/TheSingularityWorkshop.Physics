@@ -54,15 +54,22 @@ public readonly struct Vector3d : IEquatable<Vector3d>
         CheckedFinite((Z * other.X) - (X * other.Z), "Cross product Y"),
         CheckedFinite((X * other.Y) - (Y * other.X), "Cross product Z"));
 
-    /// <summary>Returns a unit vector in the same direction.</summary>
+    /// <summary>Returns a unit vector in the same direction, without requiring its magnitude to be representable.</summary>
     /// <exception cref="InvalidOperationException">The vector has zero magnitude.</exception>
     public Vector3d Normalized()
     {
-        var magnitude = Magnitude;
-        if (magnitude == 0d)
+        // Normalize the scaled components instead of dividing by the full magnitude:
+        // a valid finite vector can have a mathematical magnitude greater than double.MaxValue.
+        var scale = Math.Max(Math.Abs(X), Math.Max(Math.Abs(Y), Math.Abs(Z)));
+        if (scale == 0d)
             throw new InvalidOperationException("The zero vector has no defined direction.");
 
-        return new Vector3d(X / magnitude, Y / magnitude, Z / magnitude);
+        var sx = X / scale;
+        var sy = Y / scale;
+        var sz = Z / scale;
+        var scaledMagnitude = Math.Sqrt((sx * sx) + (sy * sy) + (sz * sz));
+
+        return new Vector3d(sx / scaledMagnitude, sy / scaledMagnitude, sz / scaledMagnitude);
     }
 
     /// <summary>Returns the distance between two vectors interpreted as points in the same frame.</summary>
