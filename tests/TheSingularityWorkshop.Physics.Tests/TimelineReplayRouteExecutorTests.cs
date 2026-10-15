@@ -16,8 +16,8 @@ public sealed class TimelineReplayRouteExecutorTests
         int result = TimelineReplayRouteExecutor.Reconstruct(
             plan, segments, Restore, ApplyEvent, Advance, (left, right) => left == right);
 
-        // Parent reaches fork tick 4 with value 44; child advances two ticks, adds 7 at tick 6, and reaches tick 7.
-        Assert.That(result, Is.EqualTo(53));
+        // Parent reaches fork tick 4 with value 44; child advances to tick 6, adds 7, then advances to tick 7.
+        Assert.That(result, Is.EqualTo(54));
     }
 
     [Test]
