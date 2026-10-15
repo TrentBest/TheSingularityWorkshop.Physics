@@ -41,7 +41,7 @@ The scheduling contract is documented in [Process-group scheduling](PROCESS_GROU
 - [ ] Validate a structural failure scenario without conflating failure detection, body-topology mutation, and injury.
 - [ ] Add deterministic/replay and cross-package contract tests showing Gestures can consume Physics observations without a Physics-to-Gestures dependency.
 
-This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The current review stack includes spatial state types, a bounded 3D compliant distance-link experiment, and a validated contact-observation value contract. The contract is not a contact detector or solver: the stack does not yet emit solver-produced contact observations, implement a rigid-joint solver, compute rigid-constraint reaction loads, or model structural failure. The complete articulated acceptance criteria remain open.
+This is the first Physics milestone directly shaped by Gestures' Stateful IK requirements. The current review stack includes spatial state types, a bounded 3D compliant distance-link experiment, a validated contact-observation value contract, and sphere-sphere narrowphase geometry that can emit per-step observations. Sphere detection is not contact response: the stack does not yet resolve penetration, model friction, implement a rigid-joint solver, compute rigid-constraint reaction loads, or model structural failure. The complete articulated acceptance criteria remain open.
 
 ## Stage 2 — Material identity and energy
 
@@ -74,7 +74,7 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 - [ ] Define coarse/fine model interfaces and conservative handoff requirements.
 - [ ] Preserve aggregate state while distant processes continue evolving and account for elapsed logical time on wake-up.
 - [x] Implement AABB intersection/union/expansion, linear swept bounds, and deterministic sweep-and-prune candidate pairs with tests.
-- [ ] Add narrowphase contact confirmation and response; validate conservative bounds for supported motion models.
+- [ ] Add narrowphase contact confirmation and response; validate conservative bounds for supported motion models. Sphere-sphere geometric contact confirmation now exists; response and other shape pairs remain incomplete.
 - [ ] Test approach/leave/revisit scenarios and transitions that occur while unobserved.
 - [ ] Measure computational cost against physical error, not visual quality alone.
 
@@ -105,7 +105,7 @@ No package release or publication occurs from this roadmap without explicit auth
 
 ## Resources & Support
 
-[Physics home](../README.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
+[Physics home](../README.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [Sphere-sphere contact detection](SPHERE_SPHERE_CONTACT.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [MicroBundleDomain](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/TrentBest/WebPage/development/TheSingularityWorkshop/wwwroot/Images/TheSingularityWorkshopLivingAvatar.svg" alt="The Singularity Workshop living avatar" width="200" />
