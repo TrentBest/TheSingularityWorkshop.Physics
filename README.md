@@ -81,6 +81,7 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Deterministic history & extensions](docs/DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) — reverse-order limits, replay, optional prediction, rollback, and branch isolation
 - [Physics domain map](docs/PHYSICS_DOMAIN_MAP.md) — broad physical territory, domain coupling, primitive foundations, and build order
 - [Hydrodynamics: shallow-water basin and bathymetry](docs/HYDRODYNAMICS_SHALLOW_WATER_2D.md) — conservative shallow-water fluxes, terrain-aware hydrostatic reconstruction, and current numerical limits
+- [Acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md) — listener-centred sound propagation, adaptive acoustic buckets, baking/caching, binaural reception, and the tested free-field observation baseline
 - [Terrain interactions, impact effects, and composable physics](docs/TERRAIN_INTERACTIONS_AND_MICROBUNDLES.md) — an educational guide to terrain-dependent water impacts, emergent dust, bulk rainfall accounting, and selecting only the microbundles a host requires
 - [Hydrodynamics World Demonstrator](docs/HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) — staged plan for a wave-filled basin, terrain, buildings, floating boats, validation gates, and eventual large-world scaling
 - [Geology: volcanic terrain](docs/GEOLOGY_VOLCANIC_TERRAIN.md) — volume-accounted volcanic deposition and the path toward terrain/water erosion coupling
