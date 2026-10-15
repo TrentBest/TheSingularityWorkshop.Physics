@@ -40,6 +40,44 @@ public sealed class BathymetricShallowWaterBasin2DTests
     }
 
     [Test]
+    public void Advance_StillLakePreservesDryShorelineAboveFreeSurface()
+    {
+        const int width = 6;
+        const int height = 5;
+        const double freeSurface = 1d;
+        var bed = new double[width * height];
+        var depth = new double[bed.Length];
+        var elevations = new[] { -0.2d, 0.1d, 0.4d, 0.8d, 1.1d, 1.4d };
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
+        {
+            var i = y * width + x;
+            bed[i] = elevations[x];
+            depth[i] = Math.Max(0d, freeSurface - bed[i]);
+        }
+
+        var basin = new BathymetricShallowWaterBasin2D(width, height, 1d, 1d, 0.003d, depth, bed);
+        var initialVolume = basin.WaterVolume;
+        var initialDepth = basin.SnapshotDepth();
+
+        for (var step = 0; step < 80; step++)
+            basin.Advance();
+
+        var finalDepth = basin.SnapshotDepth();
+        for (var i = 0; i < initialDepth.Length; i++)
+            Assert.That(finalDepth[i], Is.EqualTo(initialDepth[i]).Within(1e-11), $"Cell {i} drifted from wet/dry equilibrium.");
+        for (var y = 0; y < height; y++)
+        {
+            Assert.That(basin.SampleDepth(4, y), Is.EqualTo(0d));
+            Assert.That(basin.SampleDepth(5, y), Is.EqualTo(0d));
+            Assert.That(basin.SampleVelocityX(4, y), Is.EqualTo(0d));
+            Assert.That(basin.SampleVelocityY(4, y), Is.EqualTo(0d));
+        }
+        Assert.That(basin.WaterVolume, Is.EqualTo(initialVolume).Within(1e-10));
+        Assert.That(basin.StepCount, Is.EqualTo(80));
+    }
+
+    [Test]
     public void Advance_SurfaceDisturbanceEvolvesAndConservesWaterOverTerrain()
     {
         const int width = 15;
@@ -91,6 +129,14 @@ public sealed class BathymetricShallowWaterBasin2DTests
         Assert.Throws<ArgumentException>(() => new BathymetricShallowWaterBasin2D(
             2, 2, 1d, 1d, 0.01d, new[] { 1d, 1d, 1d, 1d },
             new[] { 0d, double.NaN, 0d, 0d }));
+    }
+
+    [Test]
+    public void Constructor_RejectsNegativeDepth()
+    {
+        Assert.Throws<ArgumentException>(() => new BathymetricShallowWaterBasin2D(
+            2, 2, 1d, 1d, 0.01d, new[] { 1d, 1d, -0.1d, 1d },
+            new[] { 0d, 0d, 0d, 0d }));
     }
 
     [Test]
