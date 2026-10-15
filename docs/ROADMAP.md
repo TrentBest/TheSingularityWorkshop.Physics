@@ -86,8 +86,9 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 - [x] Define immutable checkpoint envelopes with state payload digest and model/schema identity, plus validated checkpoint-relative event-history segments.
 - [x] Define a validated replay route that checks checkpoint versions and splits timeline-owned intervals at historical fork boundaries.
 - [x] Document deterministic replay versus true inverse-update semantics and optional extension boundaries ([deterministic history & extensions](DETERMINISTIC_HISTORY_AND_EXTENSIONS.md)).
+- [x] Implement a model-driven single-segment replay executor that restores caller-owned model state through a checkpoint decoder, applies ordered events, and advances to a requested tick within the validated interval ([executor](../Physics/Universe/TimelineReplayExecutor.cs), [tests](../tests/TheSingularityWorkshop.Physics.Tests/TimelineReplayExecutorTests.cs)).
 - [ ] Implement durable versioned authoritative-state checkpoint storage and ordered event/input history.
-- [ ] Implement deterministic reconstruction from checkpoint plus replay, with compatibility checks and state verification.
+- [ ] Implement a concrete physics-world/solver reconstruction adapter with compatibility checks and independently verifiable state fidelity.
 - [ ] Implement persistent reality identities and isolated mutable state across parallel realities.
 - [ ] Test that post-fork changes remain isolated and parent history remains unchanged.
 - [ ] Define and test a trace-based reverse-step capability that refuses unsupported non-reversible operations.
