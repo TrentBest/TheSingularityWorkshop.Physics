@@ -24,4 +24,4 @@ The implementation validates identities, positive finite masses, finite state, n
 
 This is deliberately a first mechanics increment. It does **not** model 3D rotation or inertia, rigid constraints, multiple links, contact/collision, friction, constraint solving, joint reaction loads, structural failure, topology mutation, or material/injury effects. Semi-implicit Euler has timestep-dependent numerical error; this small slice does not claim a convergence bound or general stability.
 
-See also: [Articulated mechanics contract](ARTICULATED_MECHANICS_CONTRACT.md) · [Roadmap](ROADMAP.md) · [Architecture](ARCHITECTURE.md)
+The optional [axial link failure threshold monitor](AXIAL_LINK_FAILURE.md) records a first transition from the computed axial force sample. It is a narrow threshold-state demonstration, not a material failure model or rigid-constraint solver.\n\nSee also: [Articulated mechanics contract](ARTICULATED_MECHANICS_CONTRACT.md) · [Roadmap](ROADMAP.md) · [Architecture](ARCHITECTURE.md)
