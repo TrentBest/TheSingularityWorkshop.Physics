@@ -62,7 +62,11 @@ public sealed class LinearWaveBasin1D
         // Start from rest: the Taylor expansion supplies the first previous-time level.
         var ratioSquared = courantNumber * courantNumber;
         for (var i = 0; i < cellCount; i++)
+        {
             _previousElevation[i] = _elevation[i] + 0.5d * ratioSquared * Laplacian(_elevation, i);
+            if (!double.IsFinite(_previousElevation[i]))
+                throw new ArgumentException("Initial profile produces a non-finite resting-state initialization.", nameof(initialElevation));
+        }
     }
 
     /// <summary>Gets the number of cells in the basin.</summary>
@@ -97,6 +101,7 @@ public sealed class LinearWaveBasin1D
     /// <summary>Advance one fixed step using a centered explicit wave-equation update.</summary>
     public void Advance()
     {
+        var nextStepCount = checked(StepCount + 1);
         var ratioSquared = CourantNumber * CourantNumber;
         for (var i = 0; i < _elevation.Length; i++)
         {
@@ -110,7 +115,7 @@ public sealed class LinearWaveBasin1D
         _previousElevation = _elevation;
         _elevation = _nextElevation;
         _nextElevation = reusable;
-        StepCount = checked(StepCount + 1);
+        StepCount = nextStepCount;
     }
 
     private double Laplacian(double[] values, int index)
