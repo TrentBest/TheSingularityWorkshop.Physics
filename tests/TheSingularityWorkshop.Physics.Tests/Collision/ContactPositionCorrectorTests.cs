@@ -31,8 +31,8 @@ public sealed class ContactPositionCorrectorTests
             Assert.That(result.BodyB.LinearVelocity, Is.EqualTo(b.LinearVelocity));
             Assert.That(result.BodyA.Pose.Orientation, Is.EqualTo(a.Pose.Orientation));
             Assert.That(result.BodyB.Pose.Orientation, Is.EqualTo(b.Pose.Orientation));
-            Assert.That(result.BodyA.StepIndex, Is.EqualTo(contact.StepIndex));
-            Assert.That(result.BodyB.ElapsedTime, Is.EqualTo(contact.ElapsedTime));
+            Assert.That(result.BodyA.StepIndex, Is.EqualTo(a.StepIndex));
+            Assert.That(result.BodyB.ElapsedTime, Is.EqualTo(b.ElapsedTime));
         });
     }
 
