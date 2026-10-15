@@ -103,7 +103,14 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **First usable slice:** define the intended scale, observable, and approximation before choosing a model.
 - **Guardrail:** keep these as explicit future regimes; do not present classical models as universally valid.
 
-### J. Persistent worlds, scale, and history
+### J. Geology, tectonics, and geomorphology
+- **Covers:** terrain elevation, volcanic deposition, tectonic uplift/subsidence, crustal deformation, weathering, erosion, sediment transport, and long-term landscape evolution.
+- **Key exchanges:** mass/volume transfer, heat, stress/strain, fluid forces, material properties, and time scale.
+- **First usable slice:** a volume-accounted terrain height field changed by a prescribed volcanic deposition event; then explicit bed-elevation coupling to water and erosion/sediment accounting.
+- **Guardrail:** generated elevation is physical state; labels such as “cliff,” “ridge,” or “volcanic cone” are expert-domain interpretations of measured geometry and material evidence. Do not confuse a procedural shape kernel with a full tectonic or eruption model.
+- **Current status:** the volcanic deposition primitive is implemented on the open `work/volcanic-terrain-source` branch; tectonic motion, magma dynamics, and erosion remain future work.
+
+### K. Persistent worlds, scale, and history
 - **Covers:** deterministic spatial addressing, multirate simulation, coarse/fine representations, persistence, checkpointing, replay, and isolated timeline branches.
 - **Key exchanges:** conservative state handoffs, elapsed logical time, provenance, and authoritative state.
 - **Current status:** deterministic grid, logical-time ledger, and timeline/replay contracts exist; durable world persistence, conservative multiscale handoffs, and complete world reconstruction remain future work.
@@ -112,7 +119,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 
 1. **Map and name the territory** — this document plus the roadmap; expose dependencies and gaps without marking them implemented.
 2. **Finish shared state conventions** — quantities, stable identity, logical time, model provenance, boundaries, observations, and conservation diagnostics.
-3. **Establish a minimum viable vertical slice per major domain** — mechanics, thermal state/energy, fluid state/flow, material response, species/reaction accounting, and fields/waves. Each slice must run and test independently.
+3. **Establish a minimum viable vertical slice per major domain** — mechanics, thermal state/energy, fluid state/flow, geology/terrain, material response, species/reaction accounting, and fields/waves. Each slice must run and test independently.
 4. **Couple the slices through explicit exchanges** — first heat ↔ material, then fluid ↔ heat/material, then reaction ↔ heat/species/flow.
 5. **Use fire as an integration experiment** — a deliberately bounded ignition/combustion scenario that accounts for fuel consumption, released energy, heat transfer, gas/species transport, and material change. State exactly what is modeled and omitted.
 6. **Backfill numerical depth** — stronger solvers, stability/convergence studies, property databases, uncertainty, additional regimes, and validated models for effects not required by the first scenario.
