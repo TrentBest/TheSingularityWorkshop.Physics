@@ -11,6 +11,14 @@ public sealed class LinearWaveBasin1D
     private double[] _previousElevation;
     private double[] _nextElevation;
 
+    /// <summary>Creates a closed one-dimensional basin initialized from a surface-elevation profile at rest.</summary>
+    /// <param name="cellCount">Number of uniformly spaced cells; must be at least three.</param>
+    /// <param name="cellWidth">Cell width in metres.</param>
+    /// <param name="waveSpeed">Linear wave speed in metres per second.</param>
+    /// <param name="timeStep">Fixed simulation time step in seconds.</param>
+    /// <param name="initialElevation">Initial free-surface elevation in metres, one value per cell.</param>
+    /// <exception cref="ArgumentOutOfRangeException">A dimension or physical parameter is invalid, or the Courant number exceeds one.</exception>
+    /// <exception cref="ArgumentException">The initial profile has the wrong length or contains non-finite values.</exception>
     public LinearWaveBasin1D(
         int cellCount,
         double cellWidth,
@@ -57,17 +65,28 @@ public sealed class LinearWaveBasin1D
             _previousElevation[i] = _elevation[i] + 0.5d * ratioSquared * Laplacian(_elevation, i);
     }
 
+    /// <summary>Gets the number of cells in the basin.</summary>
     public int CellCount => _elevation.Length;
+    /// <summary>Gets the cell width in metres.</summary>
     public double CellWidth { get; }
+    /// <summary>Gets the modeled linear wave speed in metres per second.</summary>
     public double WaveSpeed { get; }
+    /// <summary>Gets the fixed time step in seconds.</summary>
     public double TimeStep { get; }
+    /// <summary>Gets the Courant number, wave speed multiplied by time step and divided by cell width.</summary>
     public double CourantNumber { get; }
+    /// <summary>Gets the number of successfully completed simulation steps.</summary>
     public long StepCount { get; private set; }
+    /// <summary>Gets elapsed simulation time in seconds.</summary>
     public double SimulationTime => StepCount * TimeStep;
 
     /// <summary>Returns a defensive copy of the current free-surface elevation profile.</summary>
     public double[] SnapshotElevation() => (double[])_elevation.Clone();
 
+    /// <summary>Returns the current free-surface elevation at a cell, in metres.</summary>
+    /// <param name="cellIndex">Zero-based cell index.</param>
+    /// <returns>Current elevation in metres.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The index is outside the basin.</exception>
     public double SampleElevation(int cellIndex)
     {
         if ((uint)cellIndex >= (uint)_elevation.Length)
