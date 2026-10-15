@@ -30,6 +30,26 @@ public sealed class ContactImpulseResolverTests
     }
 
     [Test]
+    public void Resolve_UnequalMasses_PreservesTangentialVelocityAndLinearMomentum()
+    {
+        var a = Body("a", new Vector3d(1d, 4d, 0d));
+        var b = Body("b", new Vector3d(-1d, -3d, 0d));
+
+        var result = ContactImpulseResolver.Resolve(Contact(-0.1d), a, 1d, b, 3d);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.BodyA.LinearVelocity.X, Is.EqualTo(-0.5d).Within(1e-12));
+            Assert.That(result.BodyB.LinearVelocity.X, Is.EqualTo(-0.5d).Within(1e-12));
+            Assert.That(result.BodyA.LinearVelocity.Y, Is.EqualTo(4d));
+            Assert.That(result.BodyB.LinearVelocity.Y, Is.EqualTo(-3d));
+            Assert.That(
+                result.BodyA.LinearVelocity.X + (3d * result.BodyB.LinearVelocity.X),
+                Is.EqualTo(-2d).Within(1e-12));
+        });
+    }
+
+    [Test]
     public void Resolve_ElasticImpact_ReversesRelativeNormalSpeed()
     {
         var a = Body("a", new Vector3d(2d, 0d, 0d));
