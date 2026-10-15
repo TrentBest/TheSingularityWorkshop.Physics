@@ -19,7 +19,7 @@ The flat-bed prototype and the terrain-aware increment are renderer-independent,
 - Outer faces impose zero normal mass flux and hydrostatic pressure flux.
 - The terrain-aware model rejects non-finite bed elevations and invalid initial depths.
 - Each step builds a candidate state and commits only after all cells pass finite/positive-depth checks.
-- Automated tests cover a still lake over a non-flat bed, water-volume balance, and defensive snapshots.
+- Automated tests cover still-water equilibrium over an uneven bed, evolution of a free-surface disturbance over terrain, closed-basin water-volume conservation, and defensive snapshots.
 - The flat-bed solver's tests additionally cover disturbance propagation, repeatability, and CFL rejection.
 
 ## Explicit limitations
