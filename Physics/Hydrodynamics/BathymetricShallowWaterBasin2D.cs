@@ -2,11 +2,13 @@ namespace TheSingularityWorkshop.Physics.Hydrodynamics;
 
 /// <summary>
 /// A deterministic, depth-averaged shallow-water model over fixed bed elevation.
-/// Uses hydrostatic reconstruction so a lake at rest remains at rest over uneven terrain.
+/// Uses hydrostatic reconstruction so a lake at rest remains at rest over uneven terrain,
+/// including dry cells above the still-water free surface.
 /// </summary>
 /// <remarks>
-/// This increment requires positive depth in every cell. Dry cells, moving terrain,
-/// friction, and sediment exchange are not modeled. Arrays are row-major.
+/// Depth may be zero to represent a dry cell. Momentum in a dry cell is zero;
+/// wet/dry positivity and robust hydrostatic reconstruction are handled conservatively.
+/// Moving terrain, friction, and sediment exchange are not modeled. Arrays are row-major.
 /// </remarks>
 public sealed class BathymetricShallowWaterBasin2D
 {
@@ -19,7 +21,7 @@ public sealed class BathymetricShallowWaterBasin2D
     private double[] _qx;
     private double[] _qy;
 
-    /// <summary>Creates a basin from cell depths and fixed cell-centered bed elevations.</summary>
+    /// <summary>Creates a basin from cell depths (non-negative) and fixed cell-centered bed elevations.</summary>
     public BathymetricShallowWaterBasin2D(
         int width, int height, double cellWidth, double cellHeight, double timeStep,
         IReadOnlyList<double> initialDepth, IReadOnlyList<double> bedElevation,
@@ -49,8 +51,8 @@ public sealed class BathymetricShallowWaterBasin2D
         _bed = new double[count];
         for (var i = 0; i < count; i++)
         {
-            if (!double.IsFinite(initialDepth[i]) || initialDepth[i] <= 0d)
-                throw new ArgumentException("Every initial depth must be finite and positive.", nameof(initialDepth));
+            if (!double.IsFinite(initialDepth[i]) || initialDepth[i] < 0d)
+                throw new ArgumentException("Every initial depth must be finite and non-negative.", nameof(initialDepth));
             if (!double.IsFinite(bedElevation[i]))
                 throw new ArgumentException("Every bed elevation must be finite.", nameof(bedElevation));
             _depth[i] = initialDepth[i];
@@ -75,7 +77,7 @@ public sealed class BathymetricShallowWaterBasin2D
     public double[] SnapshotBedElevation() => (double[])_bed.Clone();
     /// <summary>Returns a defensive copy of water depth in metres.</summary>
     public double[] SnapshotDepth() => (double[])_depth.Clone();
-    /// <summary>Samples water depth in metres.</summary>
+    /// <summary>Samples water depth in metres; zero indicates a dry cell.</summary>
     public double SampleDepth(int x, int y) => _depth[Index(x, y)];
     /// <summary>Samples fixed bed elevation in metres.</summary>
     public double SampleBedElevation(int x, int y) => _bed[Index(x, y)];
@@ -85,10 +87,10 @@ public sealed class BathymetricShallowWaterBasin2D
         var i = Index(x, y);
         return _bed[i] + _depth[i];
     }
-    /// <summary>Samples depth-averaged X velocity in metres per second.</summary>
-    public double SampleVelocityX(int x, int y) { var i = Index(x, y); return _qx[i] / _depth[i]; }
-    /// <summary>Samples depth-averaged Y velocity in metres per second.</summary>
-    public double SampleVelocityY(int x, int y) { var i = Index(x, y); return _qy[i] / _depth[i]; }
+    /// <summary>Samples depth-averaged X velocity in metres per second; returns zero in a dry cell.</summary>
+    public double SampleVelocityX(int x, int y) { var i = Index(x, y); return Velocity(_qx[i], _depth[i]); }
+    /// <summary>Samples depth-averaged Y velocity in metres per second; returns zero in a dry cell.</summary>
+    public double SampleVelocityY(int x, int y) { var i = Index(x, y); return Velocity(_qy[i], _depth[i]); }
 
     /// <summary>Advances one conservative finite-volume step with impermeable walls.</summary>
     public void Advance()
@@ -109,8 +111,15 @@ public sealed class BathymetricShallowWaterBasin2D
             nh[i] = _depth[i] - _dt / _dx * (right.H - left.H) - _dt / _dy * (top.H - bottom.H);
             nx[i] = _qx[i] - _dt / _dx * (right.Qx - left.Qx) - _dt / _dy * (top.Qx - bottom.Qx);
             ny[i] = _qy[i] - _dt / _dx * (right.Qy - left.Qy) - _dt / _dy * (top.Qy - bottom.Qy);
-            if (!double.IsFinite(nh[i]) || nh[i] <= 0d || !double.IsFinite(nx[i]) || !double.IsFinite(ny[i]))
+
+            if (!double.IsFinite(nh[i]) || nh[i] < 0d || !double.IsFinite(nx[i]) || !double.IsFinite(ny[i]))
                 throw new ArithmeticException("Bathymetric shallow-water update produced invalid state; no state was committed.");
+            if (nh[i] == 0d)
+            {
+                // A dry cell has no meaningful depth-averaged velocity or stored momentum.
+                nx[i] = 0d;
+                ny[i] = 0d;
+            }
         }
         _depth = nh;
         _qx = nx;
@@ -125,14 +134,16 @@ public sealed class BathymetricShallowWaterBasin2D
         return y * Width + x;
     }
 
+    private static double Velocity(double momentum, double depth) => depth > 0d ? momentum / depth : 0d;
+
     private void EnsureStableTimeStep()
     {
         var maxRate = 0d;
         for (var i = 0; i < _depth.Length; i++)
         {
             var h = _depth[i];
-            var u = _qx[i] / h;
-            var v = _qy[i] / h;
+            var u = Velocity(_qx[i], h);
+            var v = Velocity(_qy[i], h);
             var c = Math.Sqrt(_gravity * h);
             maxRate = Math.Max(maxRate, (Math.Abs(u) + c) / _dx + (Math.Abs(v) + c) / _dy);
         }
@@ -183,10 +194,10 @@ public sealed class BathymetricShallowWaterBasin2D
         var bStar = Math.Max(_bed[left], _bed[right]);
         var hsL = Math.Max(0d, hL + _bed[left] - bStar);
         var hsR = Math.Max(0d, hR + _bed[right] - bStar);
-        var uL = _qx[left] / hL;
-        var uR = _qx[right] / hR;
-        var vL = _qy[left] / hL;
-        var vR = _qy[right] / hR;
+        var uL = Velocity(_qx[left], hL);
+        var uR = Velocity(_qx[right], hR);
+        var vL = Velocity(_qy[left], hL);
+        var vR = Velocity(_qy[right], hR);
         var qxL = hsL * uL;
         var qxR = hsR * uR;
         var qyL = hsL * vL;
