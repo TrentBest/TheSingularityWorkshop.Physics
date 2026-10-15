@@ -79,6 +79,29 @@ public sealed class QuaterniondTests
     }
 
     [Test]
+    public void Rotate_HandlesMultiAxisInputAtRepresentableLimit()
+    {
+        var halfAngle = Math.PI / 4d;
+        var quarterTurn = new Quaterniond(Math.Cos(halfAngle), 0d, 0d, Math.Sin(halfAngle));
+
+        var rotated = quarterTurn.Rotate(new Vector3d(double.MaxValue, double.MaxValue, 0d));
+
+        Assert.That(rotated.X / double.MaxValue, Is.EqualTo(-1d).Within(1e-14));
+        Assert.That(rotated.Y / double.MaxValue, Is.EqualTo(1d).Within(1e-14));
+        Assert.That(rotated.Z, Is.EqualTo(0d));
+    }
+
+    [Test]
+    public void Rotate_RejectsResultOutsideFiniteDoubleRange()
+    {
+        var halfAngle = Math.PI / 8d;
+        var rotation = new Quaterniond(Math.Cos(halfAngle), 0d, 0d, Math.Sin(halfAngle));
+
+        Assert.Throws<ArithmeticException>(() =>
+            rotation.Rotate(new Vector3d(double.MaxValue, double.MaxValue, 0d)));
+    }
+
+    [Test]
     public void NormSquared_RejectsOverflow()
     {
         var value = new Quaterniond(double.MaxValue, 0d, 0d, 0d);
