@@ -2,7 +2,7 @@
 
 **Goal:** build a renderer-independent physical world that can be shown as a vast bathtub first, then grow into a coastal/terrain/buildings scene. The visible signature is persistent, interacting waves: waves propagate, reflect, cross, encounter obstacles and shorelines, move boats, and respond to disturbances. Water must be simulation state, not a scrolling shader that pretends to be fluid dynamics.
 
-This is a design and implementation contract, not a claim that the simulator already exists. The development branch currently has no hydrodynamics solver.
+This is the design and implementation contract for the larger simulator. The first executable reference is documented in [Hydrodynamics: First Executable Wave Reference](HYDRODYNAMICS_FIRST_WAVE_REFERENCE.md). That one-dimensional linear model is a verification step, not the finished hydrodynamics solver.
 
 ## The experience we are building toward
 
