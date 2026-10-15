@@ -6,13 +6,13 @@
 
 `AxialSpringDamper` models two point-like bodies on one coordinate axis connected by one linear spring and one linear damper. It calculates the link force from the pre-step separation and relative velocity, then advances both body snapshots with a fixed timestep using semi-implicit Euler.
 
-For body positions (x_A,x_B), velocities (v_A,v_B), rest length (L_0), stiffness (k), and damping coefficient (c):
+For body positions `x_A`, `x_B`, velocities `v_A`, `v_B`, rest length `L_0`, stiffness `k`, and damping coefficient `c`:
 
-[
+$
 F_A = k((x_B-x_A)-L_0) + c(v_B-v_A)
-]
+$
 
-The equal-and-opposite force on body B is (-F_A). Acceleration follows (a_A=F_A/m_A) and (a_B=-F_A/m_B). Velocities are updated before positions. The returned force is in newtons and is a **compliant-link spring/damper force**, not a rigid-joint reaction, impulse, contact load, or failure criterion.
+The equal-and-opposite force on body B is `-F_A`. Acceleration follows `a_A = F_A/m_A` and `a_B = -F_A/m_B`. Velocities are updated before positions. The returned force is in newtons and is a **compliant-link spring/damper force**, not a rigid-joint reaction, impulse, contact load, or failure criterion.
 
 ## Output and time
 
