@@ -5,9 +5,8 @@ on:
     branches:
       - development
       - work/rigid-body-state
+      - work/spatial-spring-damper
   pull_request:
-    branches:
-      - development
   workflow_dispatch:
 
 permissions:
