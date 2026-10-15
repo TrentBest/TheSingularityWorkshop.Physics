@@ -41,6 +41,26 @@ public sealed class ShallowWaterBasin2DTests
     }
 
     [Test]
+    public void Advance_LocalizedDisturbancePropagatesAlongBothAxes()
+    {
+        const int width = 9;
+        const int height = 7;
+        const int centerX = 4;
+        const int centerY = 3;
+        var depth = Enumerable.Repeat(1d, width * height).ToArray();
+        depth[centerY * width + centerX] = 1.1d;
+        var basin = new ShallowWaterBasin2D(width, height, 1d, 1d, 0.01d, depth);
+
+        basin.Advance();
+
+        Assert.That(basin.SampleDepth(centerX, centerY), Is.LessThan(1.1d));
+        Assert.That(basin.SampleDepth(centerX - 1, centerY), Is.GreaterThan(1d));
+        Assert.That(basin.SampleDepth(centerX + 1, centerY), Is.GreaterThan(1d));
+        Assert.That(basin.SampleDepth(centerX, centerY - 1), Is.GreaterThan(1d));
+        Assert.That(basin.SampleDepth(centerX, centerY + 1), Is.GreaterThan(1d));
+    }
+
+    [Test]
     public void Constructor_RejectsUnsafeCflBound()
     {
         Assert.Throws<InvalidOperationException>(() =>
