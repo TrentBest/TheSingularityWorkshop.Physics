@@ -36,8 +36,8 @@ public sealed class AxialSpringDamperTests
         var result = AxialSpringDamper.Advance(Link(stiffness: 0d, damping: 3d), a, b, 1, 0d, 0.1d);
 
         Assert.That(result.AxialForceOnBodyA, Is.EqualTo(6d));
-        Assert.That(result.BodyA.Velocity, Is.EqualTo(0.6d));
-        Assert.That(result.BodyB.Velocity, Is.EqualTo(1.4d));
+        Assert.That(result.BodyA.Velocity, Is.EqualTo(0.6d).Within(1e-15));
+        Assert.That(result.BodyB.Velocity, Is.EqualTo(1.4d).Within(1e-15));
     }
 
     [Test]
