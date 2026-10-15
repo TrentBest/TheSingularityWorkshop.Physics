@@ -82,6 +82,7 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Physics domain map](docs/PHYSICS_DOMAIN_MAP.md) — broad physical territory, domain coupling, primitive foundations, and build order
 - [Hydrodynamics World Demonstrator](docs/HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) — staged plan for a wave-filled basin, terrain, buildings, floating boats, validation gates, and eventual large-world scaling
 - [Geology: volcanic terrain](docs/GEOLOGY_VOLCANIC_TERRAIN.md) — volume-accounted volcanic deposition and the path toward terrain/water erosion coupling
+- [Stellar physics and planetary energy](docs/STELLAR_PHYSICS_AND_PLANETARY_ENERGY.md) — staged path from stellar radiation to planetary heating, then stellar structure and evolution
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
