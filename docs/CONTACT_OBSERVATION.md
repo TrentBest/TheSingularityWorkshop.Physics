@@ -1,10 +1,10 @@
 # Contact Observation Contract
 
-**Status:** implemented value contract; contact detection and response are not implemented by this type.
+**Status:** implemented value contract. Sphere-sphere detection and a bounded single-contact normal-impulse response are implemented separately; this type itself remains a data contract.
 
 ## What one record means
 
-`ContactObservation` captures evidence supplied by a contact-producing model for two distinct bodies at one logical simulation step. It does not create that evidence: no narrowphase collision detection, friction solver, support inference, or body-state mutation is performed here.
+`ContactObservation` captures evidence supplied by a contact-producing model for two distinct bodies at one logical simulation step. It does not create that evidence. The sphere-sphere detector produces geometry; the separate normal-impulse resolver can update linear velocities for one active contact. Neither this record nor those bounded components provides a friction solver, support inference, contact persistence, or a general multi-contact solution.
 
 | Field | Meaning |
 |---|---|
@@ -25,7 +25,7 @@ The constructor requires a unit normal within a documented numerical tolerance a
 - Active contact is not proof of support. Support requires a model that accounts for load, gravity, friction, and the intended support criterion.
 - Force and impulse are distinct measurements and are not substituted for one another.
 - This initial contract describes body pairs, not individual collider/shape pairs. Extend identity granularity only when the owning collision model has stable shape identities.
-- No collision detector, contact persistence tracker, friction model, solver, or rigid-body integrator is implied.
+- The record alone implies no detector, persistence tracker, friction model, solver, or rigid-body integrator. See [sphere-sphere detection](SPHERE_SPHERE_CONTACT.md) and [bounded normal impulse response](CONTACT_IMPULSE_RESPONSE.md) for the separately implemented, limited models.
 
 ## Tests
 
