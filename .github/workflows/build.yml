@@ -25,6 +25,9 @@ jobs:
       - name: Execute C# experiment and serialize actual run record
         run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
 
+      - name: Verify Markdown summary matches actual C# experiment
+        run: python3 tools/render_projectile_trajectory_markdown.py /tmp/projectile-trajectory.actual.json docs/experiments/projectile-trajectory.md --check
+
       - name: Render SVG from actual C# run record
         run: python3 tools/render_projectile_trajectory.py /tmp/projectile-trajectory.actual.json /tmp/projectile-trajectory.actual.svg
 
