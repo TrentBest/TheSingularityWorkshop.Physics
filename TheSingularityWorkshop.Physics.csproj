@@ -11,7 +11,7 @@
     <Authors>TheSingularityWorkshop</Authors>
     <Company>The Singularity Workshop</Company>
     <Description>Deterministic, composable physics models and evidence-linked simulation foundations for The Singularity Workshop.</Description>
-    <PackageTags>physics;deterministic;simulation;mechanics;thermodynamics;hydrodynamics;microbundle</PackageTags>
+    <PackageTags>physics;deterministic;simulation;mechanics;thermodynamics;hydrodynamics;acoustics;waves;microbundle</PackageTags>
     <RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Physics</RepositoryUrl>
     <PackageProjectUrl>https://github.com/TrentBest/TheSingularityWorkshop.Physics</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
