@@ -41,9 +41,9 @@ Every generated artifact points to the run configuration and model versions used
 
 The repository already has a narrow working example: `ConstantAccelerationExperiment` records the initial one-dimensional state and every completed fixed step, while `ConstantAccelerationRunRecord` serializes the declared inputs, SI units, model/schema versions, and actual samples. See the [experiment implementation](../Physics/Experiments/ConstantAccelerationExperiment.cs), [run-record implementation](../Physics/Experiments/ConstantAccelerationRunRecord.cs), and [theory/evidence contract](THEORY.md). This is a foundation, not yet a general experiment or provenance framework.
 
-The 3D projectile state step is another tested primitive, but it does not yet emit a sampled trajectory record. The next useful experiment should connect that existing solver to the record pattern without implying that drag, launch mechanics, collision, or impact are implemented.
+The 3D trajectory experiment now connects that same solver to recorded samples. `ProjectileTrajectoryExperiment` stores the declared inputs, coordinate-frame convention, initial state, and every state returned by the existing solver; `ProjectileTrajectoryRunRecord` preserves those samples with model/schema identity and SI units. See [the experiment and record implementation](../Physics/Experiments/ProjectileTrajectoryExperiment.cs) and [the trajectory acceptance tests](../tests/TheSingularityWorkshop.Physics.Tests/ProjectileTrajectoryExperimentTests.cs). This is a sampled analytical trajectory, not a drag, launch-mechanism, collision, or impact simulation.
 
-### Minimum trajectory experiment contract
+### Implemented trajectory experiment contract
 
 A first trajectory experiment should declare and preserve:
 
