@@ -74,3 +74,8 @@ Do not attempt a universal solver in one jump. Preferred sequence:
 8. Record model, payload-profile and LUT/table versions/digests in run provenance wherever they influence results.
 
 Animal-like ontology entries mentioned as possible user-authored content must not imply a biological injury model. Begin with inert test payloads and only claim the response fidelity actually implemented. Presentation particles/effects are never authoritative physical fragments. No release, merge, publication or deployment is authorized by this handoff.
+
+
+## Operation Sith branch discipline — 2026-10-16
+
+Operation Sith is the current priority. Work directly on the existing `development` branch as the sole active integration branch. Do not create another feature/work branch, even for an isolated implementation slice. Before touching an existing work branch, classify its unique code, tests, docs, CI evidence, and PR dependencies; preserve valuable work on `development` in reviewable increments. Do not blindly merge stacked branch heads or discard unique work to reduce the count. `master` remains the stable branch; promotion is a separate reviewed step. Branch deletion is not authorized by this note. Do not widen this operation into the later Castle Siege / Experiences migration, WebPage source edits, publication, release, or deployment.
