@@ -43,7 +43,7 @@ The repository has a narrow working example: `ConstantAccelerationExperiment` re
 
 The 3D trajectory experiment connects the existing analytical solver to recorded samples. `ProjectileTrajectoryExperiment` stores declared inputs, coordinate-frame convention, initial state, and each solver state; `ProjectileTrajectoryRunRecord` preserves those samples with model/schema identity and SI units. See the [experiment and record implementation](../Physics/Experiments/ProjectileTrajectoryExperiment.cs) and [trajectory acceptance tests](../tests/TheSingularityWorkshop.Physics.Tests/ProjectileTrajectoryExperimentTests.cs).
 
-The first X/Z trajectory SVG is now generated from a versioned JSON run-record fixture using a renderer outside the Physics assembly. The renderer only reads recorded positions and times; it does not duplicate the solver. [The page](experiments/projectile-trajectory.md), [serialized fixture](experiments/projectile-trajectory.run.json), and [renderer](../tools/render_projectile_trajectory.py) are linked. CI checks that the committed SVG matches the fixture. This is one narrow reproducible path, not yet a universal theory generator or an automatic C#-to-documentation pipeline.
+The X/Z trajectory SVG is rendered by a tool outside the Physics assembly. CI executes the C# trajectory experiment, serializes its actual run record to a temporary file, renders an SVG from that output, and byte-compares it with the committed illustration. CI also checks the illustration against the checked-in, reviewable JSON fixture. Both paths must agree, so the live C# model—not only hand-maintained sample data—guards the visual evidence. The renderer reads recorded positions and times; it does not duplicate the solver. [The page](experiments/projectile-trajectory.md), [serialized fixture](experiments/projectile-trajectory.run.json), [C# record generator](../tools/ProjectileRunRecordGenerator/Program.cs), and [renderer](../tools/render_projectile_trajectory.py) are linked. This is one narrow reproducible path, not yet a universal theory generator.
 
 ### Implemented trajectory experiment contract
 
@@ -59,10 +59,10 @@ Do not invent external measurement provenance for a purely analytical demonstrat
 
 ## Next steps
 
-1. Accept a serialized run record emitted by the running experiment, not only a checked-in fixture.
-2. Generate a companion Markdown summary from that same record.
-3. Add bounded input controls that rerun an experiment or clearly identify the exact run being displayed.
-4. Extend the provenance contract before mixing measured data, model versions, and derived observations.
+1. Generate a companion Markdown summary from the same actual run record and validate it in CI.
+2. Add bounded input controls that rerun an experiment or clearly identify the exact run being displayed.
+3. Extend the provenance contract before mixing measured data, model versions, and derived observations.
+4. Generalize the evidence pipeline only after another physical model demonstrates the same end-to-end contract.
 
 ---
 
