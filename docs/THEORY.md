@@ -36,6 +36,30 @@ The constant-acceleration experiment runner records the initial state and each r
 
 This first format is intentionally narrow. It does not yet include external reference sources, source-data licenses, uncertainty estimates, model build hashes, independent reference comparisons, or a generated narrative with citations. Those are future additions, not implied capabilities.
 
+## Current executable example: 3D projectile state step
+
+The repository now contains a small analytical projectile-state step, implemented in [`ProjectileState.cs`](../Physics/Kinematics/ProjectileState.cs) and exercised by [`ConstantAccelerationProjectileSolverTests.cs`](../tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationProjectileSolverTests.cs). It advances a point state under constant acceleration; it does not yet produce a sampled trajectory record.
+
+For initial position `x₀`, velocity `v₀`, constant acceleration `a`, and positive timestep `Δt`, the model is:
+
+\[
+\mathbf{x}_{1}=\mathbf{x}_{0}+\mathbf{v}_{0}\Delta t+\frac{1}{2}\mathbf{a}(\Delta t)^2
+\]
+
+\[
+\mathbf{v}_{1}=\mathbf{v}_{0}+\mathbf{a}\Delta t
+\]
+
+The source uses `Vector3d` for position, velocity, and acceleration. The state documents position in metres, velocity in metres per second, acceleration in metres per second squared, and elapsed logical time in seconds. The caller owns the coordinate-frame convention; one test chooses Z-up and applies gravity as `(0, 0, -9.81) m/s²`.
+
+The focused tests establish the following bounded claims:
+
+- One three-dimensional example matches hand-computed analytical component values within `1e-12`.
+- One hundred fixed 0.01-second steps agree with a single 1-second step within the test's tolerance for the checked state components.
+- Invalid elapsed time, invalid timestep values, and elapsed-time overflow are rejected.
+
+These checks do **not** validate the chosen gravity value against a measurement, a launch mechanism, aerodynamic drag, collision, target intersection, impact, or structural damage. The next evidence-bearing increment is a versioned trajectory experiment that records inputs and sampled states, with its own validation contract.
+
 ## Generated explanations
 
 Living theory should be generated from versioned model metadata and actual experiment records, not from visual appearance alone. An explanation can show equations and symbol definitions, labeled diagrams with units, interactive parameter changes, expected/observed curves, conservation checks, numerical residuals, references, licenses, and explicit “not modeled” disclosures.
