@@ -1,6 +1,6 @@
 # Projectile trajectory: first recorded 3D experiment
 
-This page documents one deliberately narrow, reproducible run of `ProjectileTrajectoryExperiment`. The chart is the X/Z side projection of a three-dimensional state; the Y coordinate remains part of the solver state but is zero for this example.
+This page documents one deliberately narrow run of `ProjectileTrajectoryExperiment`. The X/Z chart is generated from the serialized sample states, not from a second implementation of the physics equations. The Y coordinate remains part of the recorded state and is zero for this example.
 
 ## Declared experiment
 
@@ -15,21 +15,36 @@ This page documents one deliberately narrow, reproducible run of `ProjectileTraj
 | Recorded samples | 9, including the initial state |
 | Simulated duration | 2.0 s |
 
-The plotted fixture uses the constant-acceleration equations implemented by the existing solver:
+The solver's constant-acceleration relationships are:
 
 - Position: **p(t) = p₀ + v₀t + ½at²**
 - Velocity: **v(t) = v₀ + at**
 
-The nine sample timestamps are 0, 0.25, 0.50, 0.75, 1.00, 1.25, 1.50, 1.75, and 2.00 seconds. Markers represent sampled logical states; the connecting line is a visual guide between samples.
+Markers correspond to the exact recorded sample states. The connecting line is only a visual guide between those samples.
 
-![X/Z projection of the recorded-example trajectory](projectile-trajectory.svg)
+![X/Z projection generated from the serialized trajectory run record](projectile-trajectory.svg)
+
+## Reproduce the illustration
+
+The fixture at [projectile-trajectory.run.json](projectile-trajectory.run.json) uses the same JSON property contract as `ProjectileTrajectoryRunRecord.ToJson()`. It is a checked-in reproducible run record for this example. The renderer reads positions and timestamps from the record; it does not recalculate the trajectory.
+
+From the repository root, regenerate the SVG:
+
+```bash
+python3 tools/render_projectile_trajectory.py \
+  docs/experiments/projectile-trajectory.run.json \
+  docs/experiments/projectile-trajectory.svg
+```
+
+The build runs the same renderer in `--check` mode to catch stale illustrations. To produce a chart for a newly executed experiment, save its `ProjectileTrajectoryRunRecord.ToJson()` output as JSON and pass that file instead of the checked-in fixture.
 
 ## Evidence and limitations
 
 - [Experiment implementation](../../Physics/Experiments/ProjectileTrajectoryExperiment.cs)
 - [Acceptance tests](../../tests/TheSingularityWorkshop.Physics.Tests/ProjectileTrajectoryExperimentTests.cs)
+- [Renderer source](../../tools/render_projectile_trajectory.py)
 - [Living theory and evidence contract](../LIVING_THEORY.md)
 
-The acceptance tests compare each sample with the analytical solution and check repeatability, invalid inputs, and serialization. This illustration is a declared analytical example, not a claim that the SVG is automatically emitted by the runtime yet. The next documentation step should render directly from a serialized run record so the visual and recorded samples share a single generated source.
+The acceptance tests compare each solver sample with the analytical solution and check repeatability, invalid inputs, and serialization. The fixture represents a deterministic analytical example, not external measurements.
 
 This model does **not** implement aerodynamic drag, spin, a launch mechanism, collisions, terrain intersection, or impact physics. It should not be interpreted as evidence of real-world flight accuracy.
