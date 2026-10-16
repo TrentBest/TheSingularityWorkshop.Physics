@@ -85,6 +85,9 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
 - [Determinism contract](docs/DETERMINISM.md) — replay, time, ordering, and numerical limits
 - [Roadmap](docs/ROADMAP.md) — staged path from mechanics to coupled phenomena
+- [Castle Siege physics domain](docs/CASTLE_SIEGE_PHYSICS_DOMAIN.md) — the full causal domain, fidelity ladder, capability gates, and validation principles
+- [Castle Siege experiment catalog](docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md) — a staged catalog of reusable questions, controls, observations, and regression tests
+- [Castle Siege WebPageLLM build plan](docs/CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) — host integration, destination/scene plan, adapter boundary, build slices, and acceptance checklist
 - [Living documentation design](docs/LIVING_THEORY.md) — future generated explainers, measurements, and SVG diagrams
 
 The long-term goal is not a library of static pages about physics. It is living theory: explanations that can show the governing model, expose assumptions, run an experiment, display measurements, and trace each conclusion to its source.
