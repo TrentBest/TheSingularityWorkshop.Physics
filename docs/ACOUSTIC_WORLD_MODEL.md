@@ -4,7 +4,7 @@
 
 Sound belongs in the physical world. A source vibrates, the environment carries and transforms that disturbance, surfaces reflect or absorb energy, barriers shape the path, and a listener receives a signal. Audio playback should present those results—not be a collection of unrelated clips attached to events.
 
-This document defines a direction for composable acoustic capabilities in TheSingularityWorkshop.Physics. It is a design contract and staged roadmap, not a claim that a wave solver, room-acoustics engine, binaural renderer, or acoustic perception system already exists.
+This document defines composable acoustic capabilities in TheSingularityWorkshop.Physics. The branch now includes a first executable free-field observation baseline (source/listener positions, constant-speed propagation delay, normalized direction, and a distance-based dB SPL estimate) with tests. It is not yet a waveform delay line, wave solver, room-acoustics engine, binaural renderer, or acoustic perception system.
 
 ## The central idea: resolution follows the listener
 
@@ -157,8 +157,8 @@ Benchmarks should report source count, geometry, frequency representation, updat
 
 ## Incremental roadmap
 
-1. Define units, source/receiver contracts, acoustic materials, and the first simplified propagation model.
-2. Implement and test a deterministic free-field baseline with distance and propagation delay.
+1. **Implemented on this branch:** define metre-based positions, source/listener contracts, constant sound speed, free-field propagation delay, normalized source direction, and reference-level distance response; validate with deterministic unit tests.
+2. Add an actual time-varying source signal and delayed receiver buffer, with explicit sample rate and fractional-delay policy.
 3. Add occlusion and simple reflections using an explicitly selected method.
 4. Add listener-centric resolution and acoustic-region interfaces.
 5. Add binaural receiver output and verify direction cues.
@@ -168,3 +168,17 @@ Benchmarks should report source count, geometry, frequency representation, updat
 9. Introduce higher-cost local wave simulation only where it improves a defined listener-relevant error metric enough to justify its cost.
 
 The goal is not to simulate every air molecule or store a tiny cube for every point in the city. It is to preserve important physical and perceptual consequences at the right scale, with a model that can explain its outputs and expose them to agents and applications.
+
+
+## First executable baseline on `work/acoustic-free-field`
+
+The initial implementation lives in `Physics/Acoustics/FreeFieldAcoustics.cs`:
+
+- `AcousticPosition3` stores finite XYZ coordinates in metres.
+- `AcousticSource` identifies a point source and its reference dB SPL at a declared reference distance.
+- `AcousticListener` identifies the receiving position.
+- `FreeFieldAcoustics.Observe` returns source/listener IDs, separation, propagation delay, direction from listener toward source, and estimated received dB SPL.
+
+The baseline uses a constant 343 m/s sound speed by default and the idealized point-source pressure-spreading relation `L(r) = L(r₀) − 20 log₁₀(max(r, r₀)/r₀)`. The level is clamped at the reference distance for closer positions because this far-field approximation should not be extrapolated into the source's near field. Propagation delay still uses the actual separation.
+
+This is an analytical observation model—not a simulated pressure waveform, material interaction, reflection, occlusion, Doppler, ear-canal model, or audible playback. Those require separate contracts and validation. Tests cover delay, inverse-distance pressure-level response, direction, coincident positions, near-field clamping, and invalid inputs.
