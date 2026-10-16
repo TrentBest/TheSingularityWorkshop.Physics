@@ -37,7 +37,37 @@ Every generated artifact points to the run configuration and model versions used
 5. Add version-aware comparison and replay.
 6. Let the Workshop host combine those pages into the Singularity Laboratory's navigable research spaces.
 
-The first useful living document is one small experiment whose assumptions, equations, run, measurements, and explanation stay connected.
+## First concrete path: from an existing run record to a living experiment
+
+The repository already has a narrow working example: `ConstantAccelerationExperiment` records the initial one-dimensional state and every completed fixed step, while `ConstantAccelerationRunRecord` serializes the declared inputs, SI units, model/schema versions, and actual samples. See the [experiment implementation](../Physics/Experiments/ConstantAccelerationExperiment.cs), [run-record implementation](../Physics/Experiments/ConstantAccelerationRunRecord.cs), and [theory/evidence contract](THEORY.md). This is a foundation, not yet a general experiment or provenance framework.
+
+The 3D projectile state step is another tested primitive, but it does not yet emit a sampled trajectory record. The next useful experiment should connect that existing solver to the record pattern without implying that drag, launch mechanics, collision, or impact are implemented.
+
+### Minimum trajectory experiment contract
+
+A first trajectory experiment should declare and preserve:
+
+- **Identity:** stable model ID, model-contract version, and run-record schema version.
+- **Initial state:** position and velocity vectors, elapsed logical time, and SI units.
+- **Environment:** constant acceleration vector and the coordinate-frame/sign convention chosen by the caller.
+- **Schedule:** positive finite fixed timestep and positive step count, with overflow/invalid-input behavior defined.
+- **Samples:** the initial state plus each completed logical step, in stable order.
+- **Derived observations:** final state and, when useful, per-sample logical time; derived values must be traceable to recorded samples.
+- **Validation evidence:** analytical comparison for constant acceleration, a declared numerical tolerance, invalid-input tests, and a repeatability test.
+- **Limitations:** explicit statement that the run is a point-mass kinematics experiment, not evidence for aerodynamic flight, real-world launch accuracy, target intersection, or impact physics.
+
+Do not invent external measurement provenance for a purely analytical demonstration. If a later experiment uses measured gravity, wind, launch speed, or other external data, record the source and uncertainty separately from the model's own computed output.
+
+### Evidence path for the first living page
+
+1. Reuse the tested constant-acceleration solver; do not reimplement the equations in the renderer.
+2. Define a small immutable experiment input and run record, keeping the coordinate frame explicit.
+3. Record the initial state and each sampled state from actual solver calls.
+4. Test each sample against the analytical solution, then test repeatability and invalid boundaries.
+5. Generate a static Markdown/SVG page from the record, labeling axes and values with units and distinguishing analytical predictions from simulated samples.
+6. Only after the static artifact is reproducible should interactive controls be connected to bounded inputs. A control must rerun or clearly identify the exact run it is displaying.
+
+The first living page can therefore be narrow and honest: a declared model, equations, a real recorded run, plotted samples, validation results, source links, and a visible list of omitted physics. It need not wait for a universal experiment schema or a full physics engine.
 
 ---
 
