@@ -79,3 +79,14 @@ Animal-like ontology entries mentioned as possible user-authored content must no
 ## Operation Sith branch discipline — 2026-10-16
 
 Operation Sith is the current priority. Work directly on the existing `development` branch as the sole active integration branch. Do not create another feature/work branch, even for an isolated implementation slice. Before touching an existing work branch, classify its unique code, tests, docs, CI evidence, and PR dependencies; preserve valuable work on `development` in reviewable increments. Do not blindly merge stacked branch heads or discard unique work to reduce the count. `master` remains the stable branch; promotion is a separate reviewed step. Branch deletion is not authorized by this note. Do not widen this operation into the later Castle Siege / Experiences migration, WebPage source edits, publication, release, or deployment.
+
+
+## Operation Sith — consolidated implementation status (2026-10-16)
+
+Work directly on `development` as the sole active integration branch. Do not create more work branches. The spatial/mechanics/contact, lumped thermal-state, hydrodynamics, geology, stellar-roadmap, and acoustic slices from the former stacked branches have now been ported or superseded on `development`; their focused tests are included. The integrated Physics Build and Tests workflow passed at `8f0341870ac5d498e10f5bf6576cbd335b87ef75` (run #268).
+
+All PRs in the current work stack are closed. Do not reopen them merely to merge their full histories: several contain duplicated foundational files or branch-specific workflow edits. The unique implementation/test/doc files were ported directly and the current branch’s roadmap, domain atlas, and README were reconciled.
+
+There are still 25 refs on GitHub: `development`, `master`, `main`, and 22 `work/*` refs. The `work/*` refs are ready for user-reviewed deletion because their unique changes are integrated or superseded on `development`. Do not delete refs from this agent. GitHub still names `main` as the default branch; the user must switch the default to `master` in repository Settings → Branches before deleting `main`. Keep `master` stable; do not promote `development` or publish a package without explicit authorization.
+
+Current scope is intentionally honest: the physics primitives are not a general rigid-body/articulated solver; hydrodynamics is not full 3D fluid dynamics; stellar physics remains documentation only; castle-siege payloads/versus remain a documented future integration and have not been moved to Experiences.
