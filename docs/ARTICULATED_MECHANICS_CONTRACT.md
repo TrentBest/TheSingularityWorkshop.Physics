@@ -79,10 +79,11 @@ The simplest model that validates the contract is preferable to an expansive but
 
 ## Relationship to current implementation
 
-The current Physics implementation provides a one-dimensional constant-acceleration analytical kernel and deterministic experiment/run-record foundations. It does not yet implement spatial rigid bodies, articulated constraints, collision/contact solving, joint reaction loads, or structural failure. The proposed slice above is future work, not an implemented capability.
+The current development branch contains finite spatial vectors, normalized quaternion orientation, metre-based poses, timestamped rigid-body snapshots, a bounded 3D translational distance-link experiment, a validated per-step `ContactObservation` contract, sphere-sphere narrowphase detection, a limited frictionless normal-impulse response for one contact at a time, and bounded single-contact positional correction. These are deliberately separate primitives, not a general collision or articulated solver.
 
+The contact resolver updates linear velocities only; it does not account for angular inertia, friction, simultaneous contacts, broadphase, persistent contact manifolds, or rigid joints. Positional correction is a separate stabilization operation and callers must recompute narrowphase contacts afterward. There is still no rigid-body time integrator, articulated constraint-reaction-load model, structural-failure/topology implementation, or completed Physics-to-Gestures acceptance suite. The complete proposed slice remains future work.
 ---
 
 ## Resources
 
-[Physics architecture](ARCHITECTURE.md) · [Determinism contract](DETERMINISM.md) · [Physics roadmap](ROADMAP.md) · [Gestures](https://github.com/TrentBest/TheSingularityWorkshop.Gestures)
+[Physics architecture](ARCHITECTURE.md) · [Determinism contract](DETERMINISM.md) · [Contact observation contract](CONTACT_OBSERVATION.md) · [Sphere-sphere contact detection](SPHERE_SPHERE_CONTACT.md) · [Normal contact impulse response](CONTACT_IMPULSE_RESPONSE.md) · [Contact positional correction](CONTACT_POSITIONAL_CORRECTION.md) · [Physics roadmap](ROADMAP.md) · [Gestures](https://github.com/TrentBest/TheSingularityWorkshop.Gestures)
