@@ -274,3 +274,14 @@ The game should be approachable like an Angry Birds-style destruction game: fast
 The Physics-domain design is expanded in docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md with build snapshots, symmetric inventories, turn lifecycle, fairness, bounded work, authoritative result ownership and acceptance tests. docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md adds CS-13 through CS-15 for equal-kit construction, alternating-turn play and pull-control mapping.
 
 **Boundary:** this is a design/acceptance update only. No playable match coordinator, multiplayer transport, construction UI, damage solver, or WebPage scene is claimed. Physics remains the authority for modeled outcomes; match rules/turn UI belong to the host Experience/coordinator. Continue working directly on development under Operation Sith; no new branch, merge to master, release, publication or deployment is authorized.
+
+
+## 2026-10-16 — First executable 3D projectile step
+
+**Status:** code and regression tests added on `development`; CI result pending at time of entry.
+
+- Added `ProjectileState` and `ConstantAccelerationProjectileSolver` as a renderer-independent, 3D analytical kinematic step using `Vector3d`. Position, velocity, acceleration, and logical time have documented SI semantics.
+- Added tests for a gravity-driven analytical state, repeated fixed steps versus one equivalent step, invalid elapsed time/timestep, and elapsed-time overflow.
+- Updated the experiment catalog and roadmap to distinguish this implemented step from the still-missing launch-angle adapter, immutable trajectory runner/run record, target intersection, impact response, and structural damage.
+- This is deliberately not a rigid-body integrator, collision detector, trebuchet mechanism, drag model, or playable castle duel. The next useful increment is a validated launch-state/trajectory experiment with samples and run identity; target geometry should follow as a separately tested gate.
+- Scope remains Physics repository only. No WebPage, Gestures, Visualize, or Renderer files were changed. No new branch, merge, release, package publication, or deployment was performed.
