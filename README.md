@@ -60,7 +60,7 @@ var json = runRecord.ToJson();
 // 20 completed steps, 21 samples, 2 seconds of logical time.
 ```
 
-This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. The run-record format is an initial schema; broad source provenance, uncertainty analysis, the ramp experiment, and coupled models remain future work.
+This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. See the [experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationExperimentTests.cs) and [run-record tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationRunRecordTests.cs) for the executable acceptance surface. The run-record format is an initial schema; broad source provenance, uncertainty analysis, the ramp experiment, and coupled models remain future work.
 
 ![Physics architecture](docs/images/physics-architecture.svg)
 
@@ -99,9 +99,10 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Castle Siege experiment catalog](docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md) — a staged catalog of reusable questions, controls, observations, and regression tests
 - [Castle Siege WebPageLLM build plan](docs/CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) — host integration, destination/scene plan, adapter boundary, build slices, and acceptance checklist
 - [3D projectile kernel](Physics/Kinematics/ProjectileState.cs) — analytical constant-acceleration state advancement with explicit SI units; [focused tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationProjectileSolverTests.cs); not a collision or rigid-body solver
+- [First living trajectory experiment contract](docs/LIVING_THEORY.md#minimum-trajectory-experiment-contract) — the next evidence-bearing step from the tested 3D state kernel to recorded samples, analytical checks, and a generated explanation
 - [Physics and Math LUT policy](docs/PHYSICS_MATH_LUTS.md) — LUT types, provenance, interpolation, error budgets, ownership, and dependency gates
 - [Castle Siege payloads and versus play](docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) — data-driven payloads, one-to-many impact, settling, castle construction, alternating turns, and the FPS path
-- [Living documentation design](docs/LIVING_THEORY.md) — future generated explainers, measurements, and SVG diagrams
+- [Living theory & interactive documentation](docs/LIVING_THEORY.md) — generated explainers, measured observations, accessible SVG diagrams, and the staged path toward a recorded 3D trajectory
 
 The long-term goal is not a library of static pages about physics. It is living theory: explanations that can show the governing model, expose assumptions, run an experiment, display measurements, and trace each conclusion to its source.
 
