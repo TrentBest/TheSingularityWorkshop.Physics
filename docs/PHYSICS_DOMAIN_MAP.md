@@ -71,7 +71,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Key exchanges:** mass and momentum flux; pressure and shear forces; advection of thermal energy and species.
 - **First usable slice:** a documented low-complexity incompressible flow case with explicit geometry, boundary conditions, stability limits, and convergence checks. Add buoyancy and fluid-solid coupling only as separate validated increments.
 - **Guardrail:** distinguish a fluid parcel's state from a spatial fluid field. State whether a model is incompressible, compressible, inviscid, viscous, laminar, or turbulent; do not imply general fluid simulation from one special case.
-- **Current status:** planned; no hydrodynamics solver is implemented on `development`.
+- **Current status:** `LinearWaveBasin1D`, flat-bed `ShallowWaterBasin2D`, and terrain-aware `BathymetricShallowWaterBasin2D` are implemented on `development`, including bounded wet-dry shoreline behavior. These are explicit numerical references, not general 3D Navier–Stokes, turbulent flow, breaking-wave, boat-coupling, or full rainfall/runoff solvers.
 
 ### E. Materials and continuum response
 - **Covers:** elements, compounds, mixtures, alloys, density, thermal properties, elasticity, plasticity, damage, fracture, and phase-dependent behavior.
@@ -103,6 +103,22 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **First usable slice:** define the intended scale, observable, and approximation before choosing a model.
 - **Guardrail:** keep these as explicit future regimes; do not present classical models as universally valid.
 
+### J. Geology, tectonics, and geomorphology
+- **Covers:** terrain elevation, volcanic deposition, tectonic uplift/subsidence, crustal deformation, weathering, erosion, sediment transport, and long-term landscape evolution.
+- **Key exchanges:** mass/volume transfer, heat, stress/strain, fluid forces, material properties, and time scale.
+- **First usable slice:** a volume-accounted terrain height field changed by a prescribed volcanic deposition event; then explicit bed-elevation coupling to water and erosion/sediment accounting.
+- **Guardrail:** generated elevation is physical state; labels such as “cliff,” “ridge,” or “volcanic cone” are expert-domain interpretations of measured geometry and material evidence. Do not confuse a procedural shape kernel with a full tectonic or eruption model.
+- **Current status:** `VolcanicTerrain2D` is implemented on `development` as a prescribed-volume, deterministic deposition model. Tectonic motion, magma dynamics, cooling, and erosion remain future work.
+
+### K. Stellar physics and planetary energy
+- **Covers:** stellar energy generation and structure at declared levels of fidelity; luminosity and spectral output; radiation through space; planetary absorption, reflection, thermal storage, and later atmosphere/ocean coupling.
+- **Key exchanges:** luminosity and spectrum; irradiance at distance; absorbed/emitted power; thermal energy; orbital and surface geometry.
+- **First usable slice:** a source model with explicit luminosity and a tested inverse-square radiation law, coupled to an energy-accounted planetary thermal budget.
+- **Deeper model:** a spherically symmetric stellar-structure solver using mass continuity, hydrostatic equilibrium, energy generation, an equation of state, opacity, and radiative/convective transport assumptions; later compare with trusted stellar reference models.
+- **Guardrail:** do not simulate microscopic fusion events when an effective model preserves the required observables. Distinguish luminosity, irradiance, and received energy; a radiation source alone is not a stellar interior or a climate model.
+- **Current status:** planned; see [Stellar physics and planetary energy roadmap](STELLAR_PHYSICS_AND_PLANETARY_ENERGY.md). No stellar solver or planetary irradiation coupling is claimed implemented.
+
+
 ### J. Persistent worlds, scale, and history
 - **Covers:** deterministic spatial addressing, multirate simulation, coarse/fine representations, persistence, checkpointing, replay, and isolated timeline branches.
 - **Key exchanges:** conservative state handoffs, elapsed logical time, provenance, and authoritative state.
@@ -133,7 +149,7 @@ The fire experiment is a demanding integration test, not the definition of Physi
 
 ## Current truth
 
-This map is a plan, not a claim of completion. On `development`, the working executable proof remains the one-dimensional constant-acceleration model, alongside universe/time/replay and broadphase foundations. Thermodynamics, hydrodynamics, heat transfer, materials, chemistry, and combustion still need implementation. Spatial mechanics work in open pull requests remains unmerged until explicitly approved.
+This map is a plan, not a claim of completion. On `development`, bounded executable slices include constant-acceleration mechanics, spatial state and contact primitives, lumped thermal state, 1D linear waves, 2D shallow-water flow over flat and fixed terrain beds with wet-dry shorelines, volume-accounted volcanic deposition, and free-field acoustic observations. Each has deliberately limited scope; broad coupled solvers, heat transfer, material constitutive response, chemistry/combustion, erosion, stellar physics, and complete articulated mechanics remain future work.
 
 ---
 [Physics roadmap](ROADMAP.md) · [Physics classes & ontology](PHYSICS_CLASSES.md) · [Theory and evidence](THEORY.md)
