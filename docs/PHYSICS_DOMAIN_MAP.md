@@ -51,7 +51,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Covers:** kinematics, forces, rigid bodies, constraints, contacts, deformation, fracture, and multibody systems.
 - **Key exchanges:** momentum and energy; contact forces; constraint reactions; deformation and failure state.
 - **First usable slice:** analytical motion followed by bounded rigid-body and constraint scenarios.
-- **Current status:** constant-acceleration kernel and broadphase primitives exist on `development`; spatial/contact mechanics work is also being developed in open, unmerged PRs.
+- **Current status:** bounded constant-acceleration kinematics, spatial value/state types, AABB sweep-and-prune candidate screening, sphere-sphere contact observations, single-contact frictionless normal-impulse response, positional correction, and axial spring-damper/failure primitives are implemented and tested on `development`. These are composable narrow slices, not a general rigid-body, frictional, multi-contact, or articulated solver.
 
 ### B. Thermodynamics and energy
 - **Covers:** internal energy, temperature, heat capacity, equations of state where supported, thermal equilibrium, phase change, and energy accounting.
