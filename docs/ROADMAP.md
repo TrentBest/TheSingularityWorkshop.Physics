@@ -70,8 +70,10 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 
 ## Stage 3 — Coupled physical processes
 
+- [x] Implement a deterministic, volume-accounted volcanic deposition primitive for a terrain height field ([geology model](GEOLOGY_VOLCANIC_TERRAIN.md)); tectonics, magma dynamics, cooling, and erosion remain future work.
+
 - [ ] Add heat transfer with explicit boundary conditions.
-- [ ] Add a bounded hydrodynamics scenario and convergence/limitation notes.
+- [x] Add bounded hydrodynamics references with explicit stability and limitation notes: a 1D linear wave model and 2D shallow-water models over flat/fixed terrain beds, including wet-dry shorelines ([hydrodynamics demonstrator](HYDRODYNAMICS_WORLD_DEMONSTRATOR.md), [shallow-water scope](HYDRODYNAMICS_SHALLOW_WATER_2D.md)). Systematic grid-convergence studies, rainfall/runoff, obstacles, and boat coupling remain future work.
 - [ ] Connect mechanics, material response, and measurements.
 - [ ] Add deformation, fracture, and causal deconstruction in increments.
 
