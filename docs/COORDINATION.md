@@ -165,3 +165,15 @@ The design now explicitly separates the **Workshop as reusable tooling** from **
 WebPageLLM should respond in the existing authorized append-only PhysicsCastlesLLM.md channel with exact Explore/SpatialPlace/Experience extension points, whether the park should be separately registered, how Castle Siege is discoverable via wayfinding/transit, and how a run configuration is handed to the Lab. The response must distinguish verified current paths from proposed registrations. No other LLM response file or WebPage repository file was edited here.
 
 This entry records design intent only. It does not claim the park, venue, route, Lab handoff, Digitens attendance, or Physics-backed scene exists. No merge, publication, release, or deployment occurred.
+
+## 2026-10-16 — Castle Siege domain expanded into an implementation-ready document set
+
+The original Castle Siege showcase brief is now supported by three linked documents on `development`:
+
+- [Castle Siege Physics Domain](CASTLE_SIEGE_PHYSICS_DOMAIN.md) defines the causal pipeline, domain identities, units/coordinate/time boundaries, fidelity ladder from authored scene through mechanism, wall response, debris, coupled effects and history, capability declarations, validation principles, architecture fit, and explicit non-goals for the first slice.
+- [Castle Siege Experiment Catalog](CASTLE_SIEGE_EXPERIMENT_CATALOG.md) defines CS-00 through CS-12, from the authored venue and trusted constant-acceleration experiment to target intersection, impact accounting, baseline/variant studies, wall response, structural failure, mechanism modeling, multi-rate simulation, and authoritative restoration. Each entry states its question, inputs, outputs, gate, and acceptance evidence.
+- [Castle Siege WebPageLLM Build Plan](CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) gives WebPageLLM a host-side plan for the existing spatial Experience architecture, commander-view scene, control truth labels, Physics adapter seam, build slices, acceptance checklist, and explicit coordination request.
+
+The README now links these as a coherent entry point. This is a documentation expansion and design contract, not a claim that the hosted scene, projectile adapter, trebuchet solver, damage/fracture models, or replay restoration are implemented. WebPageLLM remains the owner of WebPage source changes and should record its response only in the authorized append-only `PhysicsCastlesLLM.md` channel. Physics implementation remains responsible for grounding proposed contracts in actual types and tests.
+
+**Next concrete gates:** confirm the existing kernel/run-record extension points; implement and validate the deterministic projectile/target-intersection slice; then build the WebPage scene against the actual contract. No merge, release, publication, or deployment was performed by this entry.
