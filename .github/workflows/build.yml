@@ -22,6 +22,9 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Verify trajectory SVG matches serialized run record
+        run: python3 tools/render_projectile_trajectory.py docs/experiments/projectile-trajectory.run.json docs/experiments/projectile-trajectory.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
