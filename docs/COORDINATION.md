@@ -237,3 +237,29 @@ The repository has open draft PRs representing stacked increments, including PRs
 - Castle Siege / payload / LUT documents are design intent only. The eventual relocation of that experience to an Experiences repository is a later operation; do not widen this cleanup into that migration.
 
 This audit is based on live branch comparisons and the open-PR listing inspected on 2026-10-16. Branches were not deleted and no PR was merged by this entry.
+
+
+## Operation Sith — integration and deletion-readiness audit (2026-10-16, pass 2)
+
+### Result
+
+- All unique implementation, test, and documentation slices from the stacked spatial/mechanics/contact, thermal, hydrodynamics, geology, stellar-roadmap, and acoustic branches have been ported to `development` or superseded by a newer equivalent already on `development`.
+- The spatial/contact stack now includes `Vector3d`, `Quaterniond`, `Pose3d`, `RigidBodyState`, spatial distance spring-damper, `ContactObservation`, sphere-sphere narrowphase, bounded normal impulse response, and bounded positional correction. These are separate limited primitives, not a general rigid-body/articulated solver.
+- Thermodynamics includes the bounded lumped thermal-state primitive. Hydrodynamics includes a 1D linear-wave reference, a flat-bed 2D shallow-water model, and a terrain-aware shallow-water model with bounded wet-dry shoreline behavior. Geology includes prescribed-volume volcanic deposition. Acoustics includes an analytical free-field observation baseline. Stellar physics remains a roadmap only.
+- README links, domain atlas, roadmap, and scope documents were reconciled to distinguish implemented slices from future work. No Unity/WebPage dependency was introduced into the Physics core.
+- The integrated Physics Build and Tests workflow passed at development commit `8f0341870ac5d498e10f5bf6576cbd335b87ef75` (run [#268](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38966595047)).
+- All pull requests in this work stack are now closed; five were merged (#2, #3, #5, #11, #20), and the remaining stacked PRs were closed after their unique changes were ported directly to `development`. No release or package publication occurred.
+- No work branch has been deleted. This is intentional: the user will perform the final branch deletion after reviewing the inventory.
+
+### Branch deletion readiness
+
+The repository currently has 25 branches: `development`, `master`, `main`, and 22 `work/*` branches. The `work/*` branches are now eligible for deletion after the user’s review; their unique slices are integrated or superseded on `development`.
+
+**Important default-branch blocker:** GitHub still reports `main` as the repository default branch, and `master` is the intended stable branch under Sith policy. Before deleting `main`, change the repository default branch to `master` in GitHub Settings → Branches. This connector cannot change that repository setting or delete branch refs. Do not force-update `master` from `development`; no release/promotion was authorized.
+
+### Remaining truthfully incomplete
+
+- The code does not yet provide a general rigid-body time integrator, broadphase/contact manifold persistence, angular/frictional/multi-contact solving, rigid-joint reaction loads, or a complete articulated-mechanics acceptance scenario.
+- Hydrodynamics remains a bounded shallow-water/linear-wave foundation, not full 3D fluid dynamics, breaking waves, rainfall/runoff, boat coupling, or erosion.
+- Thermal transfer, phase change, material constitutive response, chemical reactions/combustion, erosion, stellar physics, and binaural/reflective/occluded acoustic propagation remain future work.
+- Castle-siege and payload/versus integration remains documented future work; no Experiences migration was performed.
