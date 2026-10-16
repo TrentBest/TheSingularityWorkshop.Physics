@@ -25,6 +25,15 @@ jobs:
       - name: Execute C# experiment and serialize actual run record
         run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
 
+      - name: Execute a bounded custom experiment
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.custom.json --delta-time=0.1 --steps=20 --vx=3 --vy=1 --vz=4 --ax=0.5 --ay=0 --az=-9.81
+
+      - name: Verify custom run inputs and sample count
+        run: python3 -c "import json; r=json.load(open('/tmp/projectile-trajectory.custom.json', encoding='utf-8')); d=r['definition']; s=r['samples']; assert d['deltaTime'] == 0.1; assert d['initialState']['velocity'] == {'x': 3, 'y': 1, 'z': 4}; assert d['acceleration'] == {'x': 0.5, 'y': 0, 'z': -9.81}; assert len(s) == 21; assert s[-1]['elapsedTime'] == 2.0; print('Custom bounded experiment inputs and 21 recorded states verified.')"
+
+      - name: Verify custom run record is reproducible
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.custom.json --delta-time=0.1 --steps=20 --vx=3 --vy=1 --vz=4 --ax=0.5 --ay=0 --az=-9.81 --check
+
       - name: Verify Markdown summary matches actual C# experiment
         run: python3 tools/render_projectile_trajectory_markdown.py /tmp/projectile-trajectory.actual.json docs/experiments/projectile-trajectory.md --check
 
