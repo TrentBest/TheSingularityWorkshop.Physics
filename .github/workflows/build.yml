@@ -22,10 +22,16 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Verify run record matches C# experiment output
-        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- docs/experiments/projectile-trajectory.run.json --check
+      - name: Execute C# experiment and serialize actual run record
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
 
-      - name: Verify trajectory SVG matches serialized run record
+      - name: Render SVG from actual C# run record
+        run: python3 tools/render_projectile_trajectory.py /tmp/projectile-trajectory.actual.json /tmp/projectile-trajectory.actual.svg
+
+      - name: Verify checked-in SVG matches actual C# experiment
+        run: cmp /tmp/projectile-trajectory.actual.svg docs/experiments/projectile-trajectory.svg
+
+      - name: Verify checked-in SVG matches the documented fixture
         run: python3 tools/render_projectile_trajectory.py docs/experiments/projectile-trajectory.run.json docs/experiments/projectile-trajectory.svg --check
 
       - name: Restore
