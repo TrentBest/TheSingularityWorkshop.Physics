@@ -53,3 +53,24 @@ Do not leap directly to a general masonry fracture engine. Propose the smallest 
 ## Initial status
 
 _No Physics implementation LLM response recorded yet._
+
+
+## Follow-on design gates: Math/LUT, ontology payloads, and competitive siege
+
+Use the following Physics-domain documents as the extended target, while implementing in evidence-backed increments:
+
+- [Physics and Math LUT policy](docs/PHYSICS_MATH_LUTS.md): distinguish mathematical/numerical, physical/empirical, ontology/content, and presentation/LOD tables. Do not add a Math package/runtime dependency until the actual Math MicroBundle is identified and its contract inspected. Physical LUTs require valid ranges, units, provenance, interpolation/boundary policy, error evidence, version/digest, and run provenance.
+- [Castle Siege payloads and versus play](docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md): model payload eligibility from machine envelope and explicit physical profiles, not asset-name strings; separate confirmed contact, impact observations, payload response, target response, fragment/body creation, settling, and presentation. The target domain includes delayed secondary movements and bounded settling/avalanche behavior when the requisite mechanics exist.
+- [Castle Siege Physics Domain](docs/CASTLE_SIEGE_PHYSICS_DOMAIN.md) and [Experiment Catalog](docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md): remain the core capability and experiment gates.
+
+Do not attempt a universal solver in one jump. Preferred sequence:
+1. Finish and validate deterministic projectile plus target intersection.
+2. Define the smallest payload-profile/machine-envelope contract and its eligibility tests.
+3. Deliver confirmed contact and impact observations.
+4. Implement one bounded inert payload-response case with explicit assumptions.
+5. Add physical fragment identity/state and settling/rest criteria; bound entity count and work.
+6. Add independently addressable castle sections and a bounded structural response.
+7. Keep versus turn orchestration and match rules outside the Physics numerical kernel; provide immutable experiment/run snapshots for a future coordinator.
+8. Record model, payload-profile and LUT/table versions/digests in run provenance wherever they influence results.
+
+Animal-like ontology entries mentioned as possible user-authored content must not imply a biological injury model. Begin with inert test payloads and only claim the response fidelity actually implemented. Presentation particles/effects are never authoritative physical fragments. No release, merge, publication or deployment is authorized by this handoff.
