@@ -4,7 +4,7 @@
 **Status:** design contract and test plan. The stages below are not claims that every model exists in code.  
 **Owners:** Physics owns models, units, state transitions, records, and validation; WebPageLLM owns the hosted Experience; this document coordinates their boundary.
 
-Related: [Castle Siege showcase](CASTLES_AND_CATAPULTS.md) · [Experiment catalog](CASTLE_SIEGE_EXPERIMENT_CATALOG.md) · [WebPage build plan](CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) · [Physics roadmap](ROADMAP.md) · [Physics classes](PHYSICS_CLASSES.md).
+Related: [Castle Siege showcase](CASTLES_AND_CATAPULTS.md) · [Experiment catalog](CASTLE_SIEGE_EXPERIMENT_CATALOG.md) · [WebPage build plan](CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) · [Payloads and versus play](CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) · [Physics/Math LUT policy](PHYSICS_MATH_LUTS.md) · [Physics roadmap](ROADMAP.md) · [Physics classes](PHYSICS_CLASSES.md).
 
 ## 1. Why this is the right proving ground
 
