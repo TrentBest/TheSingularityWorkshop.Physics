@@ -18,7 +18,7 @@ This roadmap separates architecture from completed functionality. Items move to 
 - [ ] Establish a tested minimum vertical slice for thermodynamics, hydrodynamics, materials, reactions, fields, and waves before deepening only one domain.
 - [ ] Use a bounded fire/combustion experiment as a cross-domain integration test after its prerequisite models exist; it is not a substitute for broader domain coverage.
 
-The domain map is architecture, not implementation. Thermodynamics, hydrodynamics, heat transfer, material response, chemical reactions, and combustion remain unimplemented on `development` until their models, tests, and scope are present.
+The domain map is architecture, not implementation. A first bounded lumped thermal-state model is implemented on `development`; broader thermodynamics, heat transfer, hydrodynamics, material response, chemical reactions, and combustion still require their own models, tests, and scope.
 
 ## Stage 1 — First executable proof: mechanics
 
@@ -63,8 +63,9 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 
 - [ ] Define elements versus compounds, mixtures, and alloys.
 - [ ] Add source/version/license provenance and valid property ranges.
-- [ ] Add energy and heat-capacity contracts.
-- [ ] Model heating/cooling with declared assumptions.
+- [x] Add a bounded lumped thermal-state contract with mass, absolute temperature, constant specific heat, reference temperature, and sensible-energy accounting ([first thermodynamics primitive](THERMODYNAMICS_FIRST_PRIMITIVE.md)).
+- [x] Apply explicit net energy transfers for bounded heating/cooling while rejecting invalid properties, overflow, and states below absolute zero.
+- [ ] Add temperature-dependent heat capacity, spatial gradients, transfer-rate models, and phase-change behavior.
 - [ ] Add one supported phase-transition model and tests.
 
 ## Stage 3 — Coupled physical processes
