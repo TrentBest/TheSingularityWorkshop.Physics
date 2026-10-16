@@ -80,7 +80,7 @@ def main():
     finish = page.index(END)
     current = page[start:finish].strip("\n")
     if args.check:
-        if current != "\n" + generated + "\n":
+        if current != generated:
             raise SystemExit("Markdown run summary is stale: regenerate it from the run record")
         print("Markdown run summary matches the supplied run record.")
         return
