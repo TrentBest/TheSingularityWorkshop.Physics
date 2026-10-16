@@ -88,7 +88,6 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Terrain interactions and MicroBundles](docs/TERRAIN_INTERACTIONS_AND_MICROBUNDLES.md) — terrain-dependent water impacts, emergent effects, and composable physical processes
 - [Hydrodynamics: shallow-water basin and bathymetry](docs/HYDRODYNAMICS_SHALLOW_WATER_2D.md) — conservative shallow-water fluxes, terrain-aware reconstruction, wet-dry shoreline support, and current numerical limits
 - [Thermodynamics: first bounded primitive](docs/THERMODYNAMICS_FIRST_PRIMITIVE.md) — lumped thermal state, sensible energy, assumptions, and limits
-- [Acoustic World Model](docs/ACOUSTIC_WORLD_MODEL.md) — listener-centred sound propagation, adaptive acoustic buckets, baking/caching, binaural reception, and sound-derived observations for agents (design roadmap; implementation remains staged).
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
 - [Theory and evidence](docs/THEORY.md) — how explanations connect to models and results
