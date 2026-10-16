@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Compile Remove="tests/**/*.cs" />
+    <Compile Remove="tools/**/*.cs" />
     <None Include="README.md" Pack="true" PackagePath="" />
     <None Include="LICENSE" Pack="true" PackagePath="" />
     <None Include="docs/**/*.md" Pack="true" PackagePath="docs/" />
