@@ -88,6 +88,8 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Castle Siege physics domain](docs/CASTLE_SIEGE_PHYSICS_DOMAIN.md) — the full causal domain, fidelity ladder, capability gates, and validation principles
 - [Castle Siege experiment catalog](docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md) — a staged catalog of reusable questions, controls, observations, and regression tests
 - [Castle Siege WebPageLLM build plan](docs/CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) — host integration, destination/scene plan, adapter boundary, build slices, and acceptance checklist
+- [Physics and Math LUT policy](docs/PHYSICS_MATH_LUTS.md) — LUT types, provenance, interpolation, error budgets, ownership, and dependency gates
+- [Castle Siege payloads and versus play](docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) — data-driven payloads, one-to-many impact, settling, castle construction, alternating turns, and the FPS path
 - [Living documentation design](docs/LIVING_THEORY.md) — future generated explainers, measurements, and SVG diagrams
 
 The long-term goal is not a library of static pages about physics. It is living theory: explanations that can show the governing model, expose assumptions, run an experiment, display measurements, and trace each conclusion to its source.
