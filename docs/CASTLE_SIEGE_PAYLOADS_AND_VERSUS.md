@@ -189,3 +189,90 @@ Start with an inert, nonliving payload that has a defensible response model. Add
 - [ ] The authoritative match stores model versions, profile/table digests, build snapshots and event history.
 - [ ] FPS/crew views consume the same physical state; the camera never decides physical outcomes.
 - [ ] Unsupported payloads or model capabilities fail explicitly and leave earlier valid observations intact.
+
+
+## 11. Equal-kit castle duel: build your own, then attack theirs
+
+This is the primary competitive variant alongside realistic siege experiments. It should be immediately legible like an Angry Birds-style turn-based destruction game, while allowing physical fidelity to grow toward realistic siege engineering. Do not force a choice between accessible game feel and inspectable physics: keep the rule layer simple and the simulation contract honest.
+
+### Match promise
+
+- Two players receive the same versioned inventory of construction parts, build-space constraints, placement rules, construction budget, and build time or move limit.
+- Each independently designs and locks a castle. Neither player can edit the opponent's castle after lock.
+- Both players receive the same declared siege-machine and ammunition access unless a named ruleset intentionally defines an asymmetry.
+- Players alternate attacks against the opposing player's locked castle. A turn includes aiming, choosing an allowed payload, firing, and resolving the declared aftermath window.
+- A round is complete when both players have attacked. Repeat until a declared victory condition, ammunition limit, turn limit, or draw condition is reached.
+- Each player must defend and attack. The castle is not a fixed campaign target.
+
+### Build phase: identical parts, different engineering
+
+The inventory is a versioned ruleset, not a separate list generated for each player. A starter kit could contain a fixed count of blocks/segments, foundations, wall pieces, towers, braces, gate components, and a bounded number of material variants. Exact counts belong to a named match profile and must be identical for both sides.
+
+Every construction part has stable profile identity/version, geometry and placement constraints, physical/material parameters only where supported, attachment/support semantics only where implemented, an inventory count or cost, and explicit capability/validity labels.
+
+The builder places parts into a bounded construction volume on a defined terrain/foundation. Validation checks inventory use, legal placement, overlaps, bounds and declared attachment rules. **Do not call a castle structurally stable just because it passes placement validation.** If no load/stability solver is enabled, report build legality separately from structural stability. A castle can be legal but vulnerable; that is part of the design challenge.
+
+Locking creates an immutable, versioned build snapshot: ordered part IDs, poses, material/profile versions, support links, terrain/map identity and validation warnings. The match records the inventory and ruleset digest. Editing after lock creates a new snapshot and is disallowed during the active match.
+
+### Attack phase: arcade controls over a real result pipeline
+
+The first playable control scheme should be familiar and quick:
+
+1. Select a permitted machine/payload.
+2. Aim with a trajectory preview when the active model can calculate one.
+3. Set supported launch parameters (initially explicit launch speed plus elevation/azimuth, or a clearly labelled pull-and-release game control mapped to those inputs).
+4. Fire one projectile.
+5. Observe computed path, confirmed contact/miss, and aftermath.
+6. Review a compact result: hit/miss, target section, impact speed/energy, supported damage/failure events, and remaining ammunition.
+
+A pull-back gesture can provide satisfying Angry Birds-like interaction without pretending to be a physical sling or trebuchet. In the earliest model, the gesture maps to a declared launch-state input; its mapping belongs to the ruleset and experiment record. A future mechanism solver may replace that mapping behind the same adapter, with a new model identity and tests.
+
+Aim assistance must be explicit. An arc can be a prediction from the active Physics model, a coarse guide, or a presentation-only hint, but its status must be visible. The preview must not secretly use a more capable model than the shot resolver. The shot result is authoritative.
+
+### Turn resolution and win conditions
+
+Every shot is a bounded experiment. A turn record references the match/ruleset version, attacker/defender slots, immutable castle snapshots, machine/payload profile versions and eligibility result, exact launch inputs, model versions, logical timestep, run ID, ordered observations/events, target-response status, aftermath termination reason, remaining ammunition/resources, and resulting castle-state version.
+
+A turn ends when a supported settling/rest criterion is met, or when a declared maximum logical duration/work budget is reached. If settling is not supported, the ruleset must state a bounded fixed horizon and label aftermath incomplete; do not infer that debris has settled. Enforce maximum body count, event count, simulation steps and payload size.
+
+Victory policy belongs to the match coordinator, not the Physics kernel. Rulesets may define a marked objective, breach/remaining-structure score, or limited-ammunition scoring. Define tie-breaks and draws before a match starts. Never derive victory from a visual explosion, arbitrary health bar, or hidden heuristic. If arcade scoring precedes structural physics, identify it as a game rule over explicit target-state events, not a real-world collapse prediction.
+
+### Fairness, determinism and anti-cheating
+
+- Both players receive the same build inventory, constraints, machine access, payload availability, turn policy, and simulation budget for the same ruleset.
+- Fix and record map, terrain, gravity/model settings, profile/table digests and random seeds before building.
+- Alternate who fires first across matches or use a declared deterministic first-player rule.
+- Lock both castle snapshots before the first shot. Never regenerate or rebalance one build after seeing the opponent's design.
+- The authoritative host validates construction, launch inputs, contact, damage, score and victory. Clients may predict/render but cannot decide truth.
+- Freeze each turn's initial conditions and inputs. Re-runs must meet the model's declared determinism tolerance; do not promise bit-identical cross-hardware outcomes without evidence.
+- Any random scatter, wind, material variation or procedural generation uses an explicit recorded seed and the same policy for both sides.
+
+### Separate game feel from physical fidelity
+
+| Layer | Arcade-first option | Higher-fidelity evolution |
+|---|---|---|
+| Build | snap-to-grid pieces and identical inventory | measured geometry, materials, support and load checks |
+| Aim | direct speed/angle controls or documented pull mapping | mechanism derives launch state |
+| Shot | clear arc preview and one projectile | validated forces, mechanism losses and supported payload state |
+| Damage | transparent target-state/score rule | bounded material response, structural failure and topology mutation |
+| Aftermath | bounded, declared turn horizon | contact/friction, fragments and tested settling/rest |
+| Replay | immutable turn result and parameter comparison | checkpointed authoritative world reconstruction |
+| Presentation | punchy impact camera, sound and dust cues | cues driven by supported event/energy contracts |
+
+Arcade-first does not mean fabricated physics. A simplified rule can be fun if named, versioned, repeatable and visible. The game may award points for hitting a marked target before full structural damage exists, but must not label those points as measured collapse.
+
+### Acceptance tests for the equal-kit duel
+
+- [ ] Both player slots receive equivalent inventory/ruleset definitions for a symmetric match.
+- [ ] Inventory counts, placement limits, resource budget and legal build volume are validated identically.
+- [ ] A locked castle snapshot cannot be mutated by later builder edits or by the opponent.
+- [ ] Both castles are locked before either attack begins.
+- [ ] Turns alternate and target the opposing castle; ammunition is deducted once per accepted shot.
+- [ ] Invalid payloads and launch inputs are rejected before simulation.
+- [ ] Every result references exact run/model/profile/snapshot versions.
+- [ ] Duplicate shot/impact delivery cannot double-apply damage or score.
+- [ ] Timeout/work-budget termination cannot masquerade as settled aftermath.
+- [ ] Victory/draw decisions derive only from declared versioned rules.
+- [ ] Arcade target scoring is distinguished from computed damage or structural collapse.
+- [ ] Identical versioned inputs reproduce outcomes within documented tolerance.
+
