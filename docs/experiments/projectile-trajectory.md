@@ -31,25 +31,42 @@ Markers correspond to the exact recorded sample states. The connecting line is o
 
 ![X/Z projection generated from the serialized trajectory run record](projectile-trajectory.svg)
 
-## Reproduce the illustration
+## Reproduce or vary the experiment
 
-The fixture at [projectile-trajectory.run.json](projectile-trajectory.run.json) uses the same JSON property contract as `ProjectileTrajectoryRunRecord.ToJson()`. It is a checked-in reproducible run record for this example. The renderer reads positions and timestamps from the record; it does not recalculate the trajectory.
+The fixture at [projectile-trajectory.run.json](projectile-trajectory.run.json) is a checked-in run record for this example. The renderer reads positions and timestamps from the record; it does not recalculate the trajectory.
 
-From the repository root, regenerate the SVG:
+From the repository root, run the C# experiment with its documented default inputs:
 
 ```bash
-python3 tools/render_projectile_trajectory.py \
-  docs/experiments/projectile-trajectory.run.json \
-  docs/experiments/projectile-trajectory.svg
+dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.json
 ```
 
-The build runs the same renderer in `--check` mode to catch stale illustrations. To produce a chart for a newly executed experiment, save its `ProjectileTrajectoryRunRecord.ToJson()` output as JSON and pass that file instead of the checked-in fixture.
+To try a different, bounded experiment, provide any of the following options. Values use invariant dot-decimal notation:
+
+| Option | Allowed range | Default |
+|---|---:|---:|
+| `--delta-time` | 0.001–1 second | 0.25 |
+| `--steps` | 1–400 | 8 |
+| `--vx`, `--vy`, `--vz` | −1000–1000 m/s | 10, 0, 12 |
+| `--ax`, `--ay`, `--az` | −100–100 m/s² | 0, 0, −9.81 |
+
+For example:
+
+```bash
+dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-custom.json --delta-time=0.1 --steps=20 --vx=3 --vy=1 --vz=4 --ax=0.5 --ay=0 --az=-9.81
+python3 tools/render_projectile_trajectory.py /tmp/projectile-custom.json /tmp/projectile-custom.svg
+```
+
+This writes the actual C# experiment output to JSON and renders its recorded X/Z samples as SVG. The optional `--check` flag compares an existing JSON file against a fresh run using the same options, providing a deterministic reproducibility check. The build exercises a non-default input set, verifies its inputs and sample count, and repeats it in `--check` mode.
+
+The checked-in SVG and generated Markdown summary remain the default example. CI regenerates the SVG from the actual default C# run and checks both the illustration and summary for drift.
 
 ## Evidence and limitations
 
 - [Experiment implementation](../../Physics/Experiments/ProjectileTrajectoryExperiment.cs)
 - [Acceptance tests](../../tests/TheSingularityWorkshop.Physics.Tests/ProjectileTrajectoryExperimentTests.cs)
-- [Renderer source](../../tools/render_projectile_trajectory.py)
+- [Run-record generator and bounded inputs](../../tools/ProjectileRunRecordGenerator/Program.cs)
+- [SVG renderer source](../../tools/render_projectile_trajectory.py)
 - [Living theory and evidence contract](../LIVING_THEORY.md)
 
 The acceptance tests compare each solver sample with the analytical solution and check repeatability, invalid inputs, and serialization. The fixture represents a deterministic analytical example, not external measurements.
