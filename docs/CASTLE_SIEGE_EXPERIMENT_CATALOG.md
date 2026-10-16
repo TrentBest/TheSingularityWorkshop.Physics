@@ -4,7 +4,7 @@ This catalog turns the castle/trebuchet attraction into a sequence of reusable, 
 
 **Status convention:** *Available* means the current code and tests demonstrate it; *next* means a concrete candidate for implementation; *later* means it depends on capabilities not yet implemented. Verify the current code and roadmap before changing any status.
 
-Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege overview](CASTLES_AND_CATAPULTS.md) · [Roadmap](ROADMAP.md).
+Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege overview](CASTLES_AND_CATAPULTS.md) · [LUT policy](PHYSICS_MATH_LUTS.md) · [Payloads and versus play](CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) · [Roadmap](ROADMAP.md).
 
 ## Experiment map
 
