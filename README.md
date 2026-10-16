@@ -99,10 +99,10 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Castle Siege experiment catalog](docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md) — a staged catalog of reusable questions, controls, observations, and regression tests
 - [Castle Siege WebPageLLM build plan](docs/CASTLE_SIEGE_WEBPAGELLM_BUILD_PLAN.md) — host integration, destination/scene plan, adapter boundary, build slices, and acceptance checklist
 - [3D projectile kernel](Physics/Kinematics/ProjectileState.cs) — analytical constant-acceleration state advancement with explicit SI units; [focused tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationProjectileSolverTests.cs); not a collision or rigid-body solver
-- [First living trajectory experiment contract](docs/LIVING_THEORY.md#minimum-trajectory-experiment-contract) — the next evidence-bearing step from the tested 3D state kernel to recorded samples, analytical checks, and a generated explanation
+- [Recorded 3D projectile trajectory experiment](Physics/Experiments/ProjectileTrajectoryExperiment.cs) — fixed-step sampling and versioned JSON run records built on the existing solver; [acceptance tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileTrajectoryExperimentTests.cs) validate every sample against the closed-form solution
 - [Physics and Math LUT policy](docs/PHYSICS_MATH_LUTS.md) — LUT types, provenance, interpolation, error budgets, ownership, and dependency gates
 - [Castle Siege payloads and versus play](docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) — data-driven payloads, one-to-many impact, settling, castle construction, alternating turns, and the FPS path
-- [Living theory & interactive documentation](docs/LIVING_THEORY.md) — generated explainers, measured observations, accessible SVG diagrams, and the staged path toward a recorded 3D trajectory
+- [Living theory & interactive documentation](docs/LIVING_THEORY.md) — generated explainers, recorded observations, accessible SVG diagrams, and the staged path from reproducible run records to generated artifacts
 
 The long-term goal is not a library of static pages about physics. It is living theory: explanations that can show the governing model, expose assumptions, run an experiment, display measurements, and trace each conclusion to its source.
 
