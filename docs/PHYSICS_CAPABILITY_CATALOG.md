@@ -17,8 +17,9 @@ An implementation claim should always be read with its assumptions, units, valid
 
 | Area | Source entry points | What is represented | Important limits |
 |---|---|---|---|
-| Kinematics | `Physics/Kinematics/ConstantAccelerationSolver.cs`, `KinematicState.cs` | One-dimensional constant-acceleration state advancement using SI quantities and explicit elapsed time | Not a general trajectory, force, or rigid-body integrator |
+| 1D kinematics | [`ConstantAccelerationSolver.cs`](../Physics/Kinematics/ConstantAccelerationSolver.cs), [`KinematicState.cs`](../Physics/Kinematics/KinematicState.cs), [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationSolverTests.cs) | One-dimensional constant-acceleration state advancement using SI quantities and explicit elapsed time | Not a general force or rigid-body integrator |
 | Repeatable experiments | `Physics/Experiments/ConstantAccelerationExperiment.cs`, `ConstantAccelerationRunRecord.cs` | Declared initial state, acceleration, fixed timestep, step count, every sampled state, and a versioned JSON record | Initial schema; not yet a universal provenance, uncertainty, or validation framework |
+| 3D projectile kinematics | [`ProjectileState.cs`](../Physics/Kinematics/ProjectileState.cs) (including `ConstantAccelerationProjectileSolver`), [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationProjectileSolverTests.cs) | Analytical 3D point-state advancement under constant world-space acceleration; explicit position, velocity, and elapsed-time SI semantics | No launch-angle adapter, trajectory sampling/run record, drag, spin, shape, collision/impact, rigid-body rotation, or launch mechanism |
 | Spatial primitives | `Spatial/Vector3d.cs`, `Quaterniond.cs`, `Pose3d.cs` | Double-precision vector, orientation, and pose value types | Primitives do not by themselves provide a complete spatial dynamics solver |
 | Rigid-body state | `Physics/Dynamics/RigidBodyState.cs` | Bounded rigid-body state representation | Not a full six-degree-of-freedom integration and constraint engine |
 | Collision candidates | `Physics/Collision/AxisAlignedBounds.cs`, `SweepAndPruneBroadphase.cs` | AABB bounds and broadphase candidate screening, including the documented swept-bound behavior | A candidate is not a confirmed contact; broadphase is not a complete collision world |
@@ -35,6 +36,18 @@ An implementation claim should always be read with its assumptions, units, valid
 | History and timelines | `Physics/Universe/PhysicsCheckpoint.cs`, `TimelineBranch.cs`, `TimelineLineage.cs`, and replay/history types | Explicit checkpoint, lineage, replay-plan, and history data contracts with tests | These types do not yet constitute a universal world snapshot, arbitrary reverse integration, or guaranteed rollback of every coupled solver |
 
 Tests are organized under `tests/TheSingularityWorkshop.Physics.Tests/`. For the exact current acceptance surface, use the test names alongside the source rather than relying on this summary alone.
+
+## Current 3D projectile evidence
+
+The current projectile primitive evaluates the constant-acceleration equations for one requested positive finite timestep:
+
+\[\mathbf{x}_{1}=\mathbf{x}_{0}+\mathbf{v}_{0}\Delta t+\tfrac{1}{2}\mathbf{a}\Delta t^{2}\]
+
+\[\mathbf{v}_{1}=\mathbf{v}_{0}+\mathbf{a}\Delta t\]
+
+The focused tests check a three-dimensional gravity example against analytical component values, compare 100 repeated 0.01-second steps with one 1-second step within a stated tolerance, and exercise invalid elapsed time/timestep plus elapsed-time overflow. This is evidence for the tested analytical state step only. It does not yet establish a trajectory experiment, target intersection, or impact response. The test does not independently validate a real-world launch or gravity measurement.
+
+The coordinate frame must be declared by the caller. The current test uses Z as the vertical axis and gravity `(0, 0, -9.81) m/s²`; that is a test convention, not a universal coordinate convention imposed on every consumer.
 
 ## Cross-cutting rules
 
