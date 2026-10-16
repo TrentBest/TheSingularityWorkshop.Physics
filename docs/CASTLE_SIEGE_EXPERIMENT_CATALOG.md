@@ -173,3 +173,33 @@ Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege
 - serialization round-trip preserves schema/model identity, units, inputs and sample order.
 
 The first public demo can stop at any gate and still be meaningful. It must not skip the evidence required by the next gate.
+
+
+### CS-13 — Equal-kit castle construction
+
+**Question:** Can two players independently design legal castles from exactly the same finite inventory?
+
+- Inputs: versioned inventory/ruleset, build volume, terrain/foundation identity, placement actions.
+- Outputs: legal/illegal placement reasons, inventory remaining, immutable build snapshot, validation warnings and capability declarations.
+- Acceptance: symmetric player slots receive identical inventory and constraints; snapshot digest changes only when the build changes; locked snapshots reject mutation.
+- Limitation: legal placement does not imply structural stability unless a supported stability/load model is enabled.
+
+### CS-14 — Alternating-turn castle duel
+
+**Question:** Can each player attack the opponent's locked castle under reproducible, symmetric rules?
+
+- Setup: both castle snapshots are locked before the first shot; both players have the same declared machine/payload access; first-player policy is recorded.
+- Inputs: accepted attack turn, target snapshot, launch inputs, payload profile and turn budget.
+- Outputs: immutable turn/run record, hit/miss and supported target events, ammunition/resource state, aftermath termination reason, score/victory decision under a versioned ruleset.
+- Acceptance: turns alternate, targets are always the opposing castle, ammunition is consumed exactly once, duplicate events cannot double-score, and the same versioned inputs reproduce results within declared tolerance.
+- Limitation: arcade scoring or target objectives are not evidence of structural collapse. Settling is not claimed if the model stops at a fixed horizon.
+
+### CS-15 — Pull-and-release control versus explicit launch inputs
+
+**Question:** Can an Angry Birds-like control map to a declared Physics input without hiding model assumptions?
+
+- Inputs: pointer/gesture displacement and a versioned mapping, or explicit speed/elevation/azimuth.
+- Outputs: resolved launch inputs, mapping version, preview provenance and actual shot run.
+- Acceptance: same gesture and ruleset yield the same launch input; preview uses the same capability/model assumptions as the resolver; unsupported mechanism behavior remains disabled or clearly labelled as a game mapping.
+- Limitation: the mapping is not a physical sling/trebuchet model unless independently implemented and validated.
+
