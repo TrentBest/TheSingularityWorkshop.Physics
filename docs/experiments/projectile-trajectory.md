@@ -2,18 +2,25 @@
 
 This page documents one deliberately narrow run of `ProjectileTrajectoryExperiment`. The X/Z chart is generated from the serialized sample states, not from a second implementation of the physics equations. The Y coordinate remains part of the recorded state and is zero for this example.
 
+<!-- BEGIN GENERATED RUN SUMMARY -->
 ## Declared experiment
 
-| Input | Value |
+| Input / outcome | Recorded value |
 |---|---:|
+| Model identity | `kinematics.constant-acceleration-projectile` (model version 1; schema 1) |
 | Initial position | (0, 0, 0) m |
 | Initial velocity | (10, 0, 12) m/s |
-| Constant acceleration | (0, 0, -9.81) m/s² |
+| Constant acceleration | (0, 0, -9.81) m/s^2 |
 | Coordinate frame | world, Z-up |
 | Fixed timestep | 0.25 s |
 | Completed steps | 8 |
 | Recorded samples | 9, including the initial state |
-| Simulated duration | 2.0 s |
+| Simulated duration | 2 s |
+| Final position | (20, 0, 4.38) m |
+| Final velocity | (10, 0, -7.62) m/s |
+
+<!-- Record-derived: model=kinematics.constant-acceleration-projectile; samples=9; duration=2 s. -->
+<!-- END GENERATED RUN SUMMARY -->
 
 The solver's constant-acceleration relationships are:
 
