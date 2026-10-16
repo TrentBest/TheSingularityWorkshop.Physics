@@ -1,0 +1,33 @@
+{
+  "modelId": "kinematics.constant-acceleration-projectile",
+  "modelVersion": "1",
+  "schemaVersion": 1,
+  "units": {
+    "acceleration": "m/s^2",
+    "elapsedTime": "s",
+    "position": "m",
+    "velocity": "m/s"
+  },
+  "definition": {
+    "initialState": {
+      "position": { "x": 0, "y": 0, "z": 0 },
+      "velocity": { "x": 10, "y": 0, "z": 12 },
+      "elapsedTime": 0
+    },
+    "acceleration": { "x": 0, "y": 0, "z": -9.81 },
+    "deltaTime": 0.25,
+    "stepCount": 8,
+    "coordinateFrame": "world, Z-up"
+  },
+  "samples": [
+    { "position": { "x": 0, "y": 0, "z": 0 }, "velocity": { "x": 10, "y": 0, "z": 12 }, "elapsedTime": 0 },
+    { "position": { "x": 2.5, "y": 0, "z": 2.6934375 }, "velocity": { "x": 10, "y": 0, "z": 9.5475 }, "elapsedTime": 0.25 },
+    { "position": { "x": 5, "y": 0, "z": 4.77375 }, "velocity": { "x": 10, "y": 0, "z": 7.095 }, "elapsedTime": 0.5 },
+    { "position": { "x": 7.5, "y": 0, "z": 6.2409375 }, "velocity": { "x": 10, "y": 0, "z": 4.6425 }, "elapsedTime": 0.75 },
+    { "position": { "x": 10, "y": 0, "z": 7.095 }, "velocity": { "x": 10, "y": 0, "z": 2.19 }, "elapsedTime": 1 },
+    { "position": { "x": 12.5, "y": 0, "z": 7.3359375 }, "velocity": { "x": 10, "y": 0, "z": -0.2625 }, "elapsedTime": 1.25 },
+    { "position": { "x": 15, "y": 0, "z": 6.96375 }, "velocity": { "x": 10, "y": 0, "z": -2.715 }, "elapsedTime": 1.5 },
+    { "position": { "x": 17.5, "y": 0, "z": 5.9784375 }, "velocity": { "x": 10, "y": 0, "z": -5.1675 }, "elapsedTime": 1.75 },
+    { "position": { "x": 20, "y": 0, "z": 4.38 }, "velocity": { "x": 10, "y": 0, "z": -7.62 }, "elapsedTime": 2 }
+  ]
+}
