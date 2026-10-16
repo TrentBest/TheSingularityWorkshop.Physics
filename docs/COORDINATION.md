@@ -253,7 +253,7 @@ This audit is based on live branch comparisons and the open-PR listing inspected
 
 ### Branch deletion readiness
 
-The repository currently has 25 branches: `development`, `master`, `main`, and 22 `work/*` branches. The `work/*` branches are now eligible for deletion after the user’s review; their unique slices are integrated or superseded on `development`.
+The repository currently has 26 branches: `development`, `master`, `main`, and 23 `work/*` branches. A final recheck found `work/axial-mechanics-current` (already two commits behind `development`) and `work/axial-spring-damper` (its implementation/tests/docs match `development`; its roadmap is stale); both are also safe to delete. The `work/*` branches are now eligible for deletion after the user’s review; their unique slices are integrated or superseded on `development`.
 
 **Important default-branch blocker:** GitHub still reports `main` as the repository default branch, and `master` is the intended stable branch under Sith policy. Before deleting `main`, change the repository default branch to `master` in GitHub Settings → Branches. This connector cannot change that repository setting or delete branch refs. Do not force-update `master` from `development`; no release/promotion was authorized.
 
