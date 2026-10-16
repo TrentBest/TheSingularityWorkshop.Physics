@@ -82,6 +82,11 @@ This is a deterministic, one-dimensional constant-acceleration experiment—not 
 - [Deterministic history & extensions](docs/DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) — reverse-order limits, replay, optional prediction, rollback, and branch isolation
 - [Physics domain map](docs/PHYSICS_DOMAIN_MAP.md) — broad physical territory, domain coupling, primitive foundations, and build order
 - [Hydrodynamics world demonstrator](docs/HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) — staged path from a measured wave reference to terrain, shorelines, and bounded boat coupling
+- [Acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md) — listener-centred propagation and the tested free-field observation baseline
+- [Stellar physics and planetary energy](docs/STELLAR_PHYSICS_AND_PLANETARY_ENERGY.md) — staged roadmap from inverse-square irradiance to deeper stellar structure
+- [Geology: volcanic terrain](docs/GEOLOGY_VOLCANIC_TERRAIN.md) — deterministic volume-accounted terrain deposition and explicit model limits
+- [Terrain interactions and MicroBundles](docs/TERRAIN_INTERACTIONS_AND_MICROBUNDLES.md) — terrain-dependent water impacts, emergent effects, and composable physical processes
+- [Hydrodynamics: shallow-water basin and bathymetry](docs/HYDRODYNAMICS_SHALLOW_WATER_2D.md) — conservative shallow-water fluxes, terrain-aware reconstruction, wet-dry shoreline support, and current numerical limits
 - [Thermodynamics: first bounded primitive](docs/THERMODYNAMICS_FIRST_PRIMITIVE.md) — lumped thermal state, sensible energy, assumptions, and limits
 - [Acoustic World Model](docs/ACOUSTIC_WORLD_MODEL.md) — listener-centred sound propagation, adaptive acoustic buckets, baking/caching, binaural reception, and sound-derived observations for agents (design roadmap; implementation remains staged).
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
