@@ -97,6 +97,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Key exchanges:** energy/momentum transport, material response, and field coupling.
 - **First usable slice:** a one-dimensional wave model with known propagation speed and measurable reflection/boundary behavior.
 - **Guardrail:** visually moving patterns are not evidence of physically correct propagation.
+- **Current status:** `LinearWaveBasin1D` provides a bounded 1D linear-wave reference; `FreeFieldAcoustics` provides analytical propagation delay, listener direction, and idealized free-field SPL estimates. Neither is a general wave/acoustic solver; reflections, occlusion, moving-source Doppler, frequency spectra, and binaural reception remain future work.
 
 ### I. Statistical, quantum, and nuclear extensions
 - **Covers:** microscopic statistical models and other regimes that cannot be honestly reduced to classical continuum rules.
@@ -119,7 +120,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Current status:** planned; see [Stellar physics and planetary energy roadmap](STELLAR_PHYSICS_AND_PLANETARY_ENERGY.md). No stellar solver or planetary irradiation coupling is claimed implemented.
 
 
-### J. Persistent worlds, scale, and history
+### L. Persistent worlds, scale, and history
 - **Covers:** deterministic spatial addressing, multirate simulation, coarse/fine representations, persistence, checkpointing, replay, and isolated timeline branches.
 - **Key exchanges:** conservative state handoffs, elapsed logical time, provenance, and authoritative state.
 - **Current status:** deterministic grid, logical-time ledger, and timeline/replay contracts exist; durable world persistence, conservative multiscale handoffs, and complete world reconstruction remain future work.
