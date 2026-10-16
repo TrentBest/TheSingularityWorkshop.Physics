@@ -263,3 +263,14 @@ The repository currently has 26 branches: `development`, `master`, `main`, and 2
 - Hydrodynamics remains a bounded shallow-water/linear-wave foundation, not full 3D fluid dynamics, breaking waves, rainfall/runoff, boat coupling, or erosion.
 - Thermal transfer, phase change, material constitutive response, chemical reactions/combustion, erosion, stellar physics, and binaural/reflective/occluded acoustic propagation remain future work.
 - Castle-siege and payload/versus integration remains documented future work; no Experiences migration was performed.
+
+
+## 2026-10-16 — Equal-kit castle duel: arcade-readable, physics-honest
+
+The competitive target is now explicitly **two builders, one shared parts kit, two castles, alternating attacks**. Each player independently designs a castle from the same versioned inventory and constraints. Both builds are locked before combat; players then take turns firing at the opponent's castle. Both sides get the same declared siege-machine/payload access and simulation budget unless a named asymmetric ruleset says otherwise.
+
+The game should be approachable like an Angry Birds-style destruction game: fast aim/fire loop, clear arc preview, satisfying impact, and simple turn/result feedback. The underlying pipeline remains Physics-owned and staged: declared launch input → trajectory → confirmed contact → impact observation → supported target/payload response → aftermath. Early pull-and-release input may map to explicit launch speed/angle under a versioned game-control mapping; it must not be described as a validated trebuchet/sling mechanism. Arcade target scoring is not structural-collapse evidence.
+
+The Physics-domain design is expanded in docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md with build snapshots, symmetric inventories, turn lifecycle, fairness, bounded work, authoritative result ownership and acceptance tests. docs/CASTLE_SIEGE_EXPERIMENT_CATALOG.md adds CS-13 through CS-15 for equal-kit construction, alternating-turn play and pull-control mapping.
+
+**Boundary:** this is a design/acceptance update only. No playable match coordinator, multiplayer transport, construction UI, damage solver, or WebPage scene is claimed. Physics remains the authority for modeled outcomes; match rules/turn UI belong to the host Experience/coordinator. Continue working directly on development under Operation Sith; no new branch, merge to master, release, publication or deployment is authorized.
