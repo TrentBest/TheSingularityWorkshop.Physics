@@ -58,7 +58,7 @@ These are the cross-cutting foundations to establish once, then reuse:
 - **Key exchanges:** heat and work; temperature-dependent material properties; latent heat; reaction energy.
 - **First usable slice:** validated material thermal properties plus a closed, lumped thermal body whose energy/temperature relation is explicit. Then heating/cooling and phase-change cases.
 - **Guardrail:** temperature is not energy; heat is energy transfer, not a stored substance. Do not assume constant heat capacity or a single phase outside the model's declared range.
-- **Current status:** planned; no thermal solver or thermal-state model is implemented on `development`.
+- **Current status:** a bounded lumped thermal-state primitive is implemented on `development` ([first thermodynamics primitive](THERMODYNAMICS_FIRST_PRIMITIVE.md)). It calculates sensible energy relative to a declared reference temperature and applies net energy transfers under constant specific heat; heat transfer, phase change, spatial gradients, and reaction energy remain unimplemented.
 
 ### C. Heat transfer
 - **Covers:** conduction, convection, and radiation as distinct mechanisms with explicit assumptions.
