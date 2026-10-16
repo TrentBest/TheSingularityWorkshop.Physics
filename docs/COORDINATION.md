@@ -177,3 +177,19 @@ The original Castle Siege showcase brief is now supported by three linked docume
 The README now links these as a coherent entry point. This is a documentation expansion and design contract, not a claim that the hosted scene, projectile adapter, trebuchet solver, damage/fracture models, or replay restoration are implemented. WebPageLLM remains the owner of WebPage source changes and should record its response only in the authorized append-only `PhysicsCastlesLLM.md` channel. Physics implementation remains responsible for grounding proposed contracts in actual types and tests.
 
 **Next concrete gates:** confirm the existing kernel/run-record extension points; implement and validate the deterministic projectile/target-intersection slice; then build the WebPage scene against the actual contract. No merge, release, publication, or deployment was performed by this entry.
+
+
+## 2026-10-16 — LUTs, ontology-defined payloads, aftermath, and versus siege
+
+Castle Siege has been expanded beyond stone-only projectile tests. Two new documents define the next domain layer:
+
+- [Physics and Math LUT policy](PHYSICS_MATH_LUTS.md) distinguishes mathematical/numerical tables, physical/empirical response tables, ontology/content profiles, and presentation/LOD tables. Physical tables require explicit units, provenance, valid ranges, interpolation/boundary behavior, error evidence, version/digest and run provenance. Presentation LUTs may not decide authoritative physical outcomes.
+- [Castle Siege payloads and versus play](CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) specifies a data-driven machine/payload envelope, capability-based payload profiles, the causal impact-to-many pipeline, fragments and delayed settling, modular castle construction, alternating builder/attacker rounds, match reproducibility, and a staged path toward first-person immersion.
+
+The user described Math and Physics as mutually informative: mathematical relationships help describe physical observations, while physical experiments motivate, constrain, and validate mathematical models. The architecture preserves that relationship without collapsing the ownership boundary: generic mathematical/numerical primitives may be provided by Math; Physics owns physical meanings, response models, validity limits and authoritative outcomes.
+
+**Dependency discovery remains an explicit gate:** current context does not establish the exact Math MicroBundle repository/package or its current contract. Do not add a package/runtime dependency or invent a bundle identity. Identify the real artifact and inspect its types before proposing integration. Existing Physics kernel is currently a constant-acceleration experiment and run record; these docs do not claim that general LUT evaluation, soft-body/fracture, fluid dispersion, settling, castle building, multiplayer, or FPS support already exists.
+
+**Implementation order:** (1) deterministic projectile and target intersection; (2) payload profile and machine eligibility contract; (3) confirmed contact and impact observations; (4) one defensible inert payload response; (5) bounded fragment initialization and settling; (6) independently addressable castle sections; (7) immutable alternating-turn match snapshots; (8) first-person presentation on the same authoritative state. Profile and table versions must be recorded for each run.
+
+No WebPage source, release, merge, publication, or deployment was changed/performed by this documentation update.
