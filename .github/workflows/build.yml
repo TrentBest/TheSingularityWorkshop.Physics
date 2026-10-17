@@ -30,7 +30,28 @@ jobs:
 
       - name: Verify custom run inputs and sample count
         run: |
-          python3 -c "import json; r=json.load(open('/tmp/projectile-trajectory.custom.json', encoding='utf-8')); d=r['definition']; s=r['samples']; assert d['deltaTime'] == 0.1; assert d['initialState']['velocity'] == {'x': 3, 'y': 1, 'z': 4}; assert d['acceleration'] == {'x': 0.5, 'y': 0, 'z': -9.81}; assert len(s) == 21; assert abs(s[-1]['elapsedTime'] - 2.0) < 1e-12; print('Custom bounded experiment inputs and 21 recorded states verified.')"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/projectile-trajectory.custom.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          samples = record['samples']
+          observed = {
+              'deltaTime': definition.get('deltaTime'),
+              'initialVelocity': definition.get('initialState', {}).get('velocity'),
+              'acceleration': definition.get('acceleration'),
+              'sampleCount': len(samples),
+              'finalElapsedTime': samples[-1].get('elapsedTime') if samples else None,
+          }
+          print(json.dumps(observed, indent=2))
+          assert observed['deltaTime'] == 0.1, 'Unexpected timestep'
+          assert observed['initialVelocity'] == {'x': 3, 'y': 1, 'z': 4}, 'Unexpected initial velocity'
+          assert observed['acceleration'] == {'x': 0.5, 'y': 0, 'z': -9.81}, 'Unexpected acceleration'
+          assert observed['sampleCount'] == 21, 'Unexpected sample count'
+          assert abs(observed['finalElapsedTime'] - 2.0) < 1e-12, 'Unexpected final logical time'
+          print('Custom bounded experiment inputs and 21 recorded states verified.')
+          PY
 
       - name: Verify custom run record is reproducible
         run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.custom.json --delta-time=0.1 --steps=20 --vx=3 --vy=1 --vz=4 --ax=0.5 --ay=0 --az=-9.81 --check
