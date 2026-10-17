@@ -96,6 +96,16 @@ public sealed class SegmentIntersection2dTests
         Assert.That(result.Point, Is.EqualTo(new Vector2d(0, 0)));
     }
     [Test]
+    public void Intersect_ExtremeMixedScaleNonAxisAlignedCrossingConstructsSmallNonzeroPoint()
+    {
+        var result = Intersect((-1e308, -1e308), (1e308, 1e308),
+            (1e-300, 0), (1e-300, 2e-300));
+
+        Assert.That(result.Kind, Is.EqualTo(SegmentIntersectionKind2d.ProperIntersection));
+        Assert.That(result.Point!.Value.X, Is.EqualTo(1e-300).Within(1e-312));
+        Assert.That(result.Point!.Value.Y, Is.EqualTo(1e-300).Within(1e-312));
+    }
+    [Test]
     public void Intersect_TinyScaleCrossingReturnsFinitePoint()
     {
         // Exercise a crossing with subnormal-scale components; the coordinate construction must
