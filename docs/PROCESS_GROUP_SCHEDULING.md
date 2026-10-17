@@ -10,6 +10,10 @@ A domain FSM can act as a small scheduler: its update callback invokes the match
 
 ![Multi-rate physics process-group scheduling](images/physics-process-group-scheduling.svg)
 
+![Living scale-factor illustration: changing a declared property produces an immediate visible change](images/scale-factor-living.svg)
+
+This is the visual-documentation pattern to repeat for cadence controls too: a future cadence-specific living image should expose the selected logical rate and the resulting schedule. The scale demo is a general illustration, not evidence of scheduler behavior.
+
 Use a dedicated, fixed logical simulation heartbeat (for example, `TickAll`) as the parent group for cadence controllers. Do not silently equate a rendered frame with a unit of simulated time. If a host uses a 60 Hz fixed heartbeat, a process rate of 60 means every 60 heartbeat invocations; it approximates one second only while that heartbeat really represents 1/60 second of logical time. Variable-rate hosts must drive the simulation clock deliberately.
 
 ## Proposed capability groups
