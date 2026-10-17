@@ -89,22 +89,43 @@ public static class Geometry2dPolygon
         bool negative = value.Sign < 0;
         BigInteger magnitude = BigInteger.Abs(value);
         long bitLength = magnitude.GetBitLength();
-        int shift = bitLength > 53 ? checked((int)(bitLength - 53)) : 0;
-        BigInteger significand = magnitude >> shift;
+        int unbiasedExponent = checked((int)(bitLength - 1 + binaryExponent));
 
-        if (shift > 0)
+        if (unbiasedExponent < -1022)
         {
-            BigInteger remainder = magnitude - (significand << shift);
-            BigInteger halfway = BigInteger.One << (shift - 1);
-            if (remainder > halfway || (remainder == halfway && !significand.IsEven))
-                significand += BigInteger.One;
+            // Subnormals are integer multiples of 2^-1074. Round directly in that
+            // lattice rather than first rounding to 53 significant bits (double rounding).
+            int subnormalScale = checked(binaryExponent + 1074);
+            BigInteger subnormalUnits = subnormalScale >= 0
+                ? magnitude << subnormalScale
+                : RoundRightShiftToEven(magnitude, -subnormalScale);
+            double subnormal = Math.ScaleB((double)subnormalUnits, -1074);
+            return negative ? -subnormal : subnormal;
         }
 
+        int shift = bitLength > 53 ? checked((int)(bitLength - 53)) : 0;
+        BigInteger significand = shift > 0
+            ? RoundRightShiftToEven(magnitude, shift)
+            : magnitude;
         double rounded = Math.ScaleB((double)significand, checked(binaryExponent + shift));
         if (double.IsInfinity(rounded))
             throw new ArithmeticException("The polygon area exceeds the finite binary64 range.");
 
         return negative ? -rounded : rounded;
+    }
+
+    private static BigInteger RoundRightShiftToEven(BigInteger value, int shift)
+    {
+        if (shift <= 0)
+            return value << -shift;
+
+        BigInteger quotient = value >> shift;
+        BigInteger remainder = value - (quotient << shift);
+        BigInteger halfway = BigInteger.One << (shift - 1);
+        if (remainder > halfway || (remainder == halfway && !quotient.IsEven))
+            quotient += BigInteger.One;
+
+        return quotient;
     }
 
     /// <summary>Locates a point relative to a closed polygon using the non-zero winding rule.</summary>
