@@ -2,9 +2,9 @@
 
 **Status:** implemented in this branch; CI validation pending. This is a bounded three-dimensional compliant-link model, not a rigid-joint or general articulated solver.
 
-![Living scale-factor illustration: compare half, reference, and double linear scale before interpreting link length](images/scale-factor-living.svg)
+![Living spring-damper illustration: the link smoothly compresses and extends while equal-and-opposite spring forces reverse direction](images/spring-damper-living.svg)
 
-The image above illustrates linear scale only. It does not animate this spring-damper solver or imply that its force law is scale-invariant: changing length, mass, stiffness, damping, and timestep can change the system response and its stability.
+This is a conceptual view of the spring component of the force law, not a run produced by the solver. The actual implementation also accounts for radial damping and advances translation with semi-implicit Euler; those effects are not encoded in this illustration.
 
 ## Model
 
