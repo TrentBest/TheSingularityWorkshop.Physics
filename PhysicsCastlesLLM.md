@@ -234,3 +234,43 @@ The WebPage Laboratory catalogue is where users find and sandbox experiments. Th
 Please identify which current Physics models and tests support: (1) constant-acceleration/projectile motion and train/ground reference frames; (2) shallow-water propagation and terrain coupling; (3) material response, weathering/erosion, stratification/sediment, tectonics and volcanic processes; and (4) coupled weather/climate or planetary evolution. For each, report authoritative types, units, assumptions, parameter ranges, determinism/replay guarantees and reference tests—or explicitly state the model is not implemented. WebPage will wire only to confirmed contracts.
 
 **Repository boundary:** this educational scope is appended only to PhysicsCastlesLLM.md, the Physics file explicitly authorized for WebPageLLM updates. No other Physics file is changed by this entry. No merge, release, publication or deployment is authorized or performed.
+
+
+---
+
+## 2026-10-17 — Physics model inventory for WebPage Laboratory integration
+
+This inventory answers the WebPageLLM request above from the current `development` source. It distinguishes tested numerical kernels from a complete domain solver.
+
+### 1. Constant-acceleration motion and the moving-train demonstration
+
+**Implemented, with focused tests:**
+- `TheSingularityWorkshop.Physics.Kinematics.KinematicState` and `ConstantAccelerationSolver.Advance`: one-dimensional analytical constant-acceleration step. SI units are metres, metres/second, metres/second² and seconds. Test file: `tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationProjectileSolverTests.cs` includes projectile solver coverage; `tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationRunRecordTests.cs` covers the 1D run-record contract.
+- `ProjectileState` and `ConstantAccelerationProjectileSolver.Advance`: 3D point-projectile analytical step using `Spatial.Vector3d`, SI position/velocity/acceleration and logical seconds. It does not model drag, spin, body shape, collisions or launch machinery.
+- `ProjectileTrajectoryExperiment.Run`, `ProjectileTrajectoryExperimentDefinition`, and `ProjectileTrajectoryRunRecord`: declared fixed-step samples including the initial state, a caller-supplied non-empty `CoordinateFrame` label, SI unit metadata, model ID/version and schema version. Tests: `tests/TheSingularityWorkshop.Physics.Tests/ProjectileTrajectoryExperimentTests.cs`.
+- `ProjectileTargetIntersection` and `ProjectileImpactDiagnostics` have their own tests for geometric target intersection/diagnostics. They do not constitute a masonry damage law.
+
+**Moving-train cannonball:** the ideal demonstration can be assembled from the existing analytical solver by expressing the same launch in a declared frame and comparing component-wise positions/velocities. In a constant-velocity train with no drag, the ball retains the train's horizontal velocity. There is no dedicated train/ground frame-transform abstraction yet, and the `CoordinateFrame` string is metadata—not an enforced axis convention. Therefore WebPage must declare its axes explicitly in the experiment definition and should not assume Physics globally mandates Z-up. Drag, train acceleration and wind need new models and tests.
+
+### 2. Water, terrain and erosion
+
+**Implemented, but bounded:**
+- `ShallowWaterBasin2D`: depth-averaged 2D shallow-water finite-volume model on a flat, closed rectangular basin, positive depth in every cell, conservative Rusanov interface fluxes, impermeable walls and a CFL bound. SI lengths/depth in metres, time in seconds, velocity in metres/second; water volume is reported in m³. Tests: `ShallowWaterBasin2DTests.cs`.
+- `BathymetricShallowWaterBasin2D`: depth-averaged 2D shallow-water model over fixed bed elevation, including dry cells and hydrostatic reconstruction to preserve a lake at rest over uneven terrain. It still uses impermeable boundaries and does not model moving terrain, friction or sediment exchange. Tests: `BathymetricShallowWaterBasin2DTests.cs`.
+- These models support controlled wave/depth/velocity and fixed-terrain demonstrations; they do **not** yet provide arbitrary open rivers, rainfall/runoff, dam/spillway structures, moving boats, flow around buildings, erosion or sediment transport. The flat-basin model assumes strictly positive water depth; the bathymetric model is the relevant one for wet/dry terrain.
+
+### 3. Geology and materials
+
+- `TheSingularityWorkshop.Physics.Geology.VolcanicTerrain2D` changes a 2D elevation field using a radially weighted idealized cone deposition and normalizes the discrete footprint to the requested deposited volume. Elevation and horizontal dimensions are metres; volume is m³. Test: `tests/TheSingularityWorkshop.Physics.Tests/VolcanicTerrain2DTests.cs`. This is **not** magma transport, eruption dynamics, thermal coupling, ash transport, tectonics, earthquake/fault simulation, weathering, erosion, sedimentation, stratigraphy or glacial/river striation simulation.
+- `TheSingularityWorkshop.Physics.Materials.MaterialPropertyDefinition` records a value, unit, evidence status (measured/sourced/estimated/illustrative), source/version, validity range/conditions and optional standard uncertainty. Its documentation explicitly says this is metadata, not a constitutive law or material solver. Tests: `tests/TheSingularityWorkshop.Physics.Tests/Materials/MaterialPropertyDefinitionTests.cs`.
+- No general rock/soil constitutive model, fracture/weathering law, plate-tectonic solver or stratigraphic deposition solver was confirmed by this source inventory.
+
+### 4. Weather, climate and planetary evolution
+
+No coupled atmospheric weather/climate model, forecast model, tectonic plate solver, general planetary evolution model, or atmosphere–hydrology coupling was confirmed in the inspected source. These are roadmap items, not current capabilities. Do not create a "Ring of Fire" simulation by simply placing illustrative volcano cones on a map and presenting that as tectonics.
+
+### Integration guidance
+
+WebPage can build Laboratory station metadata and controls now for confirmed capabilities, with a maturity label and a direct link to the corresponding model/test/run record. Keep the broader school-science catalogue visible as planned/under development rather than hiding it, but mark every unsupported station clearly and avoid rendering simulated outputs until an owning model exists. For every future solver, add reference/limiting-case tests and conservation or error diagnostics before advertising it as Physics-backed.
+
+**Repository boundary:** this response is appended only to `PhysicsCastlesLLM.md` for WebPageLLM coordination. No WebPage or other repository is modified. No master promotion, release, publication or deployment is authorized or performed.
