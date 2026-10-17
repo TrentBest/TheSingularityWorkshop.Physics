@@ -285,3 +285,28 @@ The Physics-domain design is expanded in docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.m
 - Updated the experiment catalog and roadmap to distinguish this implemented step from the still-missing launch-angle adapter, immutable trajectory runner/run record, target intersection, impact response, and structural damage.
 - This is deliberately not a rigid-body integrator, collision detector, trebuchet mechanism, drag model, or playable castle duel. The next useful increment is a validated launch-state/trajectory experiment with samples and run identity; target geometry should follow as a separately tested gate.
 - Scope remains Physics repository only. No WebPage, Gestures, Visualize, or Renderer files were changed. No new branch, merge, release, package publication, or deployment was performed.
+
+
+## 2026-10-17 — Singularity Studios acoustic and production-data coordination
+
+**Owner:** Physics-side integration coordinator  
+**Status:** first evidence-backed acoustic baseline and distance sweep are implemented; studio production-data fixture and source-rendering integration are being verified in WebPage. This entry does not claim a room-acoustics solver or a completed studio simulator.
+
+### Repositories and handoffs checked
+
+- Physics: [PhysicsLLM.md](../PhysicsLLM.md), [acoustic world model](ACOUSTIC_WORLD_MODEL.md), [living acoustic demonstration](ACOUSTIC_LIVING_DEMO.md), [single-source observation](experiments/acoustic-observation.md), and [controlled distance sweep](experiments/acoustic-distance-sweep.md).
+- WebPage: [Singularity Studios WebPageLLM handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_WEBPAGELLM_HANDOFF.md), [SFX/acoustics handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_SFX_WEBPAGELLM.md), and [production data model](https://github.com/TrentBest/WebPage/blob/development/docs/SINGULARITY_STUDIOS_PRODUCTION_MODEL.md).
+- Gestures: [Singularity Studios Gesture Plan](https://github.com/TrentBest/TheSingularityWorkshop.Gestures/blob/development/docs/SINGULARITY_STUDIOS_GESTURE_PLAN.md).
+
+### Shared contract
+
+Physics is authoritative for modeled motion, contact, material outcomes, and acoustic observations. Gestures supplies reusable procedures and evaluated motion, but does not claim physical contact. WebPage/AnyApp own host interactions and presentation. Visualize/Renderer are presentation consumers, not Physics dependencies. Studio source data, camera placement, and SVG presentation must remain separate from the physical acoustic calculation.
+
+The current free-field experiment computes source/listener distance, propagation delay, direction, and a distance-based SPL estimate. The distance sweep varies only listener distance and is generated from the C# model. These are analytical outputs—not audio samples, room reflections, absorption, occlusion, or a validated room response. The MDN sample remains explicitly reference audio.
+
+### Verification and next gate
+
+- Physics Build and Tests passed at [run 431](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38995591642), commit `49e971af7cdd79a7cb8d4de0e4b55ec261acd941`.
+- WebPage source-integration run [38995728981](https://github.com/TrentBest/WebPage/actions/runs/38995728981) exposed a missing project reference for the Visualize GUI.SVG backend in the Singularity Studios plan generator. The reference was corrected on `development` in commit `037be531894c2697b9fb8e99e31c12ee0ae36bb7`; the follow-up CI result still needs verification.
+- Next Physics gate is a reviewed, bounded room-boundary and first-order reflected-path contract with explicit assumptions and tests. Only after that contract is defensible should room geometry be allowed to affect displayed measurements. Do not use an unvalidated reverb effect as a substitute.
+- Preserve repository ownership and branch policy: work on `development`, leave `master` stable, and do not publish/release/deploy without explicit authorization.
