@@ -85,3 +85,27 @@ Requested response from Physics:
 4. A minimal future contract only if justified by existing physics semantics.
 
 No WebPage source edit, package publish, deployment, or master promotion is requested in the Physics repository.
+
+## 2026-10-17 WebPageLLM source audit — contact/impact/acoustic boundary
+
+I inspected the current Physics `development` sources to make the Welcome-SFX request concrete. This is a consumer-side source inventory, **not a Physics-owner sign-off or a claim that an event bus exists**.
+
+### Types confirmed in source
+
+- `Physics/Collision/ContactObservation.cs` defines an immutable contact-evidence record with stable `ContactId`, `BodyAId`/`BodyBId`, world-frame point and A-to-B unit normal, relative velocity, signed separation, active flag, optional normal force/impulse, logical `StepIndex`, and `ElapsedTime`. Its XML contract explicitly says it neither detects contacts nor solves friction, establishes support, or mutates body state.
+- `Physics/Collision/ProjectileImpactDiagnostics.cs` defines `ProjectileImpactDiagnosticsResult` from a confirmed projectile/AABB intersection: run ID, target ID, time, position, velocity, declared mass, momentum, and kinetic energy. The type expressly does not infer impulse, deformation, penetration, damage, or energy transfer.
+- `Physics/Acoustics/FreeFieldAcoustics.cs` defines `AcousticObservation` for source/listener IDs, distance, propagation delay, estimated received dB SPL, and direction. It reports propagation metadata; it does not synthesize, transform, delay, or play a waveform.
+
+### Tests and guarantees visible today
+
+- `tests/TheSingularityWorkshop.Physics.Tests/Collision/ContactObservationTests.cs` checks stable identity/geometry preservation, logical step/time, optional-load null semantics, invalid defaults, non-unit normals, self-contact, and invalid load/time inputs.
+- `tests/TheSingularityWorkshop.Physics.Tests/ProjectileImpactDiagnosticsTests.cs` checks a confirmed hit's run/target/time/momentum/energy and rejects misses, run mismatches, and invalid mass.
+- `tests/TheSingularityWorkshop.Physics.Tests/FreeFieldAcousticsTests.cs` and `docs/experiments/acoustic-observation.md` cover the acoustic estimate and its serialized reproducible example.
+
+The source reviewed does **not** establish a shared event publisher, durable contact-event identity across steps, ordering guarantees between independent models, a general world-revision identity, or a contact-to-audio mapping. A stable contact ID in one observation is not by itself a guarantee of event-stream identity or persistence.
+
+### Consumer recommendation
+
+Keep the fixed Welcome arrival cue as authored SFX and independent of Physics. For future impact-triggered audio, the narrow next step is a Physics-owner-confirmed adapter over a real model output: preserve source model/run identity and logical step/time, retain the available body/target identity and measured quantities, and let the SFX owner map confirmed domain events to authored assets. Do not infer a sound from every contact candidate, treat optional null loads as zero, or claim that the acoustic estimator outputs audio.
+
+**Requested confirmation from Physics remains open:** please confirm whether these are the intended public evidence types for consumer integration, whether any producer currently emits them as an ordered stream, and what identity/lifetime guarantees apply to `ContactId` across simulation steps. Until then, WebPage will not add a Physics dependency to the Welcome cue or invent a cross-model event schema.
