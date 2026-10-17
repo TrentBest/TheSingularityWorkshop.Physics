@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+<title id="title">Physics, derived rather than merely simulated</title>
+<desc id="desc">A dramatic dark scientific illustration contrasts a conventional opaque simulation path with the Workshop's explicit causal path: physical model, declared inputs and units, deterministic run, measured state, validation, and living theory. Along the bottom, motion, impact, heat, water, and electricity appear as different domains of the same physical world. The diagram communicates architecture and ambition, not that every domain is already implemented.</desc>
+<defs>
+ <radialGradient id="halo"><stop offset="0" stop-color="#123d56"/><stop offset="1" stop-color="#07111d"/></radialGradient>
+ <linearGradient id="cyan" x1="0" x2="1"><stop stop-color="#36e5dc"/><stop offset="1" stop-color="#3b91ff"/></linearGradient>
+ <linearGradient id="gold" x1="0" x2="1"><stop stop-color="#ffd36a"/><stop offset="1" stop-color="#ff774f"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 Z" fill="#54dedb"/></marker>
+ <style>
+ .h{font:700 31px 'Segoe UI',Arial,sans-serif;fill:#f4fbff}.sub{font:16px 'Segoe UI',Arial,sans-serif;fill:#a9c0d2}
+ .cap{font:700 17px 'Segoe UI',Arial,sans-serif;fill:#f4fbff}.body{font:14px 'Segoe UI',Arial,sans-serif;fill:#b9cedb}
+ .small{font:12px 'Segoe UI',Arial,sans-serif;fill:#9cb5c8}.cyan{fill:#48e1db}.gold{fill:#ffd36a}
+ .panel{fill:#101f2e;stroke:#2b4a60;stroke-width:1.5}.edge{fill:#102b39;stroke:#39dcd6;stroke-width:2}
+ .wire{fill:none;stroke:#54dedb;stroke-width:2.4;marker-end:url(#arrow)}.pulse{stroke-dasharray:5 12;animation:flow 4s linear infinite}
+ @keyframes flow{to{stroke-dashoffset:-68}} @media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+ </style>
+</defs>
+<rect width="1200" height="760" rx="26" fill="#07111d"/><rect width="1200" height="760" rx="26" fill="url(#halo)" opacity=".75"/>
+<g fill="none" stroke="#24455b" opacity=".4"><path d="M0 100H1200M0 200H1200M0 300H1200M0 400H1200M0 500H1200M0 600H1200M100 0V760M200 0V760M300 0V760M400 0V760M500 0V760M600 0V760M700 0V760M800 0V760M900 0V760M1000 0V760M1100 0V760"/></g>
+<text x="48" y="54" class="small" letter-spacing="4">THE SINGULARITY WORKSHOP · PHYSICS</text>
+<text x="48" y="102" class="h">Same reality. A different way to build it.</text>
+<text x="48" y="132" class="sub">Not a prettier black box: physical models, explicit time, observable state, and evidence that travels with the result.</text>
+<rect x="48" y="166" width="330" height="260" rx="18" class="panel"/>
+<text x="72" y="200" class="small" letter-spacing="2">THE FAMILIAR ROUTE</text>
+<text x="72" y="236" class="cap">Input → engine → image</text>
+<rect x="74" y="260" width="278" height="65" rx="12" fill="#172534" stroke="#637486" stroke-width="1.5"/>
+<g fill="#8ea1b2"><rect x="91" y="278" width="22" height="26" rx="3"/><rect x="120" y="278" width="22" height="26" rx="3"/><rect x="149" y="278" width="22" height="26" rx="3"/></g>
+<text x="190" y="288" class="cap">Simulation</text><text x="190" y="307" class="small">details often hidden</text>
+<path d="M213 328V350" stroke="#8398aa" stroke-width="2" stroke-dasharray="4 5"/>
+<rect x="74" y="351" width="278" height="49" rx="10" fill="#182330" stroke="#637486"/>
+<text x="213" y="381" text-anchor="middle" class="body">A result to look at</text>
+<text x="213" y="449" class="small">Useful visuals. Harder to inspect the cause.</text>
+<rect x="402" y="166" width="750" height="260" rx="18" fill="#0b1c29" stroke="#2b7e89" stroke-width="1.5"/>
+<text x="428" y="200" class="small" letter-spacing="2">THE PHYSICS ROUTE</text>
+<text x="428" y="236" class="cap">Declare the world. Derive the outcome.</text>
+<g>
+ <rect x="428" y="260" width="154" height="76" rx="12" class="edge"/><text x="505" y="286" text-anchor="middle" class="cap">Physical model</text><text x="505" y="309" text-anchor="middle" class="small">laws · units · limits</text>
+ <rect x="614" y="260" width="154" height="76" rx="12" class="edge"/><text x="691" y="286" text-anchor="middle" class="cap">Declared run</text><text x="691" y="309" text-anchor="middle" class="small">inputs · time · seed</text>
+ <rect x="800" y="260" width="154" height="76" rx="12" class="edge"/><text x="877" y="286" text-anchor="middle" class="cap">Measured state</text><text x="877" y="309" text-anchor="middle" class="small">samples · quantities</text>
+ <rect x="986" y="260" width="140" height="76" rx="12" fill="#2a241a" stroke="#e4b852" stroke-width="2"/><text x="1056" y="286" text-anchor="middle" class="cap">Evidence</text><text x="1056" y="309" text-anchor="middle" class="small">tests · replay</text>
+ <path d="M582 298H604M768 298H790M954 298H976" class="wire pulse"/>
+</g>
+<path d="M1056 337V366H505V344" fill="none" stroke="#ffd36a" stroke-width="1.5" stroke-dasharray="5 6" opacity=".7"/>
+<text x="815" y="389" text-anchor="middle" class="body">Results can be explained, challenged, repeated, and compared.</text>
+<text x="600" y="481" text-anchor="middle" class="h" font-size="25">One world · many coupled domains · one inspectable chain of cause</text>
+<g>
+ <rect x="48" y="514" width="210" height="154" rx="16" class="panel"/>
+ <path d="M83 555 Q107 522 131 555" fill="none" stroke="#64d8a2" stroke-width="4"/><circle cx="107" cy="561" r="9" fill="#e85c43" filter="url(#glow)"/><path d="M107 573V602" stroke="#e85c43" stroke-width="2" stroke-dasharray="3 5"/><path d="M87 604H127" stroke="#64d8a2" stroke-width="3"/>
+ <text x="153" y="554" class="cap">Motion</text><text x="153" y="576" class="small">position · velocity</text><text x="68" y="640" class="body">An apple falls.</text>
+ <rect x="278" y="514" width="210" height="154" rx="16" class="panel"/>
+ <path d="M310 581L340 552L365 574L391 538" fill="none" stroke="#ffd36a" stroke-width="3"/><path d="M340 552L328 568M365 574L377 560" stroke="#ff774f" stroke-width="3"/><circle cx="391" cy="538" r="7" fill="#ffd36a" filter="url(#glow)"/>
+ <text x="310" y="614" class="cap">Impact</text><text x="310" y="638" class="body">momentum · damage</text>
+ <rect x="508" y="514" width="210" height="154" rx="16" class="panel"/>
+ <path d="M548 581C531 566 557 552 548 537M566 581C549 566 575 552 566 537M584 581C567 566 593 552 584 537" fill="none" stroke="#ff8c56" stroke-width="3" stroke-linecap="round"/><path d="M536 590H600" stroke="#ffd36a" stroke-width="3"/>
+ <text x="615" y="558" class="cap">Heat</text><text x="615" y="581" class="small">energy · transfer</text><text x="535" y="638" class="body">Temperature can change.</text>
+ <rect x="738" y="514" width="210" height="154" rx="16" class="panel"/>
+ <path d="M765 552Q785 536 805 552T845 552M765 570Q785 554 805 570T845 570M765 588Q785 572 805 588T845 588" fill="none" stroke="#48b8ff" stroke-width="3"/>
+ <text x="863" y="558" class="cap">Water</text><text x="863" y="581" class="small">flow · terrain</text><text x="765" y="638" class="body">A wave meets a shore.</text>
+ <rect x="968" y="514" width="184" height="154" rx="16" class="panel"/>
+ <path d="M1002 541L1024 553L1002 565L1024 577L1002 589" fill="none" stroke="#d78cff" stroke-width="3"/><path d="M1024 553H1040V577H1024" fill="none" stroke="#d78cff" stroke-width="3"/><circle cx="1040" cy="565" r="4" fill="#d78cff"/>
+ <text x="1060" y="556" class="cap">Power</text><text x="1060" y="578" class="small">voltage · load</text><text x="990" y="638" class="body">Current meets resistance.</text>
+</g>
+<text x="48" y="706" class="sub">The approach is the differentiator: deterministic experiments, versioned observations, explicit assumptions, and validation.</text>
+<text x="48" y="731" class="small">Scope is honest: these domains are at different implementation stages. See the capability catalog and living lessons for what is executable today.</text>
+</svg>
