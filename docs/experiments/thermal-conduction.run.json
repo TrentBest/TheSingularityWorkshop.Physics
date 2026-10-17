@@ -49,8 +49,8 @@
   "result": {
     "thermalConductanceWattsPerKelvin": 10,
     "energyTransferredFromFirstToSecondJoules": 500,
-    "totalSensibleEnergyBeforeJoules": 103700,
-    "totalSensibleEnergyAfterJoules": 103700,
+    "totalSensibleEnergyBeforeJoules": 103700.00000000006,
+    "totalSensibleEnergyAfterJoules": 103700.00000000006,
     "energyAccountingResidualJoules": 0,
     "finalFirst": {
       "massKilograms": 2,
