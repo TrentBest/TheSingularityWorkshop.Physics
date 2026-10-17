@@ -46,6 +46,16 @@ Prefer an embedded, self-contained living SVG when it explains the concept. For 
 
 The [scale-factor lesson](SCALE_FACTOR_LIVING.md) shows the property and its visible consequence in the same image. This is a conceptual illustration—not a Physics solver—and demonstrates the minimum expected pattern for property-focused explanations.
 
+## Living-image examples already in the documentation
+
+- [Scale factor](SCALE_FACTOR_LIVING.md): the displayed linear scale and visible geometry change together. This is a conceptual property illustration, not solver output.
+- [Moving-train projectile](experiments/moving-train-projectile.md): animated markers follow paired train/ground states produced by the C# experiment; CI checks plotted coordinates against every recorded sample.
+- [Two-body thermal conduction](experiments/thermal-conduction.md): animated markers show the direction of energy transfer while temperatures, transfer energy, and accounting residual come from the serialized model result.
+- [Spring-damper](SPATIAL_DISTANCE_SPRING_DAMPER.md): the spring length and force direction animate conceptually; the image explicitly does not claim to be the solver's numerical output.
+- [Multi-rate scheduling](PROCESS_GROUP_SCHEDULING.md): separate pulses illustrate different proposed cadences; the image states that timing is illustrative, not measured runtime behavior.
+
+These examples intentionally distinguish three categories: **model-derived living images**, **conceptual living explanations**, and **static reference diagrams**. Use the strongest category the available evidence supports, and never let a conceptual image masquerade as model-derived evidence.
+
 ## Reproducible evidence
 
 Every generated artifact points to the run configuration and model versions used. A reader should be able to rerun a supported experiment and compare measurements. Illustrative or synthetic data must be labeled as such.
