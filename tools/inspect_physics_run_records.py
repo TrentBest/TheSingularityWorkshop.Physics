@@ -7,11 +7,10 @@ import json
 from pathlib import Path
 from typing import Any
 
-DOMAIN_PAYLOAD_FIELDS = {
-    "acoustics.free-field-point-source-observation": ("observation",),
-    "acoustics.first-order-room-reflection": ("directObservation", "reflections"),
-    "coupling.electrical-to-lumped-thermal": ("electricalObservation", "result"),
-    "thermodynamics.lumped-body-conduction": ("result",),
+ENVELOPE_FIELDS = {
+    "schemaVersion", "modelId", "modelVersion", "status", "units", "definition",
+    "logicalTime", "provenance", "validation", "runId", "coordinateConvention",
+    "assumptions", "limitations",
 }
 
 
@@ -53,19 +52,15 @@ def summarize(record: dict[str, Any]) -> dict[str, Any]:
     else:
         raise ValueError(f"unsupported modelId: {model_id}")
 
-    payload_fields = DOMAIN_PAYLOAD_FIELDS[model_id]
+    envelope = {field: record[field] for field in ENVELOPE_FIELDS if field in record}
+    # Preserve every non-envelope field, including legacy top-level inputs such as
+    # room/source/listener. Do not silently discard model-owned data just because
+    # an older record has not grouped it under `definition` yet.
+    domain_payload = {field: value for field, value in record.items() if field not in ENVELOPE_FIELDS}
     return {
-        "envelope": {
-            "schemaVersion": record["schemaVersion"],
-            "modelId": model_id,
-            "modelVersion": record["modelVersion"],
-            "status": record["status"],
-            **({"units": record["units"]} if "units" in record else {}),
-            **({"definition": record["definition"]} if "definition" in record else {}),
-            "limitations": record["limitations"],
-        },
+        "envelope": envelope,
         "summary": summary,
-        "domainPayload": {field: record[field] for field in payload_fields},
+        "domainPayload": domain_payload,
     }
 
 
