@@ -1,10 +1,10 @@
 # Moving-train projectile: one motion, two observers
 
-**Status:** paired train/ground experiment, versioned run-record model, generator, and focused tests implemented. CI executes the C# model and checks every paired sample. A paired comparison SVG remains the next visualization step.
+**Status:** paired train/ground experiment, versioned run-record model, generator, and focused tests implemented. CI executes the C# model and checks every paired sample. A paired observer SVG is now present as an analytical reference graphic; generating it directly from the serialized C# run record and checking it in CI remains the next step.
 
-![Recorded 3D projectile trajectory reference](projectile-trajectory.svg)
+![Moving-train projectile: passenger and trackside views](moving-train-projectile.svg)
 
-*This is the existing single-frame trajectory example, not yet the paired train/ground visualization. The paired SVG is a tracked documentation gap because this lesson's main idea is the comparison between observers.*
+*The paired plot shows the default analytical case at the same nine logical timestamps. It is currently a checked-in analytical reference graphic; the next step is to generate the SVG from the actual serialized C# run record and verify drift in CI.*
 
 ## Question
 
@@ -40,4 +40,4 @@ For train velocity \(\mathbf{u}\), train-frame position \(\mathbf{x}_{train}(t)\
 
 This is a classical, non-relativistic model. The frames have parallel axes and constant relative velocity. It does not model train acceleration, drag, launch mechanics, collision, or terrain.
 
-CI runs the generator and verifies that all nine paired samples share timestamps, satisfy the declared Galilean position transform, and preserve vertical velocity. Next: generate and check in a paired SVG from this serialized run record, making shared timestamps and both coordinate labels visible.
+CI runs the generator and verifies that all nine paired samples share timestamps, satisfy the declared Galilean position transform, and preserve vertical velocity. Next: drive the paired SVG from this serialized run record and make CI verify every plotted sample against the C# output.
