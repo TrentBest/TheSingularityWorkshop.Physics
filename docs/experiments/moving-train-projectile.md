@@ -2,6 +2,10 @@
 
 **Status:** paired train/ground experiment, versioned run-record model, generator, and focused tests implemented. CI executes the C# model and checks every paired sample. A paired comparison SVG remains the next visualization step.
 
+![Recorded 3D projectile trajectory reference](projectile-trajectory.svg)
+
+*This is the existing single-frame trajectory example, not yet the paired train/ground visualization. The paired SVG is a tracked documentation gap because this lesson's main idea is the comparison between observers.*
+
 ## Question
 
 A train moves at a constant 20 m/s. A ball is launched vertically at 8 m/s relative to the train. Ignoring air resistance, compare the description from a passenger with the description from someone beside the track.
