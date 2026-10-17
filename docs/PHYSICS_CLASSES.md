@@ -2,7 +2,7 @@
 
 # Physics Classes & Ontology Map
 
-Physics is organized into interoperable capability domains. These are not a universal fixed-layer ontology: they are addressable concepts that can coexist, be extended, and be composed into MicroBundles.
+Physics is organized into interoperable capability domains. These are not a universal fixed-layer ontology: they are addressable concepts that can coexist, be extended, and be composed into MicroBundles. Mathematics is a first-class companion domain, not an implementation detail; see the [Mathematics Domain Map](MATHEMATICS_DOMAIN_MAP.md). GPU preparation is a backend/data-layout contract, not a graphics dependency; see [GPU Computation Readiness](GPU_COMPUTATION_READINESS.md).
 
 ## Foundational classes
 
