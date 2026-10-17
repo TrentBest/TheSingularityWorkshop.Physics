@@ -296,6 +296,7 @@ The Physics-domain design is expanded in docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.m
 
 - Physics: [PhysicsLLM.md](../PhysicsLLM.md), [acoustic world model](ACOUSTIC_WORLD_MODEL.md), [living acoustic demonstration](ACOUSTIC_LIVING_DEMO.md), [single-source observation](experiments/acoustic-observation.md), and [controlled distance sweep](experiments/acoustic-distance-sweep.md).
 - WebPage: [Singularity Studios WebPageLLM handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_WEBPAGELLM_HANDOFF.md), [SFX/acoustics handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_SFX_WEBPAGELLM.md), and [production data model](https://github.com/TrentBest/WebPage/blob/development/docs/SINGULARITY_STUDIOS_PRODUCTION_MODEL.md).
+- AnyApp: [Singularity Studios desktop handoff](https://github.com/TrentBest/AnyApp/blob/development/docs/integrations/SINGULARITY_STUDIOS_ANYAPP_HANDOFF.md); AnyApp and WebPage should consume the same versioned production fixture and semantics.
 - Gestures: [Singularity Studios Gesture Plan](https://github.com/TrentBest/TheSingularityWorkshop.Gestures/blob/development/docs/SINGULARITY_STUDIOS_GESTURE_PLAN.md).
 
 ### Shared contract
