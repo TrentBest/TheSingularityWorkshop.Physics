@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+<title id="title">From physical identity to sound and damage</title>
+<desc id="desc">A theory map, not simulation output. Declared ontology and material properties plus actual motion feed contact mechanics. The resulting physical event branches into mechanical consequences such as damage and deflection, and acoustic excitation. The excitation passes through a propagation model to an observer. Solid cyan indicates conceptual inputs and event; gold indicates derived consequences; dashed outlines mark future model links.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1425"/><stop offset="1" stop-color="#142943"/></linearGradient>
+  <linearGradient id="event" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0d6b80"/><stop offset="1" stop-color="#16566b"/></linearGradient>
+  <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#5dd8e8"/></marker>
+  <marker id="arrowGold" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#f6c56b"/></marker>
+  <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#8aa5c4" stroke-opacity=".09" stroke-width="1"/></pattern>
+  <style>
+    .head{font:700 28px 'Segoe UI',Arial,sans-serif;fill:#f1f6fc}.sub{font:14px 'Segoe UI',Arial,sans-serif;fill:#b7c8dc}
+    .label{font:700 17px 'Segoe UI',Arial,sans-serif;fill:#f1f6fc}.body{font:13px 'Segoe UI',Arial,sans-serif;fill:#c7d6e7}
+    .small{font:11px 'Segoe UI',Arial,sans-serif;fill:#9db2ca}.status{font:700 10px 'Segoe UI',Arial,sans-serif;letter-spacing:1.2px;fill:#f6c56b}
+    .input{fill:#10283c;stroke:#5dd8e8;stroke-width:1.5}.future{fill:#111f31;stroke:#f6c56b;stroke-width:1.5;stroke-dasharray:6 5}
+    .lineC{fill:none;stroke:#5dd8e8;stroke-width:2.5;marker-end:url(#arrowCyan)}.lineG{fill:none;stroke:#f6c56b;stroke-width:2.5;marker-end:url(#arrowGold)}
+  </style>
+</defs>
+<rect width="1200" height="760" rx="22" fill="url(#bg)"/><rect width="1200" height="760" rx="22" fill="url(#grid)"/>
+<text x="42" y="48" class="status">LIVING THEORY · CAUSALITY MAP</text>
+<text x="42" y="88" class="head">Sound is what the event does—not what a developer attaches.</text>
+<text x="42" y="116" class="sub">One physical interaction. Shared cause. Multiple measurable consequences.</text>
+
+<rect x="42" y="165" width="260" height="126" rx="14" class="input"/>
+<text x="62" y="193" class="status">01 · DECLARE</text>
+<text x="62" y="222" class="label">Ontology + materials</text>
+<text x="62" y="247" class="body">Geometry · mass · stiffness</text><text x="62" y="267" class="body">damping · condition · limits</text>
+
+<rect x="42" y="335" width="260" height="126" rx="14" class="input"/>
+<text x="62" y="363" class="status">02 · OBSERVE</text>
+<text x="62" y="392" class="label">Actual motion</text>
+<text x="62" y="417" class="body">Swing / thrust · angular motion</text><text x="62" y="437" class="body">relative velocity · orientation</text>
+
+<path d="M302 228 H342 V300 H380" class="lineC"/><path d="M302 398 H342 V344 H380" class="lineC"/>
+<rect x="380" y="250" width="255" height="145" rx="16" fill="url(#event)" stroke="#5dd8e8" stroke-width="2"/>
+<text x="402" y="278" class="status">03 · RESOLVE</text>
+<text x="402" y="309" class="label">Contact mechanics</text>
+<text x="402" y="336" class="body">Where · when · how hard</text><text x="402" y="357" class="body">impulse · deformation · slip</text><text x="402" y="378" class="body">separation · fracture, if modeled</text>
+
+<path d="M635 320 H674 V222 H710" class="lineG"/><path d="M674 320 V426 H710" class="lineG"/>
+<rect x="710" y="157" width="220" height="132" rx="14" class="future"/>
+<text x="730" y="184" class="status">04A · CONSEQUENCE</text>
+<text x="730" y="213" class="label">Mechanical outcome</text>
+<text x="730" y="238" class="body">Damage · deflection</text><text x="730" y="258" class="body">wear · fracture</text>
+<text x="730" y="278" class="small">Derived from contact + limits</text>
+
+<rect x="710" y="360" width="220" height="132" rx="14" class="future"/>
+<text x="730" y="387" class="status">04B · EXCITATION</text>
+<text x="730" y="416" class="label">Acoustic source</text>
+<text x="730" y="441" class="body">Vibration · resonance</text><text x="730" y="461" class="body">impact spectrum · decay</text>
+<text x="730" y="481" class="small">No manually assigned SFX</text>
+
+<path d="M930 426 H965" class="lineG"/>
+<rect x="965" y="360" width="193" height="132" rx="14" class="future"/>
+<text x="983" y="387" class="status">05 · PROPAGATE</text>
+<text x="983" y="416" class="label">Sound field</text>
+<text x="983" y="441" class="body">Distance · medium</text><text x="983" y="461" class="body">occlusion · attenuation</text><text x="983" y="481" class="small">Model limits stay visible</text>
+
+<path d="M1061 492 V535" class="lineG"/>
+<rect x="965" y="535" width="193" height="84" rx="14" fill="#202c40" stroke="#f6c56b" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="983" y="561" class="status">06 · OBSERVE</text><text x="983" y="587" class="label">Listener / sensor</text><text x="983" y="606" class="small">Measured output, not a cue</text>
+
+<rect x="42" y="545" width="888" height="74" rx="12" fill="#0c1b2b" stroke="#39516a"/>
+<text x="62" y="572" class="status">EVIDENCE LOOP</text>
+<text x="62" y="596" class="body">Run identity · model versions · SI units · assumptions · event record · measured quantities · validation</text>
+
+<rect x="42" y="650" width="1116" height="68" rx="12" fill="#332a1b" stroke="#f6c56b" stroke-opacity=".8"/>
+<text x="62" y="677" class="status">IMPLEMENTATION HONESTY</text>
+<text x="62" y="700" class="body">Theory map only. Free-field acoustics exists; full material → contact → damage + acoustic-source coupling is future work.</text>
+</svg>
