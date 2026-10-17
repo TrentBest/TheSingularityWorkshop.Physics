@@ -24,7 +24,7 @@ public sealed class FirstOrderRoomReflectionsTests
 
         var observations = FirstOrderRoomReflections.Observe(source, listener, room);
 
-        var reflection = Is.Single(observations);
+        var reflection = observations.Single();
         Assert.That(reflection.SurfaceId, Is.EqualTo("x-max"));
         Assert.That(reflection.ReflectionPoint.X, Is.EqualTo(10d).Within(1e-12));
         Assert.That(reflection.ReflectionPoint.Y, Is.EqualTo(5d).Within(1e-12));
