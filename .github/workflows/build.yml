@@ -22,6 +22,30 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Verify living scale illustration is embedded and accessible
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          svg = Path('docs/images/scale-factor-living.svg').read_text(encoding='utf-8')
+          lesson = Path('docs/SCALE_FACTOR_LIVING.md').read_text(encoding='utf-8')
+          theory = Path('docs/LIVING_THEORY.md').read_text(encoding='utf-8')
+          readme = Path('README.md').read_text(encoding='utf-8')
+          checks = {
+              'accessible SVG title': '<title id="title">' in svg,
+              'accessible SVG description': '<desc id="desc">' in svg,
+              'animated scale property': '@keyframes scale-object' in svg and 'scale(.5)' in svg and 'scale(2)' in svg,
+              'changing displayed values': '0.5×' in svg and '2×' in svg and 'half-label' in svg and 'double-label' in svg,
+              'reduced motion fallback': 'prefers-reduced-motion: reduce' in svg,
+              'lesson embeds the image': 'images/scale-factor-living.svg' in lesson,
+              'living theory sets the rule': 'A living-image rule for every explanation' in theory,
+              'README links the lesson': 'docs/SCALE_FACTOR_LIVING.md' in readme,
+          }
+          for name, passed in checks.items():
+              print(f'{"PASS" if passed else "FAIL"}: {name}')
+          assert all(checks.values()), 'Living scale illustration contract failed.'
+          PY
+
       - name: Execute the apple free-fall teaching experiment
         run: dotnet run --project tools/FreeFallRunRecordGenerator/FreeFallRunRecordGenerator.csproj --configuration Release -- /tmp/apple-free-fall.actual.json
 
