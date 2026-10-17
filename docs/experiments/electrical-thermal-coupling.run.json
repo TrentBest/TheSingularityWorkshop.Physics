@@ -24,6 +24,19 @@
       "massKilograms": 2,
       "temperatureKelvin": 300,
       "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "specificHeatCapacityProperty": {
+        "materialId": "reference-thermal-body",
+        "propertyId": "specific-heat-capacity",
+        "value": 500,
+        "unit": "J/(kg*K)",
+        "evidenceStatus": "illustrative",
+        "sourceId": "workshop.electrical-thermal-fixture",
+        "sourceVersion": "1",
+        "validMinimum": 273.15,
+        "validMaximum": 373.15,
+        "validConditions": "Illustrative constant value over the example temperature interval.",
+        "standardUncertainty": null
+      },
       "referenceTemperatureKelvin": 273.15
     }
   },
