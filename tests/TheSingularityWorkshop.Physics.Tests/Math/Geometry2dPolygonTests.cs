@@ -106,6 +106,60 @@ public sealed class Geometry2dPolygonTests
                 new Vector2d(0, 0)));
     }
 
+
+    [Test]
+    public void IsSimple_AcceptsConvexConcaveAndRepeatedClosingVertex()
+    {
+        Vector2d[] square = { new(0, 0), new(4, 0), new(4, 4), new(0, 4) };
+        Vector2d[] concave =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(2, 2), new(0, 4)
+        };
+        Vector2d[] explicitlyClosed =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(0, 0)
+        };
+
+        Assert.That(Geometry2dPolygon.IsSimple(square), Is.True);
+        Assert.That(Geometry2dPolygon.IsSimple(concave), Is.True);
+        Assert.That(Geometry2dPolygon.IsSimple(explicitlyClosed), Is.True);
+    }
+
+    [Test]
+    public void IsSimple_RejectsCrossingsNonAdjacentTouchesAndOverlappingAdjacentEdges()
+    {
+        Vector2d[] bowTie =
+        {
+            new(0, 0), new(4, 4), new(0, 4), new(4, 0)
+        };
+        Vector2d[] nonAdjacentTouch =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(2, 0), new(0, 4)
+        };
+        Vector2d[] adjacentBacktrack =
+        {
+            new(0, 0), new(4, 0), new(2, 0), new(2, 2), new(0, 2)
+        };
+
+        Assert.That(Geometry2dPolygon.IsSimple(bowTie), Is.False);
+        Assert.That(Geometry2dPolygon.IsSimple(nonAdjacentTouch), Is.False);
+        Assert.That(Geometry2dPolygon.IsSimple(adjacentBacktrack), Is.False);
+    }
+
+    [Test]
+    public void IsSimple_RejectsTooFewVerticesAndRepeatedVertices()
+    {
+        Assert.That(Geometry2dPolygon.IsSimple(Array.Empty<Vector2d>()), Is.False);
+        Assert.That(Geometry2dPolygon.IsSimple(new[] { new Vector2d(0, 0), new Vector2d(1, 0) }),
+            Is.False);
+        Assert.That(Geometry2dPolygon.IsSimple(new[]
+        {
+            new Vector2d(0, 0), new Vector2d(4, 0), new Vector2d(4, 4),
+            new Vector2d(0, 4), new Vector2d(4, 0)
+        }), Is.False);
+        Assert.Throws<ArgumentNullException>(() => Geometry2dPolygon.IsSimple(null!));
+    }
+
     private static PointPolygonRelation2d Locate(
         Vector2d[] vertices, (double X, double Y) point) =>
         Geometry2dPolygon.LocatePoint(vertices, new Vector2d(point.X, point.Y));
