@@ -45,24 +45,38 @@ def validate(path: Path) -> list[str]:
         if key not in record:
             errors.append(f"{path}: missing required envelope field '{key}'")
 
-    if (not isinstance(record.get("schemaVersion"), int)\n            or isinstance(record.get("schemaVersion"), bool)\n            or record.get("schemaVersion", 0) < 1):
+    schema_version = record.get("schemaVersion")
+    if (
+        not isinstance(schema_version, int)
+        or isinstance(schema_version, bool)
+        or schema_version < 1
+    ):
         errors.append(f"{path}: schemaVersion must be a positive integer")
+
     if not isinstance(record.get("modelId"), str) or not record.get("modelId", "").strip():
         errors.append(f"{path}: modelId must be a non-empty string")
+
     model_version = record.get("modelVersion")
-    if not ((isinstance(model_version, int) and model_version > 0)
-            or (isinstance(model_version, str) and model_version.strip())):
+    if not (
+        (isinstance(model_version, int) and not isinstance(model_version, bool) and model_version > 0)
+        or (isinstance(model_version, str) and model_version.strip())
+    ):
         errors.append(f"{path}: modelVersion must be a positive integer or non-empty string")
+
     if record.get("status") not in ACCEPTED_STATUSES:
         errors.append(f"{path}: status must use a recognized epistemic status")
-    if not isinstance(record.get("limitations"), list) or not all(
-        isinstance(item, str) and item.strip() for item in record.get("limitations", [])
+
+    limitations = record.get("limitations")
+    if not isinstance(limitations, list) or not all(
+        isinstance(item, str) and item.strip() for item in limitations
     ):
         errors.append(f"{path}: limitations must be an array of non-empty strings")
 
     if not any(key in record for key in DOMAIN_PAYLOADS):
         errors.append(f"{path}: no recognized domain payload field found")
 
+    if "definition" in record and not isinstance(record["definition"], dict):
+        errors.append(f"{path}: definition, when present, must be an object")
     if "units" in record and not isinstance(record["units"], dict):
         errors.append(f"{path}: units, when present, must be an object")
     if "provenance" in record and not isinstance(record["provenance"], (dict, list)):
@@ -80,7 +94,7 @@ def main(args: list[str]) -> int:
 
     errors = [error for arg in args for error in validate(Path(arg))]
     if errors:
-        print("\n".join(errors), file=sys.stderr)
+        print("\\n".join(errors), file=sys.stderr)
         return 1
 
     print(f"Validated minimal run-record envelope for {len(args)} record(s).")
