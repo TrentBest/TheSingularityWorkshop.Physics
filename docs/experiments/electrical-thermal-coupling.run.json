@@ -32,6 +32,8 @@
         "evidenceStatus": "illustrative",
         "sourceId": "workshop.electrical-thermal-fixture",
         "sourceVersion": "1",
+        "validityQuantity": "temperature",
+        "validityUnit": "K",
         "validMinimum": 273.15,
         "validMaximum": 373.15,
         "validConditions": "Illustrative constant value over the example temperature interval.",
