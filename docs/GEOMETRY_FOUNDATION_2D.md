@@ -1,12 +1,12 @@
 # Geometry Foundation: 2D Vectors
 
-**Status:** finite 2D vector arithmetic, exact-sign orientation, closed-segment intersection classification, explicit absolute-distance tolerance, and frame-tagged point identity are implemented. Coordinate conversion and a complete geometry/collision API are not implemented.
+**Status:** finite 2D vector arithmetic, exact-sign orientation, closed-segment intersection classification, explicit absolute-distance tolerance, frame-tagged point identity, and frame-aware rigid 2D transforms are implemented. Intersection-coordinate calculation and a complete geometry/collision API are not implemented.
 
 ## Contract
 
 [`Vector2d`](../Physics/Spatial/Vector2d.cs) represents two finite, unit-agnostic components. It provides addition, subtraction, scalar scaling/division, squared length, length, dot product, signed 2D cross product, and squared distance. Focused tests live in [Vector2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Vector2dTests.cs).
 
-[`CoordinateFrame2d`](../Physics/Spatial/CoordinateFrame2d.cs) provides a stable, non-empty, ordinal/case-sensitive identifier for a caller-defined frame. The owner must document its origin, axes, orientation, and coordinate units; the identifier does not define a transform or prove compatible conventions. [`Point2d`](../Physics/Spatial/Point2d.cs) pairs coordinates with that identity, includes the frame in exact equality, and exposes `RequireSameFrame` to reject comparisons across different frame IDs. See [CoordinateFrame2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/CoordinateFrame2dTests.cs).
+[`CoordinateFrame2d`](../Physics/Spatial/CoordinateFrame2d.cs) provides a stable, non-empty, ordinal/case-sensitive identifier for a caller-defined frame. The owner must document its origin, axes, orientation, and coordinate units; the identifier does not define a transform or prove compatible conventions. [`Point2d`](../Physics/Spatial/Point2d.cs) pairs coordinates with that identity, includes the frame in exact equality, and exposes `RequireSameFrame` to reject comparisons across different frame IDs. [`RigidTransform2d`](../Physics/Spatial/RigidTransform2d.cs) maps points between explicit source and destination frames using counter-clockwise radians and destination-frame translation. It supports direction-only rotation, inverse, and ordered composition (`first.Then(next)` means apply first, then next); point application and composition reject frame mismatches. Focused tests are in [CoordinateFrame2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/CoordinateFrame2dTests.cs) and [RigidTransform2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/RigidTransform2dTests.cs).
 
 For three points, [`Geometry2d.Orient`](../Physics/Spatial/Geometry2d.cs) returns `CounterClockwise`, `Clockwise`, or `Collinear`. A conservative floating-point filter uses exact integer arithmetic over represented binary64 coordinates when the filter cannot safely determine the sign. This is exact classification of supplied values, not a claim that measured inputs are physically exact. See [Geometry2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Geometry2dTests.cs).
 
@@ -16,7 +16,7 @@ For three points, [`Geometry2d.Orient`](../Physics/Spatial/Geometry2d.cs) return
 
 ## Deliberate limits
 
-- Frame identifiers are labels, not a unit system or transform graph. Reusing an identifier for inconsistent conventions is a caller error. Cross-frame conversion remains unimplemented.
+- Frame identifiers are labels, not a unit system or transform graph. Reusing an identifier for inconsistent conventions is a caller error. `RigidTransform2d` provides explicit pairwise conversion, not a graph, automatic path finding, unit conversion, or convention discovery.
 - Raw `Vector2d` operations remain frame-agnostic; use `Point2d` where frame identity matters.
 - Equality is exact component equality. A tolerance comparison is a separate explicit operation, not a replacement for equality or robust orientation.
 - Tolerance-based proximity does not alter segment intersection classification. A near miss remains disjoint under the exact represented-coordinate classifier, even if a domain-specific solver later chooses to treat it as contact.
@@ -25,8 +25,8 @@ For three points, [`Geometry2d.Orient`](../Physics/Spatial/Geometry2d.cs) return
 
 ## Next geometry slices
 
-1. Define an explicit 2D rigid transform (translation + rotation) with source and destination frame identities; test composition and inverse properties.
-2. Specify intersection-coordinate computation with a numerical contract for parallel, collinear, endpoint-touching, degenerate, ill-conditioned, and out-of-range cases.
+1. Specify intersection-coordinate computation with a numerical contract for parallel, collinear, endpoint-touching, degenerate, ill-conditioned, and out-of-range cases.
+2. Add transform graph/path policy only when a consumer needs more than explicit pairwise transforms; define cycle and consistency behavior.
 3. Reuse the same semantics in polygon tests, 2D collision, and living visual explanations.
 4. Add batch/SoA equivalents only where they share scalar reference fixtures and declare whether they preserve exact or approximate predicate semantics.
 
