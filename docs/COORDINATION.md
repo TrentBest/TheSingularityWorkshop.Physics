@@ -311,3 +311,16 @@ The current free-field experiment computes source/listener distance, propagation
 - WebPage source-integration run [38995728981](https://github.com/TrentBest/WebPage/actions/runs/38995728981) exposed a missing project reference for the Visualize GUI.SVG backend in the Singularity Studios plan generator. The reference was corrected on `development` in commit `037be531894c2697b9fb8e99e31c12ee0ae36bb7`; the follow-up CI result still needs verification.
 - Next Physics gate is a reviewed, bounded room-boundary and first-order reflected-path contract with explicit assumptions and tests. Only after that contract is defensible should room geometry be allowed to affect displayed measurements. Do not use an unvalidated reverb effect as a substitute.
 - Preserve repository ownership and branch policy: work on `development`, leave `master` stable, and do not publish/release/deploy without explicit authorization.
+
+
+## 2026-10-17 — first-order room reflection implementation
+
+The bounded acoustic room-path increment has now moved from design to code on `development`:
+
+- `AcousticRoomBox` defines a finite axis-aligned room and six frequency-independent pressure-amplitude coefficients.
+- `FirstOrderRoomReflections` computes first-order image-source paths and returns each wall path separately.
+- Focused tests cover a known reflected path, point/delay/level calculations, stable ordering, and invalid geometry/coefficients/positions.
+- A C# run-record generator, committed JSON fixture, experiment note, and SVG renderer were added. CI checks the generated record and SVG against committed artifacts. The exact serialized fixture needed a formatting correction; the latest rerun must still confirm all artifact checks and the full test suite.
+- WebPage's [Singularity Studios page](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Pages/SingularityStudios.razor) and [SFX integration brief](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_SFX_WEBPAGELLM.md) now expose the room-path evidence with explicit non-waveform limitations.
+
+This is not room audio. The direct and reflected paths are independent estimates; no phase-aware combination, multiple reflections, frequency-dependent absorption, scattering, diffraction, transmission, occlusion, reverberation, or waveform synthesis is implemented. Continue monitoring WebPage and AnyApp handoffs for new integration requests. No publication/release/deployment or promotion to `master` is authorized.
