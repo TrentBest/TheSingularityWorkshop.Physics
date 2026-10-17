@@ -51,6 +51,10 @@ Before claiming the system generated a sound from physics, the implementation ne
 
 The first useful vertical slice is intentionally modest: **one audible source, a free-field baseline, and a measured/modelled room response comparison**. The existing free-field observation can anchor distance and delay now; room-dependent waveform changes must wait for a validated signal/room-response model. Do not convert lost mechanical energy into sound until a physical source-coupling model explicitly accounts for it.
 
+## First reproducible observation
+
+The [free-field acoustic observation experiment](experiments/acoustic-observation.md) executes `FreeFieldAcoustics.Observe`, stores the source/listener inputs and computed distance, delay, direction, and received-level estimate in a versioned JSON run record, and renders an SVG from that same record. CI regenerates the record and checks both it and the SVG. This establishes an evidence-backed source-to-listener visualization; it still does not synthesize or play a Physics-generated waveform.
+
 ## Related work
 
 - [Acoustic world model](ACOUSTIC_WORLD_MODEL.md)
