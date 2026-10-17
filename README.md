@@ -11,7 +11,7 @@
 
 ![Physics paradigm: same reality, a different way to build it](docs/images/physics-paradigm.svg)
 
-**See the difference in evidence:** [watch the apple fall](docs/experiments/apple-free-fall.md) · [inspect a recorded 3D trajectory](docs/experiments/projectile-trajectory.md) · [check what is actually implemented](docs/PHYSICS_CAPABILITY_CATALOG.md)
+**See the difference in evidence:** [watch the apple fall](docs/experiments/apple-free-fall.md) · [inspect a recorded 3D trajectory](docs/experiments/projectile-trajectory.md) · [watch a contact impulse change velocity](docs/experiments/contact-impulse.md) · [check what is actually implemented](docs/PHYSICS_CAPABILITY_CATALOG.md)
 
 **Physics is not trying to make reality look physical. It is trying to make physical outcomes explainable.** A conventional engine can be the right tool for a game; this project takes a different architectural route: explicit model identity, units and assumptions, deterministic experiments, recorded state, validation, and living theory. The ambition is not to deny familiar physics, but to make its causes inspectable and its capabilities composable. The visual above is an architectural thesis—not a claim that every pictured domain is already implemented.
 
