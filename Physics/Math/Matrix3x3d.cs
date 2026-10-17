@@ -10,16 +10,27 @@ namespace TheSingularityWorkshop.Physics.Numerics;
 /// </remarks>
 public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
 {
+    /// <summary>Gets matrix component M11 in row-major coordinates.</summary>
     public double M11 { get; }
+    /// <summary>Gets matrix component M12 in row-major coordinates.</summary>
     public double M12 { get; }
+    /// <summary>Gets matrix component M13 in row-major coordinates.</summary>
     public double M13 { get; }
+    /// <summary>Gets matrix component M21 in row-major coordinates.</summary>
     public double M21 { get; }
+    /// <summary>Gets matrix component M22 in row-major coordinates.</summary>
     public double M22 { get; }
+    /// <summary>Gets matrix component M23 in row-major coordinates.</summary>
     public double M23 { get; }
+    /// <summary>Gets matrix component M31 in row-major coordinates.</summary>
     public double M31 { get; }
+    /// <summary>Gets matrix component M32 in row-major coordinates.</summary>
     public double M32 { get; }
+    /// <summary>Gets matrix component M33 in row-major coordinates.</summary>
     public double M33 { get; }
 
+    /// <summary>Creates a matrix from nine row-major finite components.</summary>
+    /// <exception cref="ArgumentOutOfRangeException">A component is not finite.</exception>
     public Matrix3x3d(
         double m11, double m12, double m13,
         double m21, double m22, double m23,
@@ -36,6 +47,7 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         M33 = RequireFiniteComponent(m33, nameof(m33));
     }
 
+    /// <summary>Gets the 3-by-3 identity matrix.</summary>
     public static Matrix3x3d Identity => new(
         1d, 0d, 0d,
         0d, 1d, 0d,
@@ -61,6 +73,7 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         M13, M23, M33);
 
     /// <summary>Returns the matrix product this × other.</summary>
+    /// <summary>Returns the matrix product this multiplied by other.</summary>
     public Matrix3x3d Multiply(Matrix3x3d other) => new(
         DotRowColumn(M11, M12, M13, other.M11, other.M21, other.M31),
         DotRowColumn(M11, M12, M13, other.M12, other.M22, other.M32),
@@ -72,6 +85,7 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         DotRowColumn(M31, M32, M33, other.M12, other.M22, other.M32),
         DotRowColumn(M31, M32, M33, other.M13, other.M23, other.M33));
 
+    /// <inheritdoc />
     public bool Equals(Matrix3x3d other) =>
         M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) &&
         M21.Equals(other.M21) && M22.Equals(other.M22) && M23.Equals(other.M23) &&
@@ -79,12 +93,15 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
 
     public override bool Equals(object? obj) => obj is Matrix3x3d other && Equals(other);
 
+    /// <inheritdoc />
     public override int GetHashCode() => HashCode.Combine(
         HashCode.Combine(M11, M12, M13),
         HashCode.Combine(M21, M22, M23),
         HashCode.Combine(M31, M32, M33));
 
+    /// <summary>Determines whether two matrices have equal components.</summary>
     public static bool operator ==(Matrix3x3d left, Matrix3x3d right) => left.Equals(right);
+    /// <summary>Determines whether two matrices have different components.</summary>
     public static bool operator !=(Matrix3x3d left, Matrix3x3d right) => !left.Equals(right);
 
     private static double DotRowColumn(
