@@ -6,11 +6,17 @@ namespace TheSingularityWorkshop.Physics.Chemistry;
 /// </summary>
 public enum PropertyValueStatus
 {
+    /// <summary>A point value or bounded range is available.</summary>
     Known = 0,
+    /// <summary>The value has not yet been established.</summary>
     Unknown = 1,
+    /// <summary>The property does not apply to this declared subject and scope.</summary>
     NotApplicable = 2,
+    /// <summary>The selected source does not report a value.</summary>
     NotReportedBySource = 3,
+    /// <summary>The selected data profile intentionally does not include this property.</summary>
     OmittedFromProfile = 4,
+    /// <summary>The requested conditions fall outside the model's validity range.</summary>
     OutOfModelRange = 5
 }
 
@@ -19,11 +25,17 @@ public enum PropertyValueStatus
 /// </summary>
 public enum PropertyEvidenceClass
 {
+    /// <summary>Value reported from an experimental measurement.</summary>
     Measured = 0,
+    /// <summary>Value assessed from a critical evaluation of available evidence.</summary>
     CriticallyEvaluated = 1,
+    /// <summary>Value calculated using a declared method or model.</summary>
     Calculated = 2,
+    /// <summary>Value estimated rather than directly established.</summary>
     Estimated = 3,
+    /// <summary>Value inferred from other evidence under declared assumptions.</summary>
     Inferred = 4,
+    /// <summary>Illustrative value used for demonstration or testing, not scientific evidence.</summary>
     Illustrative = 5
 }
 
