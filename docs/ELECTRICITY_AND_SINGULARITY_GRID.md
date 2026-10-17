@@ -58,6 +58,11 @@ This chain should be composable. A city object owns its own on/off intent and lo
 
 Transistors deserve their own executable learning experiences. The first version should teach rather than overclaim microscopic precision.
 
+![Conceptual NPN and PNP comparison showing semiconductor regions, forward-active conventional-current direction, and electron motion as separate arrows](images/bjt-polarity-carrier-directions.svg)
+
+*This is a conceptual teaching schematic, not output from a transistor solver. It shows the standard forward-active polarity conventions; it does not calculate carrier density, drift, diffusion, junction voltage, or device geometry. The electron and conventional-current arrows are intentionally separate.*
+
+
 **NPN BJT:** show N-type emitter, thin P-type base, and N-type collector; mark conventional current from collector toward emitter in forward-active operation; show the base-emitter junction forward biased and collector-base junction reverse biased. Explain that a small base current controls a larger collector current within the model's operating region. Animate carrier injection/recombination as a conceptual visualization, not as a literal count of every carrier.
 
 **PNP BJT:** mirror the polarity and doping arrangement; show conventional current entering the emitter and leaving the collector in forward-active operation. Keep current arrows and electron/hole motion separately labelled, because they are not the same direction.
