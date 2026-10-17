@@ -11,7 +11,7 @@
 
 ![Physics paradigm: same reality, a different way to build it](docs/images/physics-paradigm.svg)
 
-**Explore the knowledge graph:** [equations, derivations, and scientific experiences](docs/EQUATIONS_DERIVATIONS_AND_SCIENTIFIC_EXPERIENCES.md) · [composable models, solvers, and experiences](docs/COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md)
+**Explore the knowledge graph:** [equations, derivations, and scientific experiences](docs/EQUATIONS_DERIVATIONS_AND_SCIENTIFIC_EXPERIENCES.md) · [composable models, solvers, and experiences](docs/COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md) · [mathematics domain map](docs/MATHEMATICS_DOMAIN_MAP.md) · [GPU computation readiness](docs/GPU_COMPUTATION_READINESS.md)
 
 **See the difference in evidence:** [watch scale change live](docs/SCALE_FACTOR_LIVING.md) · [watch the apple fall](docs/experiments/apple-free-fall.md) · [compare moving-train observers](docs/experiments/moving-train-projectile.md) · [inspect a recorded 3D trajectory](docs/experiments/projectile-trajectory.md) · [watch a contact impulse change velocity](docs/experiments/contact-impulse.md) · [watch heat transfer](docs/experiments/thermal-conduction.md) · [see spring forces reverse](docs/SPATIAL_DISTANCE_SPRING_DAMPER.md) · [see multi-rate scheduling](docs/PROCESS_GROUP_SCHEDULING.md) · [understand deterministic randomness](docs/DETERMINISTIC_RANDOMNESS.md) · [check implemented capabilities](docs/PHYSICS_CAPABILITY_CATALOG.md)
 
