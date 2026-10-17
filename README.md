@@ -157,6 +157,10 @@ The long-term goal is not a library of static pages about physics. It is living 
 
 ---
 
+### Living images are documentation
+
+The rule is simple: if a picture materially improves understanding, put it beside the explanation. The [Living Image Standard](docs/LIVING_IMAGE_STANDARD.md) distinguishes model-backed outputs from analytical references and conceptual diagrams. Start with the [capability atlas](docs/images/physics-capability-atlas.svg), the [moving-train observer comparison](docs/experiments/moving-train-projectile.md), [lookup-table interpolation](docs/PHYSICS_MATH_LUTS.md), [shallow-water concepts](docs/HYDRODYNAMICS_SHALLOW_WATER_2D.md), and the run-backed [thermal-conduction experiment](docs/experiments/thermal-conduction.md).
+
 ## Resources & Support
 
 - [The Singularity Workshop](https://github.com/TrentBest)
