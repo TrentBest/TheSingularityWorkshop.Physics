@@ -51,7 +51,12 @@ public sealed class Squirrel3Random
     public uint Seed { get; }
 
     /// <summary>Gets the next unsigned 32-bit value.</summary>
-    public uint NextUInt()\n    {\n        var position = _position;\n        _position = unchecked(_position + 1u);\n        return Squirrel3.Hash(position, Seed);\n    }
+    public uint NextUInt()
+    {
+        var position = _position;
+        _position = unchecked(_position + 1u);
+        return Squirrel3.Hash(position, Seed);
+    }
 
     /// <summary>Returns a value in [0, 1), with 32 bits of source precision.</summary>
     public double NextDouble() => NextUInt() * (1.0 / 4294967296.0);
