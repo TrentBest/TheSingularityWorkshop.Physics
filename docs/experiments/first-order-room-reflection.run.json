@@ -5,8 +5,16 @@
   "status": "computed-from-physics-model",
   "room": {
     "id": "studio-room",
-    "minimumMeters": { "x": 0, "y": 0, "z": 0 },
-    "maximumMeters": { "x": 10, "y": 10, "z": 10 },
+    "minimumMeters": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "maximumMeters": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    },
     "reflectionCoefficientsPressureAmplitude": {
       "xMin": 0,
       "xMax": 0.5,
@@ -18,13 +26,21 @@
   },
   "source": {
     "id": "studio-source",
-    "positionMeters": { "x": 2, "y": 5, "z": 5 },
+    "positionMeters": {
+      "x": 2,
+      "y": 5,
+      "z": 5
+    },
     "referenceLevelDbSpl": 80,
     "referenceDistanceMeters": 1
   },
   "listener": {
     "id": "studio-listener",
-    "positionMeters": { "x": 8, "y": 7, "z": 5 }
+    "positionMeters": {
+      "x": 8,
+      "y": 7,
+      "z": 5
+    }
   },
   "speedOfSoundMetersPerSecond": 343,
   "directObservation": {
@@ -35,7 +51,11 @@
   "reflections": [
     {
       "surfaceId": "x-max",
-      "reflectionPointMeters": { "x": 10, "y": 6.6, "z": 5 },
+      "reflectionPointMeters": {
+        "x": 10,
+        "y": 6.6,
+        "z": 5
+      },
       "pathLengthMeters": 10.19803902718557,
       "propagationDelaySeconds": 0.029731892207538108,
       "reflectionCoefficient": 0.5,
