@@ -71,6 +71,10 @@ The projectile, free-fall, acoustic, contact-impulse, and room-reflection experi
 
 The run-record catalog and validator demonstrate cross-domain metadata discovery and basic envelope validation. **The full acceptance gate remains open:** a consumer still needs to read useful values from at least two original domain payloads through the shared envelope while preserving their domain-specific shapes. Continue with a small payload-aware consumer and stronger validation evidence; do not mass-rewrite all fixtures until the migration proves useful.
 
-## Acceptance gate for a shared contract
+## Acceptance evidence and remaining gate
 
-Before promoting this proposal to a runtime API, demonstrate that at least two different domains can be consumed by one small tool using only the common envelope, while still exposing their original domain payloads. Add schema validation and negative tests for missing model identity, unsupported schema versions, unknown status, and malformed units/metadata. Until then, this document is guidance, not a claim that a universal contract already exists.
+The first cross-domain acceptance gate now has a concrete demonstrator: [inspect_physics_run_records.py](../tools/inspect_physics_run_records.py) reads acoustic observations, room-reflection paths, electrical-to-thermal coupling, and two-body thermal conduction through their shared envelope. It extracts domain-specific summary values while returning each original domain payload unchanged. CI executes the consumer and tests that the payloads are preserved.
+
+The version-1 validator and regression tests reject missing model identity, unsupported schema versions, unknown status, malformed units/provenance/validation metadata, boolean-as-integer versions, and malformed limitations. The [run-record catalog](experiments/run-record-catalog.md) remains a discovery index; the inspector is the payload-aware example.
+
+**This does not promote the proposal to a runtime API.** The next gate is a real consumer outside this repository (or a second independent implementation) and review of schema evolution, provenance, and validation semantics. The contract remains guidance until that interoperability is demonstrated; no universal physics result schema is claimed.
