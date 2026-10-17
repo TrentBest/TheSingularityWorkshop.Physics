@@ -160,3 +160,24 @@ Priorities beyond the current Operation Sith integration work:
 - require actual code, focused tests, and living visualizations generated from model output before updating capability status.
 
 Keep working on the existing development branch; do not create more work branches. No merge to master, publication, release, deployment, or edits to unrelated repositories are authorized by this note.
+
+## RNG audit — 2026-10-17
+
+A source audit found that the first RNG slice already exists; do not recreate it or treat it as future-only work:
+
+- `Physics/Math/Squirrel3Random.cs` defines `Squirrel3.Hash(uint position, uint seed)` and a stateful `Squirrel3Random` stream.
+- Existing helpers cover unsigned values, `[0,1)` doubles, ranged doubles, half-open bounded integers using rejection sampling, booleans, probability checks, selection, Fisher–Yates shuffle, and deterministic stream forks.
+- `tests/TheSingularityWorkshop.Physics.Tests/Math/Squirrel3RandomTests.cs` has five golden vectors plus repeatability, bounds, invalid-input, shuffle, selection, and fork tests.
+- Current namespace is `TheSingularityWorkshop.Physics.Numerics`; retain compatibility unless an explicit API change is justified.
+- The hash and stream are deterministic non-cryptographic tools. The stream is call-order-dependent; `Fork(streamId)` is a seed-derived stream, not yet a fully specified world-seed/entity-ID/event-counter keyed random-access contract.
+
+### Audit conclusion and next checks
+
+1. Verify the golden vectors against a canonical upstream/reference implementation and record exact attribution/licensing before making stronger statistical claims.
+2. Add statistical sanity tests only as diagnostics, not as proof of quality. Keep cryptographic use explicitly out of scope.
+3. Evaluate a keyed API for stable entity/event/tick sampling that is independent of unrelated entities and call ordering; specify key mixing and collision limits before exposing it publicly.
+4. Add typed geometric sampling (including `Vector3d`) only with distribution tests and clear contracts; a normalized random vector is not automatically uniform over a sphere.
+5. Inspect the existing numerical/LUT contracts before creating any Math package. The repository already contains `LookupTable1D`; a package split is not justified merely by the existence of a `Physics/Math` directory.
+
+The latest development-head Physics Build and Tests workflow was successful at commit `c55edcd91d297ecd5276446e21add550fa358df2` ([run #566](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/39006351119)). That verifies the current head, but does not replace targeted validation when code changes. Continue directly on `development`; no release, master promotion, or unrelated-repository edits are authorized.
+
