@@ -48,7 +48,8 @@ public sealed class FirstOrderRoomReflectionsTests
         var second = FirstOrderRoomReflections.Observe(source, listener, room);
 
         Assert.That(first.Select(path => path.SurfaceId), Is.EqualTo(second.Select(path => path.SurfaceId)));
-        Assert.That(first.Count, Is.GreaterThan(0));
+        Assert.That(first.Count, Is.EqualTo(6));
+        Assert.That(first.Select(path => path.SurfaceId), Is.EqualTo(new[] { "x-min", "x-max", "y-min", "y-max", "z-min", "z-max" }));
         Assert.That(first.All(path => path.PathLengthMeters > 0d && path.PropagationDelaySeconds >= 0d), Is.True);
         Assert.That(first.All(path => path.ReflectionCoefficient is > 0d and <= 1d), Is.True);
     }
