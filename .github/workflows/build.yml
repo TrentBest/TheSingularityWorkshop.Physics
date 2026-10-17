@@ -104,6 +104,21 @@ jobs:
       - name: Verify checked-in SVG matches the documented fixture
         run: python3 tools/render_projectile_trajectory.py docs/experiments/projectile-trajectory.run.json docs/experiments/projectile-trajectory.svg --check
 
+      - name: Execute contact impulse resolver and serialize actual response
+        run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- /tmp/contact-impulse.actual.json
+
+      - name: Verify contact impulse run record is reproducible
+        run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- /tmp/contact-impulse.actual.json --check
+
+      - name: Render contact response SVG from actual resolver output
+        run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json /tmp/contact-impulse.actual.svg
+
+      - name: Verify committed contact response SVG matches actual resolver output
+        run: cmp /tmp/contact-impulse.actual.svg docs/experiments/contact-impulse.svg
+
+      - name: Verify contact response SVG against its run record
+        run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json docs/experiments/contact-impulse.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
