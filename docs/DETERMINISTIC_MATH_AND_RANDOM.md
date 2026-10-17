@@ -4,7 +4,7 @@
 
 ## 1. Randomness that can be replayed
 
-Simulation randomness must be reproducible, addressable, and explicit about what it does *not* guarantee. The initial primitive is a 32-bit Squirrel3 hash:
+Simulation randomness must be reproducible, addressable, and explicit about what it does *not* guarantee. The initial random primitive is a 32-bit Squirrel3 hash. The first LUT primitive is a separate bounded uniform one-dimensional table with linear interpolation, documented in [Physics Math LUTs](PHYSICS_MATH_LUTS.md):
 
 - `Squirrel3.Hash(position, seed)` is stateless: the same pair always produces the same 32-bit result.
 - `Squirrel3Random(seed)` is a mutable deterministic stream. Its output depends on both the seed and call order.
@@ -62,9 +62,9 @@ A presentation/LOD LUT may choose how an established physical event is drawn. It
 
 ## 4. Capability boundary
 
-Implemented today: `Squirrel3.Hash`, the seeded `Squirrel3Random` stream, bounded integer and floating-point sampling, Bernoulli choice, list choice, in-place shuffle, stream forking, and focused deterministic/range/argument tests.
+Implemented today: `Squirrel3.Hash`, the seeded `Squirrel3Random` stream, bounded integer and floating-point sampling, Bernoulli choice, list choice, in-place shuffle, stream forking, plus `LookupTable1D` with uniform samples, linear interpolation, strict domain bounds, payload-size reporting, and focused accuracy/edge-case tests.
 
-Not claimed yet: a generic LUT container/evaluator, table generator, multi-dimensional interpolation, a validated probability-distribution library, cryptographic randomness, GPU execution, or a separate Math package/MicroBundle. Add those as independently tested capabilities when there is a real consumer and a measurable acceptance criterion.
+Not claimed yet: multi-dimensional tables, higher-order or monotone interpolation, a validated probability-distribution library, cryptographic randomness, GPU execution, or a separate Math package/MicroBundle. Add those as independently tested capabilities when there is a real consumer and a measurable acceptance criterion.
 
 ## 5. Acceptance gates for future numerical primitives
 
