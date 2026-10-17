@@ -18,6 +18,11 @@ public sealed class MaterialPropertyRangeEvaluatorTests
         Assert.That(result.PropertyId, Is.EqualTo("specific-heat-capacity"));
         Assert.That(result.MaterialId, Is.EqualTo("material:steel"));
         Assert.That(result.ObservedValue, Is.EqualTo(temperature));
+        Assert.That(result.EvidenceStatus, Is.EqualTo(PropertyEvidenceStatus.Illustrative));
+        Assert.That(result.SourceId, Is.EqualTo("steel-fixture"));
+        Assert.That(result.SourceVersion, Is.EqualTo("1"));
+        Assert.That(result.ValidMinimum, Is.EqualTo(250d));
+        Assert.That(result.ValidMaximum, Is.EqualTo(400d));
         Assert.That(result.Explanation, Does.Contain("Other validity conditions"));
     }
 
