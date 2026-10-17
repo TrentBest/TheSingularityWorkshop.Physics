@@ -42,7 +42,7 @@ jobs:
               'accessible SVG title': '<title id="title">' in svg,
               'accessible SVG description': '<desc id="desc">' in svg,
               'animated scale property': '@keyframes scale-object' in svg and 'scale(.5)' in svg and 'scale(2)' in svg,
-              'changing displayed values': '0.5×' in svg and '2×' in svg and 'half-label' in svg and 'double-label' in svg,
+              'changing displayed values': all(value in svg for value in ('0.5×', '0.65×', '0.8×', '1.25×', '1.85×', '2×')) and 'value-label' in svg,
               'reduced motion fallback': 'prefers-reduced-motion: reduce' in svg,
               'lesson embeds the image': 'images/scale-factor-living.svg' in lesson,
               'living theory sets the rule': 'A living-image rule for every explanation' in theory,
