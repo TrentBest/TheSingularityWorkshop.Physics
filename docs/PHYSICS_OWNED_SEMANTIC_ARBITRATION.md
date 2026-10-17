@@ -1,6 +1,6 @@
 # Physics-owned semantic arbitration: materials and assemblies
 
-**Status:** architecture contract and worked example; the end-to-end MicroBundle arbitration path is not yet implemented in this repository.
+**Status:** the identity-resolution slice is executable and unit-tested; the end-to-end MicroBundle discovery, assembly graph, and re-arbitration lifecycle are not yet implemented in this repository.
 
 ## Ownership
 
@@ -12,19 +12,33 @@ This is different from a generic host resolving a provider ID. Provider resoluti
 
 Physics must not depend on FSM_COS, Gestures, a renderer, or a particular experience to perform its domain reasoning. The host supplies the participating bundle set and lifecycle seam; Physics owns physical interpretation and material/model arbitration.
 
+## Executable slice currently present
+
+`Physics/Materials/MaterialIdentityArbitrator.cs` implements **material identity resolution only**. The caller supplies the known material IDs, optional known aliases, and evidence with a part ID plus source bundle/field provenance. The arbitrator:
+
+- ranks explicit material references above structured declarations and configured aliases;
+- resolves each part independently and sorts results/evidence deterministically;
+- leaves conflicts at the strongest evidence rank ambiguous;
+- leaves unknown material IDs and unsupported descriptions unresolved;
+- preserves the evidence behind the outcome.
+
+`tests/TheSingularityWorkshop.Physics.Tests/Materials/MaterialIdentityArbitratorTests.cs` exercises the steel-tip/wood-shaft example, unresolved fletching, explicit-reference precedence, conflicting explicit references, order independence, unknown materials, and provenance.
+
+This is a deliberate first slice, **not** the complete lifecycle described below. It currently accepts evidence supplied by its caller; it does not discover arbitrary MicroBundle data, establish an assembly/part graph, resolve typed provider objects, load material property records into a solver, or react automatically to bundle installation/removal. The existing `MaterialPropertyDefinition` remains a separate provenance-aware declaration and is not silently populated by identity resolution.
+
 ## Worked example: a steel-tipped arrow
 
 Imagine the installed composition contains descriptions from independently authored bundles:
 
 - a weapon bundle describes an **arrow**;
 - a parts bundle describes a **tip**, **shaft**, and **fletching**;
-- the tip's data contains the material term **steel**;
+- the tip's data contains an explicit reference to the known steel material;
 - the shaft and fletching have their own material or construction descriptions.
 
-Physics arbitrates over the data it is allowed to inspect and builds a supported interpretation:
+The intended full arbitration flow is:
 
 1. **Discover candidates.** Find explicit material references, part names, relationships, tags, structured properties, and descriptive strings exposed by the participating bundles.
-2. **Resolve the tip's material.** A strong explicit reference to the known steel material resolves the tip to Physics' steel material definition. A mere occurrence of the word “steel” in unrelated prose is only a candidate, not proof.
+2. **Resolve the tip's material.** A strong explicit reference to the known steel material resolves the tip to Physics' steel material identity. A mere occurrence of the word “steel” in unrelated prose is only a candidate, not proof.
 3. **Resolve part relationships.** Connect the tip, shaft, and fletching to the arrow only when the source data or a declared composition rule supports those relationships.
 4. **Compose the physical object.** Represent the arrow as an assembly of parts, each with its own material, geometry, mass properties, and relevant model assumptions when those values are available.
 5. **Select applicable capabilities.** The resolved materials and part relationships can make mechanics, contact, fracture, thermal, or other models relevant. Only capabilities actually installed and compatible with the required inputs can be selected.
@@ -71,15 +85,20 @@ Unknown must remain unknown. A discovered label must not be upgraded into unsupp
 
 ## Minimum executable proof
 
-Before calling this implemented, tests should prove at least:
+The identity-resolution slice currently tests:
 
-- a steel tip resolves to the steel material while shaft and fletching resolve independently;
-- a word match in unrelated descriptive text does not override an explicit typed reference;
-- repeated arbitration produces the same result regardless of bundle enumeration order;
-- duplicate or conflicting candidates produce a deterministic ambiguity outcome;
-- missing material properties remain missing rather than being silently fabricated;
-- provenance identifies the source and rule for each resolution;
-- adding a new bundle causes relevant arbitration to be reconsidered without corrupting unrelated resolved state;
+- a steel tip resolves independently of a wood shaft and unresolved fletching;
+- an explicit typed material reference outranks contradictory descriptive text;
+- repeated arbitration produces equal results regardless of evidence enumeration order;
+- conflicting explicit references produce an ambiguity outcome;
+- an unknown material stays unresolved and does not fabricate physical properties;
+- source provenance survives resolution.
+
+The remaining end-to-end tests must prove:
+
+- actual discovery from supported MicroBundle-exposed data and assembly-part relationships;
+- adding/removing a bundle causes relevant arbitration to be reconsidered without corrupting unrelated resolved state;
+- compatible capability selection uses the host's real composition seam;
 - the Physics core works without direct dependencies on FSM_COS, Gestures, or presentation packages.
 
 See also [Physics architecture](ARCHITECTURE.md), [terrain interactions and MicroBundles](TERRAIN_INTERACTIONS_AND_MICROBUNDLES.md), and the [MicroBundle provider-resolution boundary](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain/blob/development/docs/PROVIDER_RESOLUTION_CONTRACT.md).
