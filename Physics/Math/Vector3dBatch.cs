@@ -59,13 +59,21 @@ public static class Vector3dBatch
             output[i] = (leftX[i] * rightX[i]) + (leftY[i] * rightY[i]) + (leftZ[i] * rightZ[i]);
     }
 
-    private static void ValidateLengths(params int[] lengths)
+    private static void ValidateLengths(int a, int b, int c, int d, int e, int f, int g, int h, int i)
     {
-        var expected = lengths[0];
-        for (var i = 1; i < lengths.Length; i++)
-        {
-            if (lengths[i] != expected)
-                throw new ArgumentException("All component and output spans must have equal lengths.");
-        }
+        if (a != b || a != c || a != d || a != e || a != f || a != g || a != h || a != i)
+            throw new ArgumentException("All component and output spans must have equal lengths.");
+    }
+
+    private static void ValidateLengths(int a, int b, int c, int d, int e, int f)
+    {
+        if (a != b || a != c || a != d || a != e || a != f)
+            throw new ArgumentException("All component and output spans must have equal lengths.");
+    }
+
+    private static void ValidateLengths(int a, int b, int c, int d, int e, int f, int g)
+    {
+        if (a != b || a != c || a != d || a != e || a != f || a != g)
+            throw new ArgumentException("All component and output spans must have equal lengths.");
     }
 }
