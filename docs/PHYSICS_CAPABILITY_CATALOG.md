@@ -8,6 +8,8 @@
 
 This is a catalog of bounded capabilities, not a claim that the repository is a complete physics engine. The source and tests linked below are authoritative for behavior. A domain name, roadmap item, SVG, or future-facing design document is not proof that a solver exists. For the instructional progression that consumes these capabilities, see the [Physics Learning Path](LEARNING_PATH.md); the [apple free-fall lesson](experiments/apple-free-fall.md) is the first educational SVG slice driven by actual recorded states.
 
+Visual documentation is part of the capability contract: see the [Living Image Standard](LIVING_IMAGE_STANDARD.md). The catalog distinguishes model-backed images from conceptual diagrams and identifies important visualization gaps instead of allowing an attractive SVG to imply an unimplemented solver.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
