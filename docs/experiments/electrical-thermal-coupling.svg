@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-labelledby="title desc">
+<title id="title">Electrical energy transferred into a thermal body</title>
+<desc id="desc">Computed from the Physics model: 12 volt bus, 6 ohm load, 24 watts for 10 seconds gives 240 joules. A declared absorbed fraction of 0.5 transfers 120 joules to a lumped body, raising its temperature from 300 kelvin to 300.12 kelvin.</desc>
+<rect width="1000" height="620" rx="24" fill="#f7f9fc"/>
+<text x="44" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="700" fill="#14253d">One causal bridge: electricity → thermal state</text>
+<text x="44" y="78" font-size="15" fill="#475569">Model coupling.electrical-to-lumped-thermal · v1 · computed from actual C# model output</text>
+<rect x="44" y="110" width="260" height="150" rx="16" fill="#ffffff" stroke="#9bbce0" stroke-width="2"/>
+<text x="68" y="145" font-size="19" font-weight="700" fill="#1e4f85">Electrical grid</text>
+<text x="68" y="180" font-size="17" fill="#14253d">12 V ÷ 6 Ω = 2 A</text>
+<text x="68" y="211" font-size="17" fill="#14253d">Power = 24 W</text>
+<text x="68" y="238" font-size="15" fill="#475569">Energy = 240 J</text>
+<path d="M 320 185 H 420" stroke="#2563a6" stroke-width="5" stroke-linecap="round"/><path d="M 420 185 l -14 -9 v 18 z" fill="#2563a6"/>
+<rect x="438" y="110" width="240" height="150" rx="16" fill="#fffaf0" stroke="#d9ad52" stroke-width="2"/>
+<text x="462" y="145" font-size="19" font-weight="700" fill="#805b16">Transfer rule</text>
+<text x="462" y="180" font-size="17" fill="#14253d">0.5 × 240 J</text>
+<text x="462" y="211" font-size="17" fill="#14253d">= 120 J to body</text>
+<text x="462" y="238" font-size="15" fill="#475569">50% is caller-declared</text>
+<path d="M 694 185 H 794" stroke="#b7791f" stroke-width="5" stroke-linecap="round"/><path d="M 794 185 l -14 -9 v 18 z" fill="#b7791f"/>
+<rect x="812" y="110" width="144" height="150" rx="16" fill="#ffffff" stroke="#d9a58c" stroke-width="2"/>
+<text x="830" y="145" font-size="18" font-weight="700" fill="#9a4823">Thermal body</text>
+<text x="830" y="183" font-size="16" fill="#14253d">300 K</text>
+<path d="M 868 192 v 20" stroke="#bd5a23" stroke-width="3"/><path d="M 861 205 l 7 8 7 -8" fill="none" stroke="#bd5a23" stroke-width="3"/>
+<text x="830" y="239" font-size="16" font-weight="700" fill="#9a4823">300.12 K</text>
+<rect x="44" y="292" width="912" height="118" rx="16" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="68" y="326" font-size="20" font-weight="700" fill="#14253d">Energy accounting for this experiment</text>
+<text x="68" y="363" font-size="18" fill="#14253d">120 J transferred to the body + 120 J not transferred = 240 J electrical</text>
+<text x="68" y="389" font-size="14" fill="#64748b">The untransferred portion is not assigned to a loss mechanism or destination.</text>
+<rect x="44" y="434" width="912" height="140" rx="16" fill="#fff7ed" stroke="#fdba74"/>
+<text x="68" y="469" font-size="19" font-weight="700" fill="#9a3412">What this picture does not claim</text>
+<text x="68" y="501" font-size="15" fill="#7c2d12">The absorbed fraction is an input, not a predicted efficiency. No changing resistance,</text>
+<text x="68" y="525" font-size="15" fill="#7c2d12">external heat exchange, phase change, or spatial temperature gradient is modeled.</text>
+<text x="44" y="602" font-size="13" fill="#475569">Deterministic analytical fixture · not a validated appliance or real-world heater model</text>
+</svg>
