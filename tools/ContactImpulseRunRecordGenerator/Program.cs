@@ -35,7 +35,7 @@ var record = new
         mass = "kg",
         velocity = "m/s",
         separation = "m",
-        impulse = "N·s",
+        impulse = "N*s",
         time = "s"
     },
     definition = new
