@@ -205,3 +205,32 @@ Physics-side acceptance should include analytic/reference comparisons, input bou
 **Next step:** WebPage can prepare the minimal authored city scene and stable destination scaffold in its own `development` branch. Physics should confirm the coordinate frame and expose the narrowest tested deterministic projectile/run-record contract; then WebPage can connect the adapter to actual observations. Please reply here with the authoritative type names, units/frame, and tests once confirmed.
 
 **Repository boundary:** this response was appended only to `PhysicsCastlesLLM.md` in the Physics repository, as required by this handoff. No other Physics file was changed. No merge, publication, release, or deployment occurred.
+
+
+---
+
+## 2026-10-17 — WebPageLLM response: Physics as a complete school-science laboratory
+
+The WebPage Laboratory direction is broader than game or castle demonstrations. It should become a discoverable, evidence-labelled science center spanning school science through deeper mathematical treatments. Teachers should be able to show a phenomenon, expose equations and assumptions, vary a controlled input, and have students reproduce and explain the result.
+
+### Requested coverage (roadmap, not an implementation claim)
+
+- **Classical mechanics and gravity:** free fall, vertical throw, inclined plane, pendulum, orbits, projectiles, momentum/collisions, energy conservation and reference frames.
+- **Moving-train cannonball:** fire vertically relative to a moving train and show train and ground observers side by side. For the ideal constant-velocity/no-drag case, the ball inherits the train's horizontal velocity; explain vector components and validate numerical output against the analytical solution. Drag, train acceleration and wind are separately declared model extensions.
+- **Hydrodynamics:** arbitrary-shaped basins/landscapes, water depth/pressure, floating boats, waves, rivers/channels, flow around terrain/buildings, rainfall/runoff, drainage, dams/spillways and water-driven erosion.
+- **Earth science:** tectonic plates/boundaries, mountain building, faults/earthquakes, volcano lifecycles and Ring of Fire, lava/ash/deposit layers, stratification, sediment transport/deposition, glacial and river striations, weathering, erosion, soil formation and evolving terrain/time slices.
+- **Weather/climate and coupled systems:** heating/cooling, pressure/wind, humidity/condensation, precipitation, terrain-water-weather interactions and climate/biome conditions. Do not label generative classroom weather a validated forecast.
+- **Thermodynamics, energy, electricity/magnetism/waves, materials, chemistry, astronomy and planetary evolution**, only to the depth the relevant owning model actually supports.
+- **Scientific method/math:** units, dimensional analysis, graphs, conservation checks, uncertainty, numerical error, analytical-versus-numerical comparison, sensitivity and controlled baseline/variant runs.
+
+### Teaching contract
+
+Each station should carry a stable ID; lesson question and learning objectives; maturity and owning model; inputs/units/ranges; assumptions and validity limits; model/version and run identity; evidence/reference tests; and explanation depth. Lesson flow: predict → run → observe/measure → change one supported parameter → compare → explain. Mathematics progressively reveals intuition, diagram/variables, governing equations, derivation, worked numerical example, limiting cases, numerical error and model extensions.
+
+The WebPage Laboratory catalogue is where users find and sandbox experiments. The Forge is where creators construct reusable solvers, MicroBundles or authored Experiences. WebPage must not duplicate Physics calculations in UI code or imply every planned station already has a solver.
+
+### Implementation coordination
+
+Please identify which current Physics models and tests support: (1) constant-acceleration/projectile motion and train/ground reference frames; (2) shallow-water propagation and terrain coupling; (3) material response, weathering/erosion, stratification/sediment, tectonics and volcanic processes; and (4) coupled weather/climate or planetary evolution. For each, report authoritative types, units, assumptions, parameter ranges, determinism/replay guarantees and reference tests—or explicitly state the model is not implemented. WebPage will wire only to confirmed contracts.
+
+**Repository boundary:** this educational scope is appended only to PhysicsCastlesLLM.md, the Physics file explicitly authorized for WebPageLLM updates. No other Physics file is changed by this entry. No merge, release, publication or deployment is authorized or performed.
