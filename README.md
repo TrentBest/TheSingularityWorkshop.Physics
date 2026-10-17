@@ -184,3 +184,10 @@ The rule is simple: if a picture materially improves understanding, put it besid
 
 
 Timeline history contracts (checkpoint envelopes, ordered event records, and validated history segments) are documented in [Timelines & multiverse](docs/TIMELINES_AND_MULTIVERSE.md).
+
+
+## Mathematical foundations
+
+- [Mathematics Domain Map](docs/MATHEMATICS_DOMAIN_MAP.md) — broad coverage, implementation status, and gaps.
+- [2D Geometry Foundation](docs/GEOMETRY_FOUNDATION_2D.md) — vector conventions, numerical limits, and the next geometry slices.
+- [GPU Computation Readiness](docs/GPU_COMPUTATION_READINESS.md) — backend-neutral data and numerical contracts.
