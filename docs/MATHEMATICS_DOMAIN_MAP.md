@@ -9,7 +9,7 @@ Mathematics is not a supporting appendix to physics. It is the shared language u
 | Domain | Core concepts | First useful reusable capabilities | Status in this repository |
 |---|---|---|---|
 | Arithmetic and algebra | scalars, expressions, equations, inequalities, polynomials, roots, systems | stable scalar operations; explicit domains; equation records and symbolic identities | Partial: scalar arithmetic is used throughout; no symbolic algebra engine |
-| Geometry | points, distances, lines, planes, intersections, regions, coordinate frames | 2D/3D primitives, predicates, transforms, tolerances and degeneracy policies | Partial: 3D vectors, quaternions, poses, AABBs and contact geometry exist; broader geometry catalog is incomplete |
+| Geometry | points, distances, lines, planes, intersections, regions, coordinate frames | 2D/3D primitives, predicates, transforms, tolerances and degeneracy policies | Partial: [Vector2d](../Physics/Spatial/Vector2d.cs) now supplies finite 2D vector arithmetic, dot/cross products and distances with [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Vector2dTests.cs); 3D vectors, quaternions, poses, AABBs and contact geometry also exist. Robust predicates and broader geometry remain gaps |
 | Linear algebra | vectors, matrices, bases, transforms, determinants, eigenvalues, decompositions | matrix types, solve/invert policies, conditioning diagnostics, batch operations | Partial: [Matrix3x3d](../Physics/Math/Matrix3x3d.cs) supports finite 3×3 construction, determinant, transpose, matrix/vector products; [SoA Vector3d batch operations](../Physics/Math/Vector3dBatch.cs) and [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Matrix3x3dTests.cs) exist. General matrix dimensions, solves, inverses and decompositions remain gaps |
 | Calculus | limits, derivatives, integrals, gradients, divergence, curl, differential equations | finite differences with error policies; quadrature; derivative/gradient contracts; ODE integration | Partial: model equations and time stepping exist in narrow domains; no general calculus toolkit |
 | Discrete mathematics | sets, relations, graphs, combinatorics, recurrence, logic | stable graph/identity primitives, graph traversal, combinatorial counts | Partial: timeline and grid concepts exist; not a general discrete math library |
@@ -33,7 +33,7 @@ Mathematics is not a supporting appendix to physics. It is the shared language u
 
 ## Recommended build order
 
-1. Strengthen spatial/geometry predicates and coordinate-frame contracts.
+1. Extend the [2D geometry foundation](GEOMETRY_FOUNDATION_2D.md) with explicit coordinate-frame/tolerance policies and robust orientation/intersection predicates.
 2. Add general matrix and small linear-system primitives with reference tests.
 3. Add quantities/dimensions and dimensional-analysis helpers without making every low-level type allocation-heavy.
 4. Add scalar numerical analysis: root finding, quadrature, finite differences, residuals and error bounds.
