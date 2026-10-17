@@ -2,7 +2,7 @@
 
 **Purpose:** give contributors and experiment authors one evidence-oriented index of what the Physics repository can do today, what each model assumes, and what remains outside its contract.
 
-This is a catalog of bounded capabilities, not a claim that the repository is a complete physics engine. The source and tests linked below are authoritative for behavior. A domain name, roadmap item, SVG, or future-facing design document is not proof that a solver exists.
+This is a catalog of bounded capabilities, not a claim that the repository is a complete physics engine. The source and tests linked below are authoritative for behavior. A domain name, roadmap item, SVG, or future-facing design document is not proof that a solver exists. For the instructional progression that consumes these capabilities, see the [Physics Learning Path](LEARNING_PATH.md); the [apple free-fall lesson](experiments/apple-free-fall.md) is the first educational SVG slice driven by actual recorded states.
 
 ## Reading capability status
 
