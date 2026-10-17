@@ -4,7 +4,7 @@
 
 ![Moving-train projectile: passenger and trackside views](moving-train-projectile.svg)
 
-*The paired plot shows the default analytical case at the same nine logical timestamps. It is currently a checked-in analytical reference graphic; the next step is to generate the SVG from the actual serialized C# run record and verify drift in CI.*
+*The plotted curves come from the same nine paired states produced by the C# experiment. Animated markers move along the recorded trajectories; CI regenerates the SVG and rejects stale visuals.*
 
 ## Question
 
