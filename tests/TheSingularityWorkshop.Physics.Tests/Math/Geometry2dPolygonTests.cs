@@ -181,6 +181,23 @@ public sealed class Geometry2dPolygonTests
     }
 
     [Test]
+    public void SignedArea_RoundsSubnormalHalfwayCasesToEven()
+    {
+        double epsilon = double.Epsilon;
+        Vector2d[] halfEpsilon =
+        {
+            new(0, 0), new(epsilon, 0), new(0, 1)
+        };
+        Vector2d[] oneAndHalfEpsilon =
+        {
+            new(0, 0), new(3 * epsilon, 0), new(0, 1)
+        };
+
+        Assert.That(Geometry2dPolygon.SignedArea(halfEpsilon), Is.EqualTo(0d));
+        Assert.That(Geometry2dPolygon.SignedArea(oneAndHalfEpsilon), Is.EqualTo(2 * epsilon));
+    }
+
+    [Test]
     public void Triangulate_ProducesNMinusTwoTrianglesWithMatchingWinding()
     {
         Vector2d[] square = { new(0, 0), new(4, 0), new(4, 4), new(0, 4) };
