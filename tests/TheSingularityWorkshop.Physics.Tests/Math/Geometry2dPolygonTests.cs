@@ -213,6 +213,24 @@ public sealed class Geometry2dPolygonTests
     }
 
     [Test]
+    public void Triangulate_UsesExactWindingWhenRoundedAreaUnderflows()
+    {
+        double epsilon = double.Epsilon;
+        Vector2d[] tinyTriangle =
+        {
+            new(0, 0), new(epsilon, 0), new(0, epsilon)
+        };
+
+        Assert.That(Geometry2dPolygon.SignedArea(tinyTriangle), Is.EqualTo(0d));
+        var triangles = Geometry2dPolygon.Triangulate(tinyTriangle);
+        Assert.That(triangles, Has.Count.EqualTo(1));
+        Assert.That((int)Geometry2d.Orient(
+            tinyTriangle[triangles[0].AIndex],
+            tinyTriangle[triangles[0].BIndex],
+            tinyTriangle[triangles[0].CIndex]), Is.EqualTo(1));
+    }
+
+    [Test]
     public void Triangulate_ExcludesRepeatedClosingVertexFromReturnedIndices()
     {
         Vector2d[] closedSquare =
