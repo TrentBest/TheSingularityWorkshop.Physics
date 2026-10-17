@@ -1,5 +1,6 @@
 using System.Text.Json;
 using TheSingularityWorkshop.Physics.Experiments;
+using TheSingularityWorkshop.Physics.Materials;
 using TheSingularityWorkshop.Physics.Thermodynamics;
 
 if (args.Length is < 1 or > 2 || (args.Length == 2 && args[1] != "--check"))
@@ -8,10 +9,24 @@ if (args.Length is < 1 or > 2 || (args.Length == 2 && args[1] != "--check"))
     return 2;
 }
 
+var specificHeatCapacity = new MaterialPropertyDefinition(
+    MaterialId: "reference-thermal-body",
+    PropertyId: "specific-heat-capacity",
+    Value: 500d,
+    Unit: "J/(kg*K)",
+    EvidenceStatus: PropertyEvidenceStatus.Illustrative,
+    SourceId: "workshop.electrical-thermal-fixture",
+    SourceVersion: "1",
+    ValidMinimum: 273.15d,
+    ValidMaximum: 373.15d,
+    ValidConditions: "Illustrative constant value over the example temperature interval.",
+    StandardUncertainty: null);
+specificHeatCapacity.EnsureValid();
+
 var initial = new LumpedThermalState(
     MassKilograms: 2d,
     TemperatureKelvin: 300d,
-    SpecificHeatCapacityJoulesPerKilogramKelvin: 500d,
+    SpecificHeatCapacityJoulesPerKilogramKelvin: specificHeatCapacity.Value,
     ReferenceTemperatureKelvin: 273.15d);
 const double voltage = 12d;
 const double resistance = 6d;
@@ -51,6 +66,20 @@ var record = new
             massKilograms = initial.MassKilograms,
             temperatureKelvin = initial.TemperatureKelvin,
             specificHeatCapacityJoulesPerKilogramKelvin = initial.SpecificHeatCapacityJoulesPerKilogramKelvin,
+            specificHeatCapacityProperty = new
+            {
+                materialId = specificHeatCapacity.MaterialId,
+                propertyId = specificHeatCapacity.PropertyId,
+                value = specificHeatCapacity.Value,
+                unit = specificHeatCapacity.Unit,
+                evidenceStatus = specificHeatCapacity.EvidenceStatus.ToString().ToLowerInvariant(),
+                sourceId = specificHeatCapacity.SourceId,
+                sourceVersion = specificHeatCapacity.SourceVersion,
+                validMinimum = specificHeatCapacity.ValidMinimum,
+                validMaximum = specificHeatCapacity.ValidMaximum,
+                validConditions = specificHeatCapacity.ValidConditions,
+                standardUncertainty = specificHeatCapacity.StandardUncertainty
+            },
             referenceTemperatureKelvin = initial.ReferenceTemperatureKelvin
         }
     },
