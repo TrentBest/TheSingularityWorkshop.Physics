@@ -195,6 +195,14 @@ jobs:
           docs/experiments/first-order-room-reflection.run.json
           docs/experiments/electrical-thermal-coupling.run.json
 
+      - name: Verify cross-domain run-record catalog is reproducible
+        run: >-
+          python3 tools/catalog_physics_run_records.py
+          docs/experiments/acoustic-observation.run.json
+          docs/experiments/first-order-room-reflection.run.json
+          docs/experiments/electrical-thermal-coupling.run.json
+          --output docs/experiments/run-record-catalog.md --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
