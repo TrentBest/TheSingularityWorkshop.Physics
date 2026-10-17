@@ -91,6 +91,7 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         M21.Equals(other.M21) && M22.Equals(other.M22) && M23.Equals(other.M23) &&
         M31.Equals(other.M31) && M32.Equals(other.M32) && M33.Equals(other.M33);
 
+    /// <inheritdoc />
     public override bool Equals(object? obj) => obj is Matrix3x3d other && Equals(other);
 
     /// <inheritdoc />
