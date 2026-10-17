@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" role="img" aria-labelledby="title desc">
 <title id="title">Moving-train projectile — two observers, one trajectory</title>
-<desc id="desc">Animated comparison generated from 9 paired states in run record kinematics.moving-train-projectile. The train-frame horizontal position remains fixed while the ground-frame position advances. Both observers report the same vertical trajectory at each shared logical time.</desc>
+<desc id="desc">Animated comparison generated from nine paired states in run record kinematics.moving-train-projectile. The train-frame horizontal position remains fixed while the ground-frame position advances. Both observers report the same vertical trajectory at each shared logical time.</desc>
 <rect width="1100" height="620" rx="18" fill="#f7f9fc"/>
 <text x="42" y="45" fill="#14253d" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="700">ONE PROJECTILE · TWO REFERENCE FRAMES</text>
 <text x="42" y="76" fill="#475569" font-family="Segoe UI, Arial, sans-serif" font-size="14">9 paired states · 2.00 s · model 1 · animated markers follow recorded samples</text>
@@ -30,15 +30,15 @@
 <text x="510.00" y="492" text-anchor="middle" fill="#64748b" font-size="12">2.00</text>
 <text x="297.50" y="512" text-anchor="middle" fill="#475569" font-size="13">Elapsed time (s) · x (m)</text>
 <line x1="590.00" y1="470.00" x2="1015.00" y2="470.00" stroke="#e2e8f0"/>
-<text x="578.00" y="474.00" text-anchor="end" fill="#64748b" font-size="12">-4.17</text>
+<text x="578.00" y="474.00" text-anchor="end" fill="#64748b" font-size="12">-0.59</text>
 <line x1="590.00" y1="395.00" x2="1015.00" y2="395.00" stroke="#e2e8f0"/>
-<text x="578.00" y="399.00" text-anchor="end" fill="#64748b" font-size="12">-2.18</text>
+<text x="578.00" y="399.00" text-anchor="end" fill="#64748b" font-size="12">1.54</text>
 <line x1="590.00" y1="320.00" x2="1015.00" y2="320.00" stroke="#e2e8f0"/>
-<text x="578.00" y="324.00" text-anchor="end" fill="#64748b" font-size="12">-0.19</text>
+<text x="578.00" y="324.00" text-anchor="end" fill="#64748b" font-size="12">3.67</text>
 <line x1="590.00" y1="245.00" x2="1015.00" y2="245.00" stroke="#e2e8f0"/>
-<text x="578.00" y="249.00" text-anchor="end" fill="#64748b" font-size="12">1.80</text>
+<text x="578.00" y="249.00" text-anchor="end" fill="#64748b" font-size="12">5.80</text>
 <line x1="590.00" y1="170.00" x2="1015.00" y2="170.00" stroke="#e2e8f0"/>
-<text x="578.00" y="174.00" text-anchor="end" fill="#64748b" font-size="12">3.79</text>
+<text x="578.00" y="174.00" text-anchor="end" fill="#64748b" font-size="12">7.92</text>
 <line x1="590.00" y1="170.00" x2="590.00" y2="470.00" stroke="#e2e8f0"/>
 <text x="590.00" y="492" text-anchor="middle" fill="#64748b" font-size="12">0.00</text>
 <line x1="696.25" y1="170.00" x2="696.25" y2="470.00" stroke="#e2e8f0"/>
@@ -52,11 +52,11 @@
 <text x="802.50" y="512" text-anchor="middle" fill="#475569" font-size="13">Elapsed time (s) · z (m)</text>
 <path d="M 85.00 470.00 L 138.13 470.00 L 191.25 470.00 L 244.38 470.00 L 297.50 470.00 L 350.63 470.00 L 403.75 470.00 L 456.88 470.00 L 510.00 470.00" fill="none" stroke="#1267a5" stroke-width="4" stroke-linejoin="round"/>
 <path d="M 85.00 470.00 L 138.13 432.50 L 191.25 395.00 L 244.38 357.50 L 297.50 320.00 L 350.63 282.50 L 403.75 245.00 L 456.88 207.50 L 510.00 170.00" fill="none" stroke="#c2410c" stroke-width="4" stroke-dasharray="9 6" stroke-linejoin="round"/>
-<path d="M 590.00 312.86 L 643.13 249.02 L 696.25 208.30 L 749.38 190.69 L 802.50 196.19 L 855.63 224.80 L 908.75 276.53 L 961.88 351.36 L 1015.00 449.31" fill="none" stroke="#1267a5" stroke-width="5" stroke-linejoin="round"/>
-<path d="M 590.00 312.86 L 643.13 249.02 L 696.25 208.30 L 749.38 190.69 L 802.50 196.19 L 855.63 224.80 L 908.75 276.53 L 961.88 351.36 L 1015.00 449.31" fill="none" stroke="#c2410c" stroke-width="2.5" stroke-dasharray="8 6" stroke-linejoin="round"/>
+<path d="M 590.00 449.31 L 643.13 354.36 L 696.25 281.02 L 749.38 229.29 L 802.50 199.18 L 855.63 190.69 L 908.75 203.81 L 961.88 238.55 L 1015.00 294.90" fill="none" stroke="#1267a5" stroke-width="5" stroke-linejoin="round"/>
+<path d="M 590.00 449.31 L 643.13 354.36 L 696.25 281.02 L 749.38 229.29 L 802.50 199.18 L 855.63 190.69 L 908.75 203.81 L 961.88 238.55 L 1015.00 294.90" fill="none" stroke="#c2410c" stroke-width="2.5" stroke-dasharray="8 6" stroke-linejoin="round"/>
 <circle r="7" fill="#1267a5" stroke="#ffffff" stroke-width="2"><animateMotion dur="4s" repeatCount="indefinite" path="M 85.00 470.00 L 138.13 470.00 L 191.25 470.00 L 244.38 470.00 L 297.50 470.00 L 350.63 470.00 L 403.75 470.00 L 456.88 470.00 L 510.00 470.00"/></circle>
 <circle r="7" fill="#c2410c" stroke="#ffffff" stroke-width="2"><animateMotion dur="4s" repeatCount="indefinite" path="M 85.00 470.00 L 138.13 432.50 L 191.25 395.00 L 244.38 357.50 L 297.50 320.00 L 350.63 282.50 L 403.75 245.00 L 456.88 207.50 L 510.00 170.00"/></circle>
-<circle r="8" fill="#ffffff" stroke="#1267a5" stroke-width="4"><animateMotion dur="4s" repeatCount="indefinite" path="M 590.00 312.86 L 643.13 249.02 L 696.25 208.30 L 749.38 190.69 L 802.50 196.19 L 855.63 224.80 L 908.75 276.53 L 961.88 351.36 L 1015.00 449.31"/></circle>
+<circle r="8" fill="#ffffff" stroke="#1267a5" stroke-width="4"><animateMotion dur="4s" repeatCount="indefinite" path="M 590.00 449.31 L 643.13 354.36 L 696.25 281.02 L 749.38 229.29 L 802.50 199.18 L 855.63 190.69 L 908.75 203.81 L 961.88 238.55 L 1015.00 294.90"/></circle>
 <text x="85" y="555" fill="#1267a5" font-size="14" font-weight="700">● Train frame: horizontal position stays at 0 m</text>
 <text x="85" y="580" fill="#c2410c" font-size="14" font-weight="700">● Ground frame: horizontal position advances with the train</text>
 <text x="590" y="555" fill="#14253d" font-size="14" font-weight="700">The vertical curves coincide: both observers agree.</text>
