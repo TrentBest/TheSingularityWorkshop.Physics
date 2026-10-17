@@ -80,7 +80,7 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         self.assertIn("`directObservation`, `reflections`", rendered)
         self.assertIn("`result`, `electricalObservation`", rendered)
         self.assertIn("./acoustic-observation.run.json", rendered)
-        self.assertIn("not a universal physics result schema", rendered)
+        self.assertIn("does not claim that records share a physical result schema", rendered)
 
 
 if __name__ == "__main__":
