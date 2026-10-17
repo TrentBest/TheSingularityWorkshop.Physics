@@ -158,9 +158,28 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         for path, output in zip(paths, inspected):
             with self.subTest(path=path.name):
                 original = json.loads(path.read_text(encoding="utf-8"))
-                for field, payload in output["domainPayload"].items():
-                    self.assertEqual(payload, original[field])
+                expected_payload = {
+                    field: payload for field, payload in original.items()
+                    if field not in inspector.ENVELOPE_FIELDS
+                }
+                self.assertEqual(output["domainPayload"], expected_payload)
                 self.assertEqual(output["envelope"]["modelId"], original["modelId"])
+
+    def test_inspector_preserves_optional_envelope_metadata_and_legacy_top_level_inputs(self):
+        source = ROOT / "docs/experiments/first-order-room-reflection.run.json"
+        record = json.loads(source.read_text(encoding="utf-8"))
+        record["provenance"] = {"sourceId": "test.source", "evidenceStatus": "sourced"}
+        record["logicalTime"] = {"timeBasis": "model-local", "observationSeconds": 0.25}
+        record["runId"] = "fixture-room-run"
+        path = self.write_record(record)
+
+        inspected = inspector.inspect_path(path)
+        self.assertEqual(inspected["envelope"]["provenance"], record["provenance"])
+        self.assertEqual(inspected["envelope"]["logicalTime"], record["logicalTime"])
+        self.assertEqual(inspected["envelope"]["runId"], record["runId"])
+        self.assertEqual(inspected["domainPayload"]["room"], record["room"])
+        self.assertEqual(inspected["domainPayload"]["source"], record["source"])
+        self.assertEqual(inspected["domainPayload"]["listener"], record["listener"])
 
 
 if __name__ == "__main__":
