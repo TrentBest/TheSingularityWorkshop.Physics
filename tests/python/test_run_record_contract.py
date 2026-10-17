@@ -36,6 +36,7 @@ class RunRecordEnvelopeTests(unittest.TestCase):
             ROOT / "docs/experiments/acoustic-observation.run.json",
             ROOT / "docs/experiments/first-order-room-reflection.run.json",
             ROOT / "docs/experiments/electrical-thermal-coupling.run.json",
+            ROOT / "docs/experiments/thermal-conduction.run.json",
         ]
         for path in paths:
             with self.subTest(path=path.name):
@@ -54,6 +55,48 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         errors = validator.validate(self.write_record(record))
         self.assertTrue(any("schemaVersion must be a positive integer" in e for e in errors))
         self.assertTrue(any("modelVersion must be a positive integer" in e for e in errors))
+
+    def test_missing_model_identity_and_unsupported_schema_version_are_rejected(self):
+        missing_identity = {
+            "schemaVersion": 1,
+            "modelVersion": 1,
+            "status": "computed",
+            "definition": {},
+            "result": {},
+            "limitations": ["test fixture"],
+        }
+        errors = validator.validate(self.write_record(missing_identity))
+        self.assertTrue(any("missing required envelope field 'modelId'" in e for e in errors))
+
+        unsupported_version = {
+            "schemaVersion": 2,
+            "modelId": "test.model",
+            "modelVersion": 1,
+            "status": "computed",
+            "definition": {},
+            "result": {},
+            "limitations": ["test fixture"],
+        }
+        errors = validator.validate(self.write_record(unsupported_version))
+        self.assertTrue(any("unsupported schemaVersion" in e for e in errors))
+
+    def test_malformed_units_and_provenance_metadata_are_rejected(self):
+        record = {
+            "schemaVersion": 1,
+            "modelId": "test.model",
+            "modelVersion": 1,
+            "status": "computed",
+            "definition": {},
+            "result": {},
+            "limitations": ["test fixture"],
+            "units": ["not", "an", "object"],
+            "provenance": "not an object or array",
+            "validation": "not an object or array",
+        }
+        errors = validator.validate(self.write_record(record))
+        self.assertTrue(any("units, when present, must be an object" in e for e in errors))
+        self.assertTrue(any("provenance, when present" in e for e in errors))
+        self.assertTrue(any("validation, when present" in e for e in errors))
 
     def test_unknown_status_and_empty_limitations_are_rejected(self):
         record = {
