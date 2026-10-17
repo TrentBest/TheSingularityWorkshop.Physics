@@ -188,12 +188,31 @@ jobs:
       - name: Verify electrical-to-thermal SVG against committed run record
         run: python3 tools/render_electrical_thermal_coupling.py docs/experiments/electrical-thermal-coupling.run.json docs/experiments/electrical-thermal-coupling.svg --check
 
+      - name: Execute two-body thermal conduction and serialize actual model output
+        run: dotnet run --project tools/ThermalConductionRunRecordGenerator/ThermalConductionRunRecordGenerator.csproj --configuration Release -- /tmp/thermal-conduction.actual.json
+
+      - name: Verify committed thermal conduction record is reproducible
+        run: dotnet run --project tools/ThermalConductionRunRecordGenerator/ThermalConductionRunRecordGenerator.csproj --configuration Release -- docs/experiments/thermal-conduction.run.json --check
+
+      - name: Verify generated thermal conduction record matches committed fixture
+        run: cmp /tmp/thermal-conduction.actual.json docs/experiments/thermal-conduction.run.json
+
+      - name: Render thermal conduction SVG from actual model output
+        run: python3 tools/render_thermal_conduction.py /tmp/thermal-conduction.actual.json /tmp/thermal-conduction.actual.svg
+
+      - name: Verify committed thermal conduction SVG matches actual model output
+        run: cmp /tmp/thermal-conduction.actual.svg docs/experiments/thermal-conduction.svg
+
+      - name: Verify thermal conduction SVG against committed run record
+        run: python3 tools/render_thermal_conduction.py docs/experiments/thermal-conduction.run.json docs/experiments/thermal-conduction.svg --check
+
       - name: Validate shared run-record envelope across acoustics, room reflections, and coupled energy
         run: >-
           python3 tools/validate_physics_run_records.py
           docs/experiments/acoustic-observation.run.json
           docs/experiments/first-order-room-reflection.run.json
           docs/experiments/electrical-thermal-coupling.run.json
+          docs/experiments/thermal-conduction.run.json
 
       - name: Verify cross-domain run-record catalog is reproducible
         run: >-
@@ -201,6 +220,7 @@ jobs:
           docs/experiments/acoustic-observation.run.json
           docs/experiments/first-order-room-reflection.run.json
           docs/experiments/electrical-thermal-coupling.run.json
+          docs/experiments/thermal-conduction.run.json
           --output docs/experiments/run-record-catalog.md --check
 
       - name: Test run-record envelope and catalog edge cases
