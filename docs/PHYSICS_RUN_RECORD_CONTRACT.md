@@ -69,7 +69,7 @@ The electrical-to-lumped-thermal experiment demonstrates a computed, determinist
 
 The projectile, free-fall, acoustic, contact-impulse, and room-reflection experiments retain their domain-owned record structures. The electrical-to-thermal fixture now carries a provenance-bearing, explicitly illustrative specific-heat property: value and property unit, evidence status, source/fixture version, validity-condition quantity and unit, valid range, and conditions. The [material-property definition](../Physics/Materials/MaterialPropertyDefinition.cs) validates this metadata but does not implement temperature-dependent material behavior or make the fixture value empirical.
 
-The run-record catalog and validator demonstrate cross-domain metadata discovery and basic envelope validation. **The full acceptance gate remains open:** a consumer still needs to read useful values from at least two original domain payloads through the shared envelope while preserving their domain-specific shapes. Continue with a small payload-aware consumer and stronger validation evidence; do not mass-rewrite all fixtures until the migration proves useful.
+The run-record catalog and validator now demonstrate cross-domain metadata discovery, and the catalog invokes the shared validator before indexing each record. Regression tests confirm malformed status and empty limitation entries are rejected rather than silently indexed. The payload-aware inspector described below has already crossed the initial acceptance gate for four domains while preserving each domain's original payload shape. The remaining interoperability gate is external consumption or a second independent implementation, not another in-repository proof of concept.
 
 ## Acceptance evidence and remaining gate
 
