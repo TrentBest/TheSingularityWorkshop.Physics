@@ -1,6 +1,6 @@
 # Geometry Foundation: 2D Vectors
 
-**Status:** finite 2D vector arithmetic, exact-sign orientation, closed-segment intersection classification, explicit absolute-distance tolerance, frame-tagged point identity, and frame-aware rigid 2D transforms are implemented. Intersection-coordinate calculation and a complete geometry/collision API are not implemented.
+**Status:** finite 2D vector arithmetic, exact-sign orientation, closed-segment intersection classification, unique-point intersection construction, explicit absolute-distance tolerance, frame-tagged point identity, and frame-aware rigid 2D transforms are implemented. A complete geometry/collision API is not implemented.
 
 ## Contract
 
@@ -10,7 +10,7 @@
 
 For three points, [`Geometry2d.Orient`](../Physics/Spatial/Geometry2d.cs) returns `CounterClockwise`, `Clockwise`, or `Collinear`. A conservative floating-point filter uses exact integer arithmetic over represented binary64 coordinates when the filter cannot safely determine the sign. This is exact classification of supplied values, not a claim that measured inputs are physically exact. See [Geometry2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Geometry2dTests.cs).
 
-[`Geometry2dSegments.ClassifyIntersection`](../Physics/Spatial/Geometry2dSegments.cs) classifies two closed segments as disjoint, proper intersection, endpoint touch, collinear overlap, or degenerate-point intersection. It deliberately returns a kind, not an intersection coordinate; coordinate calculation needs its own precision and failure contract. See [Geometry2dSegmentsTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Geometry2dSegmentsTests.cs).
+[`Geometry2dSegments.ClassifyIntersection`](../Physics/Spatial/Geometry2dSegments.cs) classifies two closed segments as disjoint, proper intersection, endpoint touch, collinear overlap, or degenerate-point intersection. [`Geometry2dSegments.Intersect`](../Physics/Spatial/SegmentIntersection2d.cs) returns that classification plus a coordinate only when there is a unique point; disjoint segments and collinear overlaps have no unique point. Endpoint and degenerate intersections reuse an input coordinate. Proper-crossing construction normalizes coordinates to reduce intermediate overflow, but remains a floating-point construction and can fail for ill-conditioned cases. See [Geometry2dSegmentsTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Geometry2dSegmentsTests.cs) and [SegmentIntersection2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/SegmentIntersection2dTests.cs).
 
 [`GeometryTolerance2d`](../Physics/Spatial/GeometryTolerance2d.cs) makes a caller-selected absolute Euclidean-distance threshold explicit. Its value must be finite and non-negative and uses the same coordinate units as the points. `IsNear` performs a scaled distance comparison to avoid squared-distance overflow. There is no universal default: the appropriate tolerance depends on coordinate scale, units, source uncertainty, and the decision being made. See [GeometryTolerance2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/GeometryTolerance2dTests.cs).
 
@@ -25,7 +25,7 @@ For three points, [`Geometry2d.Orient`](../Physics/Spatial/Geometry2d.cs) return
 
 ## Next geometry slices
 
-1. Specify intersection-coordinate computation with a numerical contract for parallel, collinear, endpoint-touching, degenerate, ill-conditioned, and out-of-range cases.
+1. Strengthen intersection-coordinate construction with adversarial numerical tests and an explicit policy for ill-conditioned cases; the first bounded API is now implemented.
 2. Add transform graph/path policy only when a consumer needs more than explicit pairwise transforms; define cycle and consistency behavior.
 3. Reuse the same semantics in polygon tests, 2D collision, and living visual explanations.
 4. Add batch/SoA equivalents only where they share scalar reference fixtures and declare whether they preserve exact or approximate predicate semantics.
