@@ -73,6 +73,16 @@ public sealed class SegmentIntersection2dTests
     }
 
     [Test]
+    public void Intersect_ExtremeMixedScaleCrossingReportsUnresolvableConstruction()
+    {
+        // The exact-sign predicate identifies this as a proper crossing at (0, 0), but the
+        // current all-coordinate normalization underflows the tiny segment to zero length.
+        // Fail explicitly rather than fabricate a coordinate; a future constructor can improve this.
+        Assert.Throws<System.ArithmeticException>(() => Intersect(
+            (-1e308, 0), (1e308, 0), (0, -1e-300), (0, 1e-300)));
+    }
+
+    [Test]
     public void Intersect_TinyScaleCrossingReturnsFinitePoint()
     {
         // Exercise a crossing with subnormal-scale components; the coordinate construction must
