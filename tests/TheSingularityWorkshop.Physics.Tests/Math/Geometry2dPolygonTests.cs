@@ -213,6 +213,27 @@ public sealed class Geometry2dPolygonTests
     }
 
     [Test]
+    public void Triangulate_UsesExactWindingWhenAreaExceedsBinary64Range()
+    {
+        Vector2d[] square =
+        {
+            new(-1e308, -1e308), new(1e308, -1e308),
+            new(1e308, 1e308), new(-1e308, 1e308)
+        };
+
+        Assert.Throws<ArithmeticException>(() => Geometry2dPolygon.SignedArea(square));
+        var triangles = Geometry2dPolygon.Triangulate(square);
+
+        Assert.That(triangles, Has.Count.EqualTo(2));
+        foreach (TriangleIndices2d triangle in triangles)
+        {
+            Assert.That((int)Geometry2d.Orient(
+                square[triangle.AIndex], square[triangle.BIndex], square[triangle.CIndex]),
+                Is.EqualTo(1));
+        }
+    }
+
+    [Test]
     public void Triangulate_UsesExactWindingWhenRoundedAreaUnderflows()
     {
         double epsilon = double.Epsilon;
