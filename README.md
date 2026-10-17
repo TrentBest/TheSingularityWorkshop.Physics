@@ -124,6 +124,7 @@ This is an ideal point-projectile experiment under constant acceleration. A sepa
 - [Timelines & multiverse](docs/TIMELINES_AND_MULTIVERSE.md) — immutable timeline lineage and the still-unimplemented checkpoint/replay/isolation contract
 - [Deterministic history & extensions](docs/DETERMINISTIC_HISTORY_AND_EXTENSIONS.md) — reverse-order limits, replay, optional prediction, rollback, and branch isolation
 - [Physics domain map](docs/PHYSICS_DOMAIN_MAP.md) — broad physical territory, domain coupling, primitive foundations, and build order
+- [Composable physics models, solvers, and experiences](docs/COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md) — separate physical meaning from numerical resolution and GUI authoring; define the broad domain map, evidence levels, and MicroBundle boundary
 - [Hydrodynamics world demonstrator](docs/HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) — staged path from a measured wave reference to terrain, shorelines, and bounded boat coupling
 - [Acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md) — listener-centred propagation and the tested free-field observation baseline
 - [Living acoustic demonstration](docs/ACOUSTIC_LIVING_DEMO.md) — audible reference source, source/space/listener comparisons, SVG-plus-HTML delivery, and explicit evidence gates for physics-generated sound
