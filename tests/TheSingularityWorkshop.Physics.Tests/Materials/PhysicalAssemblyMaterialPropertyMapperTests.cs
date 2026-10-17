@@ -83,6 +83,31 @@ public sealed class PhysicalAssemblyMaterialPropertyMapperTests
             PhysicalAssemblyMaterialPropertyMapper.Map(invalid, Array.Empty<MaterialPropertyDefinition>()));
     }
 
+
+    [Test]
+    public void Map_RejectsNonResolvedPartThatClaimsMaterialIdentity()
+    {
+        var invalid = new PhysicalAssemblyMaterialResolution("sword", [
+            new MaterialIdentityResolution("sword.blade", MaterialIdentityResolutionStatus.Ambiguous,
+                "material:steel", [], "Malformed ambiguous result.")
+        ]);
+
+        Assert.Throws<ArgumentException>(() =>
+            PhysicalAssemblyMaterialPropertyMapper.Map(invalid, Array.Empty<MaterialPropertyDefinition>()));
+    }
+
+    [Test]
+    public void Map_RejectsDuplicatePartIdentities()
+    {
+        var invalid = new PhysicalAssemblyMaterialResolution("sword", [
+            Resolved("sword.blade", "material:steel"),
+            Resolved("sword.blade", "material:copper")
+        ]);
+
+        Assert.Throws<ArgumentException>(() =>
+            PhysicalAssemblyMaterialPropertyMapper.Map(invalid, Array.Empty<MaterialPropertyDefinition>()));
+    }
+
     private static MaterialIdentityResolution Resolved(string partId, string materialId) =>
         new(partId, MaterialIdentityResolutionStatus.Resolved, materialId, [],
             "Resolved by test fixture.");
