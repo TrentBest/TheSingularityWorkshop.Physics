@@ -59,6 +59,24 @@ A second, deliberately educational slice uses the same pattern for [apple free f
 
 Do not invent external measurement provenance for a purely analytical demonstration. If a later experiment uses measured gravity, wind, launch speed, or other external data, record the source and uncertainty separately from computed output.
 
+## Sound is an observation of physical events, not an SFX assignment
+
+The target is a physics-based sound system, not a library of authored effects that developers must attach to every item. An object contributes its ontology and physical/material properties; a simulation derives an interaction; an acoustic model turns the event's physical excitation into sound. Presentation consumes that result but does not invent the cause.
+
+Consider a player forging a sword. The player defines the sword's identity and material characteristics, not a list of sounds. When it is swung into a hard metal surface, another blade, armor, cloth, or a compliant target, the simulation should use the actual motion and contact to determine the mechanical result. Relative velocity, contact location, impulse, deformation, damping, and fracture—where the relevant models exist—provide causal inputs to both damage and acoustic excitation. A thrust and a glancing parry should not become equivalent just because both are categorized as a “sword hit.”
+
+This is a coupling contract, not a claim that the complete system already exists:
+
+1. **Describe the thing:** ontology and material data define the physical properties the model actually uses.
+2. **Resolve the event:** motion and contact mechanics determine whether and how contact occurs.
+3. **Derive consequences:** the same event drives damage/deflection/wear and an acoustic source model.
+4. **Propagate and observe:** vibration, resonance, damping, and the current propagation model determine what an observer hears.
+5. **Record evidence:** keep the event state, model versions, assumptions, and acoustic observations reproducible.
+
+Material labels alone are insufficient: steel alloys, heat treatments, geometry, and damage state can differ. Likewise, damage must follow the modeled swing/thrust and contact mechanics, not a hand-authored damage number tied to a sound cue.
+
+Physics currently includes a bounded analytical free-field acoustics primitive. The material-driven source model and its coupling to contact, fracture, damage, and richer propagation are future work. Build this as an incremental chain of testable physical models; do not hide the missing links behind a convincing sound effect.
+
 ## Next steps
 
 1. Add bounded input controls that rerun an experiment or clearly identify the exact run being displayed.
