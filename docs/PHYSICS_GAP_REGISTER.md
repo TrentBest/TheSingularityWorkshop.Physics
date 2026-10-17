@@ -1,6 +1,6 @@
 # Physics Gap Register — What Exists, What Connects, What Comes Next
 
-**Status:** evidence-based planning document, reviewed against the `development` tree after the electrical-to-thermal evidence was added (2026-10-17). This is not a claim that the roadmap items below have been implemented.
+**Status:** evidence-based planning document, reviewed against the `development` tree after material-property provenance and two-body thermal-conduction evidence were added (2026-10-17). Roadmap items below remain unimplemented unless the source, focused tests, and evidence pipeline support the stated scope.
 
 The goal is to prevent the repository from becoming a collection of individually polished primitives that never combine into useful worlds. A domain is counted as *implemented* only at the scope supported by source, focused tests, and documented limits.
 
@@ -49,7 +49,9 @@ Before building a general “units framework,” define the minimum common contr
 
 This is deliberately bounded: the absorbed fraction is authored, not predicted by a heat-transfer model; the experiment does not model where untransferred energy goes, changing resistance, external heat exchange, phase change, or spatial gradients. It is not a validated appliance or electrical-arc model.
 
-**Next P1 work:** create a provenance-bearing material/property definition before building a large material catalogue. Each property needs a value, unit, valid range/conditions, source/version, and status (measured, sourced, estimated, or illustrative). A material name is not a physical model. Use the property record in the next coupled experiment rather than creating another standalone showcase.
+**Second thermal bridge implemented:** [`ThermalConduction`](../Physics/Thermodynamics/ThermalConduction.cs) transfers signed energy between two lumped bodies using a declared conductivity, area, path length, and interval. It checks the conductivity property’s temperature-validity range, rejects an explicit step that would overshoot equilibrium, and records the total sensible-energy residual. The [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Thermodynamics/ThermalConductionTests.cs), [run record](experiments/thermal-conduction.run.json), and [SVG](experiments/thermal-conduction.svg) make the result inspectable. Conductivity remains illustrative; this is not a spatial heat solver or a measured real-material prediction.
+
+**Next P1 work:** add sourced properties only when source/version and applicability can be verified; then use property validity ranges in a temperature-dependent response (for example, heat capacity changing with temperature) and add explicit heat exchange with the environment. Keep the current conduction fixture explicitly illustrative until real material data is sourced.
 
 ### P2 — Make collision response causal
 
