@@ -51,6 +51,24 @@ The focused tests check a three-dimensional gravity example against analytical c
 
 The coordinate frame must be declared by the caller. The current test uses Z as the vertical axis and gravity `(0, 0, -9.81) m/s²`; that is a test convention, not a universal coordinate convention imposed on every consumer.
 
+## Derived acoustics: sound follows the physical event
+
+The intended Workshop model is **physics-based sound, not an authored SFX inventory**. A crafted object should not need a manually assigned “clash sound.” Its ontology supplies what the object is; its material definition supplies relevant properties; the interaction produces a physical event; and an acoustic model derives sound from that event.
+
+For example, a sword's geometry, mass distribution, metallurgy, stiffness, damping, and condition combine with the swing or thrust state and the contact partner's material. The resulting contact mechanics determine quantities such as contact location, relative velocity, impulse, deformation, and possible fracture. Those quantities can drive an acoustic source model, while the same physical event determines deflection, penetration, wear, or damage. A hard steel blade meeting another hard metal should not be treated as equivalent to striking cloth or a compliant target simply because both events are labelled “hit.”
+
+The causal contract is:
+
+**Ontology/material properties → motion → contact event → mechanical outcome + acoustic excitation → propagated observation**
+
+- **Material/ontology:** declare relevant physical properties and their provenance. Names such as “steel” are not enough by themselves; alloys, heat treatment, geometry, and condition can differ.
+- **Interaction:** derive contact from the physical state and solver, not from an animation cue or a sound trigger.
+- **Damage:** use the actual motion and contact response, with declared material/structural limits. A swing's visual speed alone is not a damage formula.
+- **Acoustics:** derive excitation from the contact/deformation/fracture event, then account for vibration, resonance, damping, and propagation as model capabilities permit.
+- **Evidence:** record the event inputs and derived observations so a sound can be explained, replayed, and tested—not merely played.
+
+**Current status:** the repository has an analytical free-field acoustics primitive, but does not yet implement this full material-to-contact-to-sound chain. Material-driven acoustic excitation, coupling to contact/damage, and richer propagation remain planned work. Do not describe them as implemented until source, focused tests, and a reproducible demonstration support the claim.
+
 ## Cross-cutting rules
 
 ### 1. Units and coordinate meaning
