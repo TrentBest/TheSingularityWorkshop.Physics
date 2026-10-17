@@ -334,3 +334,20 @@ This is not room audio. The direct and reflected paths are independent estimates
 ## 2026-10-17 — Gestures evaluator lifecycle boundary checked
 
 Gestures added [Gesture Evaluation Lifecycle](https://github.com/TrentBest/TheSingularityWorkshop.Gestures/blob/development/docs/GESTURE_EVALUATION_LIFECYCLE.md) and tests pinning its current CPU evaluator behavior. The important integration contract is that `GestureEvaluator.Evaluate` is a deterministic stateless pose sampler—not a running procedure, scheduler, pause/resume owner, interrupt handler, anchor resolver, or authority for contact/physical success. The host owns lifecycle and task coordination; Physics remains authoritative for physical outcomes. WebPage's [Singularity Studios handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_WEBPAGELLM_HANDOFF.md) now links this contract to prevent a timeline from claiming unsupported lifecycle semantics. No Gestures API or implementation was changed by this coordination update.
+
+
+## 2026-10-17 — Sound Experiences and composable audio roles
+
+The Experiences development branch now contains [Sound Experiences — MicroBundle Design](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/experiences/Sound/README.md), indexed from its README. This is a design proposal only; it does not claim that providers, descriptors, audio synthesis, or cross-host integration are implemented.
+
+The proposed semantic families include instruments and voices; performer/sections; bands, orchestras, choirs and other ensembles; scores and arrangements; performances; venues/acoustic environments; microphones/recording/monitoring; listeners/audiences; and event-driven sound sources. These should compose by explicit IDs/contracts rather than be hard-coded as WebPage-specific concepts.
+
+Ownership:
+- Experiences authors the Experience definition, ensemble membership, score/arrangement, and user journey.
+- MicroBundleDomain/repository own descriptor/provider and artifact contracts.
+- Physics owns validated physical acoustic calculations and their reproducible evidence.
+- Gestures owns reusable performer motion procedures, not ensemble semantics or performance scheduling.
+- WebPage and AnyApp consume the same versioned definitions and own their respective manifestation/device adapters.
+- FSM_COS composes capabilities; it does not become an audio callback loop.
+
+Current acoustic boundary is unchanged: free-field observations and first-order room-reflection paths are analytical metadata; no Physics waveform synthesis, signal mixing, or complete room-acoustics simulation is claimed. Before executable bundles are authored, inspect the existing MicroBundle descriptor/artifact schemas and reuse them rather than inventing a parallel format. No master merge, release, publication, or deployment is authorized.
