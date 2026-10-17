@@ -69,7 +69,7 @@
   <text x="600" y="518" text-anchor="middle" class="body">Power → heat · temperature → resistance · impact → damage</text>
 
   <rect x="52" y="590" width="520" height="100" class="box" fill="#ffffff" stroke="#a56a13"/>
-  <text x="312" y="624" text-anchor="middle" class="label">Event wake-ups & local detail</text>
+  <text x="312" y="624" text-anchor="middle" class="label">Event wake-ups &amp; local detail</text>
   <text x="312" y="651" text-anchor="middle" class="body">Faults, thresholds, nearby interaction, fast motion</text>
   <text x="312" y="673" text-anchor="middle" class="small">Never wait for a coarse tick when causality demands action.</text>
   <path d="M312 590 V566 H190 V380" class="edge dash"/>
