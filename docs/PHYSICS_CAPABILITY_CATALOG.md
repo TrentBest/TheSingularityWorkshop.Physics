@@ -14,6 +14,8 @@ Visual documentation is part of the capability contract: see the [Living Image S
 
 **Element/material data:** [Element and Material Data Architecture](ELEMENT_AND_MATERIAL_DATA_ARCHITECTURE.md) defines the planned breadth of property families, provenance and applicability rules, and independently loadable core/specialist profiles. It is a design contract, not evidence that a complete property warehouse or nuclear solver has been populated.
 
+**Condition-qualified property fact contract:** [`PropertyValueRecord`](../Physics/Chemistry/PropertyValueRecord.cs) represents sourced point/range values or explicit availability states, with units, conditions, uncertainty, evidence class, and provenance. Focused validation tests are in [`PropertyValueRecordTests`](../tests/TheSingularityWorkshop.Physics.Tests/Chemistry/PropertyValueRecordTests.cs). This is a data contract, not yet a property database, importer, condition matcher, or physics solver.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
