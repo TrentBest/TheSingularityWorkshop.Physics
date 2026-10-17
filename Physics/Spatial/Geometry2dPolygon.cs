@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace TheSingularityWorkshop.Physics.Spatial;
 
@@ -11,6 +12,94 @@ namespace TheSingularityWorkshop.Physics.Spatial;
 /// </remarks>
 public static class Geometry2dPolygon
 {
+    /// <summary>Computes the signed shoelace area of a closed polygon boundary.</summary>
+    /// <param name="vertices">At least three effective vertices in boundary order; the first may optionally be repeated at the end.</param>
+    /// <returns>Positive area for counter-clockwise order, negative for clockwise order, or zero for a degenerate/algebraically cancelling boundary.</returns>
+    /// <exception cref="ArgumentNullException">The vertex collection is null.</exception>
+    /// <exception cref="ArgumentException">The boundary has fewer than three effective vertices.</exception>
+    /// <exception cref="ArithmeticException">The exact area magnitude exceeds the finite binary64 range.</exception>
+    /// <remarks>
+    /// The shoelace sum is accumulated exactly over the supplied binary64 coordinates using integer
+    /// arithmetic. The final area is rounded to binary64 (nearest, ties-to-even); a nonzero exact area
+    /// smaller than the representable range may underflow to zero. This is algebraic area for any
+    /// ordered boundary, including self-intersecting boundaries; call <see cref="IsSimple"/> separately
+    /// when a simple polygon is required. Complexity is O(n) arithmetic operations, with allocation
+    /// proportional to the exact integer sizes.
+    /// </remarks>
+    public static double SignedArea(IReadOnlyList<Vector2d> vertices)
+    {
+        if (vertices is null)
+            throw new ArgumentNullException(nameof(vertices));
+
+        int count = vertices.Count;
+        if (count > 1 && vertices[count - 1] == vertices[0])
+            count--;
+
+        if (count < 3)
+            throw new ArgumentException("A polygon requires at least three effective vertices.", nameof(vertices));
+
+        BigInteger twiceAreaUnits = BigInteger.Zero;
+        for (int i = 0; i < count; i++)
+        {
+            Vector2d current = vertices[i];
+            Vector2d next = vertices[(i + 1) % count];
+            BigInteger x1 = ToSubnormalUnits(current.X);
+            BigInteger y1 = ToSubnormalUnits(current.Y);
+            BigInteger x2 = ToSubnormalUnits(next.X);
+            BigInteger y2 = ToSubnormalUnits(next.Y);
+            twiceAreaUnits += x1 * y2 - y1 * x2;
+        }
+
+        // Each coordinate is represented in units of 2^-1074. The shoelace sum
+        // therefore has units of 2^-2148; dividing by two gives area units 2^-2149.
+        return ScaledIntegerToDouble(twiceAreaUnits, -2149);
+    }
+
+    private static BigInteger ToSubnormalUnits(double value)
+    {
+        long bits = BitConverter.DoubleToInt64Bits(value);
+        bool negative = bits < 0;
+        ulong magnitudeBits = unchecked((ulong)bits) & 0x7FFFFFFFFFFFFFFFUL;
+        int exponentBits = (int)(magnitudeBits >> 52);
+        ulong fraction = magnitudeBits & 0x000FFFFFFFFFFFFFUL;
+
+        if (exponentBits == 0)
+        {
+            BigInteger subnormal = fraction;
+            return negative ? -subnormal : subnormal;
+        }
+
+        BigInteger significand = (1UL << 52) | fraction;
+        BigInteger units = significand << (exponentBits - 1);
+        return negative ? -units : units;
+    }
+
+    private static double ScaledIntegerToDouble(BigInteger value, int binaryExponent)
+    {
+        if (value.IsZero)
+            return 0d;
+
+        bool negative = value.Sign < 0;
+        BigInteger magnitude = BigInteger.Abs(value);
+        long bitLength = magnitude.GetBitLength();
+        int shift = bitLength > 53 ? checked((int)(bitLength - 53)) : 0;
+        BigInteger significand = magnitude >> shift;
+
+        if (shift > 0)
+        {
+            BigInteger remainder = magnitude - (significand << shift);
+            BigInteger halfway = BigInteger.One << (shift - 1);
+            if (remainder > halfway || (remainder == halfway && !significand.IsEven))
+                significand += BigInteger.One;
+        }
+
+        double rounded = Math.ScaleB((double)significand, checked(binaryExponent + shift));
+        if (double.IsInfinity(rounded))
+            throw new ArithmeticException("The polygon area exceeds the finite binary64 range.");
+
+        return negative ? -rounded : rounded;
+    }
+
     /// <summary>Locates a point relative to a closed polygon using the non-zero winding rule.</summary>
     /// <param name="vertices">At least three polygon vertices in boundary order.</param>
     /// <param name="point">The point to classify.</param>
