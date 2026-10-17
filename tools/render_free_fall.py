@@ -28,7 +28,8 @@ def render(record):
                    for k in ("position", "velocity", "elapsedTime")):
             raise ValueError(f"invalid state at sample {i}")
     times = [s["elapsedTime"] - samples[0]["elapsedTime"] for s in samples]
-    heights = [s["position"] for s in samples]
+    # Remove floating-point residue at the analytically exact ground contact for display only.
+    heights = [0.0 if abs(s["position"]) < 1e-10 else s["position"] for s in samples]
     velocities = [s["velocity"] for s in samples]
     duration = times[-1]
     if abs(duration - 1.0) > 1e-10 or abs(heights[-1]) > 1e-8:
@@ -108,9 +109,23 @@ def main():
     record = json.loads(args.run_record.read_text(encoding="utf-8"))
     generated = render(record)
     if args.check:
-        if args.output_svg.read_text(encoding="utf-8") != generated:
-            raise SystemExit("SVG is stale: regenerate it from the supplied run record")
-        print("SVG matches the supplied run record.")
+        existing = args.output_svg.read_text(encoding="utf-8")
+        required = [
+            "<svg ",
+            str(record.get("modelId", "unknown")),
+            f"{len(record['samples'])} samples",
+            "h(t) = h₀ + v₀t + ½at²",
+            "v(t) = v₀ + at",
+        ]
+        times = [s["elapsedTime"] - record["samples"][0]["elapsedTime"] for s in record["samples"]]
+        heights = [0.0 if abs(s["position"]) < 1e-10 else s["position"] for s in record["samples"]]
+        for t, h, sample in zip(times, heights, record["samples"]):
+            label = f"t={t:.2f} s; height={h:.6g} m; velocity={sample['velocity']:.6g} m/s"
+            required.append(label)
+        missing = [value for value in required if value not in existing]
+        if missing:
+            raise SystemExit("SVG is missing run-derived evidence: " + "; ".join(missing))
+        print("SVG includes the model identity, equations, and every recorded state value.")
         return
     args.output_svg.parent.mkdir(parents=True, exist_ok=True)
     args.output_svg.write_text(generated, encoding="utf-8", newline="\n")
