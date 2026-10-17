@@ -1,0 +1,64 @@
+{
+  "$schema": "./lesson-manifest.schema.json",
+  "schemaVersion": 1,
+  "lessonId": "physics.lesson.free-fall.apple",
+  "title": "An apple falls",
+  "question": "How do height and velocity change as an apple falls from rest?",
+  "status": "implemented-demo",
+  "model": {
+    "id": "kinematics.constant-acceleration",
+    "version": "1",
+    "runRecordSchemaVersion": 1,
+    "entryPoint": "TheSingularityWorkshop.Physics.Experiments.ConstantAccelerationExperiment"
+  },
+  "defaultExperiment": {
+    "initialHeightMetres": 4.905,
+    "initialVelocityMetresPerSecond": 0,
+    "accelerationMetresPerSecondSquared": -9.81,
+    "deltaTimeSeconds": 0.1,
+    "stepCount": 10
+  },
+  "learningObjectives": [
+    "Read position/height and velocity as quantities that change with time.",
+    "Relate the slope of the height-time graph to velocity.",
+    "Relate the slope of the velocity-time graph to constant acceleration.",
+    "Recognize that the model's result depends on declared assumptions and coordinate sign."
+  ],
+  "assumptions": [
+    "One-dimensional vertical motion with upward-positive coordinates.",
+    "Constant acceleration of -9.81 m/s^2 for the entire experiment.",
+    "The initial height is selected so the analytical model reaches ground level at one second."
+  ],
+  "limitations": [
+    "No air resistance, wind, apple rotation, branch separation, deformation, or ground-contact response.",
+    "Tree and apple artwork are explanatory illustration, not physical geometry.",
+    "The model is an ideal teaching example, not a claim about every real fall."
+  ],
+  "visualizations": [
+    {
+      "type": "svg",
+      "path": "apple-free-fall.svg",
+      "source": "mixed",
+      "description": "The apple markers and height/velocity plots are tied to the recorded run; tree artwork is illustrative."
+    }
+  ],
+  "validation": {
+    "method": "Run the existing constant-acceleration experiment with declared SI inputs, then check the recorded duration, sample count, final position, and final velocity against analytical expectations.",
+    "acceptance": [
+      "11 states including the initial state and 10 completed steps.",
+      "One second of recorded logical time.",
+      "Final position is zero within floating-point tolerance.",
+      "Final velocity is -9.81 m/s within floating-point tolerance.",
+      "Every displayed state label in the SVG matches a state in the actual run record."
+    ]
+  },
+  "prerequisites": [],
+  "nextLessons": [
+    "physics.lesson.projectile.trajectory",
+    "physics.lesson.contact.target-intersection"
+  ],
+  "relatedTheory": [
+    "../THEORY.md",
+    "../LEARNING_PATH.md"
+  ]
+}
