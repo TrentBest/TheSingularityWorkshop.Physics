@@ -67,7 +67,7 @@ def render(record):
         arrow(220, a0, "A", "#2563a6"),
         '<text x="65" y="258" font-size="16" font-weight="700" fill="#bd5a23">Body B</text>',
         arrow(280, b0, "B", "#bd5a23"),
-        '<text x="505" y="181" font-size="13" fill="#64748b">−x</text><text x="820" y="181" font-size="13" fill="#64748b">+x</text>',
+        '<text x="150" y="181" font-size="13" fill="#64748b">−x</text><text x="820" y="181" font-size="13" fill="#64748b">+x</text>',
         '<rect x="40" y="350" width="880" height="92" rx="14" fill="#eaf2fb" stroke="#a8c7e7"/>',
         '<text x="65" y="380" font-size="17" font-weight="700" fill="#14253d">Resolver result</text>',
         f'<text x="65" y="408" font-size="16" fill="#14253d">Normal impulse magnitude: {impulse:.6g} N·s</text>',
