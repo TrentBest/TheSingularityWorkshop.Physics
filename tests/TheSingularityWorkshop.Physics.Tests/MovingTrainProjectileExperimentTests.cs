@@ -61,4 +61,34 @@ public sealed class MovingTrainProjectileExperimentTests
         Assert.That(final.Position.Y, Is.EqualTo(3d).Within(1e-12));
         Assert.That(final.Position.Z, Is.EqualTo(1d).Within(1e-12));
     }
+
+    [Test]
+    public void RunRecord_CapturesPairedSamplesAndSerializesDeterministically()
+    {
+        var definition = new MovingTrainProjectileExperimentDefinition(
+            new ProjectileState(Vector3d.Zero, new Vector3d(0d, 0d, 8d), 0d),
+            new Vector3d(0d, 0d, -9.81d),
+            new Vector3d(20d, 0d, 0d),
+            new Vector3d(100d, 0d, 0d),
+            0.25d,
+            4);
+        var result = MovingTrainProjectileExperiment.Run(definition);
+
+        var record = MovingTrainProjectileRunRecord.FromResult(result);
+        var json = record.ToJson();
+
+        Assert.That(record.ModelId, Is.EqualTo("kinematics.moving-train-projectile"));
+        Assert.That(record.ModelVersion, Is.EqualTo("1"));
+        Assert.That(record.SchemaVersion, Is.EqualTo(1));
+        Assert.That(record.CompletedSteps, Is.EqualTo(4));
+        Assert.That(record.Definition, Is.EqualTo(definition));
+        Assert.That(record.Samples, Is.EqualTo(result.Samples));
+        Assert.That(record.Units["position"], Is.EqualTo("m"));
+        Assert.That(record.Units["velocity"], Is.EqualTo("m/s"));
+        Assert.That(json, Does.Contain("\"trainFrameState\""));
+        Assert.That(json, Does.Contain("\"groundFrameState\""));
+        Assert.That(json, Does.Contain("\"schemaVersion\": 1"));
+        Assert.That(record.ToJson(), Is.EqualTo(json));
+    }
+
 }
