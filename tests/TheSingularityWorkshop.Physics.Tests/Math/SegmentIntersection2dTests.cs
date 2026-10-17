@@ -73,10 +73,10 @@ public sealed class SegmentIntersection2dTests
     }
 
     [Test]
-    public void Intersect_RejectsUnresolvableProperCrossingInsteadOfReturningNonFinitePoint()
+    public void Intersect_TinyScaleCrossingReturnsFinitePoint()
     {
-        // The exact predicate can establish topology even when a coordinate construction is
-        // too poorly conditioned to retain a non-zero denominator in scaled binary64 arithmetic.
+        // Exercise a crossing with subnormal-scale components; the coordinate construction must
+        // return finite output rather than overflow or silently emit NaN/infinity.
         var result = Intersect((0, 0), (1, 1e-320), (0, 1e-320), (1, 0));
         Assert.That(result.Kind, Is.EqualTo(SegmentIntersectionKind2d.ProperIntersection));
         Assert.That(result.HasUniquePoint, Is.True);
