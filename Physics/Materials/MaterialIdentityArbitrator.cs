@@ -135,6 +135,26 @@ public sealed class MaterialIdentityArbitrator
             }
         }
 
+        var unknownReferences = evidence
+            .Where(item => item.Kind != MaterialReferenceEvidenceKind.DescriptiveText &&
+                !_knownMaterialIds.Contains(item.MaterialId!))
+            .Select(item => (Evidence: item, Rank: Rank(item.Kind)))
+            .Where(candidate => candidate.Rank > 0)
+            .ToArray();
+
+        var strongestKnownRank = eligible.Count == 0 ? 0 : eligible.Max(candidate => candidate.Rank);
+        var strongestUnknownRank = unknownReferences.Length == 0 ? 0 : unknownReferences.Max(candidate => candidate.Rank);
+
+        if (strongestUnknownRank > strongestKnownRank)
+        {
+            var unresolvedEvidence = unknownReferences
+                .Where(candidate => candidate.Rank == strongestUnknownRank)
+                .Select(candidate => candidate.Evidence);
+            return new(partId, MaterialIdentityResolutionStatus.Unresolved, null,
+                SortEvidence(unresolvedEvidence),
+                "The strongest material reference is not present in the known material catalog; weaker evidence cannot override it, and physical properties remain unspecified.");
+        }
+
         if (eligible.Count == 0)
             return new(partId, MaterialIdentityResolutionStatus.Unresolved, null,
                 SortEvidence(evidence), "No evidence identifies a known material; physical properties remain unspecified.");
@@ -145,6 +165,16 @@ public sealed class MaterialIdentityArbitrator
             .ThenBy(candidate => candidate.Evidence.SourceBundleId, StringComparer.Ordinal)
             .ThenBy(candidate => candidate.Evidence.SourceFieldId, StringComparer.Ordinal)
             .ToArray();
+
+        if (strongestUnknownRank == strongestRank)
+        {
+            var contestedEvidence = strongest.Select(candidate => candidate.Evidence)
+                .Concat(unknownReferences.Where(candidate => candidate.Rank == strongestRank)
+                    .Select(candidate => candidate.Evidence));
+            return new(partId, MaterialIdentityResolutionStatus.Ambiguous, null,
+                SortEvidence(contestedEvidence),
+                "The strongest evidence includes material references absent from the known catalog; no material identity was selected.");
+        }
         var materials = strongest.Select(candidate => candidate.MaterialId)
             .Distinct(StringComparer.Ordinal).ToArray();
         var provenance = SortEvidence(strongest.Select(candidate => candidate.Evidence));
@@ -160,6 +190,14 @@ public sealed class MaterialIdentityArbitrator
                     ? "Resolved from a structured material declaration."
                     : "Resolved from a known material alias; descriptive evidence is not treated as a physical property.");
     }
+
+    private static int Rank(MaterialReferenceEvidenceKind kind) => kind switch
+    {
+        MaterialReferenceEvidenceKind.ExplicitReference => 3,
+        MaterialReferenceEvidenceKind.StructuredDeclaration => 2,
+        MaterialReferenceEvidenceKind.KnownAlias => 1,
+        _ => 0
+    };
 
     private static IReadOnlyList<MaterialReferenceEvidence> SortEvidence(IEnumerable<MaterialReferenceEvidence> evidence) =>
         evidence.OrderBy(item => item.SourceBundleId, StringComparer.Ordinal)
