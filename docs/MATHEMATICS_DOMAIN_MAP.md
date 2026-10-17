@@ -33,7 +33,7 @@ Mathematics is not a supporting appendix to physics. It is the shared language u
 
 ## Recommended build order
 
-1. Extend the [2D geometry foundation](GEOMETRY_FOUNDATION_2D.md) with intersection-coordinate calculation and uncertainty-aware policies; explicit pairwise rigid transforms are implemented, while transform graphs, unit conversion, and intersection coordinates still need their own contracts.
+1. Strengthen the [2D geometry foundation](GEOMETRY_FOUNDATION_2D.md) with adversarial intersection-coordinate tests and uncertainty-aware policies; explicit pairwise rigid transforms and a bounded unique-point intersection API are implemented, while transform graphs and unit conversion still need their own contracts.
 2. Add general matrix and small linear-system primitives with reference tests.
 3. Add quantities/dimensions and dimensional-analysis helpers without making every low-level type allocation-heavy.
 4. Add scalar numerical analysis: root finding, quadrature, finite differences, residuals and error bounds.
