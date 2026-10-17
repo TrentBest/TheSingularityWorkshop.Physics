@@ -144,3 +144,19 @@ Boundary for Physics:
 - Before any Physics implementation expands, coordinate the proposed source-excitation, environment, and receiver contracts with the existing [acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md). Prefer one small, testable contract over a broad unvalidated solver.
 
 The Experiences design asks the integration coordinator to inspect the existing MicroBundle descriptor/artifact contracts before defining a parallel schema. WebPage and AnyApp should eventually consume the same versioned Experience definition; neither should privately fork ensemble semantics or Physics calculations. No release, merge to master, publication, or deployment is authorized.
+
+
+## Domain-wide Math / Chemistry / Combustion direction — 2026-10-16
+
+The owner has assigned Physics as the home for the domain's physical and mathematical foundation. Read and follow [Physics + Math Domain Expansion](docs/PHYSICS_MATH_CHEMISTRY_COMBUSTION.md) alongside the existing [LUT policy](docs/PHYSICS_MATH_LUTS.md) and capability catalog. This is design direction, not a claim that these capabilities exist.
+
+Priorities beyond the current Operation Sith integration work:
+- inventory existing math/numerical primitives and repository/MicroBundle providers before creating a standalone Math package or adding dependencies;
+- evaluate deterministic Squirrel3 RNG and convenient typed sampling helpers with golden vectors, bounded-integer correctness, replay metadata, and keyed per-entity/event streams;
+- prefer justified LUTs with provenance, validity, interpolation/boundary policy, error bounds and content digest;
+- start chemistry with a scientifically labelled, sourced H2 potential-energy curve and two-hydrogen/bond visualization contract; do not depict fixed classical electron orbits as quantum truth;
+- design Burning Engine around explicit fuel, thermal-energy/temperature, and oxygen state, stoichiometric reaction accounting, and conservative mass/energy transfer before GPU texture optimization;
+- start gas with a well-mixed compartment, then bounded transport; extend existing shallow-water foundations for conservative liquid/tracer mixing;
+- require actual code, focused tests, and living visualizations generated from model output before updating capability status.
+
+Keep working on the existing development branch; do not create more work branches. No merge to master, publication, release, deployment, or edits to unrelated repositories are authorized by this note.
