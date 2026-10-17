@@ -88,6 +88,32 @@ public sealed class MaterialIdentityArbitratorTests
     }
 
     [Test]
+    public void Arbitrate_UnknownExplicitReferenceCannotBeOverriddenByWeakerKnownDeclaration()
+    {
+        var result = CreateArbitrator().Arbitrate([
+            Evidence("part", "material:unregistered-alloy", MaterialReferenceEvidenceKind.ExplicitReference, "primary", "material"),
+            Evidence("part", "material:wood", MaterialReferenceEvidenceKind.StructuredDeclaration, "secondary", "material")
+        ]).Single();
+
+        Assert.That(result.Status, Is.EqualTo(MaterialIdentityResolutionStatus.Unresolved));
+        Assert.That(result.MaterialId, Is.Null);
+        Assert.That(result.Evidence.Select(item => item.SourceBundleId), Is.EqualTo(new[] { "primary" }));
+    }
+
+    [Test]
+    public void Arbitrate_UnknownAndKnownExplicitReferencesRemainAmbiguous()
+    {
+        var result = CreateArbitrator().Arbitrate([
+            Evidence("part", "material:unregistered-alloy", MaterialReferenceEvidenceKind.ExplicitReference, "a", "material"),
+            Evidence("part", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "b", "material")
+        ]).Single();
+
+        Assert.That(result.Status, Is.EqualTo(MaterialIdentityResolutionStatus.Ambiguous));
+        Assert.That(result.MaterialId, Is.Null);
+        Assert.That(result.Evidence.Select(item => item.SourceBundleId), Is.EqualTo(new[] { "a", "b" }));
+    }
+
+    [Test]
     public void Arbitrate_KnownAliasResolvesIdentityAndRetainsProvenance()
     {
         var result = CreateArbitrator().Arbitrate([
