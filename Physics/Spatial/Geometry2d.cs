@@ -38,11 +38,15 @@ public static class Geometry2d
         double left = abx * acy;
         double right = aby * acx;
         double determinant = left - right;
+        const double minNormal = 2.2250738585072014e-308;
         if (double.IsFinite(abx) && double.IsFinite(aby) &&
             double.IsFinite(acx) && double.IsFinite(acy) &&
-            double.IsFinite(left) && double.IsFinite(right) && double.IsFinite(determinant))
+            double.IsFinite(left) && double.IsFinite(right) && double.IsFinite(determinant) &&
+            Math.Abs(left) >= minNormal && Math.Abs(right) >= minNormal &&
+            Math.Abs(determinant) >= minNormal)
         {
-            const double unitRoundoff = 1.1102230246251565e-16; // 2^-53; double.Epsilon is the smallest subnormal, not this value.\n            double errorBound = (Math.Abs(left) + Math.Abs(right)) * (3d + (16d * unitRoundoff)) * unitRoundoff;
+            const double unitRoundoff = 1.1102230246251565e-16; // 2^-53; use unit roundoff, not double.Epsilon.
+            double errorBound = (Math.Abs(left) + Math.Abs(right)) * (3d + (16d * unitRoundoff)) * unitRoundoff;
             if (double.IsFinite(errorBound) && Math.Abs(determinant) > errorBound)
                 return determinant > 0d ? Orientation2d.CounterClockwise : Orientation2d.Clockwise;
         }
