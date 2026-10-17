@@ -35,7 +35,7 @@
     "listenerId": "studio-listener",
     "distanceMeters": 5,
     "propagationDelaySeconds": 0.014577259475218658,
-    "receivedLevelDbSpl": 66.02059991327962,
+    "receivedLevelDbSpl": 66.02059991327963,
     "directionFromListenerToSource": {
       "x": -0.6,
       "y": -0.8,
