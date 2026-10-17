@@ -1,6 +1,6 @@
 # Moving-train projectile: one motion, two observers
 
-**Status:** paired train/ground experiment, versioned run-record model, generator, and focused tests implemented. CI executes the C# model and checks every paired sample. A paired observer SVG is now present as an analytical reference graphic; generating it directly from the serialized C# run record and checking it in CI remains the next step.
+**Status:** paired train/ground experiment, versioned run-record model, generator, focused tests, and animated observer SVG implemented. CI executes the C# model and checks the plotted SVG coordinates against every paired sample.
 
 ![Moving-train projectile: passenger and trackside views](moving-train-projectile.svg)
 
