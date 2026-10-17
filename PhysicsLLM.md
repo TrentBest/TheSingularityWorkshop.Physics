@@ -124,3 +124,8 @@ Implemented on `development`:
 - WebPage's Singularity Studios page and SFX handoff now link to this evidence. AnyApp's [desktop consumer brief](https://github.com/TrentBest/AnyApp/blob/development/docs/integrations/SINGULARITY_STUDIOS_ANYAPP_HANDOFF.md) remains the desktop counterpart and should consume the same production data rather than fork the Physics calculation.
 
 **Limitations remain explicit:** this is path metadata, not a waveform or room response. Direct and reflected levels are separate; there is no phase/interference, frequency-dependent absorption, scattering, diffraction, transmission, occlusion, multiple reflection, reverberation, or material-driven sound generation. Verify the newest Physics CI run before calling this increment green. Next, only after the reproducible record/SVG checks pass, consider a second reflection order or a frequency-banded material contract; do not combine path levels without a declared signal/energy model.
+
+
+### Verification update — 2026-10-17
+
+The bounded room-reflection increment is verified at [Physics Build and Tests run 38996272912](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38996272912), commit `325e9db2eb70434b923c2b56edcf6f5f19c5a6f2`. The run passed the focused test suite, generator/fixture comparison, SVG render, exact SVG comparison, and SVG-against-record check. Later commits in this sequence update documentation/coordination only. Keep watching the newest development run for the final branch tip.
