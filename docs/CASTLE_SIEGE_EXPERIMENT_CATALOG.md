@@ -61,10 +61,11 @@ Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege
 
 **Question:** Does the computed path cross the target geometry?
 
-- Inputs: CS-02 run plus target identity, frame, geometry and active time interval.
-- Outputs: hit/miss/indeterminate; first intersection time/position where supported; target identity.
-- Acceptance: tests cover target before/after the path, miss, interior hit, boundary/grazing, coordinate mismatch and degenerate geometry.
-- Limitation: a trajectory line crossing a rendered mesh is not sufficient evidence unless it is the actual declared target geometry and contract.
+- Inputs: CS-02 run plus stable target identity, shared world coordinate frame, fixed axis-aligned bounds and run duration.
+- Outputs: hit/miss, first intersection time and projectile state, tied to the originating run and target identity.
+- Method: solve each constant-acceleration coordinate against the six AABB boundary planes, order candidate times, and validate the complete point against the closed target bounds. This tests the continuous analytical path within the recorded duration, not merely the sampled polyline.
+- Acceptance: tests cover a crossing between sample times, a parabolic hit, start-inside, miss beyond the duration, and invalid target identity.
+- Limitation: the projectile is a point; target bounds are fixed and axis-aligned; bounds and trajectory must share the same frame. Rotated targets, moving targets, radius, and collision response remain unsupported. A rendered mesh alone is not target geometry.
 
 ### CS-04 — Account for impact
 
