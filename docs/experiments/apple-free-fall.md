@@ -39,7 +39,7 @@ v(t)=v_0+at
 
 Here \(h_0=4.905\text{ m}\), \(v_0=0\), and \(a=-9.81\text{ m/s}^2\). At \(t=1\text{ s}\), the predicted height is zero and the predicted velocity is \(-9.81\text{ m/s}\).
 
-The experiment uses the repository's existing [ConstantAccelerationExperiment](../../Physics/Experiments/ConstantAccelerationExperiment.cs) and [ConstantAccelerationSolver](../../Physics/Kinematics/ConstantAccelerationSolver.cs). The [run generator](../../tools/FreeFallRunRecordGenerator/Program.cs) writes the actual samples as a versioned JSON run record; the [SVG renderer](../../tools/render_free_fall.py) reads those samples and displays them.
+The experiment uses the repository's existing [ConstantAccelerationExperiment](../../Physics/Experiments/ConstantAccelerationExperiment.cs) and [ConstantAccelerationSolver](../../Physics/Kinematics/ConstantAccelerationSolver.cs). The [run generator](../../tools/FreeFallRunRecordGenerator/Program.cs) writes the actual samples as a versioned JSON run record; the [SVG renderer](../../tools/render_free_fall.py) reads those samples and displays them. The [lesson manifest](apple-free-fall.lesson.json) gives an experience host the question, model identity, default inputs, learning objectives, assumptions, limitations, and visualization references using the [shared lesson-manifest schema](lesson-manifest.schema.json). This is instructional metadata for consumption by a host, not a claim that it is already a MicroBundleDomain runtime manifest.
 
 ## Where calculus sneaks in
 
