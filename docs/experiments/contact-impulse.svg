@@ -8,13 +8,9 @@
 <text x="65" y="139" font-size="18" font-weight="700" fill="#14253d">Before contact response</text>
 <line x1="480" y1="160" x2="480" y2="300" stroke="#cbd5e1" stroke-dasharray="4 5"/>
 <text x="65" y="198" font-size="16" font-weight="700" fill="#2563a6">Body A</text>
-<line x1="480" y1="220" x2="585" y2="220" stroke="#2563a6" stroke-width="6" stroke-linecap="round"/>
-<path d="M 585 220 L 572 212 L 572 228 Z" fill="#2563a6"/>
-<text x="532.5" y="207" text-anchor="middle" font-size="15" font-weight="700" fill="#2563a6">1 m/s</text>
+<line x1="480" y1="220" x2="585" y2="220" stroke="#2563a6" stroke-width="6" stroke-linecap="round"/><path d="M 585 220 L 572 212 L 572 228 Z" fill="#2563a6"/><text x="532.5" y="207" text-anchor="middle" font-size="15" font-weight="700" fill="#2563a6">1 m/s</text>
 <text x="65" y="258" font-size="16" font-weight="700" fill="#bd5a23">Body B</text>
-<line x1="480" y1="280" x2="375" y2="280" stroke="#bd5a23" stroke-width="6" stroke-linecap="round"/>
-<path d="M 375 280 L 388 272 L 388 288 Z" fill="#bd5a23"/>
-<text x="427.5" y="267" text-anchor="middle" font-size="15" font-weight="700" fill="#bd5a23">-1 m/s</text>
+<line x1="480" y1="280" x2="375" y2="280" stroke="#bd5a23" stroke-width="6" stroke-linecap="round"/><path d="M 375 280 L 388 272 L 388 288 Z" fill="#bd5a23"/><text x="427.5" y="267" text-anchor="middle" font-size="15" font-weight="700" fill="#bd5a23">-1 m/s</text>
 <text x="505" y="181" font-size="13" fill="#64748b">−x</text><text x="820" y="181" font-size="13" fill="#64748b">+x</text>
 <rect x="40" y="350" width="880" height="92" rx="14" fill="#eaf2fb" stroke="#a8c7e7"/>
 <text x="65" y="380" font-size="17" font-weight="700" fill="#14253d">Resolver result</text>
@@ -24,10 +20,8 @@
 <text x="65" y="495" font-size="18" font-weight="700" fill="#14253d">After response · pose and logical time preserved</text>
 <line x1="480" y1="510" x2="480" y2="578" stroke="#cbd5e1" stroke-dasharray="4 5"/>
 <text x="65" y="535" font-size="15" font-weight="700" fill="#2563a6">A</text>
-<circle cx="480" cy="540" r="5" fill="#2563a6"/>
-<text x="494" y="545" font-size="15" fill="#23334a">0 m/s</text>
+<circle cx="480" cy="540" r="5" fill="#2563a6"/><text x="494" y="545" font-size="15" fill="#23334a">0 m/s</text>
 <text x="65" y="575" font-size="15" font-weight="700" fill="#bd5a23">B</text>
-<circle cx="480" cy="580" r="5" fill="#bd5a23"/>
-<text x="494" y="585" font-size="15" fill="#23334a">0 m/s</text>
+<circle cx="480" cy="580" r="5" fill="#bd5a23"/><text x="494" y="585" font-size="15" fill="#23334a">0 m/s</text>
 <text x="44" y="630" font-size="13" fill="#475569">mA=1 kg · mB=1 kg · e=0 · signed separation=-0.1 m · timestep advanced=0 s</text>
 </svg>
