@@ -39,4 +39,4 @@ dotnet test TheSingularityWorkshop.Physics.sln --configuration Release
 
 The room is an axis-aligned box with frequency-independent coefficients. Only first-order specular paths are considered; edge/corner hits are excluded. This does not model absorption by frequency, diffraction, scattering, transmission, occlusion, multiple reflections, reverberation, phase, binaural reception, or audible output. The reflected-path estimate is not a total room level.
 
-Next, generate an SVG from this run record so the same computed reflection point and paths become living documentation. Do not describe the MDN reference recording or a generic reverb effect as output from this model.
+The [SVG](first-order-room-reflection.svg) is rendered from the same run record and CI compares it with a fresh render from the actual C# output. Do not describe the MDN reference recording or a generic reverb effect as output from this model.
