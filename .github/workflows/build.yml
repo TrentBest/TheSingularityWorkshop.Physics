@@ -1,0 +1,242 @@
+name: Physics Build and Tests
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Execute the apple free-fall teaching experiment
+        run: dotnet run --project tools/FreeFallRunRecordGenerator/FreeFallRunRecordGenerator.csproj --configuration Release -- /tmp/apple-free-fall.actual.json
+
+      - name: Verify lesson manifest matches the executable model
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          lesson = json.loads(Path('docs/experiments/apple-free-fall.lesson.json').read_text(encoding='utf-8'))
+          record = json.loads(Path('/tmp/apple-free-fall.actual.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          defaults = lesson['defaultExperiment']
+          assert lesson['schemaVersion'] == 1
+          assert lesson['status'] == 'implemented-demo'
+          assert lesson['model']['id'] == record['modelId']
+          assert lesson['model']['version'] == record['modelVersion']
+          assert defaults['initialHeightMetres'] == definition['initialState']['position']
+          assert defaults['initialVelocityMetresPerSecond'] == definition['initialState']['velocity']
+          assert defaults['accelerationMetresPerSecondSquared'] == definition['acceleration']
+          assert defaults['deltaTimeSeconds'] == definition['deltaTime']
+          assert defaults['stepCount'] == definition['stepCount']
+          assert len(record['samples']) == 11
+          for visual in lesson['visualizations']:
+              assert Path('docs/experiments', visual['path']).is_file()
+          print('Lesson manifest matches the actual C# run and its visualization exists.')
+          PY
+
+      - name: Render apple lesson from actual C# states
+        run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json /tmp/apple-free-fall.actual.svg
+
+      - name: Verify committed apple SVG against every recorded state
+        run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json docs/experiments/apple-free-fall.svg --check
+
+      - name: Execute C# experiment and serialize actual run record
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
+
+      - name: Execute a bounded custom experiment
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.custom.json --delta-time=0.1 --steps=20 --vx=3 --vy=1 --vz=4 --ax=0.5 --ay=0 --az=-9.81
+
+      - name: Verify custom run inputs and sample count
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/projectile-trajectory.custom.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          samples = record['samples']
+          velocity = definition.get('initialState', {}).get('velocity', {})
+          acceleration = definition.get('acceleration', {})
+          observed = {
+              'deltaTime': definition.get('deltaTime'),
+              'initialVelocity': {key: velocity.get(key) for key in ('x', 'y', 'z')},
+              'acceleration': {key: acceleration.get(key) for key in ('x', 'y', 'z')},
+              'sampleCount': len(samples),
+              'finalElapsedTime': samples[-1].get('elapsedTime') if samples else None,
+          }
+          print(json.dumps(observed, indent=2))
+          assert observed['deltaTime'] == 0.1, 'Unexpected timestep'
+          assert observed['initialVelocity'] == {'x': 3, 'y': 1, 'z': 4}, 'Unexpected initial velocity'
+          assert observed['acceleration'] == {'x': 0.5, 'y': 0, 'z': -9.81}, 'Unexpected acceleration'
+          assert observed['sampleCount'] == 21, 'Unexpected sample count'
+          assert abs(observed['finalElapsedTime'] - 2.0) < 1e-12, 'Unexpected final logical time'
+          print('Custom bounded experiment inputs and 21 recorded states verified.')
+          PY
+
+      - name: Verify custom run record is reproducible
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.custom.json --delta-time=0.1 --steps=20 --vx=3 --vy=1 --vz=4 --ax=0.5 --ay=0 --az=-9.81 --check
+
+      - name: Verify Markdown summary matches actual C# experiment
+        run: python3 tools/render_projectile_trajectory_markdown.py /tmp/projectile-trajectory.actual.json docs/experiments/projectile-trajectory.md --check
+
+      - name: Render SVG from actual C# run record
+        run: python3 tools/render_projectile_trajectory.py /tmp/projectile-trajectory.actual.json /tmp/projectile-trajectory.actual.svg
+
+      - name: Verify checked-in SVG matches actual C# experiment
+        run: cmp /tmp/projectile-trajectory.actual.svg docs/experiments/projectile-trajectory.svg
+
+      - name: Verify checked-in SVG matches the documented fixture
+        run: python3 tools/render_projectile_trajectory.py docs/experiments/projectile-trajectory.run.json docs/experiments/projectile-trajectory.svg --check
+
+      - name: Execute contact impulse resolver and serialize actual response
+        run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- /tmp/contact-impulse.actual.json
+
+      - name: Verify committed contact impulse run record matches current resolver output
+        run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- docs/experiments/contact-impulse.run.json --check
+
+      - name: Verify generated contact impulse record matches the committed fixture
+        run: cmp /tmp/contact-impulse.actual.json docs/experiments/contact-impulse.run.json
+
+      - name: Render contact response SVG from actual resolver output
+        run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json /tmp/contact-impulse.actual.svg
+
+      - name: Verify committed contact response SVG matches actual resolver output
+        run: diff -u docs/experiments/contact-impulse.svg /tmp/contact-impulse.actual.svg
+
+      - name: Verify contact response SVG against its run record
+        run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json docs/experiments/contact-impulse.svg --check
+
+      - name: Execute free-field acoustic observation from the C# model
+        run: dotnet run --project tools/AcousticObservationRunRecordGenerator/AcousticObservationRunRecordGenerator.csproj --configuration Release -- /tmp/acoustic-observation.actual.json
+
+      - name: Verify committed acoustic observation record is reproducible
+        run: dotnet run --project tools/AcousticObservationRunRecordGenerator/AcousticObservationRunRecordGenerator.csproj --configuration Release -- docs/experiments/acoustic-observation.run.json --check
+
+      - name: Verify generated acoustic record matches committed fixture
+        run: cmp /tmp/acoustic-observation.actual.json docs/experiments/acoustic-observation.run.json
+
+      - name: Render SVG from actual acoustic model output
+        run: python3 tools/render_acoustic_observation.py /tmp/acoustic-observation.actual.json /tmp/acoustic-observation.actual.svg
+
+      - name: Verify committed acoustic SVG matches actual model output
+        run: python3 tools/render_acoustic_observation.py /tmp/acoustic-observation.actual.json docs/experiments/acoustic-observation.svg --check
+
+      - name: Execute controlled acoustic distance sweep from the C# model
+        run: dotnet run --project tools/AcousticDistanceSweepRunRecordGenerator/AcousticDistanceSweepRunRecordGenerator.csproj --configuration Release -- /tmp/acoustic-distance-sweep.actual.json
+
+      - name: Verify committed acoustic distance-sweep record is reproducible
+        run: dotnet run --project tools/AcousticDistanceSweepRunRecordGenerator/AcousticDistanceSweepRunRecordGenerator.csproj --configuration Release -- docs/experiments/acoustic-distance-sweep.run.json --check
+
+      - name: Verify generated distance-sweep record matches committed fixture
+        run: cmp /tmp/acoustic-distance-sweep.actual.json docs/experiments/acoustic-distance-sweep.run.json
+
+      - name: Render distance-sweep SVG from actual model output
+        run: python3 tools/render_acoustic_distance_sweep.py /tmp/acoustic-distance-sweep.actual.json /tmp/acoustic-distance-sweep.actual.svg
+
+      - name: Verify committed distance-sweep SVG matches actual model output
+        run: python3 tools/render_acoustic_distance_sweep.py /tmp/acoustic-distance-sweep.actual.json docs/experiments/acoustic-distance-sweep.svg --check
+
+      - name: Execute first-order room reflection from the C# model
+        run: dotnet run --project tools/FirstOrderRoomReflectionRunRecordGenerator/FirstOrderRoomReflectionRunRecordGenerator.csproj --configuration Release -- /tmp/first-order-room-reflection.actual.json
+
+      - name: Verify committed first-order room reflection record is reproducible
+        run: dotnet run --project tools/FirstOrderRoomReflectionRunRecordGenerator/FirstOrderRoomReflectionRunRecordGenerator.csproj --configuration Release -- docs/experiments/first-order-room-reflection.run.json --check
+
+      - name: Verify generated first-order room reflection record matches committed fixture
+        run: cmp /tmp/first-order-room-reflection.actual.json docs/experiments/first-order-room-reflection.run.json
+
+      - name: Render first-order room reflection SVG from actual model output
+        run: python3 tools/render_first_order_room_reflection.py /tmp/first-order-room-reflection.actual.json /tmp/first-order-room-reflection.actual.svg
+
+      - name: Verify committed room reflection SVG matches actual model output
+        run: cmp /tmp/first-order-room-reflection.actual.svg docs/experiments/first-order-room-reflection.svg
+
+      - name: Verify room reflection SVG against committed run record
+        run: python3 tools/render_first_order_room_reflection.py docs/experiments/first-order-room-reflection.run.json docs/experiments/first-order-room-reflection.svg --check
+
+      - name: Execute electrical-to-thermal coupling and serialize actual model output
+        run: dotnet run --project tools/ElectricalThermalCouplingRunRecordGenerator/ElectricalThermalCouplingRunRecordGenerator.csproj --configuration Release -- /tmp/electrical-thermal-coupling.actual.json
+
+      - name: Verify committed electrical-to-thermal run record is reproducible
+        run: dotnet run --project tools/ElectricalThermalCouplingRunRecordGenerator/ElectricalThermalCouplingRunRecordGenerator.csproj --configuration Release -- docs/experiments/electrical-thermal-coupling.run.json --check
+
+      - name: Verify generated electrical-to-thermal record matches committed fixture
+        run: cmp /tmp/electrical-thermal-coupling.actual.json docs/experiments/electrical-thermal-coupling.run.json
+
+      - name: Render electrical-to-thermal SVG from actual model output
+        run: python3 tools/render_electrical_thermal_coupling.py /tmp/electrical-thermal-coupling.actual.json /tmp/electrical-thermal-coupling.actual.svg
+
+      - name: Verify committed electrical-to-thermal SVG matches actual model output
+        run: cmp /tmp/electrical-thermal-coupling.actual.svg docs/experiments/electrical-thermal-coupling.svg
+
+      - name: Verify electrical-to-thermal SVG against committed run record
+        run: python3 tools/render_electrical_thermal_coupling.py docs/experiments/electrical-thermal-coupling.run.json docs/experiments/electrical-thermal-coupling.svg --check
+
+      - name: Execute two-body thermal conduction and serialize actual model output
+        run: dotnet run --project tools/ThermalConductionRunRecordGenerator/ThermalConductionRunRecordGenerator.csproj --configuration Release -- /tmp/thermal-conduction.actual.json
+
+      - name: Verify committed thermal conduction record is reproducible
+        run: dotnet run --project tools/ThermalConductionRunRecordGenerator/ThermalConductionRunRecordGenerator.csproj --configuration Release -- docs/experiments/thermal-conduction.run.json --check
+
+      - name: Verify generated thermal conduction record matches committed fixture
+        run: cmp /tmp/thermal-conduction.actual.json docs/experiments/thermal-conduction.run.json
+
+      - name: Render thermal conduction SVG from actual model output
+        run: python3 tools/render_thermal_conduction.py /tmp/thermal-conduction.actual.json /tmp/thermal-conduction.actual.svg
+
+      - name: Verify committed thermal conduction SVG matches actual model output
+        run: cmp /tmp/thermal-conduction.actual.svg docs/experiments/thermal-conduction.svg
+
+      - name: Verify thermal conduction SVG against committed run record
+        run: python3 tools/render_thermal_conduction.py docs/experiments/thermal-conduction.run.json docs/experiments/thermal-conduction.svg --check
+
+      - name: Validate shared run-record envelope across acoustics, room reflections, and two thermal experiments
+        run: >-
+          python3 tools/validate_physics_run_records.py
+          docs/experiments/acoustic-observation.run.json
+          docs/experiments/first-order-room-reflection.run.json
+          docs/experiments/electrical-thermal-coupling.run.json
+          docs/experiments/thermal-conduction.run.json
+
+      - name: Verify cross-domain run-record catalog is reproducible
+        run: >-
+          python3 tools/catalog_physics_run_records.py
+          docs/experiments/acoustic-observation.run.json
+          docs/experiments/first-order-room-reflection.run.json
+          docs/experiments/electrical-thermal-coupling.run.json
+          docs/experiments/thermal-conduction.run.json
+          --output docs/experiments/run-record-catalog.md --check
+
+      - name: Test run-record envelope and catalog edge cases
+        run: python3 -m unittest discover -s tests/python -v
+
+      - name: Restore
+        run: dotnet restore TheSingularityWorkshop.Physics.sln
+
+      - name: Test with coverage
+        run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
+
+      - name: Verify package can be created
+        run: dotnet pack TheSingularityWorkshop.Physics.csproj --configuration Release --no-restore --output ./artifacts
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-nuget-package
+          path: ./artifacts/*.nupkg
