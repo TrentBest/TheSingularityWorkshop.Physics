@@ -12,6 +12,8 @@ Visual documentation is part of the capability contract: see the [Living Image S
 
 **MicroBundle boundary:** the cross-bundle application behavior—provider discovery, arbitration orchestration, composition, provider binding, and re-arbitration after bundle changes—belongs to the MicroBundle composition/arbitration layer. Physics provides deterministic domain evaluators over caller-supplied evidence; those evaluators do not implement the MicroBundle workflow.
 
+**Element/material data:** [Element and Material Data Architecture](ELEMENT_AND_MATERIAL_DATA_ARCHITECTURE.md) defines the planned breadth of property families, provenance and applicability rules, and independently loadable core/specialist profiles. It is a design contract, not evidence that a complete property warehouse or nuclear solver has been populated.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
