@@ -119,6 +119,7 @@ This is an ideal point-projectile experiment under constant acceleration. A sepa
 - [Physics domain map](docs/PHYSICS_DOMAIN_MAP.md) — broad physical territory, domain coupling, primitive foundations, and build order
 - [Hydrodynamics world demonstrator](docs/HYDRODYNAMICS_WORLD_DEMONSTRATOR.md) — staged path from a measured wave reference to terrain, shorelines, and bounded boat coupling
 - [Acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md) — listener-centred propagation and the tested free-field observation baseline
+- [Living acoustic demonstration](docs/ACOUSTIC_LIVING_DEMO.md) — audible reference source, source/space/listener comparisons, SVG-plus-HTML delivery, and explicit evidence gates for physics-generated sound
 - [Stellar physics and planetary energy](docs/STELLAR_PHYSICS_AND_PLANETARY_ENERGY.md) — staged roadmap from inverse-square irradiance to deeper stellar structure
 - [Geology: volcanic terrain](docs/GEOLOGY_VOLCANIC_TERRAIN.md) — deterministic volume-accounted terrain deposition and explicit model limits
 - [Terrain interactions and MicroBundles](docs/TERRAIN_INTERACTIONS_AND_MICROBUNDLES.md) — terrain-dependent water impacts, emergent effects, and composable physical processes
