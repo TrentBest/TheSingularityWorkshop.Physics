@@ -12,7 +12,7 @@ Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege
 |---|---|---|---|---|
 | CS-00 | What does this scene contain? | camera/presentation choices | scene composition; explicit fixture status | scene-only |
 | CS-01 | How does constant acceleration change a launch? | initial state, gravity, timestep | position/velocity by logical tick | current kernel foundation; adapt and verify |
-| CS-02 | How do elevation and azimuth change the path? | launch speed, elevation, azimuth | sampled position/velocity states | 3D constant-acceleration step is implemented; experiment runner, launch-angle helper and trajectory samples remain next |
+| CS-02 | How do elevation and azimuth change the path? | launch speed, elevation, azimuth | sampled position/velocity states | Implemented analytical 3D constant-acceleration runner, angle-to-velocity helper, fixed-step samples and versioned JSON record; target intersection remains next |
 | CS-03 | Does the path intersect the selected wall section? | target position/size/orientation | hit/miss/indeterminate, intersection | target geometry |
 | CS-04 | What arrives at impact? | mass, launch state, gravity | impact velocity, momentum, kinetic energy | confirmed impact |
 | CS-05 | What changes when one parameter changes? | one supported field per variant | overlay, exact input diff, measurement delta | run identity/comparison |
