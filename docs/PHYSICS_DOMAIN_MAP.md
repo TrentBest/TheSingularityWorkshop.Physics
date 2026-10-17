@@ -6,6 +6,8 @@
 
 A domain becomes implemented only when it has an explicit state model, units and conventions, governing assumptions, validated numerical behavior, tests, and observable outputs. A name on this page is a planned domain unless its implementation is linked and tested. The broader mathematical foundation is tracked in the [Mathematics Domain Map](MATHEMATICS_DOMAIN_MAP.md); the data-layout and numerical contracts for future acceleration are in [GPU Computation Readiness](GPU_COMPUTATION_READINESS.md).
 
+Material composition and discovery now have an initial implementation slice: explicit assembly/part declarations, per-part material identity arbitration, provenance-aware property records, and a mapper from resolved part identities to matching property evidence. The next layer is cross-provider discovery and compatibility matching from those properties to models and solvers; it is not yet implemented. See [Composable Physics: composition-level material discovery](COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md#composition-level-material-discovery-and-physics-mapping) for the staged contract.
+
 ## The physical picture
 
 A world contains matter and fields. They carry state and energy; models describe how that state changes; solvers advance it through declared logical time; observations report what happened. Coupled domains exchange quantities through explicit interfaces rather than secretly reaching into each other's internals.
