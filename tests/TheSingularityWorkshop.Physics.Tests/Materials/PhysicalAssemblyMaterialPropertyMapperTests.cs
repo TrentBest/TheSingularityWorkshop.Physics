@@ -71,6 +71,18 @@ public sealed class PhysicalAssemblyMaterialPropertyMapperTests
             PhysicalAssemblyMaterialPropertyMapper.Map(resolution, [invalid]));
     }
 
+    [Test]
+    public void Map_RejectsResolvedPartWithoutMaterialIdentity()
+    {
+        var invalid = new PhysicalAssemblyMaterialResolution("sword", [
+            new MaterialIdentityResolution("sword.blade", MaterialIdentityResolutionStatus.Resolved,
+                null, [], "Malformed result.")
+        ]);
+
+        Assert.Throws<ArgumentException>(() =>
+            PhysicalAssemblyMaterialPropertyMapper.Map(invalid, Array.Empty<MaterialPropertyDefinition>()));
+    }
+
     private static MaterialIdentityResolution Resolved(string partId, string materialId) =>
         new(partId, MaterialIdentityResolutionStatus.Resolved, materialId, [],
             "Resolved by test fixture.");
