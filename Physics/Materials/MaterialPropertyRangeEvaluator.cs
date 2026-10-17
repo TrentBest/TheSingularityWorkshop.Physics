@@ -21,6 +21,11 @@ public enum MaterialPropertyRangeStatus
 /// <param name="ObservedQuantity">Quantity supplied for assessment.</param>
 /// <param name="ObservedUnit">Unit supplied for assessment.</param>
 /// <param name="ObservedValue">Numeric value supplied for assessment.</param>
+/// <param name="EvidenceStatus">Evidence classification of the source property.</param>
+/// <param name="SourceId">Source identifier for the assessed property.</param>
+/// <param name="SourceVersion">Source version for the assessed property.</param>
+/// <param name="ValidMinimum">Inclusive lower bound declared by the property.</param>
+/// <param name="ValidMaximum">Inclusive upper bound declared by the property.</param>
 /// <param name="Explanation">Reason for the outcome.</param>
 public sealed record MaterialPropertyRangeAssessment(
     string PropertyId,
@@ -29,6 +34,11 @@ public sealed record MaterialPropertyRangeAssessment(
     string ObservedQuantity,
     string ObservedUnit,
     double ObservedValue,
+    PropertyEvidenceStatus EvidenceStatus,
+    string SourceId,
+    string SourceVersion,
+    double ValidMinimum,
+    double ValidMaximum,
     string Explanation);
 
 /// <summary>
@@ -65,6 +75,11 @@ public static class MaterialPropertyRangeEvaluator
                 observedQuantity,
                 observedUnit,
                 observedValue,
+                property.EvidenceStatus,
+                property.SourceId,
+                property.SourceVersion,
+                property.ValidMinimum,
+                property.ValidMaximum,
                 "Observed quantity and unit must exactly match the property's declared validity quantity and unit; no unit conversion or condition inference is performed.");
         }
 
@@ -78,6 +93,11 @@ public static class MaterialPropertyRangeEvaluator
             observedQuantity,
             observedUnit,
             observedValue,
+            property.EvidenceStatus,
+            property.SourceId,
+            property.SourceVersion,
+            property.ValidMinimum,
+            property.ValidMaximum,
             withinRange
                 ? "Observed value is within the inclusive declared numeric validity range. Other validity conditions still require separate evaluation."
                 : "Observed value is outside the declared numeric validity range.");
