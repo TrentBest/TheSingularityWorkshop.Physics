@@ -70,6 +70,10 @@ if (File.Exists(path) && args.Length == 2 && args[1] == "--check")
     if (File.ReadAllText(path) != json)
     {
         Console.Error.WriteLine("Contact impulse run record differs from the current resolver output.");
+        Console.Error.WriteLine("Expected committed record:");
+        Console.Error.WriteLine(File.ReadAllText(path));
+        Console.Error.WriteLine("Fresh resolver record:");
+        Console.Error.WriteLine(json);
         return 1;
     }
     Console.WriteLine("Contact impulse run record matches current resolver output.");
