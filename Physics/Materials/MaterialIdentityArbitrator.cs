@@ -108,6 +108,40 @@ public sealed class MaterialIdentityArbitrator
             .ToArray();
     }
 
+    /// <summary>
+    /// Resolves material identity for every declared assembly part, including parts with no material evidence.
+    /// Evidence for parts outside the declared assembly is rejected instead of silently attaching it elsewhere.
+    /// </summary>
+    public PhysicalAssemblyMaterialResolution Arbitrate(
+        PhysicalAssemblyDescription assembly,
+        IEnumerable<MaterialReferenceEvidence> evidence)
+    {
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(evidence);
+        assembly.EnsureValid();
+
+        var all = evidence.ToArray();
+        if (all.Any(item => item is null || !item.IsValid))
+            throw new ArgumentException("Evidence must contain valid part identity and source provenance.", nameof(evidence));
+
+        var partIds = new HashSet<string>(assembly.Parts.Select(part => part.PartId), StringComparer.Ordinal);
+        var outsideEvidence = all.FirstOrDefault(item => !partIds.Contains(item.PartId));
+        if (outsideEvidence is not null)
+            throw new ArgumentException(
+                $"Material evidence references part '{outsideEvidence.PartId}', which is not declared in assembly '{assembly.AssemblyId}'.",
+                nameof(evidence));
+
+        var byPart = all.GroupBy(item => item.PartId, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.ToArray(), StringComparer.Ordinal);
+        var results = assembly.Parts
+            .OrderBy(part => part.PartId, StringComparer.Ordinal)
+            .Select(part => ResolvePart(part.PartId,
+                byPart.TryGetValue(part.PartId, out var partEvidence) ? partEvidence : []))
+            .ToArray();
+
+        return new PhysicalAssemblyMaterialResolution(assembly.AssemblyId, results);
+    }
+
     private MaterialIdentityResolution ResolvePart(string partId, MaterialReferenceEvidence[] evidence)
     {
         var eligible = new List<(MaterialReferenceEvidence Evidence, string MaterialId, int Rank)>();
