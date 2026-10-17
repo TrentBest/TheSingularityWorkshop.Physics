@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 650" role="img" aria-labelledby="title desc">
+  <title id="title">NPN and PNP bipolar transistor polarity and carrier directions</title>
+  <desc id="desc">A conceptual forward-active comparison. NPN layers are N emitter, thin P base, N collector. Conventional current runs from collector to emitter while electron motion is opposite. PNP layers are P emitter, thin N base, P collector. Conventional current runs from emitter to collector; hole motion follows conventional current and electron motion is opposite. Base-emitter is forward biased and collector-base reverse biased in both forward-active examples.</desc>
+  <defs>
+    <marker id="blueArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2878b5"/></marker>
+    <marker id="orangeArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#c66a19"/></marker>
+    <marker id="purpleArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8056b3"/></marker>
+    <style>
+      text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;fill:#18212b}
+      .heading{font-size:25px;font-weight:700}.sub{font-size:15px;fill:#44515e}.label{font-size:17px;font-weight:650}.small{font-size:14px}.tiny{font-size:12px}
+      .panel{fill:#f8fafc;stroke:#cbd5df;stroke-width:1.5}.n{fill:#dceeff;stroke:#2878b5;stroke-width:1.5}.p{fill:#f8e5d5;stroke:#c66a19;stroke-width:1.5}
+      .current{stroke:#2878b5;stroke-width:4;fill:none;marker-end:url(#blueArrow)}.electron{stroke:#c66a19;stroke-width:3.5;fill:none;marker-end:url(#orangeArrow)}.hole{stroke:#8056b3;stroke-width:3.5;fill:none;marker-end:url(#purpleArrow)}
+      .wire{stroke:#64748b;stroke-width:2.5;fill:none}.divider{stroke:#d5dde5;stroke-width:1}
+    </style>
+  </defs>
+  <rect width="1120" height="650" rx="18" fill="#ffffff"/>
+  <text x="36" y="43" class="heading">One device family, mirrored polarity</text>
+  <text x="36" y="69" class="sub">Bipolar junction transistors · forward-active region · schematic, not to scale</text>
+  <rect x="30" y="91" width="520" height="424" rx="14" class="panel"/>
+  <rect x="570" y="91" width="520" height="424" rx="14" class="panel"/>
+  <text x="54" y="126" class="heading">NPN</text><text x="594" y="126" class="heading">PNP</text>
+  <text x="54" y="150" class="sub">N emitter · thin P base · N collector</text>
+  <text x="594" y="150" class="sub">P emitter · thin N base · P collector</text>
+  <!-- NPN semiconductor regions -->
+  <rect x="72" y="176" width="436" height="58" rx="7" class="n"/>
+  <rect x="72" y="234" width="436" height="35" rx="5" class="p"/>
+  <rect x="72" y="269" width="436" height="58" rx="7" class="n"/>
+  <text x="88" y="199" class="label">Collector (N)</text><text x="88" y="220" class="small">C</text>
+  <text x="88" y="256" class="label">Base (P)</text><text x="88" y="311" class="label">Emitter (N)</text><text x="88" y="326" class="tiny">E</text>
+  <path d="M310 198 L310 293" class="current"/>
+  <text x="326" y="219" class="small" fill="#2878b5">Conventional</text><text x="326" y="236" class="small" fill="#2878b5">current C → E</text>
+  <path d="M407 295 L407 201" class="electron"/>
+  <text x="420" y="272" class="small" fill="#c66a19">Electron</text><text x="420" y="289" class="small" fill="#c66a19">motion E → C</text>
+  <path d="M56 250 L72 250" class="wire"/><text x="54" y="350" class="small">BE: forward biased</text><text x="54" y="371" class="small">CB: reverse biased</text>
+  <text x="54" y="407" class="small">Electrons injected from emitter</text><text x="54" y="426" class="small">cross the thin base; some recombine.</text>
+  <text x="54" y="461" class="small">Base control is limited to the</text><text x="54" y="480" class="small">device model's valid operating region.</text>
+  <!-- PNP semiconductor regions -->
+  <rect x="612" y="176" width="436" height="58" rx="7" class="p"/>
+  <rect x="612" y="234" width="436" height="35" rx="5" class="n"/>
+  <rect x="612" y="269" width="436" height="58" rx="7" class="p"/>
+  <text x="628" y="199" class="label">Emitter (P)</text><text x="628" y="220" class="small">E</text>
+  <text x="628" y="256" class="label">Base (N)</text><text x="628" y="311" class="label">Collector (P)</text><text x="628" y="326" class="tiny">C</text>
+  <path d="M850 198 L850 293" class="current"/>
+  <text x="866" y="219" class="small" fill="#2878b5">Conventional</text><text x="866" y="236" class="small" fill="#2878b5">current E → C</text>
+  <path d="M948 295 L948 201" class="electron"/>
+  <text x="960" y="272" class="small" fill="#c66a19">Electron</text><text x="960" y="289" class="small" fill="#c66a19">motion C → E</text>
+  <text x="594" y="350" class="small">BE: forward biased</text><text x="594" y="371" class="small">CB: reverse biased</text>
+  <text x="594" y="407" class="small">Hole motion is E → C, along</text><text x="594" y="426" class="small">conventional current in this case.</text>
+  <text x="594" y="461" class="small">Electron and hole arrows describe</text><text x="594" y="480" class="small">different carriers—not a single flow.</text>
+  <line x1="36" y1="536" x2="1084" y2="536" class="divider"/>
+  <path d="M52 566 L120 566" class="current"/><text x="135" y="571" class="small">Conventional current</text>
+  <path d="M365 566 L433 566" class="electron"/><text x="448" y="571" class="small">Electron motion</text>
+  <path d="M670 566 L738 566" class="hole"/><text x="753" y="571" class="small">Hole motion</text>
+  <text x="36" y="610" class="small" font-weight="700">CONCEPTUAL TEACHING SCHEMATIC — not a transistor solver result; carrier density, drift, diffusion and geometry are not numerically simulated.</text>
+  <text x="36" y="632" class="tiny">Arrow directions show operating-region conventions only. Real device behavior depends on bias, material, temperature and device parameters.</text>
+</svg>
