@@ -170,6 +170,24 @@ jobs:
       - name: Verify room reflection SVG against committed run record
         run: python3 tools/render_first_order_room_reflection.py docs/experiments/first-order-room-reflection.run.json docs/experiments/first-order-room-reflection.svg --check
 
+      - name: Execute electrical-to-thermal coupling and serialize actual model output
+        run: dotnet run --project tools/ElectricalThermalCouplingRunRecordGenerator/ElectricalThermalCouplingRunRecordGenerator.csproj --configuration Release -- /tmp/electrical-thermal-coupling.actual.json
+
+      - name: Verify committed electrical-to-thermal run record is reproducible
+        run: dotnet run --project tools/ElectricalThermalCouplingRunRecordGenerator/ElectricalThermalCouplingRunRecordGenerator.csproj --configuration Release -- docs/experiments/electrical-thermal-coupling.run.json --check
+
+      - name: Verify generated electrical-to-thermal record matches committed fixture
+        run: cmp /tmp/electrical-thermal-coupling.actual.json docs/experiments/electrical-thermal-coupling.run.json
+
+      - name: Render electrical-to-thermal SVG from actual model output
+        run: python3 tools/render_electrical_thermal_coupling.py /tmp/electrical-thermal-coupling.actual.json /tmp/electrical-thermal-coupling.actual.svg
+
+      - name: Verify committed electrical-to-thermal SVG matches actual model output
+        run: cmp /tmp/electrical-thermal-coupling.actual.svg docs/experiments/electrical-thermal-coupling.svg
+
+      - name: Verify electrical-to-thermal SVG against committed run record
+        run: python3 tools/render_electrical_thermal_coupling.py docs/experiments/electrical-thermal-coupling.run.json docs/experiments/electrical-thermal-coupling.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
