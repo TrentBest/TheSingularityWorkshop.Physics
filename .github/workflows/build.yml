@@ -191,7 +191,7 @@ jobs:
       - name: Validate shared run-record envelope across mechanics, acoustics, and coupled energy
         run: >-
           python3 tools/validate_physics_run_records.py
-          docs/experiments/projectile-trajectory.run.json
+          docs/experiments/acoustic-observation.run.json
           docs/experiments/first-order-room-reflection.run.json
           docs/experiments/electrical-thermal-coupling.run.json
 
