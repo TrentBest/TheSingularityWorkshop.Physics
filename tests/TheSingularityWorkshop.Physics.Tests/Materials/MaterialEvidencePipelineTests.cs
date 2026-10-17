@@ -46,6 +46,19 @@ public sealed class MaterialEvidencePipelineTests
         Assert.That(fletching.MaterialId, Is.Null);
         Assert.That(fletching.Properties, Is.Empty);
 
+        var thermalCapability = new MaterialModelCapability(
+            "model:thermal-response",
+            [new MaterialPropertyRequirement("specific-heat-capacity", "J/(kg*K)")],
+            "thermal-model-bundle",
+            "1");
+        var tipCapability = MaterialModelCapabilityMatcher.Assess(tip, thermalCapability);
+        Assert.That(tipCapability.Status, Is.EqualTo(MaterialModelCapabilityStatus.Ready));
+        Assert.That(tipCapability.SatisfiedPropertyIds, Is.EqualTo(new[] { "specific-heat-capacity" }));
+
+        var fletchingCapability = MaterialModelCapabilityMatcher.Assess(fletching, thermalCapability);
+        Assert.That(fletchingCapability.Status, Is.EqualTo(MaterialModelCapabilityStatus.MissingRequirements));
+        Assert.That(fletchingCapability.MissingPropertyIds, Is.EqualTo(new[] { "specific-heat-capacity" }));
+
         var temperatureAssessment = MaterialPropertyRangeEvaluator.Assess(
             tip.Properties.Single(property => property.PropertyId == "specific-heat-capacity"),
             "temperature", "K", 300d);
