@@ -2,6 +2,9 @@
 
 `ContactImpulseResolver` is the first contact-response slice after sphere-sphere geometric detection. Given a valid active `ContactObservation`, body snapshots, positive masses, and a restitution coefficient, it applies an instantaneous frictionless impulse along the observed normal and returns new immutable body snapshots plus an observation carrying the computed impulse magnitude.
 
+![Contact impulse experiment: recorded before-and-after velocities](experiments/contact-impulse.svg)
+
+
 ## Rule and conventions
 
 Let **n** be the unit normal from A to B, **vᵣ = vB − vA**, and **u = vᵣ · n**. For a penetrating or touching contact with closing normal speed (**u < 0**), the impulse magnitude is
