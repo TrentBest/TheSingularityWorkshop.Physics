@@ -115,6 +115,19 @@ public sealed class SegmentIntersection2dTests
         Assert.That(result.HasUniquePoint, Is.True);
         Assert.That(double.IsFinite(result.Point!.Value.X), Is.True);
         Assert.That(double.IsFinite(result.Point!.Value.Y), Is.True);
+        Assert.That(result.Point.Value.X, Is.EqualTo(0.5).Within(1e-15));
+        Assert.That(result.Point.Value.Y, Is.EqualTo(5e-321).Within(1e-323));
+    }
+
+    [Test]
+    public void Intersect_NonDyadicCrossingRoundsToExpectedBinary64()
+    {
+        // The exact intersection is (2/3, 2/3), which is not exactly representable in binary64.
+        var result = Intersect((0, 0), (1, 1), (0, 1), (2, 0));
+
+        Assert.That(result.Kind, Is.EqualTo(SegmentIntersectionKind2d.ProperIntersection));
+        Assert.That(result.Point!.Value.X, Is.EqualTo(2d / 3d).Within(1e-15));
+        Assert.That(result.Point.Value.Y, Is.EqualTo(2d / 3d).Within(1e-15));
     }
 
     private static SegmentIntersection2d Intersect(
