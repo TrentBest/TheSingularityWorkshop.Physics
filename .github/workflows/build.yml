@@ -194,7 +194,7 @@ jobs:
               assert len(paths) == 4, f'{path}: expected four recorded-state curves'
               parsed = []
               for element in paths:
-                  nums = [float(v) for v in re.findall(r'[-+]?(?:\\d*\\.)?\\d+(?:[eE][-+]?\\d+)?', element.attrib['d'])]
+                  nums = [float(v) for v in re.findall(r'[-+]?(?:[0-9]*[.])?[0-9]+(?:[eE][-+]?[0-9]+)?', element.attrib['d'])]
                   points = list(zip(nums[0::2], nums[1::2]))
                   assert len(points) == len(samples), f'{path}: path point count differs from run sample count'
                   parsed.append(points)
