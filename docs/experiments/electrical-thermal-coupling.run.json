@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "modelId": "coupling.electrical-to-lumped-thermal",
+  "modelVersion": 1,
+  "status": "computed-from-physics-model",
+  "units": {
+    "voltage": "V",
+    "resistance": "ohm",
+    "current": "A",
+    "power": "W",
+    "duration": "s",
+    "energy": "J",
+    "mass": "kg",
+    "specificHeatCapacity": "J/(kg*K)",
+    "temperature": "K"
+  },
+  "definition": {
+    "busVoltageVolts": 12,
+    "loadResistanceOhms": 6,
+    "generationCapacityWatts": 100,
+    "durationSeconds": 10,
+    "absorbedPowerFraction": 0.5,
+    "initialThermalState": {
+      "massKilograms": 2,
+      "temperatureKelvin": 300,
+      "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "referenceTemperatureKelvin": 273.15
+    }
+  },
+  "electricalObservation": {
+    "busVoltageVolts": 12,
+    "generationCapacityWatts": 100,
+    "demandWatts": 24,
+    "totalCurrentAmperes": 2,
+    "remainingCapacityWatts": 76,
+    "isOverloaded": false,
+    "loads": [
+      {
+        "loadId": "coupled-load",
+        "isEnabled": true,
+        "voltageVolts": 12,
+        "resistanceOhms": 6,
+        "currentAmperes": 2,
+        "powerWatts": 24
+      }
+    ]
+  },
+  "result": {
+    "electricalEnergyJoules": 240,
+    "thermalEnergyTransferJoules": 120,
+    "energyNotTransferredToThermalBodyJoules": 120,
+    "finalThermalState": {
+      "massKilograms": 2,
+      "temperatureKelvin": 300.12,
+      "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "referenceTemperatureKelvin": 273.15
+    }
+  },
+  "limitations": [
+    "Ideal fixed-voltage DC bus and constant resistive load.",
+    "Absorbed fraction is a declared input, not a predicted efficiency.",
+    "Energy not transferred to the thermal body is not assigned to a loss mechanism or destination.",
+    "No temperature-dependent resistance, external heat exchange, phase change, or spatial temperature gradient."
+  ]
+}
