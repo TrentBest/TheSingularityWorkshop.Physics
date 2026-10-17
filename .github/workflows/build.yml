@@ -203,6 +203,9 @@ jobs:
           docs/experiments/electrical-thermal-coupling.run.json
           --output docs/experiments/run-record-catalog.md --check
 
+      - name: Test run-record envelope and catalog edge cases
+        run: python3 -m unittest discover -s tests/python -v
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
