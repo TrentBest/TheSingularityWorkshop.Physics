@@ -1,6 +1,6 @@
 # Physics Gap Register — What Exists, What Connects, What Comes Next
 
-**Status:** evidence-based planning document, reviewed against the `development` tree at commit `0231763e2d4189213c9660b08e28a119f3d31a36` (2026-10-17). This is not a claim that the roadmap items below have been implemented.
+**Status:** evidence-based planning document, reviewed against the `development` tree after the electrical-to-thermal evidence was added (2026-10-17). This is not a claim that the roadmap items below have been implemented.
 
 The goal is to prevent the repository from becoming a collection of individually polished primitives that never combine into useful worlds. A domain is counted as *implemented* only at the scope supported by source, focused tests, and documented limits.
 
@@ -10,7 +10,7 @@ The goal is to prevent the repository from becoming a collection of individually
 
 Physics is no longer an empty skeleton. It already contains tested slices in spatial math, kinematics, collision/contact, axial mechanics, thermal accounting, shallow-water models, terrain, electrical load accounting, acoustics, deterministic cell addressing, and timeline/history contracts. The problem is that these capabilities are mostly **islands**: they do not yet form a validated, causal, multi-domain world.
 
-The highest-value work is not another isolated showcase or another round of polishing the same model. It is to establish reusable contracts and make adjacent models exchange quantities correctly. **A first electrical-to-thermal coupling experiment now exists in source with focused tests; its CI result and generated evidence are still pending.**
+The highest-value work is not another isolated showcase or another round of polishing the same model. It is to establish reusable contracts and make adjacent models exchange quantities correctly. **A first electrical-to-thermal coupling experiment now exists in source with focused tests, a C# run-record generator, a committed JSON fixture, and an SVG rendered from that record. The first test attempt exposed incorrect test assumptions; those were corrected, and the corrected build-and-test run passed. The new run-record/SVG consistency checks have been added to CI and await their first result.**
 
 ## Current evidence and missing bridges
 
@@ -45,7 +45,7 @@ Before building a general “units framework,” define the minimum common contr
 
 ### P1 — Material properties and one causal cross-domain slice
 
-**Implementation started:** [`ElectricalThermalCouplingExperiment`](../Physics/Experiments/ElectricalThermalCouplingExperiment.cs) now connects the ideal electrical-load observation to the lumped thermal state. Focused tests cover (E=P\Delta t\), a declared absorbed fraction, energy accounting, invalid inputs, overload reporting, and repeatability. This is a deliberately bounded coupling: the fraction is authored, not predicted by a heat-transfer model. The experiment does not yet have a generated run record/SVG, and its CI result must be checked before it is treated as accepted.
+**Implementation started:** [`ElectricalThermalCouplingExperiment`](../Physics/Experiments/ElectricalThermalCouplingExperiment.cs) now connects the ideal electrical-load observation to the lumped thermal state. Focused tests cover (E=P\Delta t\), a declared absorbed fraction, energy accounting, invalid inputs, overload reporting, and repeatability. This is a deliberately bounded coupling: the fraction is authored, not predicted by a heat-transfer model. 
 
 Create a provenance-bearing material/property definition before creating a large material catalogue. Each property needs a value, unit, valid range/conditions, source/version, and status (measured, sourced, estimated, or illustrative). A material name is not a physical model.
 
@@ -91,6 +91,6 @@ A slice is not done when a class exists or a diagram looks plausible. It is done
 
 ## What I would do next
 
-Finish and validate the **P1 electrical-to-thermal experiment** with a reproducible run record and an SVG generated from that record; then use the concrete friction points to define the minimum reusable **P0 observation/run contract**. That is a better order than designing a generic framework before one real exchange proves what the framework needs. Keep the test and SVG part of the deliverable, and do not mark it complete until CI and artifact consistency are green.
+Validate the **P1 electrical-to-thermal evidence pipeline** end to end: its run record and SVG are now committed and CI is wired to compare them with fresh output. Do not mark the slice fully accepted until that new CI path is green. Then use concrete friction points from this real exchange to define the minimum reusable **P0 observation/run contract**, rather than designing a generic framework before one real exchange proves what it needs.
 
 This audit is intended to change priorities: stop deepening isolated capabilities by default; prioritize one tested causal connection at a time.
