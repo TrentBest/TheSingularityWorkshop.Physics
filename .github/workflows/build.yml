@@ -206,7 +206,7 @@ jobs:
       - name: Verify thermal conduction SVG against committed run record
         run: python3 tools/render_thermal_conduction.py docs/experiments/thermal-conduction.run.json docs/experiments/thermal-conduction.svg --check
 
-      - name: Validate shared run-record envelope across acoustics, room reflections, and coupled energy
+      - name: Validate shared run-record envelope across acoustics, room reflections, and two thermal experiments
         run: >-
           python3 tools/validate_physics_run_records.py
           docs/experiments/acoustic-observation.run.json
