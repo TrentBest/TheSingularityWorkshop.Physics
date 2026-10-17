@@ -10,6 +10,8 @@ This is a catalog of bounded capabilities, not a claim that the repository is a 
 
 Visual documentation is part of the capability contract: see the [Living Image Standard](LIVING_IMAGE_STANDARD.md). The catalog distinguishes model-backed images from conceptual diagrams and identifies important visualization gaps instead of allowing an attractive SVG to imply an unimplemented solver.
 
+**MicroBundle boundary:** the cross-bundle application behavior—provider discovery, arbitration orchestration, composition, provider binding, and re-arbitration after bundle changes—belongs to the MicroBundle composition/arbitration layer. Physics provides deterministic domain evaluators over caller-supplied evidence; those evaluators do not implement the MicroBundle workflow.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
