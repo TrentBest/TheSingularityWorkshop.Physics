@@ -69,7 +69,7 @@
     "Lumped bodies with constant specific heat capacity and one constant conductivity value.",
     "Conducting area and path length are declared inputs; contact resistance and changing geometry are not modeled.",
     "Conductivity is illustrative, not a sourced or measured value for a named real material.",
-    "Explicit interval is rejected if it would reverse the bodies' temperature ordering.",
+    "Explicit interval is rejected if it would reverse the bodies\\u0027 temperature ordering.",
     "No spatial temperature gradients within either body, phase change, convection, or radiation."
   ]
 }
