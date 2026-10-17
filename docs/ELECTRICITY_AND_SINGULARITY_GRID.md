@@ -25,6 +25,10 @@ This is a deterministic, ideal fixed-voltage DC accounting model. It implements 
 
 It is intentionally **not yet** a complete circuit solver. Overload currently reports an energy-supply mismatch; it does not automatically reduce voltage, trip a breaker, shed loads, or simulate generator dynamics. The bus voltage remains the declared nominal voltage even when capacity is exceeded. That limitation is explicit so a UI cannot mistake a capacity warning for a solved brownout.
 
+![Electrical-to-thermal coupling experiment: computed load power and resulting thermal accounting](experiments/electrical-thermal-coupling.svg)
+
+*This image is generated from a bounded run record. The broader Singularity Grid described below is a roadmap, not an implemented city-scale network.*
+
 ## The causal chain we want
 
 ```text
