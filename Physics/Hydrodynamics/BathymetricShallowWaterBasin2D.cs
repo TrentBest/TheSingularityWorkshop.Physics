@@ -92,6 +92,37 @@ public sealed class BathymetricShallowWaterBasin2D
     /// <summary>Samples depth-averaged Y velocity in metres per second; returns zero in a dry cell.</summary>
     public double SampleVelocityY(int x, int y) { var i = Index(x, y); return Velocity(_qy[i], _depth[i]); }
 
+    /// <summary>
+    /// Applies water-equivalent precipitation to matching cells without advancing simulation time.
+    /// </summary>
+    /// <remarks>
+    /// This is an explicit source-splitting operation: precipitation adds depth but no horizontal
+    /// momentum, so existing discharge is retained and velocity changes as depth changes. Callers
+    /// choose the source interval and ordering relative to <see cref="Advance"/>. If the updated
+    /// state violates the model's CFL bound, the operation fails without committing any changes.
+    /// Infiltration, runoff loss, snow phase changes, and wind-driven momentum are not included.
+    /// </remarks>
+    /// <param name="rainfall">Cell-centred precipitation rates aligned to this basin's row-major grid.</param>
+    /// <param name="durationSeconds">Elapsed precipitation duration in seconds; simulation time is unchanged.</param>
+    public void ApplyRainfall(RainfallRateField2D rainfall, double durationSeconds)
+    {
+        ArgumentNullException.ThrowIfNull(rainfall);
+        if (rainfall.Width != Width || rainfall.Height != Height)
+            throw new ArgumentException("Rainfall grid dimensions must match the basin.", nameof(rainfall));
+
+        var increments = rainfall.CalculateDepthIncrement(durationSeconds);
+        var nextDepth = new double[_depth.Length];
+        for (var i = 0; i < nextDepth.Length; i++)
+        {
+            nextDepth[i] = _depth[i] + increments[i];
+            if (!double.IsFinite(nextDepth[i]))
+                throw new ArithmeticException("Rainfall update produced invalid depth; no state was committed.");
+        }
+
+        EnsureStableTimeStep(nextDepth, _qx, _qy);
+        _depth = nextDepth;
+    }
+
     /// <summary>Advances one conservative finite-volume step with impermeable walls.</summary>
     public void Advance()
     {
@@ -136,14 +167,16 @@ public sealed class BathymetricShallowWaterBasin2D
 
     private static double Velocity(double momentum, double depth) => depth > 0d ? momentum / depth : 0d;
 
-    private void EnsureStableTimeStep()
+    private void EnsureStableTimeStep() => EnsureStableTimeStep(_depth, _qx, _qy);
+
+    private void EnsureStableTimeStep(double[] depth, double[] qx, double[] qy)
     {
         var maxRate = 0d;
-        for (var i = 0; i < _depth.Length; i++)
+        for (var i = 0; i < depth.Length; i++)
         {
-            var h = _depth[i];
-            var u = Velocity(_qx[i], h);
-            var v = Velocity(_qy[i], h);
+            var h = depth[i];
+            var u = Velocity(qx[i], h);
+            var v = Velocity(qy[i], h);
             var c = Math.Sqrt(_gravity * h);
             maxRate = Math.Max(maxRate, (Math.Abs(u) + c) / _dx + (Math.Abs(v) + c) / _dy);
         }
