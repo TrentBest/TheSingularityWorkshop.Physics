@@ -2,7 +2,7 @@ using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Numerics;
 using TheSingularityWorkshop.Physics.Spatial;
 
-namespace TheSingularityWorkshop.Physics.Tests.Math;
+namespace TheSingularityWorkshop.Physics.Tests.Mathematics;
 
 [TestFixture]
 public sealed class Matrix3x3dTests
