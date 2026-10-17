@@ -2,6 +2,8 @@
 
 **Purpose:** establish the broad physical territory before implementation narrows into individual solvers. This is an architecture map and build order, not a claim that these capabilities already exist.
 
+![Physics domain map: concepts and relationships](images/physics-ontology-map.svg)
+
 A domain becomes implemented only when it has an explicit state model, units and conventions, governing assumptions, validated numerical behavior, tests, and observable outputs. A name on this page is a planned domain unless its implementation is linked and tested.
 
 ## The physical picture
