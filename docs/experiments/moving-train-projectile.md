@@ -8,7 +8,7 @@
 
 ## Question
 
-A train moves at a constant 20 m/s. A ball is launched vertically at 8 m/s relative to the train. Ignoring air resistance, compare the description from a passenger with the description from someone beside the track.
+A train moves at a constant 20 m/s. A ball is launched vertically at 12 m/s relative to the train. Ignoring air resistance, compare the description from a passenger with the description from someone beside the track.
 
 The train-frame horizontal position stays at zero. The ground-frame horizontal position advances by 20 metres each second. The vertical position and velocity are equal in both frames at every shared timestamp.
 
