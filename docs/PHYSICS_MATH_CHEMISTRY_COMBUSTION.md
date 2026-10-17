@@ -4,7 +4,7 @@
 
 **Authority:** Physics owns physical state transitions and evidence-backed models. Math owns reusable numerical primitives only when a stable, separately useful contract has emerged. Presentation may visualize results but cannot invent physical state.
 
-Related: [Physics capability catalog](PHYSICS_CAPABILITY_CATALOG.md) · [Physics/Math LUT policy](PHYSICS_MATH_LUTS.md) · [Architecture](ARCHITECTURE.md) · [Living theory](LIVING_THEORY.md).
+Related: [Element and material data architecture](ELEMENT_AND_MATERIAL_DATA_ARCHITECTURE.md) · [Physics capability catalog](PHYSICS_CAPABILITY_CATALOG.md) · [Physics/Math LUT policy](PHYSICS_MATH_LUTS.md) · [Architecture](ARCHITECTURE.md) · [Living theory](LIVING_THEORY.md).
 
 ## 1. Governing principle
 
