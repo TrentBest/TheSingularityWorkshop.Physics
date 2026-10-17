@@ -90,3 +90,24 @@ All PRs in the current work stack are closed. Do not reopen them merely to merge
 There are still 26 refs on GitHub: `development`, `master`, `main`, and 23 `work/*` refs. Final recheck found `work/axial-mechanics-current` already behind `development` and `work/axial-spring-damper` with implementation/tests/docs identical to `development` (only its roadmap is stale); both are redundant. The `work/*` refs are ready for user-reviewed deletion because their unique changes are integrated or superseded on `development`. Do not delete refs from this agent. GitHub still names `main` as the default branch; the user must switch the default to `master` in repository Settings → Branches before deleting `main`. Keep `master` stable; do not promote `development` or publish a package without explicit authorization.
 
 Current scope is intentionally honest: the physics primitives are not a general rigid-body/articulated solver; hydrodynamics is not full 3D fluid dynamics; stellar physics remains documentation only; castle-siege payloads/versus remain a documented future integration and have not been moved to Experiences.
+
+
+## Cross-repository watchlist — 2026-10-17
+
+This is a coordination addendum, not a replacement for the castle-siege implementation request above.
+
+### Singularity Studios and acoustics
+
+- WebPage owns the Singularity Studios experience, stage-plan presentation, HTML audio controls, and evidence labels. Current handoffs: [Singularity Studios WebPageLLM brief](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_WEBPAGELLM_HANDOFF.md), [SFX and acoustics brief](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_SFX_WEBPAGELLM.md), and [reusable production model](https://github.com/TrentBest/WebPage/blob/development/docs/SINGULARITY_STUDIOS_PRODUCTION_MODEL.md).
+- Gestures owns reusable, anchor-bound performer, crew, and equipment procedures. Its [Singularity Studios Gesture Plan](https://github.com/TrentBest/TheSingularityWorkshop.Gestures/blob/development/docs/SINGULARITY_STUDIOS_GESTURE_PLAN.md) is a proposal, not evidence of an implemented studio production scheduler.
+- Physics owns the physical observations and any validated acoustic source/propagation model. Current executable evidence is limited to the tested free-field observation and controlled distance sweep; both are analytical metadata, not waveform synthesis or room acoustics.
+- Current Physics evidence: [acoustic observation](docs/experiments/acoustic-observation.md), [distance sweep](docs/experiments/acoustic-distance-sweep.md), [acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md), and [living acoustic demonstration plan](docs/ACOUSTIC_LIVING_DEMO.md). The integrated Physics workflow passed at commit `49e971af7cdd79a7cb8d4de0e4b55ec261acd941` ([run 431](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38995591642)).
+- Next Physics acoustic gate: specify a bounded room-boundary representation and a first-order reflected-path model before implementing it. Declare geometry, reflection/absorption assumptions, path selection, units, validity bounds, and numerical/reference tests. Do not label a generic reverb effect or an illustrative room drawing as physical output.
+
+### Cross-repository rules
+
+- Keep the canonical physics implementation in Physics; WebPage and AnyApp consume versioned inputs/results and may render the same scenario but must not fork the numerical model.
+- Keep the studio production data and its evidence labels separate from the acoustic solver. Camera views observe one scene; they do not clone scene state.
+- Treat all current production/room-scale capacity statements as targets unless measured. Do not claim a GPU renderer, studio execution engine, room-acoustic solver, or Physics-generated audio where only an authored fixture/reference recording exists.
+- Check `development` in Physics, WebPage, Gestures, AnyApp, Visualize, and Renderer for new `PhysicsLLM` / `WebPageLLM` / domain handoffs before changing a shared contract. Append coordination decisions here; do not edit another repository's handoff on its behalf.
+- No merge to `master`, release, package publication, or deployment is authorized by this note.
