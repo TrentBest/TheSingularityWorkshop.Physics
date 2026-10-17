@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "modelId": "acoustics.free-field-point-source-observation",
+  "modelVersion": 1,
+  "status": "computed-from-physics-model",
+  "units": {
+    "position": "m",
+    "propagationDelay": "s",
+    "receivedLevel": "dB SPL",
+    "direction": "unit vector"
+  },
+  "definition": {
+    "source": {
+      "id": "studio-source",
+      "positionMeters": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "referenceLevelDbSpl": 80,
+      "referenceDistanceMeters": 1
+    },
+    "listener": {
+      "id": "studio-listener",
+      "positionMeters": {
+        "x": 3,
+        "y": 4,
+        "z": 0
+      }
+    },
+    "speedOfSoundMetersPerSecond": 343
+  },
+  "observation": {
+    "sourceId": "studio-source",
+    "listenerId": "studio-listener",
+    "distanceMeters": 5,
+    "propagationDelaySeconds": 0.014577259475218658,
+    "receivedLevelDbSpl": 66.020599913279625,
+    "directionFromListenerToSource": {
+      "x": -0.6,
+      "y": -0.8,
+      "z": 0
+    },
+    "hasDirection": true
+  },
+  "limitations": [
+    "Analytical free-field estimate; not an audio waveform.",
+    "No room reflections, absorption, occlusion, frequency response, source motion, or Doppler."
+  ]
+}
