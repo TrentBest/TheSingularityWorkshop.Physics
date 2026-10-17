@@ -85,7 +85,7 @@ var record = ProjectileExperimentRunRecord.FromResult(result);
 var json = record.ToJson();
 ```
 
-This is an ideal point-projectile experiment under constant acceleration. A separate analytical intersection capability can test its continuous path against a fixed axis-aligned target during the recorded duration. Drag, projectile radius, rotated or moving targets, impact response, and trebuchet mechanics remain unsupported. See the [projectile experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileExperimentTests.cs) and [target-intersection tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileTargetIntersectionTests.cs) for the executable acceptance surface.
+This is an ideal point-projectile experiment under constant acceleration. A separate analytical intersection capability tests its continuous path against a fixed axis-aligned target during the recorded duration, and impact diagnostics calculate incoming velocity, momentum, and kinetic energy from a confirmed hit. Drag, projectile radius, rotated or moving targets, collision response, material damage, and trebuchet mechanics remain unsupported. See the [projectile experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileExperimentTests.cs), [target-intersection tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileTargetIntersectionTests.cs), and [impact-diagnostics tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileImpactDiagnosticsTests.cs) for the executable acceptance surface.
 
 ![Physics architecture](docs/images/physics-architecture.svg)
 
