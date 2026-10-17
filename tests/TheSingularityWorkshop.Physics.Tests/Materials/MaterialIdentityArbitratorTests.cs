@@ -99,8 +99,8 @@ public sealed class MaterialIdentityArbitratorTests
         Assert.That(result.Evidence.Single().SourceFieldId, Is.EqualTo("tip.description"));
     }
 
-    private static object[] Project(IEnumerable<MaterialIdentityResolution> results) =>
-        results.Select(result => (object)new
+    private static string Project(IEnumerable<MaterialIdentityResolution> results) =>
+        System.Text.Json.JsonSerializer.Serialize(results.Select(result => new
         {
             result.PartId,
             result.Status,
@@ -115,7 +115,7 @@ public sealed class MaterialIdentityArbitratorTests
                 item.SourceBundleId,
                 item.SourceFieldId
             }).ToArray()
-        }).ToArray();
+        }).ToArray());
 
     private static MaterialIdentityResolution Find(
         IReadOnlyList<MaterialIdentityResolution> results, string partId) =>
