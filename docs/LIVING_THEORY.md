@@ -60,6 +60,7 @@ The [deterministic randomness lesson](DETERMINISTIC_RANDOMNESS.md) contrasts str
 - [Two-body thermal conduction](experiments/thermal-conduction.md): animated markers show the direction of energy transfer while temperatures, transfer energy, and accounting residual come from the serialized model result.
 - [Spring-damper](SPATIAL_DISTANCE_SPRING_DAMPER.md): the spring length and force direction animate conceptually; the image explicitly does not claim to be the solver's numerical output.
 - [Multi-rate scheduling](PROCESS_GROUP_SCHEDULING.md): separate pulses illustrate different proposed cadences; the image states that timing is illustrative, not measured runtime behavior.
+- [Deterministic randomness](DETERMINISTIC_RANDOMNESS.md): a conceptual living dataflow shows why sequential stream consumption is order-sensitive while keyed samples remain attached to explicit entity/tick/purpose inputs.
 
 These examples intentionally distinguish three categories: **model-derived living images**, **conceptual living explanations**, and **static reference diagrams**. Use the strongest category the available evidence supports, and never let a conceptual image masquerade as model-derived evidence.
 
