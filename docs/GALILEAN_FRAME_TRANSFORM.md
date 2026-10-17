@@ -8,6 +8,10 @@ A train moves steadily at 20 m/s. A passenger launches a ball straight upward at
 
 At (t=1\) s, the ball's train-frame position is ((0,0,1.5)\) m in this test fixture. The corresponding ground-frame state is at ((20,0,1.5)\) m, moving at ((20,0,8)\) m/s. The ball's vertical motion is unchanged; the ground observer also sees the train's horizontal motion.
 
+![Recorded 3D projectile trajectory reference](experiments/projectile-trajectory.svg)
+
+*Reference trajectory only; it does not yet show both frames. The paired observer visualization remains a specific next deliverable.*
+
 ## The transform
 
 For parallel axes and constant relative frame velocity (\mathbf{u}\), with the moving-frame origin at world position (\mathbf{o}_0\) at (t=0\):
