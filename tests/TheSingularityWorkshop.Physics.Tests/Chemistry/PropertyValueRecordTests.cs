@@ -14,15 +14,15 @@ public sealed class PropertyValueRecordTests
     public void KnownPropertyRequiresFiniteOrderedBoundsAndExplicitUnit()
     {
         var property = new PropertyValueRecord(
-            "material:copper",
-            "thermal.conductivity",
+            "material:test-sample",
+            "test.property",
             PropertyValueStatus.Known,
-            390d,
-            401d,
-            "W/(m·K)",
+            10d,
+            12d,
+            "test-unit",
             new PropertyConditions(TemperatureKelvin: 293.15d, Phase: "solid"),
-            2d,
-            Provenance());
+            1d,
+            Provenance(PropertyEvidenceClass.Illustrative));
 
         Assert.That(property.IsValid, Is.True);
         Assert.DoesNotThrow(property.EnsureValid);
@@ -53,15 +53,15 @@ public sealed class PropertyValueRecordTests
     public void UnavailableStatusCannotCarryNumericValues()
     {
         var property = new PropertyValueRecord(
-            "material:copper",
-            "thermal.conductivity",
+            "material:test-sample",
+            "test.property",
             PropertyValueStatus.Unknown,
             0d,
             0d,
-            "W/(m·K)",
+            "test-unit",
             new PropertyConditions(),
             null,
-            Provenance());
+            Provenance(PropertyEvidenceClass.Illustrative));
 
         Assert.That(property.IsValid, Is.False);
         Assert.Throws<ArgumentException>(property.EnsureValid);
@@ -71,15 +71,15 @@ public sealed class PropertyValueRecordTests
     public void KnownStatusRequiresBothBounds()
     {
         var property = new PropertyValueRecord(
-            "material:copper",
-            "thermal.conductivity",
+            "material:test-sample",
+            "test.property",
             PropertyValueStatus.Known,
             400d,
             null,
-            "W/(m·K)",
+            "test-unit",
             new PropertyConditions(),
             null,
-            Provenance());
+            Provenance(PropertyEvidenceClass.Illustrative));
 
         Assert.That(property.IsValid, Is.False);
     }
@@ -88,15 +88,15 @@ public sealed class PropertyValueRecordTests
     public void ReversedBoundsAreRejected()
     {
         var property = new PropertyValueRecord(
-            "material:copper",
-            "thermal.conductivity",
+            "material:test-sample",
+            "test.property",
             PropertyValueStatus.Known,
-            401d,
-            390d,
-            "W/(m·K)",
+            12d,
+            10d,
+            "test-unit",
             new PropertyConditions(),
             null,
-            Provenance());
+            Provenance(PropertyEvidenceClass.Illustrative));
 
         Assert.That(property.IsValid, Is.False);
     }
@@ -105,15 +105,15 @@ public sealed class PropertyValueRecordTests
     public void NonFiniteValuesAndInvalidConditionsAreRejected()
     {
         var nonFinite = new PropertyValueRecord(
-            "material:copper",
-            "thermal.conductivity",
+            "material:test-sample",
+            "test.property",
             PropertyValueStatus.Known,
             double.NaN,
             double.NaN,
-            "W/(m·K)",
+            "test-unit",
             new PropertyConditions(),
             null,
-            Provenance());
+            Provenance(PropertyEvidenceClass.Illustrative));
 
         var invalidConditions = nonFinite with
         {
@@ -130,7 +130,7 @@ public sealed class PropertyValueRecordTests
     public void MissingProvenanceIsRejected()
     {
         var property = new PropertyValueRecord(
-            "material:copper",
+            "material:test-sample",
             "density",
             PropertyValueStatus.Known,
             8900d,
