@@ -143,6 +143,8 @@ jobs:
           assert record['modelId'] == 'kinematics.moving-train-projectile'
           assert record['schemaVersion'] == 1
           assert len(samples) == definition['stepCount'] + 1 == 9
+          assert definition['trainFrameInitialState']['velocity']['z'] == 12
+          assert samples[-1]['groundFrameState']['position']['z'] > 0, 'Default visual trajectory should remain above the ground for the displayed interval.'
           train_velocity = definition['trainVelocityInWorld']
           origin = definition['trainOriginAtEpoch']
           for pair in samples:
