@@ -27,6 +27,7 @@ The domain map is architecture, not implementation. A first bounded lumped therm
 - [x] Implement a bounded analytical case: one-dimensional constant acceleration.
 - [x] Test analytical outcomes, repeatability, invalid inputs, and unit consistency.
 - [x] Generate a versioned JSON run record from actual experiment samples, with explicit units and repeat-serialization tests.
+- [x] Add an instructional free-fall experiment whose recorded states drive a living SVG lesson; CI checks the displayed state labels against actual C# output ([apple free-fall lesson](experiments/apple-free-fall.md)).
 - [ ] Add reference-data provenance, uncertainty/residual reporting, and an independently checkable validation record.
 
 ## Stage 1.5 — Multi-rate physical execution
