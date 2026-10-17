@@ -8,6 +8,10 @@ Model a star as a physical energy source and make the energy it emits a causal i
 
 The star model and the planet model should remain separate, composable domains. The star publishes observations such as luminosity and spectral output; orbital geometry and radiative transfer determine what reaches each planetary location; planetary material, atmosphere, ocean, and terrain models determine what happens to that energy.
 
+![Conceptual energy-flow diagram from configured stellar luminosity through distance-dependent irradiance to planetary reflection, absorption, storage, transport, and emission. This is a roadmap schematic, not solver output.](images/stellar-planetary-energy-flow.svg)
+
+*The image shows the intended causal boundary: the star supplies radiation; geometry determines incident flux; the planetary models account for where energy goes. It does not claim that a stellar or planetary energy solver is implemented.*
+
 ## The hierarchy of models
 
 ### Level 1 — Irradiation source
