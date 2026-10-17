@@ -10,6 +10,10 @@ An unobserved region still has state, history, causal relationships, and elapsed
 
 ![Universe resolution tiers](images/universe-observer-resolution.svg)
 
+![Living scale-factor illustration: one object viewed against a fixed reference as its scale changes](images/scale-factor-living.svg)
+
+Scale is one visible parameter, not a complete observer-resolution policy. Actual horizon and resolution selection must also account for observer relevance, model validity, error bounds, and state reconciliation.
+
 ## One universe, addressable cells
 
 A universe representation can be partitioned into spatial cells, hierarchical regions, or another address scheme suited to its scale. A cell is an addressable container for model state and references—not a promise that all physics fit neatly inside a cube. Long-range fields, global constraints, and cross-cell relationships must remain explicit.
