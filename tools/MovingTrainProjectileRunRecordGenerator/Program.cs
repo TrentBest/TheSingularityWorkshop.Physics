@@ -11,7 +11,7 @@ if (args.Length != 1)
 var definition = new MovingTrainProjectileExperimentDefinition(
     TrainFrameInitialState: new ProjectileState(
         Vector3d.Zero,
-        new Vector3d(0d, 0d, 8d),
+        new Vector3d(0d, 0d, 12d),
         0d),
     TrainFrameAcceleration: new Vector3d(0d, 0d, -9.81d),
     TrainVelocityInWorld: new Vector3d(20d, 0d, 0d),
