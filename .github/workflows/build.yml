@@ -49,7 +49,7 @@ jobs:
               'README links the lesson': 'docs/SCALE_FACTOR_LIVING.md' in readme,
               'spring illustration animates spring length and forces': '<animate attributeName="d"' in spring and '<animateTransform' in spring and 'equal-and-opposite' in spring_doc,
               'spring illustration is labelled conceptual': 'conceptual illustration' in spring.lower() and 'images/spring-damper-living.svg' in spring_doc,
-              'scheduling diagram has distinct moving cadence pulses': scheduling.count('<animateMotion') >= 3 and 'illustrative only' in scheduling,
+              'scheduling diagram has distinct moving cadence pulses': scheduling.count('<animateMotion') >= 3 and 'pulse timing is conceptual' in scheduling,
               'scheduling page explains pulse timing limitations': 'animation timing is illustrative' in scheduling_doc,
           }
           for name, passed in checks.items():
