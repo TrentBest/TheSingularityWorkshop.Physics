@@ -19,12 +19,42 @@
       "massKilograms": 2,
       "temperatureKelvin": 350,
       "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "specificHeatCapacityProperty": {
+        "materialId": "illustrative-solid-a",
+        "propertyId": "specific-heat-capacity",
+        "value": 500,
+        "unit": "J/(kg*K)",
+        "evidenceStatus": "illustrative",
+        "sourceId": "workshop.thermal-conduction-fixture",
+        "sourceVersion": "1",
+        "validityQuantity": "temperature",
+        "validityUnit": "K",
+        "validMinimum": 273.15,
+        "validMaximum": 373.15,
+        "validConditions": "Illustrative constant specific heat over the example temperature interval.",
+        "standardUncertainty": null
+      },
       "referenceTemperatureKelvin": 273.15
     },
     "secondInitialState": {
       "massKilograms": 2,
       "temperatureKelvin": 300,
       "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "specificHeatCapacityProperty": {
+        "materialId": "illustrative-solid-b",
+        "propertyId": "specific-heat-capacity",
+        "value": 500,
+        "unit": "J/(kg*K)",
+        "evidenceStatus": "illustrative",
+        "sourceId": "workshop.thermal-conduction-fixture",
+        "sourceVersion": "1",
+        "validityQuantity": "temperature",
+        "validityUnit": "K",
+        "validMinimum": 273.15,
+        "validMaximum": 373.15,
+        "validConditions": "Illustrative constant specific heat over the example temperature interval.",
+        "standardUncertainty": null
+      },
       "referenceTemperatureKelvin": 273.15
     },
     "thermalConductivity": {
