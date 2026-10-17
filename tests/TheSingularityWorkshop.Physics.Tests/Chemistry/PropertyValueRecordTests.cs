@@ -7,7 +7,7 @@ namespace TheSingularityWorkshop.Physics.Tests.Chemistry;
 public sealed class PropertyValueRecordTests
 {
     private static PropertyProvenance Provenance(
-        PropertyEvidenceClass evidence = PropertyEvidenceClass.Measured) =>
+        PropertyEvidenceClass evidence = PropertyEvidenceClass.Illustrative) =>
         new("fixture-dataset", "1.0", "fixture:record-1", "test-only", evidence);
 
     [Test]
@@ -36,8 +36,8 @@ public sealed class PropertyValueRecordTests
     public void UnavailablePropertyStatesDoNotRequireInventedZero(PropertyValueStatus status)
     {
         var property = new PropertyValueRecord(
-            "element:6",
-            "nuclear.half-life",
+            "subject:test",
+            "test.property",
             status,
             null,
             null,
@@ -131,14 +131,14 @@ public sealed class PropertyValueRecordTests
     {
         var property = new PropertyValueRecord(
             "material:test-sample",
-            "density",
+            "test.property",
             PropertyValueStatus.Known,
-            8900d,
-            8900d,
-            "kg/m³",
+            1d,
+            1d,
+            "test-unit",
             new PropertyConditions(),
             null,
-            new PropertyProvenance("", "1", "fixture:record", "test-only", PropertyEvidenceClass.Measured));
+            new PropertyProvenance("", "1", "fixture:record", "test-only", PropertyEvidenceClass.Illustrative));
 
         Assert.That(property.IsValid, Is.False);
     }
