@@ -137,6 +137,21 @@ jobs:
       - name: Verify committed acoustic SVG matches actual model output
         run: python3 tools/render_acoustic_observation.py /tmp/acoustic-observation.actual.json docs/experiments/acoustic-observation.svg --check
 
+      - name: Execute controlled acoustic distance sweep from the C# model
+        run: dotnet run --project tools/AcousticDistanceSweepRunRecordGenerator/AcousticDistanceSweepRunRecordGenerator.csproj --configuration Release -- /tmp/acoustic-distance-sweep.actual.json
+
+      - name: Verify committed acoustic distance-sweep record is reproducible
+        run: dotnet run --project tools/AcousticDistanceSweepRunRecordGenerator/AcousticDistanceSweepRunRecordGenerator.csproj --configuration Release -- docs/experiments/acoustic-distance-sweep.run.json --check
+
+      - name: Verify generated distance-sweep record matches committed fixture
+        run: cmp /tmp/acoustic-distance-sweep.actual.json docs/experiments/acoustic-distance-sweep.run.json
+
+      - name: Render distance-sweep SVG from actual model output
+        run: python3 tools/render_acoustic_distance_sweep.py /tmp/acoustic-distance-sweep.actual.json /tmp/acoustic-distance-sweep.actual.svg
+
+      - name: Verify committed distance-sweep SVG matches actual model output
+        run: python3 tools/render_acoustic_distance_sweep.py /tmp/acoustic-distance-sweep.actual.json docs/experiments/acoustic-distance-sweep.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
