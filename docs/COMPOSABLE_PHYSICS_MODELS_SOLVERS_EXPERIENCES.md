@@ -63,6 +63,25 @@ Workshop-internal MicroBundles can package a selected composition of model defin
 
 Do not put every domain into one giant solver or force all capabilities to load together. Keep domains independently usable and connect them through explicit exchanges of typed quantities, state, energy, momentum, mass, species, fields, and observations. Coupling must declare temporal semantics and validate conservation/residuals across the boundary.
 
+## Composition-level material discovery and physics mapping
+
+Material discovery must climb with the composition hierarchy. A material bundle should not merely label an isolated object; higher-level composition should be able to discover the material evidence, locate compatible physical knowledge, and map that knowledge back to the exact parts that need it.
+
+The intended chain is:
+
+1. **Discover providers and catalogs.** Find material identities, property evidence, model providers, and solver capabilities by stable IDs and declared contracts. A MicroBundle can contribute any of these without owning the whole world.
+2. **Declare physical composition.** An assembly names its parts and explicit parent relationships. A sword can contain a blade, guard, pommel, and grip; each part remains independently addressable. Do not infer a part hierarchy from a display name.
+3. **Arbitrate identity per part.** Resolve each part's material from evidence and provenance. Strong explicit references outrank weaker clues; equally strong conflicts stay ambiguous. Unknown explicit material IDs must not be overwritten by a weaker guess.
+4. **Map material evidence.** For a resolved `material:steel` blade, find the steel property records and their units, validity ranges, and evidence status. A copper part maps to copper records, not steel records. An unresolved or ambiguous part receives no material properties by default.
+5. **Find compatible physics.** Index models by required material properties, state variables, conditions, units, geometry, and supported regime. For example, density can support a mass calculation only when volume and the appropriate density validity conditions are available; thermal conductivity can support a conduction model only when its required assumptions and boundary/state inputs are satisfied.
+6. **Bind and validate at the higher composition level.** Assemble the compatible model/solver providers into the requested experience, retaining which part, material record, model version, source, and validity conditions justified each binding. Report missing properties, conflicts, incompatible regimes, or absent solvers instead of filling gaps with guesses.
+
+This is a discovery and mapping pipeline, not a single all-knowing arbitrator. Identity resolution answers **what material is this part declared to be?** Property lookup answers **what evidence exists about that material?** Capability matching answers **which physical models can use that evidence under these conditions?** Solver selection answers **which implementation can resolve the chosen model?** Keep those questions separate so that one layer can improve without invalidating the others.
+
+### Implemented boundary today
+
+The repository now has provenance-aware `MaterialPropertyDefinition` records, explicit `PhysicalAssemblyDescription` / part declarations, deterministic per-part `MaterialIdentityArbitrator` resolution, and `PhysicalAssemblyMaterialPropertyMapper` to map a resolved part to all matching catalog property evidence. The mapper preserves property units, validity, source/version, and evidence status; it does not combine conflicting measurements, select constitutive laws, or run a solver. The broader cross-provider search index and model/solver compatibility matcher remain future work.
+
 ## Broad physical territory to capture
 
 This is the target knowledge map. Every topic progresses through clear status levels: **mapped → explained → specified → implemented → validated → coupled**. A conceptual image or a page of equations is not equivalent to an implementation.
