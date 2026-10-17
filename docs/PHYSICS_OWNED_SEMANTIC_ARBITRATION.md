@@ -18,6 +18,7 @@ The following pieces are executable and separate by responsibility:
 - `Physics/Materials/MaterialIdentityArbitrator.cs` resolves material identity per part from caller-supplied evidence. Explicit references outrank structured declarations and weaker alias/descriptive evidence. Equally strong conflicts remain ambiguous; unknown material IDs are not silently overridden by weaker known clues. Results and evidence are deterministically ordered and retain provenance.
 - `Physics/Materials/MaterialPropertyDefinition.cs` represents a property value with units, evidence status, source/version, validity quantity/range/conditions, and optional uncertainty. It is a declaration of evidence, not a constitutive law or solver.
 - `Physics/Materials/PhysicalAssemblyMaterialPropertyMapper.cs` maps each resolved part to property records whose material ID matches exactly. Ambiguous or unresolved parts receive no properties by default; unrelated catalog entries are ignored. Results are validated and sorted deterministically. The mapper preserves property records rather than combining conflicting values or selecting a solver.
+- `Physics/Materials/MaterialPropertyRangeEvaluator.cs` compares an observed validity quantity, unit, and value with a property's declared numeric range. It reports within-range, outside-range, or incomparable; quantity and unit must match exactly. It does not convert units, interpret free-text conditions, or claim that all model assumptions are satisfied.
 
 The tests under `tests/TheSingularityWorkshop.Physics.Tests/Materials/` cover independent steel-tip / wood-shaft / unresolved-fletching identities, assembly relationship validation, rejection of evidence for undeclared parts, explicit-reference precedence, conflicts, unknown identities, deterministic ordering, provenance, and mapping property evidence to the correct parts.
 
@@ -68,7 +69,7 @@ Unknown must remain unknown. A discovered label must not be upgraded into unsupp
 
 ## Remaining executable proof
 
-The existing unit tests cover identity resolution, assembly validation, and exact-ID property mapping. The remaining end-to-end proof must demonstrate:
+The existing unit tests cover identity resolution, assembly validation, exact-ID property mapping, and explicit range checks that do not silently convert units or infer unstated conditions. The remaining end-to-end proof must demonstrate:
 
 - discovery from supported MicroBundle-exposed data and relationships;
 - host-level typed provider resolution and compatibility checks;
