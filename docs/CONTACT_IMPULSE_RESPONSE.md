@@ -12,6 +12,10 @@ where masses are in kilograms, velocity in metres per second, restitution `e` is
 
 A separating pair receives no pulling impulse. A positive separation reported only because of detector tolerance also receives no impulse. Restitution zero removes closing relative normal speed in the ideal two-body case; restitution one reverses it.
 
+## Living experiment
+
+The [contact-impulse experiment](experiments/contact-impulse.md) executes this resolver for a declared equal-mass case, checks the serialized result against a committed run record, and generates an SVG from the actual initial/final velocities and impulse. The illustration is evidence for this bounded implementation case; it is not a real-world measurement or a claim of general collision accuracy.
+
 ## Deliberate limits
 
 This is not a general collision solver. It assumes the supplied contact normal is suitable for response and treats bodies as translational point masses. It does not account for angular inertia or contact-point torque, friction/tangential impulse, positional penetration correction, contact persistence, multi-contact coupling, joints, or solver iteration. It must not be interpreted as a measured sustained normal force or as proof of support. The returned body snapshots preserve pose and angular velocity and carry the contact step/time; callers remain responsible for ordering and committing results.
