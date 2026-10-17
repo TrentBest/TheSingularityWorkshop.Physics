@@ -6,6 +6,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "manifestSchema",
     "schemaVersion",
     "lessonId",
     "title",
@@ -20,9 +21,6 @@
     "validation"
   ],
   "properties": {
-    "$schema": {
-      "type": "string"
-    },
     "schemaVersion": {
       "const": 1
     },
@@ -195,6 +193,10 @@
       "items": {
         "type": "string"
       }
+    },
+    "manifestSchema": {
+      "type": "string",
+      "minLength": 1
     }
   }
 }
