@@ -39,7 +39,7 @@ def render(record):
     return "\n".join([
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">',
         '<title id="title">Heat conduction between two lumped thermal bodies</title>',
-        f'<desc id="desc">The Physics model transfers {energy:g} joules from a body at {first_initial:g} kelvin to a body at {second_initial:g} kelvin. Final temperatures are {first_final:g} and {second_final:g} kelvin. Total sensible-energy residual is {residual:g} joules. Conductivity is {property_record["evidenceStatus"]}.</desc>',
+        f'<desc id="desc">The Physics model transfers {energy:g} joules from a body at {first_initial:g} kelvin to a body at {second_initial:g} kelvin. Final temperatures are {first_final:g} and {second_final:g} kelvin. Total sensible-energy residual is {residual:g} joules. Conductivity is {property_record["evidenceStatus"]}. Animated markers illustrate the transfer direction.</desc>',
         '<rect width="900" height="560" rx="24" fill="#f7f9fc"/>',
         '<text x="40" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#14253d">Thermal conduction: heat moves down the temperature gradient</text>',
         f'<text x="40" y="75" font-size="14" fill="#475569">Model {esc(record["modelId"])} · v{record["modelVersion"]} · deterministic C# output</text>',
@@ -53,6 +53,8 @@ def render(record):
         f'<text x="397" y="181" font-size="17" fill="#14253d">{energy:g} J →</text>',
         f'<text x="397" y="208" font-size="14" fill="#475569">G = {conductance:g} W/K</text>',
         '<path d="M 540 180 H 585" stroke="#2563a6" stroke-width="5" stroke-linecap="round"/><path d="M 585 180 l -12 -8 v 16 z" fill="#2563a6"/>',
+        '<circle r="5" fill="#c2410c"><animateMotion dur="1.6s" repeatCount="indefinite" path="M 320 180 L 355 180"/></circle>',
+        '<circle r="5" fill="#2563a6"><animateMotion dur="1.6s" repeatCount="indefinite" path="M 545 180 L 580 180"/></circle>',
         '<rect x="600" y="105" width="260" height="150" rx="16" fill="#eff6ff" stroke="#60a5fa" stroke-width="2"/>',
         '<text x="620" y="137" font-size="19" font-weight="700" fill="#1d4ed8">Body B · initially cooler</text>',
         f'<text x="620" y="170" font-size="17" fill="#14253d">{second_initial:g} K → {second_final:g} K</text>',
