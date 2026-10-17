@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "modelId": "thermodynamics.lumped-body-conduction",
+  "modelVersion": 1,
+  "status": "computed-from-physics-model",
+  "units": {
+    "temperature": "K",
+    "mass": "kg",
+    "specificHeatCapacity": "J/(kg*K)",
+    "thermalConductivity": "W/(m*K)",
+    "area": "m^2",
+    "separation": "m",
+    "duration": "s",
+    "thermalConductance": "W/K",
+    "energy": "J"
+  },
+  "definition": {
+    "firstInitialState": {
+      "massKilograms": 2,
+      "temperatureKelvin": 350,
+      "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "referenceTemperatureKelvin": 273.15
+    },
+    "secondInitialState": {
+      "massKilograms": 2,
+      "temperatureKelvin": 300,
+      "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "referenceTemperatureKelvin": 273.15
+    },
+    "thermalConductivity": {
+      "materialId": "illustrative-solid",
+      "propertyId": "thermal-conductivity",
+      "value": 10,
+      "unit": "W/(m*K)",
+      "evidenceStatus": "illustrative",
+      "sourceId": "workshop.thermal-conduction-fixture",
+      "sourceVersion": "1",
+      "validityQuantity": "temperature",
+      "validityUnit": "K",
+      "validMinimum": 273.15,
+      "validMaximum": 373.15,
+      "validConditions": "Illustrative constant conductivity over the example temperature interval.",
+      "standardUncertainty": null
+    },
+    "contactAreaSquareMeters": 1,
+    "separationMeters": 1,
+    "durationSeconds": 1
+  },
+  "result": {
+    "thermalConductanceWattsPerKelvin": 10,
+    "energyTransferredFromFirstToSecondJoules": 500,
+    "totalSensibleEnergyBeforeJoules": 103700,
+    "totalSensibleEnergyAfterJoules": 103700,
+    "energyAccountingResidualJoules": 0,
+    "finalFirst": {
+      "massKilograms": 2,
+      "temperatureKelvin": 349.5,
+      "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "referenceTemperatureKelvin": 273.15
+    },
+    "finalSecond": {
+      "massKilograms": 2,
+      "temperatureKelvin": 300.5,
+      "specificHeatCapacityJoulesPerKilogramKelvin": 500,
+      "referenceTemperatureKelvin": 273.15
+    }
+  },
+  "limitations": [
+    "Lumped bodies with constant specific heat capacity and one constant conductivity value.",
+    "Conducting area and path length are declared inputs; contact resistance and changing geometry are not modeled.",
+    "Conductivity is illustrative, not a sourced or measured value for a named real material.",
+    "Explicit interval is rejected if it would reverse the bodies' temperature ordering.",
+    "No spatial temperature gradients within either body, phase change, convection, or radiation."
+  ]
+}
