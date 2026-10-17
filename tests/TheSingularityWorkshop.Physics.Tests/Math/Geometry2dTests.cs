@@ -44,7 +44,7 @@ public sealed class Geometry2dTests
         var b = new Vector2d(7d, 3d);
         var c = new Vector2d(1d, 9d);
 
-        Assert.That(Geometry2d.Orient(a, b, c), Is.EqualTo(Orientation2d.Clockwise));
-        Assert.That(Geometry2d.Orient(b, a, c), Is.EqualTo(Orientation2d.CounterClockwise));
+        Assert.That(Geometry2d.Orient(a, b, c), Is.EqualTo(Orientation2d.CounterClockwise));
+        Assert.That(Geometry2d.Orient(b, a, c), Is.EqualTo(Orientation2d.Clockwise));
     }
 }
