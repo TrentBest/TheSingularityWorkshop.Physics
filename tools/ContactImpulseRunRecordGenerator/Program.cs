@@ -3,7 +3,7 @@ using TheSingularityWorkshop.Physics.Collision;
 using TheSingularityWorkshop.Physics.Dynamics;
 using TheSingularityWorkshop.Physics.Spatial;
 
-if (args.Length != 1)
+if (args.Length is < 1 or > 2 || (args.Length == 2 && args[1] != "--check"))
 {
     Console.Error.WriteLine("Usage: ContactImpulseRunRecordGenerator <output.json>");
     return 2;
@@ -65,7 +65,7 @@ var record = new
 var json = JsonSerializer.Serialize(record, new JsonSerializerOptions { WriteIndented = true }) + Environment.NewLine;
 var path = Path.GetFullPath(args[0]);
 Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-if (File.Exists(path) && args.Contains("--check", StringComparer.Ordinal))
+if (File.Exists(path) && args.Length == 2 && args[1] == "--check")
 {
     if (File.ReadAllText(path) != json)
     {
