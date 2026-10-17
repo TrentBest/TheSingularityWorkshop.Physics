@@ -61,6 +61,9 @@ Do not invent external measurement provenance for a purely analytical demonstrat
 
 ## Sound is an observation of physical events, not an SFX assignment
 
+![Causal theory map showing how ontology, motion, and contact branch into mechanical outcomes and acoustic observation. This is an architectural theory map, not measured simulation output.](images/acoustic-causality.svg)
+
+
 The target is a physics-based sound system, not a library of authored effects that developers must attach to every item. An object contributes its ontology and physical/material properties; a simulation derives an interaction; an acoustic model turns the event's physical excitation into sound. Presentation consumes that result but does not invent the cause.
 
 Consider a player forging a sword. The player defines the sword's identity and material characteristics, not a list of sounds. When it is swung into a hard metal surface, another blade, armor, cloth, or a compliant target, the simulation should use the actual motion and contact to determine the mechanical result. Relative velocity, contact location, impulse, deformation, damping, and fracture—where the relevant models exist—provide causal inputs to both damage and acoustic excitation. A thrust and a glancing parry should not become equivalent just because both are categorized as a “sword hit.”
