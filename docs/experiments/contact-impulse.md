@@ -49,7 +49,7 @@ dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRec
 python3 tools/render_contact_impulse.py /tmp/contact-impulse.json /tmp/contact-impulse.svg
 ```
 
-The generator calls `ContactImpulseResolver.Resolve` and serializes its output. The renderer reads that record and draws the actual initial and final X velocities and impulse magnitude. It does not solve the response again.
+The generator calls `ContactImpulseResolver.Resolve` and serializes its output. The checked-in [run record](contact-impulse.run.json) is compared byte-for-byte with fresh output in CI. The renderer reads that record and draws the actual initial and final X velocities and impulse magnitude. It does not solve the response again.
 
 ## Evidence and limits
 
