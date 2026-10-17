@@ -2,6 +2,10 @@
 
 **Status:** the Squirrel3 hash, seeded helper stream, stateless keyed sampler, and bounded uniform 1D LUT are implemented and covered by focused tests. This document distinguishes those working primitives from future math capabilities. It does not claim that a general-purpose LUT engine, GPU math backend, or separate Math MicroBundle exists.
 
+![Deterministic mathematics workflow: explicit inputs, stable keys, numerical approximation, and error checks](images/deterministic-math-workflow.svg)
+
+*Conceptual workflow diagram. Its arrows describe the evidence path; they are not simulation output or a statistical-quality claim.*
+
 ## 1. Randomness that can be replayed
 
 Simulation randomness must be reproducible, addressable, and explicit about what it does *not* guarantee. The initial random primitive is a 32-bit Squirrel3 hash. The first LUT primitive is a separate bounded uniform one-dimensional table with linear interpolation, documented in [Physics Math LUTs](PHYSICS_MATH_LUTS.md):
