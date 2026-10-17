@@ -2,6 +2,10 @@
 
 **Purpose:** define where lookup tables (LUTs) belong in the Workshop physics stack, how they complement analytical mathematics, and how Castle Siege can use them without turning approximations into hidden truth.
 
+![Lookup-table sampling and interpolation: reference curve, sampled nodes, and bounded linear segments](images/lookup-table-interpolation.svg)
+
+*Conceptual numerical diagram. The implemented `LookupTable1D` uses bounded linear interpolation; exact error depends on the table and input function.*
+
 **Status:** design contract plus one implemented numerical primitive. [`LookupTable1D`](../Physics/Math/LookupTable1D.cs) now samples a finite one-dimensional domain uniformly and performs bounded linear interpolation; focused tests compare its sine approximation against `System.Math.Sin`. This is not a general multi-dimensional LUT runtime, nor evidence that a separate Math MicroBundle exists. The exact Math MicroBundle repository/package remains to be identified before any dependency is added.
 
 Related: [Castle Siege Physics Domain](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Experiment Catalog](CASTLE_SIEGE_EXPERIMENT_CATALOG.md) · [Physics classes](PHYSICS_CLASSES.md) · [Living theory](LIVING_THEORY.md).
