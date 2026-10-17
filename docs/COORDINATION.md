@@ -324,3 +324,8 @@ The bounded acoustic room-path increment has now moved from design to code on `d
 - WebPage's [Singularity Studios page](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Pages/SingularityStudios.razor) and [SFX integration brief](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_SFX_WEBPAGELLM.md) now expose the room-path evidence with explicit non-waveform limitations.
 
 This is not room audio. The direct and reflected paths are independent estimates; no phase-aware combination, multiple reflections, frequency-dependent absorption, scattering, diffraction, transmission, occlusion, reverberation, or waveform synthesis is implemented. Continue monitoring WebPage and AnyApp handoffs for new integration requests. No publication/release/deployment or promotion to `master` is authorized.
+
+
+## 2026-10-17 — room-reflection evidence verified
+
+[Physics Build and Tests run 38996272912](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38996272912) passed at `325e9db2eb70434b923c2b56edcf6f5f19c5a6f2`. Verified steps include the focused test suite, reproducible first-order room-reflection run record, exact fixture comparison, SVG generation from actual C# output, exact committed-SVG comparison, and rendering the committed SVG against the committed run record. Subsequent commits update docs and coordination; recheck the latest development tip before final status reporting.
