@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "modelId": "acoustics.first-order-room-reflection",
+  "modelVersion": 1,
+  "status": "computed-from-physics-model",
+  "room": {
+    "id": "studio-room",
+    "minimumMeters": { "x": 0, "y": 0, "z": 0 },
+    "maximumMeters": { "x": 10, "y": 10, "z": 10 },
+    "reflectionCoefficientsPressureAmplitude": {
+      "xMin": 0,
+      "xMax": 0.5,
+      "yMin": 0,
+      "yMax": 0,
+      "zMin": 0,
+      "zMax": 0
+    }
+  },
+  "source": {
+    "id": "studio-source",
+    "positionMeters": { "x": 2, "y": 5, "z": 5 },
+    "referenceLevelDbSpl": 80,
+    "referenceDistanceMeters": 1
+  },
+  "listener": {
+    "id": "studio-listener",
+    "positionMeters": { "x": 8, "y": 7, "z": 5 }
+  },
+  "speedOfSoundMetersPerSecond": 343,
+  "directObservation": {
+    "distanceMeters": 6.324555320336759,
+    "propagationDelaySeconds": 0.01843893679398472,
+    "receivedLevelDbSpl": 63.979400086720375
+  },
+  "reflections": [
+    {
+      "surfaceId": "x-max",
+      "reflectionPointMeters": { "x": 10, "y": 6.6, "z": 5 },
+      "pathLengthMeters": 10.19803902718557,
+      "propagationDelaySeconds": 0.029731892207538108,
+      "reflectionCoefficient": 0.5,
+      "receivedLevelDbSpl": 53.809066693732575
+    }
+  ],
+  "limitations": [
+    "First-order specular path metadata only; not a pressure waveform or audible room response.",
+    "Axis-aligned rectangular room; only the maximum-X wall reflects in this controlled scenario.",
+    "Frequency-independent pressure-amplitude coefficient; no phase, interference, scattering, diffraction, transmission, occlusion, or multiple reflections.",
+    "Direct and reflected levels are separate per-path estimates and are not combined into a total listener level."
+  ]
+}
