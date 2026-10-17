@@ -55,6 +55,13 @@ The first useful vertical slice is intentionally modest: **one audible source, a
 
 The [free-field acoustic observation experiment](experiments/acoustic-observation.md) executes `FreeFieldAcoustics.Observe`, stores the source/listener inputs and computed distance, delay, direction, and received-level estimate in a versioned JSON run record, and renders an SVG from that same record. CI regenerates the record and checks both it and the SVG. This establishes an evidence-backed source-to-listener visualization; it still does not synthesize or play a Physics-generated waveform.
 
+## First bounded room-path experiment
+
+The [first-order room-reflection experiment](experiments/first-order-room-reflection.md) now extends that evidence with a 10 m axis-aligned room and one enabled wall. The C# model returns a direct free-field baseline and one valid specular reflection, including the bounce point, path length, propagation delay, and separate per-path level estimate. Its [run record](experiments/first-order-room-reflection.run.json) and [SVG](experiments/first-order-room-reflection.svg) are verified by CI against fresh model output.
+
+This is geometric reflection metadata, not room audio. The paths are not phase-aware or summed into a combined level; there is no frequency-dependent absorption, scattering, diffraction, transmission, occlusion, reverberation, or waveform synthesis. The model demonstrates a first causal step toward room-aware sound, not a completed acoustic simulator.
+
+
 ## Related work
 
 - [Acoustic world model](ACOUSTIC_WORLD_MODEL.md)
