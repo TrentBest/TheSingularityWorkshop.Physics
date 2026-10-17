@@ -41,7 +41,7 @@ def render(record):
     x1, y1 = project(sx, sy)
     x2, y2 = project(lx, ly)
     esc = lambda value: html.escape(str(value), quote=True)
-    return f\'''<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
   <title id="title">Measured free-field acoustic observation</title>
   <desc id="desc">Source and listener positions and values computed by FreeFieldAcoustics. This is propagation metadata, not generated audio.</desc>
   <rect width="720" height="420" rx="18" fill="#101923"/>
@@ -58,7 +58,7 @@ def render(record):
   <text x="390" y="396" fill="#e4edf4" font-family="sans-serif" font-size="15">Estimated received level: {level:.6g} dB SPL</text>
   <text x="28" y="396" fill="#94a6b6" font-family="sans-serif" font-size="11">Reference: {reference_level:g} dB SPL at {reference_distance:g} m · 2D projection of declared XYZ positions</text>
 </svg>
-\'''
+'''
 
 
 def main():
