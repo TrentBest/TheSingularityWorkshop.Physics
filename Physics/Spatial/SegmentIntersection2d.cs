@@ -84,6 +84,14 @@ public static partial class Geometry2dSegments
 
     private static Vector2d ConstructProperIntersection(Vector2d a, Vector2d b, Vector2d c, Vector2d d)
     {
+        // For axis-aligned crossings, the intersection coordinates are input coordinates themselves.
+        // Reuse them directly: normalizing every endpoint together can erase a tiny segment next to
+        // an enormous one, even though the crossing is exactly representable.
+        if (a.Y == b.Y && c.X == d.X)
+            return new Vector2d(c.X, a.Y);
+        if (c.Y == d.Y && a.X == b.X)
+            return new Vector2d(a.X, c.Y);
+
         double scale = MaxAbs(a.X, a.Y, b.X, b.Y, c.X, c.Y, d.X, d.Y);
         if (scale == 0d || !double.IsFinite(scale))
             throw new ArithmeticException("Cannot scale segment coordinates for intersection construction.");
