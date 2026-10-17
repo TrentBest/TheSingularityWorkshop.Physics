@@ -40,6 +40,14 @@ The normal velocity updates are:
 
 So both X velocities become zero. This does **not** mean the bodies have been moved apart, that all motion is solved, or that all kinetic energy has been modeled as heat. The resolver preserves pose and angular velocity, does not advance time, and does not model friction, rotational inertia, tangential impulse, persistent contacts, multiple-contact coupling, or material deformation.
 
+## What this result does—and does not—teach
+
+**Prediction:** if the bodies have equal mass and approach at equal and opposite speeds, what impulse is required to stop their relative normal motion? The equation answers this without advancing the clock: each body receives an equal-magnitude, opposite-direction impulse.
+
+**Misconception to avoid:** zero final normal velocity does not mean the model has explained where the initial kinetic energy went. A restitution-zero response is an idealized inelastic velocity rule. This resolver does not convert the kinetic-energy difference into heat, sound, fracture, or deformation; those require explicit, coupled models and an energy-accounting contract. Likewise, the drawing shows velocity arrows, not body geometry or separation correction.
+
+A useful next experiment would compare restitution values while reporting both momentum and kinetic-energy changes. It should not label the energy difference as heat unless a thermal/material model actually receives that energy.
+
 ## Reproduce the picture
 
 From the repository root:
