@@ -73,13 +73,15 @@ public sealed class SegmentIntersection2dTests
     }
 
     [Test]
-    public void Intersect_ExtremeMixedScaleCrossingReportsUnresolvableConstruction()
+    public void Intersect_ExtremeMixedScaleAxisAlignedCrossingReturnsExactRepresentablePoint()
     {
-        // The exact-sign predicate identifies this as a proper crossing at (0, 0), but the
-        // current all-coordinate normalization underflows the tiny segment to zero length.
-        // Fail explicitly rather than fabricate a coordinate; a future constructor can improve this.
-        Assert.Throws<System.ArithmeticException>(() => Intersect(
-            (-1e308, 0), (1e308, 0), (0, -1e-300), (0, 1e-300)));
+        // The shared-scale general path would erase the tiny vertical segment. Since this is an
+        // axis-aligned crossing, the intersection can instead reuse x from the vertical segment
+        // and y from the horizontal segment without numerical construction.
+        var result = Intersect((-1e308, 0), (1e308, 0), (0, -1e-300), (0, 1e-300));
+
+        Assert.That(result.Kind, Is.EqualTo(SegmentIntersectionKind2d.ProperIntersection));
+        Assert.That(result.Point, Is.EqualTo(new Vector2d(0, 0)));
     }
 
     [Test]
