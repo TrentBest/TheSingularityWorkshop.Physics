@@ -78,7 +78,7 @@ var json = runRecord.ToJson();
 // 20 completed steps, 21 samples, 2 seconds of logical time.
 ```
 
-This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. See the [experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationExperimentTests.cs) and [run-record tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationRunRecordTests.cs) for the executable acceptance surface. The run-record format is an initial schema; broad source provenance, uncertainty analysis, the ramp experiment, and coupled models remain future work.
+This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. See the [experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationExperimentTests.cs) and [run-record tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationRunRecordTests.cs) for the executable acceptance surface. The run-record format is an initial schema; broad source provenance, uncertainty analysis, the ramp experiment, and coupled models remain future work. A proposed cross-domain [run-record envelope](docs/PHYSICS_RUN_RECORD_CONTRACT.md) now has an executable validator and a [catalog generated from acoustic, room-reflection, and coupled-energy records](docs/experiments/run-record-catalog.md); this demonstrates shared discovery metadata, not a universal physics result schema.
 
 ### 3D projectile experiment
 
