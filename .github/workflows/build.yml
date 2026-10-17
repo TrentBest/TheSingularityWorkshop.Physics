@@ -31,6 +31,13 @@ jobs:
           lesson = Path('docs/SCALE_FACTOR_LIVING.md').read_text(encoding='utf-8')
           theory = Path('docs/LIVING_THEORY.md').read_text(encoding='utf-8')
           readme = Path('README.md').read_text(encoding='utf-8')
+          spring = Path('docs/images/spring-damper-living.svg').read_text(encoding='utf-8')
+          spring_doc = Path('docs/SPATIAL_DISTANCE_SPRING_DAMPER.md').read_text(encoding='utf-8')
+          scheduling = Path('docs/images/physics-process-group-scheduling.svg').read_text(encoding='utf-8')
+          scheduling_doc = Path('docs/PROCESS_GROUP_SCHEDULING.md').read_text(encoding='utf-8')
+          import xml.etree.ElementTree as ET
+          for image_path in ('docs/images/scale-factor-living.svg', 'docs/images/spring-damper-living.svg', 'docs/images/physics-process-group-scheduling.svg'):
+              ET.parse(image_path)
           checks = {
               'accessible SVG title': '<title id="title">' in svg,
               'accessible SVG description': '<desc id="desc">' in svg,
@@ -40,6 +47,10 @@ jobs:
               'lesson embeds the image': 'images/scale-factor-living.svg' in lesson,
               'living theory sets the rule': 'A living-image rule for every explanation' in theory,
               'README links the lesson': 'docs/SCALE_FACTOR_LIVING.md' in readme,
+              'spring illustration animates spring length and forces': '<animate attributeName="d"' in spring and '<animateTransform' in spring and 'equal-and-opposite' in spring_doc,
+              'spring illustration is labelled conceptual': 'conceptual illustration' in spring.lower() and 'images/spring-damper-living.svg' in spring_doc,
+              'scheduling diagram has distinct moving cadence pulses': scheduling.count('<animateMotion') >= 3 and 'illustrative only' in scheduling,
+              'scheduling page explains pulse timing limitations': 'animation timing is illustrative' in scheduling_doc,
           }
           for name, passed in checks.items():
               print(f'{"PASS" if passed else "FAIL"}: {name}')
