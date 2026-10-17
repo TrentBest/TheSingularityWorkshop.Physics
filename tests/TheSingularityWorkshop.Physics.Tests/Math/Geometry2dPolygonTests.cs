@@ -75,6 +75,27 @@ public sealed class Geometry2dPolygonTests
             Is.EqualTo(PointPolygonRelation2d.Outside));
     }
 
+
+    [Test]
+    public void LocatePoint_HandlesRepeatedClosingVertexAndRayThroughVertices()
+    {
+        Vector2d[] closedSquare =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(0, 0)
+        };
+
+        // The horizontal ray shares a y-coordinate with two polygon vertices.
+        // Crossing-count rules must not double-count those vertices.
+        Assert.That(Geometry2dPolygon.LocatePoint(closedSquare, new Vector2d(2, 2)),
+            Is.EqualTo(PointPolygonRelation2d.Inside));
+        Assert.That(Geometry2dPolygon.LocatePoint(closedSquare, new Vector2d(-1, 0)),
+            Is.EqualTo(PointPolygonRelation2d.Outside));
+        Assert.That(Geometry2dPolygon.LocatePoint(closedSquare, new Vector2d(2, 0)),
+            Is.EqualTo(PointPolygonRelation2d.Boundary));
+        Assert.That(Geometry2dPolygon.LocatePoint(closedSquare, new Vector2d(4, 2)),
+            Is.EqualTo(PointPolygonRelation2d.Boundary));
+    }
+
     [Test]
     public void LocatePoint_RejectsNullAndTooFewVertices()
     {
