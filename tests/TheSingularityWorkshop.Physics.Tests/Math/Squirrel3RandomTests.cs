@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using TheSingularityWorkshop.Physics.Math;
+using TheSingularityWorkshop.Physics.Numerics;
 
-namespace TheSingularityWorkshop.Physics.Tests.Math;
+namespace TheSingularityWorkshop.Physics.Tests.Numerics;
 
 [TestFixture]
 public sealed class Squirrel3RandomTests
