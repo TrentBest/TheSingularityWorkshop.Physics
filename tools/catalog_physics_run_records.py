@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a small cross-domain index using only the shared run-record envelope.
+"""Build a small cross-domain index using the shared run-record envelope.
 
 Domain payloads are named and linked, never normalized or rewritten.
 """
@@ -9,10 +9,14 @@ import argparse
 import json
 from pathlib import Path
 
-PAYLOAD_FIELDS = (
-    "result", "samples", "electricalObservation", "directObservation",
-    "reflections", "observation", "impacts", "contacts",
-)
+# Keep this aligned with the inspector's shared/recommended envelope boundary.
+# Anything outside it remains model-owned payload, including legacy top-level
+# inputs that have not been grouped under `definition`.
+ENVELOPE_FIELDS = {
+    "schemaVersion", "modelId", "modelVersion", "status", "units", "definition",
+    "logicalTime", "provenance", "validation", "runId", "coordinateConvention",
+    "assumptions", "limitations",
+}
 
 
 def load_record(path: Path) -> dict:
@@ -22,9 +26,9 @@ def load_record(path: Path) -> dict:
     for key in ("schemaVersion", "modelId", "modelVersion", "status", "limitations"):
         if key not in record:
             raise ValueError(f"{path}: missing envelope field {key!r}")
-    payloads = [key for key in PAYLOAD_FIELDS if key in record]
+    payloads = [key for key in record if key not in ENVELOPE_FIELDS]
     if not payloads:
-        raise ValueError(f"{path}: no recognized domain payload")
+        raise ValueError(f"{path}: no domain payload fields outside the shared envelope")
     if not isinstance(record["limitations"], list):
         raise ValueError(f"{path}: limitations must be an array")
     return {"path": path, "record": record, "payloads": payloads}
@@ -35,7 +39,7 @@ def render(entries: list[dict]) -> str:
         "# Physics run-record catalog",
         "",
         "Generated from checked-in run records using the shared envelope only. "
-        "Domain payloads remain owned by their models.",
+        "Domain payloads remain owned by their models, including legacy top-level inputs.",
         "",
         "| Model | Version | Status | Domain payload fields | Unit keys | Limitations |",
         "|---|---:|---|---|---|---:|",
@@ -56,9 +60,9 @@ def render(entries: list[dict]) -> str:
     lines.extend([
         "",
         "This index does not claim that records share a physical result schema. "
-        "It proves only that a consumer can discover model identity, status, "
-        "payload boundaries, units when supplied, and limitations through the "
-        "common envelope.",
+        "It proves only that a consumer can discover model identity, status, all "
+        "model-owned payload fields, units when supplied, and limitations through "
+        "the common envelope boundary.",
         "",
     ])
     return "\n".join(lines)
