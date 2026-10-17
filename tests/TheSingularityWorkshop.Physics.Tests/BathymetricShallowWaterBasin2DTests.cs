@@ -196,6 +196,57 @@ public sealed class BathymetricShallowWaterBasin2DTests
     }
 
     [Test]
+    public void ApplyRainfall_AddsCellDepthAndConservesExistingWaterMomentumAndTime()
+    {
+        var basin = new BathymetricShallowWaterBasin2D(
+            2, 2, 2d, 3d, 0.005d,
+            new[] { 0.2d, 0d, 0.1d, 0d },
+            new[] { 0d, 0.2d, 0d, 0.2d });
+        var initialVolume = basin.WaterVolume;
+        var initialTime = basin.SimulationTime;
+        var rain = new RainfallRateField2D(2, 2, new[] { 0.001d, 0.002d, 0d, 0.004d });
+
+        basin.ApplyRainfall(rain, 10d);
+
+        Assert.That(basin.WaterVolume, Is.EqualTo(initialVolume + (0.01d + 0.02d + 0d + 0.04d) * 6d).Within(1e-12));
+        Assert.That(basin.SampleDepth(0, 0), Is.EqualTo(0.21d).Within(1e-12));
+        Assert.That(basin.SampleDepth(1, 0), Is.EqualTo(0.02d).Within(1e-12), "Rain should wet a previously dry cell.");
+        Assert.That(basin.SampleDepth(0, 1), Is.EqualTo(0.1d));
+        Assert.That(basin.SampleDepth(1, 1), Is.EqualTo(0.04d).Within(1e-12));
+        Assert.That(basin.SimulationTime, Is.EqualTo(initialTime));
+        Assert.That(basin.StepCount, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void ApplyRainfall_RejectsMismatchedGridWithoutChangingState()
+    {
+        var basin = new BathymetricShallowWaterBasin2D(
+            2, 2, 1d, 1d, 0.01d, new[] { 0.1d, 0.1d, 0.1d, 0.1d },
+            new[] { 0d, 0d, 0d, 0d });
+        var before = basin.SnapshotDepth();
+
+        Assert.Throws<ArgumentException>(() => basin.ApplyRainfall(
+            new RainfallRateField2D(1, 1, new[] { 0.001d }), 1d));
+
+        Assert.That(basin.SnapshotDepth(), Is.EqualTo(before));
+    }
+
+    [Test]
+    public void ApplyRainfall_RejectsCflViolationWithoutChangingState()
+    {
+        var basin = new BathymetricShallowWaterBasin2D(
+            2, 2, 1d, 1d, 0.1d, new[] { 0.01d, 0.01d, 0.01d, 0.01d },
+            new[] { 0d, 0d, 0d, 0d });
+        var before = basin.SnapshotDepth();
+        var rain = new RainfallRateField2D(2, 2, new[] { 100d, 100d, 100d, 100d });
+
+        Assert.Throws<InvalidOperationException>(() => basin.ApplyRainfall(rain, 1d));
+
+        Assert.That(basin.SnapshotDepth(), Is.EqualTo(before));
+        Assert.That(basin.StepCount, Is.EqualTo(0));
+    }
+
+    [Test]
     public void Constructor_RejectsNonFiniteBedElevation()
     {
         Assert.Throws<ArgumentException>(() => new BathymetricShallowWaterBasin2D(
