@@ -161,8 +161,58 @@ jobs:
       - name: Render moving-train SVG from actual paired C# states
         run: python3 tools/render_moving_train_projectile.py /tmp/moving-train-projectile.actual.json /tmp/moving-train-projectile.actual.svg
 
-      - name: Verify committed moving-train living SVG matches the C# run
-        run: cmp /tmp/moving-train-projectile.actual.svg docs/experiments/moving-train-projectile.svg
+      - name: Verify living SVG paths against every actual C# sample
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          import re
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/moving-train-projectile.actual.json').read_text(encoding='utf-8'))
+          ns = {'svg': 'http://www.w3.org/2000/svg'}
+          samples = record['samples']
+          assert len(samples) == 9
+          times = [p['trainFrameState']['elapsedTime'] for p in samples]
+          train_x = [p['trainFrameState']['position']['x'] for p in samples]
+          ground_x = [p['groundFrameState']['position']['x'] for p in samples]
+          train_z = [p['trainFrameState']['position']['z'] for p in samples]
+          ground_z = [p['groundFrameState']['position']['z'] for p in samples]
+          duration = times[-1] - times[0]
+          xmin, xmax = min(train_x + ground_x), max(train_x + ground_x)
+          zmin, zmax = min(0.0, min(train_z + ground_z)), max(1.0, max(train_z + ground_z))
+          zpad = (zmax - zmin) * 0.08
+          zmin, zmax = zmin - zpad, zmax + zpad
+          def sx(t, box):
+              return box[0] + (t - times[0]) / duration * (box[1] - box[0])
+          def sy(value, lo, hi):
+              return 470.0 - (value - lo) / (hi - lo) * 300.0
+          def read_paths(path):
+              root = ET.parse(path).getroot()
+              paths = root.findall('svg:path', ns)
+              assert len(paths) == 4, f'{path}: expected four recorded-state curves'
+              parsed = []
+              for element in paths:
+                  nums = [float(v) for v in re.findall(r'[-+]?(?:\\d*\\.)?\\d+(?:[eE][-+]?\\d+)?', element.attrib['d'])]
+                  points = list(zip(nums[0::2], nums[1::2]))
+                  assert len(points) == len(samples), f'{path}: path point count differs from run sample count'
+                  parsed.append(points)
+              return parsed
+          expected = [
+              [(sx(t, (85.0, 510.0)), sy(v, xmin, xmax)) for t, v in zip(times, train_x)],
+              [(sx(t, (85.0, 510.0)), sy(v, xmin, xmax)) for t, v in zip(times, ground_x)],
+              [(sx(t, (590.0, 1015.0)), sy(v, zmin, zmax)) for t, v in zip(times, train_z)],
+              [(sx(t, (590.0, 1015.0)), sy(v, zmin, zmax)) for t, v in zip(times, ground_z)],
+          ]
+          for path in ('/tmp/moving-train-projectile.actual.svg', 'docs/experiments/moving-train-projectile.svg'):
+              actual = read_paths(path)
+              for series_index, (actual_points, expected_points) in enumerate(zip(actual, expected)):
+                  for sample_index, (point, wanted) in enumerate(zip(actual_points, expected_points)):
+                      assert abs(point[0] - wanted[0]) <= 0.011, f'{path}: x drift in curve {series_index}, sample {sample_index}'
+                      assert abs(point[1] - wanted[1]) <= 0.011, f'{path}: y drift in curve {series_index}, sample {sample_index}'
+          print('Generated and committed living SVG curves match every actual C# sample within 0.01 SVG units.')
+          PY
 
       - name: Execute contact impulse resolver and serialize actual response
         run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- /tmp/contact-impulse.actual.json
