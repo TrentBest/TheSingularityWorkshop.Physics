@@ -42,7 +42,7 @@ def render(entries: list[dict]) -> str:
     ]
     for entry in entries:
         record = entry["record"]
-        relpath = entry["path"].as_posix()
+        relpath = entry["path"].name
         model_id = record["modelId"]
         version = record["modelVersion"]
         status = record["status"]
