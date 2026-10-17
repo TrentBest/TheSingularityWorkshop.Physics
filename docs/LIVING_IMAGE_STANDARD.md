@@ -33,13 +33,16 @@ Do not force an image into a page when it adds no explanatory value. Prefer a cl
 - Keep SVG/DOM/rendering dependencies outside the Physics core assembly.
 - Link the model, test, run record, and renderer so a reader can reproduce the result.
 
-## Current priorities
+## Current coverage and remaining priorities
 
-- **Paired moving-train projectile:** the comparison image now exists as an analytical reference graphic. Replace its manually maintained coordinates with output rendered from the actual paired C# run record and have CI verify every plotted point.
+- **Scale factor:** a conceptual living image now changes the object smoothly from 0.5× to 2× and advances the numeric label through intermediate values. It is a property illustration, not solver output.
+- **Paired moving-train projectile:** the renderer consumes the actual paired C# run record; animated markers follow the plotted train/ground paths, and CI checks all four plotted curves against every recorded sample within SVG rounding tolerance.
+- **Thermal conduction:** the displayed temperatures, 500 J transfer, and energy residual come from the actual run record. Animated markers show transfer direction; CI reruns the renderer and checks the committed SVG.
+- **Spring-damper and process scheduling:** dedicated conceptual animations show spring compression/extension and distinct cadence pulses. Both disclose that they are illustrations, not numerical solver output or measured scheduler timing.
 - **Hydrodynamics:** keep conceptual state diagrams separate from future solver-backed basin/terrain field images. Add living snapshots as model runs become serializable.
 - **Geology:** the volcanic-deposition schematic explains the current prescribed-volume model; future erosion, tectonics, and stratigraphy images must come from bounded models rather than invented geological output.
 - **Math/LUTs:** the interpolation diagram is conceptual. Add generated error plots and convergence checks tied to actual table fixtures when those test outputs are exposed.
-- **Domain coverage:** use the capability catalog and learning path to expose both existing visuals and missing image/model pairs. The catalog must distinguish implemented visuals from concepts and roadmap.
+- **Domain coverage:** continue auditing every theory, capability, and experiment page. Where a living image would clarify a concept, embed it inline; where it cannot yet be honestly built, record the exact missing model/data/rendering dependency rather than silently leaving the page text-only.
 
 This policy is an ongoing repository-wide documentation requirement, not a claim that every domain already has a working simulator or a run-backed image.
 
