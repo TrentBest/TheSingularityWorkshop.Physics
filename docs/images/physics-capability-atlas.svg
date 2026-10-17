@@ -44,10 +44,10 @@
 <path class="arrow" d="M458 592 V620 H310 V644"/>
 <path class="arrow" d="M742 592 V620 H890 V644"/>
 <rect x="40" y="644" width="530" height="116" rx="12" class="bridge"/>
-<text x="62" y="672" class="tag amber">P1 · BRIDGE + RUN EVIDENCE ADDED; CI PENDING</text>
+<text x="62" y="672" class="tag amber">P1 · BRIDGE + RUN EVIDENCE VERIFIED</text>
 <text x="62" y="699" class="h2">Electrical power → thermal energy</text>
 <text x="62" y="723" class="body">Declare coupling fraction + Δt; check E = PΔt</text>
-<text x="62" y="744" class="small">Tests passed; JSON + SVG added; consistency CI pending</text>
+<text x="62" y="744" class="small">Tests, run-record, SVG checks and package build passed</text>
 <rect x="590" y="644" width="570" height="116" rx="12" class="planned"/>
 <text x="612" y="672" class="tag">NEXT BRIDGES</text>
 <text x="612" y="699" class="h2">Material properties · impact → response · fluid ↔ body</text>
