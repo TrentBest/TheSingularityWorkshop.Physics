@@ -37,10 +37,12 @@ jobs:
           record = json.loads(Path('/tmp/projectile-trajectory.custom.json').read_text(encoding='utf-8'))
           definition = record['definition']
           samples = record['samples']
+          velocity = definition.get('initialState', {}).get('velocity', {})
+          acceleration = definition.get('acceleration', {})
           observed = {
               'deltaTime': definition.get('deltaTime'),
-              'initialVelocity': definition.get('initialState', {}).get('velocity'),
-              'acceleration': definition.get('acceleration'),
+              'initialVelocity': {key: velocity.get(key) for key in ('x', 'y', 'z')},
+              'acceleration': {key: acceleration.get(key) for key in ('x', 'y', 'z')},
               'sampleCount': len(samples),
               'finalElapsedTime': samples[-1].get('elapsedTime') if samples else None,
           }
