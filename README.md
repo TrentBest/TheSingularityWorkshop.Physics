@@ -133,6 +133,7 @@ This is an ideal point-projectile experiment under constant acceleration. A sepa
 - [Hydrodynamics: shallow-water basin and bathymetry](docs/HYDRODYNAMICS_SHALLOW_WATER_2D.md) — conservative shallow-water fluxes, terrain-aware reconstruction, wet-dry shoreline support, and current numerical limits
 - [Thermodynamics: first bounded primitive](docs/THERMODYNAMICS_FIRST_PRIMITIVE.md) — lumped thermal state, sensible energy, assumptions, and limits
 - [Physics capability catalog](docs/PHYSICS_CAPABILITY_CATALOG.md) — implemented source entry points, model scope, limits, and contribution checklist
+- [Physics gap register](docs/PHYSICS_GAP_REGISTER.md) — evidence-based audit of missing cross-domain bridges, priorities, and acceptance gates; includes the [capability atlas SVG](docs/images/physics-capability-atlas.svg)
 - [Numerical validation playbook](docs/NUMERICAL_VALIDATION.md) — analytical checks, conservation residuals, convergence, determinism, and evidence gates
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
 - [Physics ontology map](docs/images/physics-ontology-map.svg) — visual guide to composable domains
