@@ -112,3 +112,15 @@ This is a coordination addendum, not a replacement for the castle-siege implemen
 - Treat all current production/room-scale capacity statements as targets unless measured. Do not claim a GPU renderer, studio execution engine, room-acoustic solver, or Physics-generated audio where only an authored fixture/reference recording exists.
 - Check `development` in Physics, WebPage, Gestures, AnyApp, Visualize, and Renderer for new `PhysicsLLM` / `WebPageLLM` / domain handoffs before changing a shared contract. Append coordination decisions here; do not edit another repository's handoff on its behalf.
 - No merge to `master`, release, package publication, or deployment is authorized by this note.
+
+
+## 2026-10-17 — first-order room reflection increment
+
+Implemented on `development`:
+- `AcousticRoomBox`: axis-aligned finite room bounds and six per-wall pressure-amplitude reflection coefficients.
+- `FirstOrderRoomReflections.Observe`: image-source construction for first-order specular paths, rejecting source/listener positions outside or on the room boundary and excluding edge/corner hits.
+- Focused tests for a known bounce point, path length, delay, per-path SPL estimate, deterministic wall ordering, and invalid inputs.
+- Reproducible scenario: [run record](docs/experiments/first-order-room-reflection.run.json), [experiment notes](docs/experiments/first-order-room-reflection.md), and [SVG](docs/experiments/first-order-room-reflection.svg). The generator serializes current C# output; the SVG renderer uses that record, and CI compares the artifacts.
+- WebPage's Singularity Studios page and SFX handoff now link to this evidence. AnyApp's [desktop consumer brief](https://github.com/TrentBest/AnyApp/blob/development/docs/integrations/SINGULARITY_STUDIOS_ANYAPP_HANDOFF.md) remains the desktop counterpart and should consume the same production data rather than fork the Physics calculation.
+
+**Limitations remain explicit:** this is path metadata, not a waveform or room response. Direct and reflected levels are separate; there is no phase/interference, frequency-dependent absorption, scattering, diffraction, transmission, occlusion, multiple reflection, reverberation, or material-driven sound generation. Verify the newest Physics CI run before calling this increment green. Next, only after the reproducible record/SVG checks pass, consider a second reflection order or a frequency-banded material contract; do not combine path levels without a declared signal/energy model.
