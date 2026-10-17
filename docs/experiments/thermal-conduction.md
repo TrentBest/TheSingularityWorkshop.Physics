@@ -2,7 +2,9 @@
 
 This experiment exercises a new causal thermal primitive: two lumped bodies exchange energy according to a declared conductivity, effective area, path length, and timestep.
 
-![Thermal conduction between two lumped bodies, rendered from the actual run record](thermal-conduction.svg)
+![Living thermal-conduction image: animated markers follow the computed heat-transfer direction between two bodies; values and energy accounting come from the actual run record](thermal-conduction.svg)
+
+The animated markers make the transfer direction visible. The temperatures and 500 J transfer are computed outputs from this declared run; the animation is a presentation of that result, not a second thermal solver.
 
 ## Declared case and computed result
 
