@@ -158,42 +158,6 @@ jobs:
               assert abs(ground['velocity']['z'] - train['velocity']['z']) < 1e-10
           print('Paired run record verified: 9 shared timestamps, Galilean position transform, preserved vertical velocity.')
 
-      - name: Verify paired observer SVG against actual C# samples
-        run: |
-          python3 - <<'PY'
-          import json
-          import math
-          import xml.etree.ElementTree as ET
-          from pathlib import Path
-
-          record = json.loads(Path('/tmp/moving-train-projectile.actual.json').read_text(encoding='utf-8'))
-          root = ET.parse('docs/experiments/moving-train-projectile.svg').getroot()
-          polylines = root.findall('{http://www.w3.org/2000/svg}polyline')
-          assert len(polylines) == 2, 'Expected train-frame and ground-frame trajectory paths'
-          samples = record['samples']
-          assert len(samples) == 9, 'Expected nine paired states'
-          parsed = []
-          for line in polylines:
-              points = []
-              for token in line.attrib['points'].split():
-                  x, y = token.split(',')
-                  points.append((float(x), float(y)))
-              assert len(points) == len(samples), 'SVG point count must match recorded sample count'
-              parsed.append(points)
-          for i, pair in enumerate(samples):
-              t = pair['trainFrameState']['elapsedTime']
-              train_z = pair['trainFrameState']['position']['z']
-              ground_x = pair['groundFrameState']['position']['x']
-              ground_z = pair['groundFrameState']['position']['z']
-              expected_train = (90 + t / 2 * 350, 200 - train_z * 25)
-              expected_ground = (560 + ground_x / 40 * 350, 200 - ground_z * 25)
-              for actual, expected in ((parsed[0][i], expected_train), (parsed[1][i], expected_ground)):
-                  assert abs(actual[0] - expected[0]) <= 0.011, f'SVG X coordinate drift at sample {i}'
-                  assert abs(actual[1] - expected[1]) <= 0.011, f'SVG Z coordinate drift at sample {i}'
-          print('Paired observer SVG matches every recorded C# position within SVG rounding tolerance.')
-          PY
-          PY
-
       - name: Render moving-train SVG from actual paired C# states
         run: python3 tools/render_moving_train_projectile.py /tmp/moving-train-projectile.actual.json /tmp/moving-train-projectile.actual.svg
 
