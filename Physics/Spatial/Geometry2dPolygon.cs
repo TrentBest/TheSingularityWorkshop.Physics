@@ -52,6 +52,72 @@ public static class Geometry2dPolygon
             : PointPolygonRelation2d.Inside;
     }
 
+    /// <summary>Determines whether the vertices describe a simple closed polygon boundary.</summary>
+    /// <param name="vertices">Vertices in boundary order; the first vertex may optionally be repeated at the end.</param>
+    /// <returns>
+    /// True when the boundary has at least three distinct vertices, no zero-length edges, and no
+    /// intersections except the shared endpoints of adjacent edges; otherwise false.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">The vertex collection is null.</exception>
+    /// <remarks>
+    /// The check is O(n²), uses exact represented-coordinate segment predicates, and does not apply
+    /// a proximity tolerance. Non-adjacent touches are rejected as well as crossings and overlaps.
+    /// </remarks>
+    public static bool IsSimple(IReadOnlyList<Vector2d> vertices)
+    {
+        if (vertices is null)
+            throw new ArgumentNullException(nameof(vertices));
+
+        int count = vertices.Count;
+        if (count > 1 && vertices[count - 1] == vertices[0])
+            count--;
+
+        if (count < 3)
+            return false;
+
+        // Repeated vertices imply a zero-length edge or a non-adjacent boundary touch.
+        for (int i = 0; i < count; i++)
+        {
+            Vector2d current = vertices[i];
+            Vector2d next = vertices[(i + 1) % count];
+            if (current == next)
+                return false;
+
+            for (int j = i + 1; j < count; j++)
+            {
+                if (current == vertices[j])
+                    return false;
+            }
+        }
+
+        // Every edge pair must be disjoint unless the edges are adjacent and meet only
+        // at their shared endpoint. Adjacent collinear backtracking is an overlap, not simple.
+        for (int i = 0; i < count; i++)
+        {
+            Vector2d a = vertices[i];
+            Vector2d b = vertices[(i + 1) % count];
+
+            for (int j = i + 1; j < count; j++)
+            {
+                bool adjacent = j == i + 1 || (i == 0 && j == count - 1);
+                SegmentIntersectionKind2d kind = Geometry2dSegments.ClassifyIntersection(
+                    a, b, vertices[j], vertices[(j + 1) % count]);
+
+                if (adjacent)
+                {
+                    if (kind != SegmentIntersectionKind2d.EndpointTouch)
+                        return false;
+                }
+                else if (kind != SegmentIntersectionKind2d.Disjoint)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private static bool IsOnClosedSegment(Vector2d point, Vector2d a, Vector2d b) =>
         Geometry2d.Orient(a, b, point) == Orientation2d.Collinear &&
         point.X >= Math.Min(a.X, b.X) && point.X <= Math.Max(a.X, b.X) &&
