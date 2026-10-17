@@ -5,17 +5,13 @@
     <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#dbe3ed" stroke-width="1"/></pattern>
     <style>
       text { font-family: Inter, Segoe UI, Arial, sans-serif; }
-      .half-label { animation: half-label 4s ease-in-out infinite; }
-      .double-label { animation: double-label 4s ease-in-out infinite; }
-      .scaled-object { transform-box: fill-box; transform-origin: center; animation: scale-object 4s ease-in-out infinite; }
+      .scaled-object { transform-box: fill-box; transform-origin: center; animation: scale-object 4s linear infinite; }
       @keyframes scale-object { 0%, 100% { transform: scale(.5); } 50% { transform: scale(2); } }
-      @keyframes half-label { 0%, 46% { opacity: 1; } 50%, 96% { opacity: 0; } 100% { opacity: 1; } }
-      @keyframes double-label { 0%, 46% { opacity: 0; } 50%, 96% { opacity: 1; } 100% { opacity: 0; } }
       @media (prefers-reduced-motion: reduce) {
-        .scaled-object, .half-label, .double-label { animation: none; }
-        .scaled-object { transform: scale(1); }
-        .half-label, .double-label { opacity: 0; }
-        .half-label { opacity: 1; }
+        .scaled-object { animation: none; transform: scale(1); }
+        .value-label animate { display: none; }
+        .value-label { display: none; }
+        .value-label.reference { display: block; }
       }
     </style>
   </defs>
@@ -34,8 +30,17 @@
   <text x="355" y="475" fill="#475569" font-size="14" text-anchor="middle">Dashed square = reference scale 1×</text>
   <rect x="700" y="120" width="255" height="310" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
   <text x="730" y="158" fill="#475569" font-size="14" font-weight="700" letter-spacing="1">CURRENT SCALE</text>
-  <text class="half-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">0.5×</text>
-  <text class="double-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">2×</text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">0.5×<animate attributeName="opacity" values="1;0;1;1" keyTimes="0;0.05;0.95;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">0.65×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.05;0.10;0.45;0.50;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">0.8×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.10;0.15;0.40;0.45;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">0.95×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.15;0.20;0.35;0.40;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">1.1×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.20;0.25;0.30;0.35;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label reference" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">1.25×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.25;0.30;0.25;0.30;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">1.4×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.30;0.35;0.20;0.25;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">1.55×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.35;0.40;0.15;0.20;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">1.7×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.40;0.45;0.10;0.15;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">1.85×<animate attributeName="opacity" values="0;1;0;1;0;0" keyTimes="0;0.45;0.50;0.05;0.10;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
+  <text class="value-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">2×<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;0.45;0.55;1" dur="4s" calcMode="discrete" repeatCount="indefinite"/></text>
   <text x="730" y="292" fill="#14253d" font-size="16">Width and height</text>
   <text x="730" y="317" fill="#14253d" font-size="16">multiply by scale.</text>
   <line x1="730" y1="340" x2="925" y2="340" stroke="#dbe3ed"/>
