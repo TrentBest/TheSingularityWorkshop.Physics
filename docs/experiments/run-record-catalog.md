@@ -9,4 +9,4 @@ Generated from checked-in run records using the shared envelope only. Domain pay
 | [coupling.electrical-to-lumped-thermal](./electrical-thermal-coupling.run.json) | 1 | `computed-from-physics-model` | `electricalObservation`, `result` | `voltage`, `resistance`, `current`, `power`, `duration`, `energy`, `mass`, `specificHeatCapacity`, `temperature` | 4 |
 | [thermodynamics.lumped-body-conduction](./thermal-conduction.run.json) | 1 | `computed-from-physics-model` | `result` | `temperature`, `mass`, `specificHeatCapacity`, `thermalConductivity`, `area`, `separation`, `duration`, `thermalConductance`, `energy` | 5 |
 
-This index does not claim that records share a physical result schema. It proves only that a consumer can discover model identity, status, all model-owned payload fields, units when supplied, and limitations through the common envelope.
+This index does not claim that records share a physical result schema. It proves only that a consumer can discover model identity, status, all model-owned payload fields, units when supplied, and limitations through the common envelope boundary.
