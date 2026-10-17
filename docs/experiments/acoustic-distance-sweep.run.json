@@ -24,7 +24,7 @@
     {
       "listenerId": "listener-2m",
       "distanceMeters": 2,
-      "propagationDelaySeconds": 0.005830903790087463,
+      "propagationDelaySeconds": 0.0058309037900874635,
       "receivedLevelDbSpl": 73.97940008672037
     },
     {
@@ -36,7 +36,7 @@
     {
       "listenerId": "listener-10m",
       "distanceMeters": 10,
-      "propagationDelaySeconds": 0.029154518950437317,
+      "propagationDelaySeconds": 0.029154518950437316,
       "receivedLevelDbSpl": 60
     }
   ],
