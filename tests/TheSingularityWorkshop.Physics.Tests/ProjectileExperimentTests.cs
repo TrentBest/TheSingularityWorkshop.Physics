@@ -75,6 +75,12 @@ public sealed class ProjectileExperimentTests
         Assert.That(record.CoordinateConvention, Does.Contain("z-up"));
         Assert.That(document.RootElement.GetProperty("schemaVersion").GetInt32(), Is.EqualTo(1));
         Assert.That(document.RootElement.GetProperty("samples").GetArrayLength(), Is.EqualTo(11));
+        var positionFields = document.RootElement
+            .GetProperty("samples")[0]
+            .GetProperty("position")
+            .EnumerateObject()
+            .Select(property => property.Name);
+        Assert.That(positionFields, Is.EquivalentTo(new[] { "x", "y", "z" }));
         Assert.That(json, Is.EqualTo(ProjectileExperimentRunRecord.FromResult(result).ToJson()));
     }
 
