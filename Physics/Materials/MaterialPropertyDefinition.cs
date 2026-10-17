@@ -24,8 +24,10 @@ public enum PropertyEvidenceStatus
 /// <param name="EvidenceStatus">How the value should be interpreted epistemically.</param>
 /// <param name="SourceId">Source identifier, or a stable fixture identifier for illustrative values.</param>
 /// <param name="SourceVersion">Version or revision of the source/fixture.</param>
-/// <param name="ValidMinimum">Inclusive lower bound of the property's validity range.</param>
-/// <param name="ValidMaximum">Inclusive upper bound of the property's validity range.</param>
+/// <param name="ValidityQuantity">Quantity that bounds the conditions of validity, such as temperature.</param>
+/// <param name="ValidityUnit">Unit for the validity quantity.</param>
+/// <param name="ValidMinimum">Inclusive lower bound of the validity-condition range.</param>
+/// <param name="ValidMaximum">Inclusive upper bound of the validity-condition range.</param>
 /// <param name="ValidConditions">Conditions under which the value/range is intended to apply.</param>
 /// <param name="StandardUncertainty">Optional standard uncertainty in the same unit as Value.</param>
 public sealed record MaterialPropertyDefinition(
@@ -36,6 +38,8 @@ public sealed record MaterialPropertyDefinition(
     PropertyEvidenceStatus EvidenceStatus,
     string SourceId,
     string SourceVersion,
+    string ValidityQuantity,
+    string ValidityUnit,
     double ValidMinimum,
     double ValidMaximum,
     string ValidConditions,
@@ -50,11 +54,11 @@ public sealed record MaterialPropertyDefinition(
         Enum.IsDefined(EvidenceStatus) &&
         !string.IsNullOrWhiteSpace(SourceId) &&
         !string.IsNullOrWhiteSpace(SourceVersion) &&
+        !string.IsNullOrWhiteSpace(ValidityQuantity) &&
+        !string.IsNullOrWhiteSpace(ValidityUnit) &&
         double.IsFinite(ValidMinimum) &&
         double.IsFinite(ValidMaximum) &&
         ValidMinimum <= ValidMaximum &&
-        Value >= ValidMinimum &&
-        Value <= ValidMaximum &&
         !string.IsNullOrWhiteSpace(ValidConditions) &&
         (StandardUncertainty is null ||
             (double.IsFinite(StandardUncertainty.Value) && StandardUncertainty.Value >= 0d));
