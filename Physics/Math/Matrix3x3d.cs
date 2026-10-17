@@ -25,15 +25,15 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         double m21, double m22, double m23,
         double m31, double m32, double m33)
     {
-        M11 = RequireFinite(m11, nameof(m11));
-        M12 = RequireFinite(m12, nameof(m12));
-        M13 = RequireFinite(m13, nameof(m13));
-        M21 = RequireFinite(m21, nameof(m21));
-        M22 = RequireFinite(m22, nameof(m22));
-        M23 = RequireFinite(m23, nameof(m23));
-        M31 = RequireFinite(m31, nameof(m31));
-        M32 = RequireFinite(m32, nameof(m32));
-        M33 = RequireFinite(m33, nameof(m33));
+        M11 = RequireFiniteComponent(m11, nameof(m11));
+        M12 = RequireFiniteComponent(m12, nameof(m12));
+        M13 = RequireFiniteComponent(m13, nameof(m13));
+        M21 = RequireFiniteComponent(m21, nameof(m21));
+        M22 = RequireFiniteComponent(m22, nameof(m22));
+        M23 = RequireFiniteComponent(m23, nameof(m23));
+        M31 = RequireFiniteComponent(m31, nameof(m31));
+        M32 = RequireFiniteComponent(m32, nameof(m32));
+        M33 = RequireFiniteComponent(m33, nameof(m33));
     }
 
     public static Matrix3x3d Identity => new(
@@ -45,7 +45,7 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
     public double Determinant => RequireFinite(
         (M11 * ((M22 * M33) - (M23 * M32))) -
         (M12 * ((M21 * M33) - (M23 * M31))) +
-        (M13 * ((M21 * M32) - (M22 * M31)),
+        (M13 * ((M21 * M32) - (M22 * M31))),
         "Determinant");
 
     /// <summary>Multiplies this matrix by a column vector.</summary>
@@ -91,6 +91,13 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         double a1, double a2, double a3,
         double b1, double b2, double b3) =>
         RequireFinite((a1 * b1) + (a2 * b2) + (a3 * b3), "Matrix product");
+
+    private static double RequireFiniteComponent(double value, string name)
+    {
+        if (!double.IsFinite(value))
+            throw new ArgumentOutOfRangeException(name, "Matrix components must be finite.");
+        return value;
+    }
 
     private static double RequireFinite(double value, string name)
     {
