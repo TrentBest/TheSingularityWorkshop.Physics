@@ -108,6 +108,78 @@ public sealed class Geometry2dPolygonTests
 
 
     [Test]
+    public void SignedArea_UsesWindingDirectionAndSupportsRepeatedClosingVertex()
+    {
+        Vector2d[] counterClockwise = { new(0, 0), new(4, 0), new(4, 4), new(0, 4) };
+        Vector2d[] clockwise = { new(0, 0), new(0, 4), new(4, 4), new(4, 0) };
+        Vector2d[] explicitlyClosed =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(0, 0)
+        };
+
+        Assert.That(Geometry2dPolygon.SignedArea(counterClockwise), Is.EqualTo(16d));
+        Assert.That(Geometry2dPolygon.SignedArea(clockwise), Is.EqualTo(-16d));
+        Assert.That(Geometry2dPolygon.SignedArea(explicitlyClosed), Is.EqualTo(16d));
+    }
+
+    [Test]
+    public void SignedArea_ComputesConcaveAndAlgebraicallyCancellingBoundaries()
+    {
+        Vector2d[] concave =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(2, 2), new(0, 4)
+        };
+        Vector2d[] bowTie =
+        {
+            new(0, 0), new(4, 4), new(0, 4), new(4, 0)
+        };
+
+        Assert.That(Geometry2dPolygon.SignedArea(concave), Is.EqualTo(12d));
+        Assert.That(Geometry2dPolygon.SignedArea(bowTie), Is.EqualTo(0d));
+    }
+
+    [Test]
+    public void SignedArea_AccumulatesExtremeCoordinatesWithoutIntermediateOverflow()
+    {
+        Vector2d[] square =
+        {
+            new(0, 0), new(1e154, 0), new(1e154, 1e154), new(0, 1e154)
+        };
+
+        Assert.That(Geometry2dPolygon.SignedArea(square),
+            Is.EqualTo(1e308).Within(2e292));
+    }
+
+    [Test]
+    public void SignedArea_ThrowsWhenExactAreaExceedsFiniteBinary64Range()
+    {
+        Vector2d[] square =
+        {
+            new(-1e154, -1e154), new(1e154, -1e154),
+            new(1e154, 1e154), new(-1e154, 1e154)
+        };
+
+        Assert.Throws<ArithmeticException>(() => Geometry2dPolygon.SignedArea(square));
+    }
+
+    [Test]
+    public void SignedArea_RoundsTinyRepresentableAreaAndRejectsTooFewEffectiveVertices()
+    {
+        Vector2d[] tinySquare =
+        {
+            new(0, 0), new(1e-160, 0), new(1e-160, 1e-160), new(0, 1e-160)
+        };
+
+        Assert.That(Geometry2dPolygon.SignedArea(tinySquare),
+            Is.EqualTo(1e-320).Within(1e-323));
+        Assert.Throws<ArgumentException>(() => Geometry2dPolygon.SignedArea(new[]
+        {
+            new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(0, 0)
+        }));
+        Assert.Throws<ArgumentNullException>(() => Geometry2dPolygon.SignedArea(null!));
+    }
+
+    [Test]
     public void IsSimple_AcceptsConvexConcaveAndRepeatedClosingVertex()
     {
         Vector2d[] square = { new(0, 0), new(4, 0), new(4, 4), new(0, 4) };
