@@ -42,3 +42,17 @@ Do not force an image into a page when it adds no explanatory value. Prefer a cl
 - **Domain coverage:** use the capability catalog and learning path to expose both existing visuals and missing image/model pairs. The catalog must distinguish implemented visuals from concepts and roadmap.
 
 This policy is an ongoing repository-wide documentation requirement, not a claim that every domain already has a working simulator or a run-backed image.
+
+## Complex visual authoring with GUI.SVG
+
+**GUI.SVG is an authorized companion for creating and simplifying complex explanatory SVGs.** Use it when hand-authoring paths, layered diagrams, motion, labels, or visual composition becomes needlessly difficult. The Physics repository should consume the exported SVG (and, where useful, the authoring source or reproducible generation steps); the Physics core must not acquire a GUI.SVG, DOM, or renderer dependency.
+
+Choosing the authoring tool does not change the evidence standard:
+
+- A run-backed image must still be generated from actual model/run-record data; GUI.SVG may arrange and style the data but must not recalculate or invent the physics.
+- Conceptual visuals should remain explicitly labelled as conceptual. Animated movement can make relationships visible, but animation is not evidence that a model was simulated.
+- Prefer reusable visual components and parameterized layouts for repeated diagrams instead of copying complicated path geometry by hand.
+- Keep reduced-motion behavior, accessible SVG title/description, legible units, and a clear inline embedding in the relevant Markdown page.
+- Where a visual has a model-backed source, retain a deterministic export/render step and CI check so editing tools cannot silently leave the committed image stale.
+
+This makes GUI.SVG a visual-authoring aid in the documentation workflow, not a dependency of the Physics domain.
