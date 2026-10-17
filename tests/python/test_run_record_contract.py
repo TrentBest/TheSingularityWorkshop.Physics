@@ -20,6 +20,7 @@ def load_tool(name: str, filename: str):
 
 validator = load_tool("physics_record_validator", "validate_physics_run_records.py")
 catalog = load_tool("physics_record_catalog", "catalog_physics_run_records.py")
+inspector = load_tool("physics_record_inspector", "inspect_physics_run_records.py")
 
 
 class RunRecordEnvelopeTests(unittest.TestCase):
@@ -81,6 +82,27 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         self.assertIn("`result`, `electricalObservation`", rendered)
         self.assertIn("./acoustic-observation.run.json", rendered)
         self.assertIn("does not claim that records share a physical result schema", rendered)
+
+    def test_payload_aware_inspector_summarizes_four_domains_and_preserves_payloads(self):
+        paths = [
+            ROOT / "docs/experiments/acoustic-observation.run.json",
+            ROOT / "docs/experiments/first-order-room-reflection.run.json",
+            ROOT / "docs/experiments/electrical-thermal-coupling.run.json",
+            ROOT / "docs/experiments/thermal-conduction.run.json",
+        ]
+        inspected = [inspector.inspect_path(path) for path in paths]
+        self.assertEqual(len(inspected), 4)
+        self.assertEqual(inspected[0]["summary"]["distanceMeters"], 5)
+        self.assertEqual(inspected[1]["summary"]["reflectionCount"], 1)
+        self.assertEqual(inspected[2]["summary"]["thermalEnergyTransferJoules"], 120)
+        self.assertEqual(inspected[3]["summary"]["energyAccountingResidualJoules"], 0)
+
+        for path, output in zip(paths, inspected):
+            with self.subTest(path=path.name):
+                original = json.loads(path.read_text(encoding="utf-8"))
+                for field, payload in output["domainPayload"].items():
+                    self.assertEqual(payload, original[field])
+                self.assertEqual(output["envelope"]["modelId"], original["modelId"])
 
 
 if __name__ == "__main__":
