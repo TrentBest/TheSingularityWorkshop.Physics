@@ -14,7 +14,8 @@ The train-frame horizontal position stays at zero. The ground-frame horizontal p
 - [Frame transform](../Physics/Math/GalileanFrameTransform.cs) converts positions and velocities between parallel axes with constant relative velocity.
 - [Versioned run record](../Physics/Experiments/MovingTrainProjectileRunRecord.cs) stores both states for every logical timestamp.
 - [Run-record generator](../../tools/MovingTrainProjectileRunRecordGenerator/Program.cs) executes the C# experiment and serializes its actual output.
-- [Acceptance tests](../tests/TheSingularityWorkshop.Physics.Tests/MovingTrainProjectileExperimentTests.cs) check matching logical timestamps, horizontal train motion, preserved vertical motion, and a non-zero train origin.
+- [Acceptance tests](../tests/TheSingularityWorkshop.Physics.Tests/MovingTrainProjectileExperimentTests.cs) check matching logical timestamps, horizontal train motion, preserved vertical motion, a non-zero train origin, and deterministic run-record serialization.
+- [Versioned run record](../Physics/Experiments/MovingTrainProjectileRunRecord.cs) preserves the declared inputs, SI units, model/schema versions, and both observer states for every sample. It serializes actual experiment output rather than generating a separate illustrative trajectory.
 - [Transform lesson](../GALILEAN_FRAME_TRANSFORM.md) explains the equations and their assumptions.
 
 The ground-frame trajectory is not independently re-simulated. That avoids two numerical integrations drifting apart and makes the relationship between the observations explicit.
