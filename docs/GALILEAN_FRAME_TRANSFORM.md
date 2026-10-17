@@ -6,11 +6,11 @@
 
 A train moves steadily at 20 m/s. A passenger launches a ball straight upward at 8 m/s relative to the train. Ignoring air resistance, what does a passenger see—and what does a person standing beside the track see?
 
-At (t=1\) s, the ball's train-frame position is ((0,0,1.5)\) m in this test fixture. The corresponding ground-frame state is at ((20,0,1.5)\) m, moving at ((20,0,8)\) m/s. The ball's vertical motion is unchanged; the ground observer also sees the train's horizontal motion.
+The isolated transform unit test uses a supplied state at t = 1 s with position (0, 0, 1.5) m and velocity (0, 0, 8) m/s. Those are test inputs to the coordinate transform, not a gravity-consistent trajectory. The paired experiment separately launches at 12 m/s under −9.81 m/s² acceleration and derives the ground view at every sampled time.
 
-![Moving-train projectile: passenger and trackside views](experiments/moving-train-projectile.svg)
+![Living moving-train projectile: animated markers follow paired train and ground trajectories generated from the C# run record](experiments/moving-train-projectile.svg)
 
-*Paired analytical reference graphic for the default teaching case. It is not yet generated from the serialized C# run record; CI-backed rendering is the next step.*
+*This is a run-backed living image. CI executes the paired C# experiment, checks the Galilean frame relationship, and validates each plotted train/ground coordinate against the actual serialized samples.*
 
 ## The transform
 
