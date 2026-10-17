@@ -24,6 +24,24 @@ SVG diagrams should be generated from or bound to real model values where possib
 
 GUI.SVG and other rendering technologies are optional consumers of physics contracts. No SVG/DOM types belong in the physics core.
 
+## A living-image rule for every explanation
+
+When a concept can be made clearer by watching a value change, **include the living image in the explanation itself**—not merely in a gallery or a future roadmap. Ask this for every section, example, equation, and capability page:
+
+1. Can a reader see the important variable change (scale, time, force, energy, distance, resolution, temperature, or another declared input)?
+2. Can the resulting shape, trajectory, graph, state, or comparison update in response?
+3. Can the displayed value and units be read while the change happens?
+4. Is the image driven by the actual model/run data where a model exists? If it is conceptual, is that clearly labelled?
+5. Does the animation have a useful reduced-motion/static state and accessible title/description?
+
+Prefer an embedded, self-contained living SVG when it explains the concept. For physical experiments, render from the same recorded C# output and make CI compare the committed image with freshly generated output. Never let an illustrative animation impersonate a solver, and never leave a known visual gap described as future work when it can be built now.
+
+### Example: change a property, see the consequence
+
+![Living scale factor: the solid object smoothly changes between one-half and twice the reference size, while the reference outline stays fixed.](images/scale-factor-living.svg)
+
+The [scale-factor lesson](SCALE_FACTOR_LIVING.md) shows the property and its visible consequence in the same image. This is a conceptual illustration—not a Physics solver—and demonstrates the minimum expected pattern for property-focused explanations.
+
 ## Reproducible evidence
 
 Every generated artifact points to the run configuration and model versions used. A reader should be able to rerun a supported experiment and compare measurements. Illustrative or synthetic data must be labeled as such.
