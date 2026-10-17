@@ -129,6 +129,7 @@ This is an ideal point-projectile experiment under constant acceleration. A sepa
 - [Physics and Math LUT policy](docs/PHYSICS_MATH_LUTS.md) — LUT types, provenance, interpolation, error budgets, ownership, and dependency gates
 - [Castle Siege payloads and versus play](docs/CASTLE_SIEGE_PAYLOADS_AND_VERSUS.md) — data-driven payloads, one-to-many impact, settling, castle construction, alternating turns, and the FPS path
 - [Living theory & interactive documentation](docs/LIVING_THEORY.md) — generated explainers, recorded observations, accessible SVG diagrams, and the staged path from reproducible run records to generated artifacts
+- [Physics learning path](docs/LEARNING_PATH.md) — organize the domain around curiosity, progressive concepts, reusable lesson experiences, and explicit implementation status
 
 The long-term goal is not a library of static pages about physics. It is living theory: explanations that can show the governing model, expose assumptions, run an experiment, display measurements, and trace each conclusion to its source.
 
