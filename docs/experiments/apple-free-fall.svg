@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" role="img" aria-labelledby="title desc">
+<title id="title">An apple falls: the motion, recorded and explained</title>
+<desc id="desc">An apple is shown at each of 11 recorded times beside height-time and velocity-time graphs generated from the same run record. Model kinematics.constant-acceleration; no physics is recomputed by this illustration.</desc>
+<rect width="1000" height="600" rx="18" fill="#f7fafc"/>
+<text x="32" y="42" font-family="Segoe UI,Arial,sans-serif" font-size="25" font-weight="700" fill="#183047">An apple falls · one model, many ways to see it</text>
+<text x="32" y="70" font-family="Segoe UI,Arial,sans-serif" font-size="13" fill="#526578">Recorded C# states · 11 samples · 1.00 s · kinematics.constant-acceleration v1</text>
+<rect x="24" y="95" width="330" height="450" rx="14" fill="#edf6ed" stroke="#d3e5d2"/>
+<text x="45" y="125" font-family="Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#254b36">The scene</text>
+<path d="M35 455 Q100 445 170 455 T340 455 L340 490 L35 490 Z" fill="#a9cf91"/>
+<rect x="82" y="235" width="24" height="220" rx="8" fill="#805438"/>
+<path d="M94 300 L145 240 M94 332 L53 290 M94 365 L143 322" fill="none" stroke="#805438" stroke-width="10" stroke-linecap="round"/>
+<circle cx="82" cy="207" r="47" fill="#69a96b"/><circle cx="128" cy="195" r="53" fill="#7cbb79"/><circle cx="166" cy="228" r="39" fill="#5e9d61"/><circle cx="57" cy="244" r="32" fill="#82c47e"/>
+<path d="M200 155 L200 455" stroke="#6f8fa3" stroke-width="1.5" stroke-dasharray="4 5"/>
+<text x="211" y="175" font-family="Segoe UI,Arial,sans-serif" font-size="11" fill="#526578">recorded height</text>
+<polyline points="200.00,155.00 200.00,158.00 200.00,167.00 200.00,182.00 200.00,203.00 200.00,230.00 200.00,263.00 200.00,302.00 200.00,347.00 200.00,398.00 200.00,455.00" fill="none" stroke="#c65b35" stroke-width="2" stroke-dasharray="4 4"/>
+<circle cx="200" cy="155.00" r="7" fill="#c94435" stroke="#fff" stroke-width="1.2"><title>t=0.00 s; height=4.905 m; velocity=0 m/s</title></circle>
+<circle cx="200" cy="158.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.10 s; height=4.85595 m; velocity=-0.981 m/s</title></circle>
+<circle cx="200" cy="167.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.20 s; height=4.7088 m; velocity=-1.962 m/s</title></circle>
+<circle cx="200" cy="182.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.30 s; height=4.46355 m; velocity=-2.943 m/s</title></circle>
+<circle cx="200" cy="203.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.40 s; height=4.1202 m; velocity=-3.924 m/s</title></circle>
+<circle cx="200" cy="230.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.50 s; height=3.67875 m; velocity=-4.905 m/s</title></circle>
+<circle cx="200" cy="263.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.60 s; height=3.1392 m; velocity=-5.886 m/s</title></circle>
+<circle cx="200" cy="302.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.70 s; height=2.50155 m; velocity=-6.867 m/s</title></circle>
+<circle cx="200" cy="347.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.80 s; height=1.7658 m; velocity=-7.848 m/s</title></circle>
+<circle cx="200" cy="398.00" r="3.5" fill="#e77c4b" stroke="#fff" stroke-width="1.2"><title>t=0.90 s; height=0.93195 m; velocity=-8.829 m/s</title></circle>
+<circle cx="200" cy="455.00" r="7" fill="#c94435" stroke="#fff" stroke-width="1.2"><title>t=1.00 s; height=0 m; velocity=-9.81 m/s</title></circle>
+<text x="42" y="518" font-family="Segoe UI,Arial,sans-serif" font-size="12" fill="#254b36">Dots = recorded states.</text>
+<text x="42" y="535" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">Tree and apple artwork are illustrative.</text>
+<rect x="375" y="95" width="600" height="450" rx="14" fill="#fff" stroke="#d9e2ea"/>
+<text x="400" y="125" font-family="Segoe UI,Arial,sans-serif" font-size="17" font-weight="700" fill="#183047">Read the motion</text>
+<text x="400" y="145" font-family="Segoe UI,Arial,sans-serif" font-size="12" fill="#526578">Dots are recorded values; connecting lines guide the eye.</text>
+<text x="410" y="133" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#226b9a">Height above ground (m)</text>
+<rect x="410.0" y="145.0" width="540.0" height="130.0" fill="#f8fbfd" stroke="#a9b9c8"/>
+<polyline points="410.00,145.00 464.00,146.30 518.00,150.20 572.00,156.70 626.00,165.80 680.00,177.50 734.00,191.80 788.00,208.70 842.00,228.20 896.00,250.30 950.00,275.00" fill="none" stroke="#226b9a" stroke-width="3" stroke-linejoin="round"/>
+<text x="410" y="348" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="700" fill="#b35434">Vertical velocity (m/s)</text>
+<rect x="410.0" y="360.0" width="540.0" height="130.0" fill="#fffaf7" stroke="#a9b9c8"/>
+<line x1="410.0" y1="425.00" x2="950.0" y2="425.00" stroke="#c6b8ae" stroke-dasharray="4 4"/>
+<polyline points="410.00,425.00 464.00,431.50 518.00,438.00 572.00,444.50 626.00,451.00 680.00,457.50 734.00,464.00 788.00,470.50 842.00,477.00 896.00,483.50 950.00,490.00" fill="none" stroke="#b35434" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="410.00" cy="145.00" r="3.2" fill="#226b9a"><title>t=0.00 s; height=4.905 m</title></circle>
+<circle cx="410.00" cy="425.00" r="3.2" fill="#b35434"><title>t=0.00 s; velocity=0 m/s</title></circle>
+<circle cx="464.00" cy="146.30" r="3.2" fill="#226b9a"><title>t=0.10 s; height=4.85595 m</title></circle>
+<circle cx="464.00" cy="431.50" r="3.2" fill="#b35434"><title>t=0.10 s; velocity=-0.981 m/s</title></circle>
+<circle cx="518.00" cy="150.20" r="3.2" fill="#226b9a"><title>t=0.20 s; height=4.7088 m</title></circle>
+<circle cx="518.00" cy="438.00" r="3.2" fill="#b35434"><title>t=0.20 s; velocity=-1.962 m/s</title></circle>
+<circle cx="572.00" cy="156.70" r="3.2" fill="#226b9a"><title>t=0.30 s; height=4.46355 m</title></circle>
+<circle cx="572.00" cy="444.50" r="3.2" fill="#b35434"><title>t=0.30 s; velocity=-2.943 m/s</title></circle>
+<circle cx="626.00" cy="165.80" r="3.2" fill="#226b9a"><title>t=0.40 s; height=4.1202 m</title></circle>
+<circle cx="626.00" cy="451.00" r="3.2" fill="#b35434"><title>t=0.40 s; velocity=-3.924 m/s</title></circle>
+<circle cx="680.00" cy="177.50" r="3.2" fill="#226b9a"><title>t=0.50 s; height=3.67875 m</title></circle>
+<circle cx="680.00" cy="457.50" r="3.2" fill="#b35434"><title>t=0.50 s; velocity=-4.905 m/s</title></circle>
+<circle cx="734.00" cy="191.80" r="3.2" fill="#226b9a"><title>t=0.60 s; height=3.1392 m</title></circle>
+<circle cx="734.00" cy="464.00" r="3.2" fill="#b35434"><title>t=0.60 s; velocity=-5.886 m/s</title></circle>
+<circle cx="788.00" cy="208.70" r="3.2" fill="#226b9a"><title>t=0.70 s; height=2.50155 m</title></circle>
+<circle cx="788.00" cy="470.50" r="3.2" fill="#b35434"><title>t=0.70 s; velocity=-6.867 m/s</title></circle>
+<circle cx="842.00" cy="228.20" r="3.2" fill="#226b9a"><title>t=0.80 s; height=1.7658 m</title></circle>
+<circle cx="842.00" cy="477.00" r="3.2" fill="#b35434"><title>t=0.80 s; velocity=-7.848 m/s</title></circle>
+<circle cx="896.00" cy="250.30" r="3.2" fill="#226b9a"><title>t=0.90 s; height=0.93195 m</title></circle>
+<circle cx="896.00" cy="483.50" r="3.2" fill="#b35434"><title>t=0.90 s; velocity=-8.829 m/s</title></circle>
+<circle cx="950.00" cy="275.00" r="3.2" fill="#226b9a"><title>t=1.00 s; height=0 m</title></circle>
+<circle cx="950.00" cy="490.00" r="3.2" fill="#b35434"><title>t=1.00 s; velocity=-9.81 m/s</title></circle>
+<text x="410.00" y="511" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">0.0</text>
+<text x="518.00" y="511" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">0.2</text>
+<text x="626.00" y="511" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">0.4</text>
+<text x="734.00" y="511" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">0.6</text>
+<text x="842.00" y="511" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">0.8</text>
+<text x="950.00" y="511" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="10" fill="#526578">1.0</text>
+<text x="680" y="530" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-size="11" fill="#526578">Elapsed time (s)</text>
+<text x="400" y="570" font-family="Segoe UI,Arial,sans-serif" font-size="15" font-weight="700" fill="#183047">h(t) = h₀ + v₀t + ½at²</text>
+<text x="400" y="590" font-family="Segoe UI,Arial,sans-serif" font-size="12" fill="#526578">v(t) = v₀ + at · a = -9.81 m/s^2 · Δt = 0.1 s</text>
+<text x="32" y="580" font-family="Segoe UI,Arial,sans-serif" font-size="12" fill="#526578">Ideal free fall · no air resistance · constant gravity · SI units</text>
+</svg>
