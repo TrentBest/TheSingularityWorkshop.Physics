@@ -42,7 +42,7 @@ public static class Geometry2d
             double.IsFinite(acx) && double.IsFinite(acy) &&
             double.IsFinite(left) && double.IsFinite(right) && double.IsFinite(determinant))
         {
-            double errorBound = (Math.Abs(left) + Math.Abs(right)) * (3d + (16d * double.Epsilon)) * double.Epsilon;
+            const double unitRoundoff = 1.1102230246251565e-16; // 2^-53; double.Epsilon is the smallest subnormal, not this value.\n            double errorBound = (Math.Abs(left) + Math.Abs(right)) * (3d + (16d * unitRoundoff)) * unitRoundoff;
             if (double.IsFinite(errorBound) && Math.Abs(determinant) > errorBound)
                 return determinant > 0d ? Orientation2d.CounterClockwise : Orientation2d.Clockwise;
         }
