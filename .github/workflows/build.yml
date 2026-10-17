@@ -25,6 +25,31 @@ jobs:
       - name: Execute the apple free-fall teaching experiment
         run: dotnet run --project tools/FreeFallRunRecordGenerator/FreeFallRunRecordGenerator.csproj --configuration Release -- /tmp/apple-free-fall.actual.json
 
+      - name: Verify lesson manifest matches the executable model
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          lesson = json.loads(Path('docs/experiments/apple-free-fall.lesson.json').read_text(encoding='utf-8'))
+          record = json.loads(Path('/tmp/apple-free-fall.actual.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          defaults = lesson['defaultExperiment']
+          assert lesson['schemaVersion'] == 1
+          assert lesson['status'] == 'implemented-demo'
+          assert lesson['model']['id'] == record['modelId']
+          assert lesson['model']['version'] == record['modelVersion']
+          assert defaults['initialHeightMetres'] == definition['initialState']['position']
+          assert defaults['initialVelocityMetresPerSecond'] == definition['initialState']['velocity']
+          assert defaults['accelerationMetresPerSecondSquared'] == definition['acceleration']
+          assert defaults['deltaTimeSeconds'] == definition['deltaTime']
+          assert defaults['stepCount'] == definition['stepCount']
+          assert len(record['samples']) == 11
+          for visual in lesson['visualizations']:
+              assert Path('docs/experiments', visual['path']).is_file()
+          print('Lesson manifest matches the actual C# run and its visualization exists.')
+          PY
+
       - name: Render apple lesson from actual C# states
         run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json /tmp/apple-free-fall.actual.svg
 
