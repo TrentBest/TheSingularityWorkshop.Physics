@@ -104,6 +104,35 @@ jobs:
       - name: Verify checked-in SVG matches the documented fixture
         run: python3 tools/render_projectile_trajectory.py docs/experiments/projectile-trajectory.run.json docs/experiments/projectile-trajectory.svg --check
 
+      - name: Execute paired moving-train projectile experiment
+        run: dotnet run --project tools/MovingTrainProjectileRunRecordGenerator/MovingTrainProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/moving-train-projectile.actual.json
+
+      - name: Verify paired frame samples share time and preserve vertical motion
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/moving-train-projectile.actual.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          samples = record['samples']
+          assert record['modelId'] == 'kinematics.galilean-moving-train-projectile'
+          assert record['schemaVersion'] == 1
+          assert len(samples) == definition['stepCount'] + 1 == 9
+          train_velocity = definition['trainVelocityInWorld']
+          origin = definition['trainOriginAtEpoch']
+          for pair in samples:
+              train = pair['trainFrameState']
+              ground = pair['groundFrameState']
+              t = train['elapsedTime']
+              assert abs(ground['elapsedTime'] - t) < 1e-12
+              assert abs(ground['position']['x'] - (origin['x'] + train['position']['x'] + train_velocity['x'] * t)) < 1e-10
+              assert abs(ground['position']['y'] - (origin['y'] + train['position']['y'] + train_velocity['y'] * t)) < 1e-10
+              assert abs(ground['position']['z'] - (origin['z'] + train['position']['z'] + train_velocity['z'] * t)) < 1e-10
+              assert abs(ground['velocity']['z'] - train['velocity']['z']) < 1e-10
+          print('Paired run record verified: 9 shared timestamps, Galilean position transform, preserved vertical velocity.')
+          PY
+
       - name: Execute contact impulse resolver and serialize actual response
         run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- /tmp/contact-impulse.actual.json
 
