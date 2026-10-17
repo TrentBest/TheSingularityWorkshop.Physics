@@ -49,6 +49,7 @@ The [scale-factor lesson](SCALE_FACTOR_LIVING.md) shows the property and its vis
 ## Living-image examples already in the documentation
 
 - [Scale factor](SCALE_FACTOR_LIVING.md): the displayed linear scale and visible geometry change together. This is a conceptual property illustration, not solver output.
+- [Lookup-table interpolation](PHYSICS_MATH_LUTS.md): a moving query marker follows the piecewise-linear segments. The curve is conceptual; a solver-backed error plot remains future work.
 - [Moving-train projectile](experiments/moving-train-projectile.md): animated markers follow paired train/ground states produced by the C# experiment; CI checks plotted coordinates against every recorded sample.
 - [Two-body thermal conduction](experiments/thermal-conduction.md): animated markers show the direction of energy transfer while temperatures, transfer energy, and accounting residual come from the serialized model result.
 - [Spring-damper](SPATIAL_DISTANCE_SPRING_DAMPER.md): the spring length and force direction animate conceptually; the image explicitly does not claim to be the solver's numerical output.
