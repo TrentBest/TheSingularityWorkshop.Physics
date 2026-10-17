@@ -1,8 +1,18 @@
-# The Singularity Workshop · Physics
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg)
+
+# ✳️ 00 The Singularity Workshop — Physics
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/TheSingularityWorkshop.Physics/build.yml?branch=development&style=flat-square&logo=github)](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+
 
 **Physics is the study of what changes, why it changes, and what must follow.** This package is the Workshop's foundation for deterministic, composable physical models—so experiments, simulations, and eventually entire worlds share explainable rules rather than disconnected visual effects.
 
 <p align="center"><strong>What → Why → How → Observe → Explain</strong></p>
+
+![Physics paradigm: same reality, a different way to build it](docs/images/physics-paradigm.svg)
+
+**Physics is not trying to make reality look physical. It is trying to make physical outcomes explainable.** A conventional engine can be the right tool for a game; this project takes a different architectural route: explicit model identity, units and assumptions, deterministic experiments, recorded state, validation, and living theory. The ambition is not to deny familiar physics, but to make its causes inspectable and its capabilities composable. The visual above is an architectural thesis—not a claim that every pictured domain is already implemented.
 
 ---
 
