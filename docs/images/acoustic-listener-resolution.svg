@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img" aria-labelledby="title desc">
+  <title id="title">Listener-centred acoustic resolution</title>
+  <desc id="desc">Conceptual schematic, not solver output. A listener is surrounded by nested regions of increasing spatial scale. A nearby source has a direct path, a wall blocks one path, and a reflected path bends toward the listener. The labels describe which acoustic details deserve refinement at each scale.</desc>
+  <rect width="1000" height="560" rx="20" fill="#f7f9fc"/>
+  <text x="38" y="45" fill="#172b45" font-family="Segoe UI,Arial,sans-serif" font-size="25" font-weight="700">ACOUSTIC DETAIL FOLLOWS THE LISTENER</text>
+  <text x="38" y="73" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="14">Conceptual resolution map · not a computed sound field</text>
+  <circle cx="430" cy="300" r="210" fill="#e9f2fb" stroke="#94b9d8" stroke-width="2" stroke-dasharray="7 7"/>
+  <circle cx="430" cy="300" r="145" fill="#d6e9f8" stroke="#5e9bc9" stroke-width="2"/>
+  <circle cx="430" cy="300" r="78" fill="#b8dcf3" stroke="#2378b7" stroke-width="2"/>
+  <circle cx="430" cy="300" r="30" fill="#fff" stroke="#1267a5" stroke-width="4"/>
+  <circle cx="430" cy="300" r="7" fill="#1267a5"/>
+  <text x="430" y="352" text-anchor="middle" fill="#154b75" font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">LISTENER</text>
+  <text x="430" y="372" text-anchor="middle" fill="#154b75" font-family="Segoe UI,Arial,sans-serif" font-size="12">highest relevance</text>
+  <circle cx="300" cy="225" r="15" fill="#d97706" stroke="#fff" stroke-width="3"/>
+  <path d="M300 225 L430 300" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+  <path d="M319 236 L338 247" fill="none" stroke="#d97706" stroke-width="2"/>
+  <text x="250" y="196" fill="#8a4b08" font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Nearby source</text>
+  <rect x="515" y="210" width="18" height="112" rx="3" fill="#64748b"/>
+  <path d="M300 225 L520 225" fill="none" stroke="#c2410c" stroke-width="3" stroke-dasharray="7 6"/>
+  <path d="M520 225 L585 255 L560 320 L460 310" fill="none" stroke="#0f766e" stroke-width="3" stroke-dasharray="7 5"/>
+  <circle cx="460" cy="310" r="5" fill="#0f766e"/>
+  <text x="548" y="192" fill="#475569" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="700">Barrier</text>
+  <text x="552" y="210" fill="#64748b" font-family="Segoe UI,Arial,sans-serif" font-size="12">blocks direct path</text>
+  <text x="575" y="348" fill="#0f766e" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="700">Possible reflection</text>
+  <path d="M640 145 L670 145" stroke="#2378b7" stroke-width="3"/>
+  <text x="682" y="150" fill="#172b45" font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Near field</text>
+  <text x="682" y="169" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="12">fine source / listener detail</text>
+  <path d="M640 205 L670 205" stroke="#5e9bc9" stroke-width="3"/>
+  <text x="682" y="210" fill="#172b45" font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Local environment</text>
+  <text x="682" y="229" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="12">rooms, barriers, reflections</text>
+  <path d="M640 265 L670 265" stroke="#94b9d8" stroke-width="3" stroke-dasharray="6 5"/>
+  <text x="682" y="270" fill="#172b45" font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Far field</text>
+  <text x="682" y="289" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="12">coarser energy / clusters</text>
+  <rect x="640" y="375" width="315" height="104" rx="12" fill="#fff" stroke="#cbd5e1"/>
+  <text x="660" y="402" fill="#172b45" font-family="Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Refine on evidence</text>
+  <text x="660" y="426" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="13">A doorway, moving source, or quiet</text>
+  <text x="660" y="446" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="13">nearby event can matter more than</text>
+  <text x="660" y="466" fill="#52647a" font-family="Segoe UI,Arial,sans-serif" font-size="13">distance alone.</text>
+  <text x="38" y="525" fill="#64748b" font-family="Segoe UI,Arial,sans-serif" font-size="12">Schematic only: paths and regions illustrate design intent; no propagation values are calculated here.</text>
+</svg>
