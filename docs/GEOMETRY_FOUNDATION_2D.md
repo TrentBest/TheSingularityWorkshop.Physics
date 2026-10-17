@@ -14,6 +14,10 @@ For three points, [`Geometry2d.Orient`](../Physics/Spatial/Geometry2d.cs) return
 
 [`GeometryTolerance2d`](../Physics/Spatial/GeometryTolerance2d.cs) makes a caller-selected absolute Euclidean-distance threshold explicit. Its value must be finite and non-negative and uses the same coordinate units as the points. `IsNear` performs a scaled distance comparison to avoid squared-distance overflow. There is no universal default: the appropriate tolerance depends on coordinate scale, units, source uncertainty, and the decision being made. See [GeometryTolerance2dTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/GeometryTolerance2dTests.cs).
 
+
+
+[`Geometry2dPolygon.LocatePoint`](../Physics/Spatial/Geometry2dPolygon.cs) classifies a point against a simple polygon using the non-zero winding rule and the exact-sign orientation predicate. It distinguishes `Inside`, `Outside`, and `Boundary`; edges and vertices count as boundary. Supply at least three vertices in boundary order; the first vertex need not be repeated. Clockwise and counter-clockwise vertex order are both supported. This API does not validate polygon simplicity, repair self-intersections, apply a proximity tolerance, or compute area/triangulation. See [Geometry2dPolygonTests](../tests/TheSingularityWorkshop.Physics.Tests/Math/Geometry2dPolygonTests.cs).
+
 ## Deliberate limits
 
 - Frame identifiers are labels, not a unit system or transform graph. Reusing an identifier for inconsistent conventions is a caller error. `RigidTransform2d` provides explicit pairwise conversion, not a graph, automatic path finding, unit conversion, or convention discovery.
