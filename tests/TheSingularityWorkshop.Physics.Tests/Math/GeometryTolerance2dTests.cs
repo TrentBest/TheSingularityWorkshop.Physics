@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Spatial;
 
-namespace TheSingularityWorkshop.Physics.Tests.Math;
+namespace TheSingularityWorkshop.Physics.Tests.Mathematics;
 
 [TestFixture]
 public sealed class GeometryTolerance2dTests
