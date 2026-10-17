@@ -127,6 +127,31 @@ class RunRecordEnvelopeTests(unittest.TestCase):
                 errors = validator.validate(self.write_record(record))
                 self.assertTrue(any("recognized epistemic status" in e for e in errors))
 
+    def test_catalog_rejects_records_that_fail_the_shared_validator(self):
+        invalid_status = {
+            "schemaVersion": 1,
+            "modelId": "test.invalid-status",
+            "modelVersion": 1,
+            "status": "probably-real",
+            "definition": {},
+            "result": {},
+            "limitations": ["fixture"],
+        }
+        with self.assertRaisesRegex(ValueError, "recognized epistemic status"):
+            catalog.load_record(self.write_record(invalid_status))
+
+        invalid_limitations = {
+            "schemaVersion": 1,
+            "modelId": "test.invalid-limitations",
+            "modelVersion": 1,
+            "status": "computed",
+            "definition": {},
+            "result": {},
+            "limitations": [""],
+        }
+        with self.assertRaisesRegex(ValueError, "limitations must be an array of non-empty strings"):
+            catalog.load_record(self.write_record(invalid_limitations))
+
     def test_catalog_discovers_shared_fields_without_rewriting_domain_payloads(self):
         paths = [
             ROOT / "docs/experiments/acoustic-observation.run.json",
