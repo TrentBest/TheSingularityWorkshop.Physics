@@ -6,6 +6,7 @@ Domain payloads are named and linked, never normalized or rewritten.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 from pathlib import Path
 
@@ -19,7 +20,23 @@ ENVELOPE_FIELDS = {
 }
 
 
+def _load_validator():
+    validator_path = Path(__file__).with_name("validate_physics_run_records.py")
+    spec = importlib.util.spec_from_file_location("physics_run_record_validator", validator_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load shared run-record validator at {validator_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_VALIDATOR = _load_validator()
+
+
 def load_record(path: Path) -> dict:
+    errors = _VALIDATOR.validate(path)
+    if errors:
+        raise ValueError("; ".join(errors))
     record = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(record, dict):
         raise ValueError(f"{path}: record root must be an object")
