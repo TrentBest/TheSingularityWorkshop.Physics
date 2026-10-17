@@ -17,6 +17,52 @@ public sealed class MaterialIdentityArbitratorTests
         new(["material:steel", "material:wood"], Aliases);
 
     [Test]
+    public void Arbitrate_AssemblyKeepsMaterialIdentityIndependentPerPartAndIncludesMissingEvidence()
+    {
+        var assembly = new PhysicalAssemblyDescription("arrow", "weapon", "assembly.parts", [
+            new PhysicalPartDescription("arrow.tip", null, "weapon", "tip"),
+            new PhysicalPartDescription("arrow.shaft", null, "parts", "shaft"),
+            new PhysicalPartDescription("arrow.fletching", "arrow.shaft", "parts", "fletching")
+        ]);
+
+        var result = CreateArbitrator().Arbitrate(assembly, [
+            Evidence("arrow.tip", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "weapon", "tip.material"),
+            Evidence("arrow.shaft", "material:wood", MaterialReferenceEvidenceKind.StructuredDeclaration, "parts", "shaft.material")
+        ]);
+
+        Assert.That(result.AssemblyId, Is.EqualTo("arrow"));
+        Assert.That(result.Parts.Select(part => part.PartId),
+            Is.EqualTo(new[] { "arrow.fletching", "arrow.shaft", "arrow.tip" }));
+        Assert.That(Find(result.Parts, "arrow.tip").MaterialId, Is.EqualTo("material:steel"));
+        Assert.That(Find(result.Parts, "arrow.shaft").MaterialId, Is.EqualTo("material:wood"));
+        Assert.That(Find(result.Parts, "arrow.fletching").Status, Is.EqualTo(MaterialIdentityResolutionStatus.Unresolved));
+        Assert.That(Find(result.Parts, "arrow.fletching").MaterialId, Is.Null);
+    }
+
+    [Test]
+    public void Arbitrate_AssemblyRejectsEvidenceForUndeclaredPart()
+    {
+        var assembly = new PhysicalAssemblyDescription("arrow", "weapon", "assembly.parts", [
+            new PhysicalPartDescription("arrow.tip", null, "weapon", "tip")
+        ]);
+
+        Assert.Throws<ArgumentException>(() => CreateArbitrator().Arbitrate(assembly, [
+            Evidence("arrow", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "weapon", "material")
+        ]));
+    }
+
+    [Test]
+    public void PhysicalAssemblyDescription_RejectsCyclicPartRelationships()
+    {
+        var assembly = new PhysicalAssemblyDescription("arrow", "weapon", "assembly.parts", [
+            new PhysicalPartDescription("tip", "shaft", "weapon", "tip.parent"),
+            new PhysicalPartDescription("shaft", "tip", "weapon", "shaft.parent")
+        ]);
+
+        Assert.Throws<ArgumentException>(() => assembly.EnsureValid());
+    }
+
+    [Test]
     public void Arbitrate_ResolvesTipIndependentlyFromShaftAndFletching()
     {
         var result = CreateArbitrator().Arbitrate([
