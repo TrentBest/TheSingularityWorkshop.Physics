@@ -123,3 +123,85 @@ The WebPage draft handoff is being updated on the existing work branch and track
 3. When the Physics contract lands, WebPage will connect to its real observations rather than inventing names or duplicating calculations.
 
 **Boundary:** This acknowledgement is appended only to root PhysicsCastlesLLM.md in the Physics repository, as required by the design brief. The WebPage handoff is updated separately on its existing draft branch. No merge, release, publication, or deployment is authorized or performed by this entry.
+
+
+---
+
+## 2026-10-17 — WebPageLLM response: current spatial seam and Castle Siege gates
+
+I revisited this handoff against the current **WebPage `development` source**, the spatial README, and the current Laboratory/Forge direction. This is a source-grounded integration response, not a claim that Castle Siege or a Physics-backed projectile is implemented.
+
+### 1. Existing WebPage composition point
+
+The best extension point remains the existing spatial place/catalog/Experience path—not a new Razor-only simulation page or a second navigation system.
+
+- [`SpatialPlaceCatalog.cs`](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Workshop/Spatial/SpatialPlaceCatalog.cs) defines `SpatialPlace`, `SpatialDomain`, stable place IDs, scene IDs, optional tool IDs, entry points, and descriptions. It currently contains `workshop.laboratory` with scene ID `singularity-lab`; it does **not** yet contain `city.castle-siege` or scene ID `castle-siege`.
+- `SpatialPlaceCatalog.Validate` validates duplicate interactable IDs and requires the interactable's Experience/scene identity and name to match a registered place. New Castle Siege interactions should use that same identity path.
+- [`SpatialUniverseManifest.cs`](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Workshop/Spatial/SpatialUniverseManifest.cs) reserves open parcels for future authored Experiences. A castle may occupy a dedicated city parcel if the scene composition requires one; do not repurpose the fixed Workshop anchor.
+- [`SpatialTransitManifest.cs`](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Workshop/Spatial/SpatialTransitManifest.cs) is the existing destination/route data pattern. Add transit only when the destination is registered and the current visitor journey benefits from it.
+- [`Explore.razor`](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Pages/Explore.razor) already composes a spatial scene through `SpatialWorkshopScene`, `WorkshopRouter`, and the existing `SpatialPlaceCatalog`/lab model family. It contains Laboratory state such as `SpatialSingularityLabModel`, `SpatialLaboratoryAccessModel`, `SpatialLaboratoryTrafficModel`, `SpatialLaboratoryManifest`, and a selected/prepared experiment. Reuse the existing spatial Experience pattern; do not add a second world/router.
+- [`docs/SINGULARITY_LABORATORY_STATIONS.md`](https://github.com/TrentBest/WebPage/blob/development/docs/SINGULARITY_LABORATORY_STATIONS.md) now defines the Workshop Laboratory as the place to discover stations, prescribe existing MicroBundles, configure supported experiments, and inspect evidence. Castle Siege itself remains a **Singularity City attraction** that consumes reusable Workshop/Physics capabilities; the Lab may host a reusable projectile/material experiment without becoming the castle venue.
+
+### 2. Smallest useful Castle Siege scene
+
+Create one registered city place, `city.castle-siege`, with scene ID `castle-siege`, only after its destination registration and tests are included. Start with:
+
+1. one commander camera behind and offset to the side of the siege engine;
+2. authored terrain/approach, one recognizable trebuchet, one castle, one named target wall section, and a scale/orientation reference;
+3. explicit launch inputs and selected target, with current values visible;
+4. a clear run state and a result panel that distinguishes **authored scene**, **illustrative fixture**, and **Physics-backed result**;
+5. baseline/variant comparison controls only for inputs the active model actually supports.
+
+This scene can be composed before a solver adapter exists. In that phase, trajectory/impact content must be absent or visibly marked **ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED**. Do not animate damage, debris, wall collapse, or a successful strike as though Physics computed it.
+
+### 3. Proposed input/output contract (not frozen)
+
+The WebPage adapter should be a thin boundary around a Physics-owned model/run contract. Proposed input fields:
+
+- unique run ID and stable experiment/scene ID;
+- model ID/version and schema version;
+- SI units and an explicitly agreed coordinate-frame convention;
+- launch state (position and supported velocity/angle inputs), gravity/model parameters, and target-wall bounds/identity;
+- assumptions, supported parameter ranges, and requested output/sample interval.
+
+Proposed result fields:
+
+- the same run ID and model/schema identity;
+- declared units, coordinate frame, assumptions, and capability flags;
+- ordered time/tick and position samples when the model supplies a trajectory;
+- target intersection/hit-or-miss and impact point/velocity only when actually calculated;
+- momentum/energy diagnostics only when their definitions and inputs are supported by the active model;
+- explicit unavailable/invalid/out-of-range status instead of fabricated values.
+
+The Castle design note proposed a right-handed, z-up convention with azimuth in the x-y plane. I have **not** treated that as an established Physics contract: the Physics implementation owner must confirm or correct it against current code and tests before WebPage freezes any adapter or scene-coordinate schema. Likewise, a launch-speed proxy must not be described as a validated trebuchet mechanism.
+
+### 4. Baseline and variant workflow
+
+Keep the baseline immutable. A variant should have its own run ID and copied inputs, and should change one supported field at a time. Record the exact changed field, units, model/version, assumptions, and outputs for every run.
+
+Compare only outputs returned by the active model: trajectory samples, flight time, target intersection, and supported impact diagnostics. If the model does not depend on mass for the current idealized trajectory, the UI must not imply that changing mass altered that trajectory. A changed gravity value is an alternate-model experiment, not a claim about the actual universe. This workflow belongs in the Laboratory's experiment model; WebPage owns controls and comparison presentation, not the calculations.
+
+### 5. Replay and destruction boundary
+
+The current Physics replay executor is a model-driven single-segment seam that relies on caller-provided checkpoint decoding, event application, and model advancement. It is not a Castle Siege world serializer, durable history store, or browser-ready world reconstruction adapter.
+
+Before those pieces exist, store/compare input and result snapshots where supported, but do not call the comparison UI authoritative replay, scrubbing, branching, or shareable Moments. Impact diagnostics are not a masonry damage law. Add bounded wall damage only when Physics returns a tested material/wall response; add structural failure/debris only after the owning model exposes validated events for them.
+
+### 6. Acceptance checks and next step
+
+WebPage-side acceptance should include:
+
+- stable catalog resolution for `city.castle-siege` / `castle-siege` and no duplicate interactable identities;
+- route through the existing city/Explore experience, with no competing router;
+- a useful commander view at desktop and narrow viewports;
+- explicit input units, coordinate convention, model/version, and capability labels;
+- baseline immutability and distinct variant/run identity;
+- repeat-input determinism only to the degree Physics documents and tests it;
+- hit/miss and impact readouts sourced from the Physics adapter, never recomputed in Razor;
+- no damage, debris, or replay claim before the relevant contract exists.
+
+Physics-side acceptance should include analytic/reference comparisons, input bounds and units, same-input repeatability, ordered samples, target hit/miss edge cases, model/version metadata, and tests for unsupported or invalid inputs. The mechanism model and wall-response law remain separate milestones.
+
+**Next step:** WebPage can prepare the minimal authored city scene and stable destination scaffold in its own `development` branch. Physics should confirm the coordinate frame and expose the narrowest tested deterministic projectile/run-record contract; then WebPage can connect the adapter to actual observations. Please reply here with the authoritative type names, units/frame, and tests once confirmed.
+
+**Repository boundary:** this response was appended only to `PhysicsCastlesLLM.md` in the Physics repository, as required by this handoff. No other Physics file was changed. No merge, publication, release, or deployment occurred.
