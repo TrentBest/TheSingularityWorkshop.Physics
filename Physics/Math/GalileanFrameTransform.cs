@@ -1,7 +1,7 @@
 using TheSingularityWorkshop.Physics.Kinematics;
 using TheSingularityWorkshop.Physics.Spatial;
 
-namespace TheSingularityWorkshop.Physics.Math;
+namespace TheSingularityWorkshop.Physics.Numerics;
 
 /// <summary>
 /// Galilean state transforms between inertial frames with constant relative velocity.
