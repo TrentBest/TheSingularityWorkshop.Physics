@@ -181,3 +181,25 @@ A source audit found that the first RNG slice already exists; do not recreate it
 
 The latest development-head Physics Build and Tests workflow was successful at commit `c55edcd91d297ecd5276446e21add550fa358df2` ([run #566](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/39006351119)). That verifies the current head, but does not replace targeted validation when code changes. Continue directly on `development`; no release, master promotion, or unrelated-repository edits are authorized.
 
+
+
+## New follow-on: material-driven surface combustion and element data
+
+**Priority:** after preserving the current projectile/material work, establish the first tested combustion reference slice. This is a Physics-domain task, not a WebPage, renderer, or MicroBundle runtime task.
+
+Contracts already added on `development`:
+- [`ChemicalElementDefinition`](Physics/Chemistry/ChemicalElementDefinition.cs): atomic identity plus explicit source/version/URL/license attribution. It intentionally does not conflate element identity with isotope mass, standard atomic weight, or bulk material properties.
+- [`SurfaceCombustionCellState`](Physics/Combustion/SurfaceCombustionCellState.cs): stable cell/material identity, area, fuel mass, oxygen inventory, thermal energy, and unit surface normal. This is a state contract, not a solver.
+- [Surface Combustion Model](docs/SURFACE_COMBUSTION_MODEL.md): ownership, field semantics, physics invariants, deterministic variation, and staged acceptance gates.
+
+Implement next, in order:
+1. Identify and document a legally usable, source-attributed element dataset before importing all 118 elements. Do not invent atomic weights or copy a dataset without checking its license and provenance. Keep the dataset distinct from the identity contract so providers can contribute updated versions.
+2. Add material/reaction-profile contracts only as needed for the first balanced, named reaction. Record reactants/products, stoichiometric coefficients, heat-release basis/units, source/version, validity range, and evidence status. Do not hard-code a generic “wood burns” reaction or treat a display name as a material model.
+3. Implement a single-cell reaction-accounting reference model with explicit time step and a declared reaction-rate assumption. Bound reaction extent by the limiting reactant. Test non-negative inventories, stoichiometry, heat bookkeeping, limiting-reagent transitions, invalid inputs, and exact-input determinism. If empirical inputs are not yet sourced, label fixtures illustrative and keep the model scope narrow.
+4. Add a surface-source/ignition slice that transfers energy from a reusable flame source into a target surface through a declared transfer model. Do not expose a `LightCandle()` shortcut that bypasses physics; candle, paper, and wood should be data-driven cases only where supported inputs and models exist.
+5. Keep the proposed fuel, oxygen, and thermal textures as logical Physics fields first. A texture is a storage encoding, not the scientific contract. Validate CPU reference state before any GPU implementation. Track surface normals and coordinate frame explicitly; gravity/buoyancy, conduction, radiation, and wind transport are distinct mechanisms.
+6. Use existing `Squirrel3`/`Squirrel3Keyed` only for deterministic variation with stable cell/tick/purpose keys. Randomness must not create fuel/oxygen/energy or mask failed accounting.
+7. Add focused tests and update the [capability catalog](docs/PHYSICS_CAPABILITY_CATALOG.md) only to describe behavior proven by code and tests. Do not edit WebPage or any renderer integration; coordinate a later visual consumer through the existing owner/coordination document.
+8. No package publishing or release without explicit authorization.
+
+The target is a physically inspectable model whose flames are emitted from solved heat/reaction state, not a script or shader that merely looks plausible. Preserve the distinction between authoritative simulation and presentation particles.
