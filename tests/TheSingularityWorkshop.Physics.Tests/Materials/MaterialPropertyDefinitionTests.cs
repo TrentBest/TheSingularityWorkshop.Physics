@@ -16,9 +16,9 @@ public sealed class MaterialPropertyDefinitionTests
     }
 
     [Test]
-    public void IsValid_RejectsValueOutsideItsDeclaredValidityRange()
+    public void IsValid_RejectsAnInvertedValidityConditionRange()
     {
-        var property = CreateProperty() with { Value = 500d, ValidMaximum = 450d };
+        var property = CreateProperty() with { ValidMinimum = 373.15d, ValidMaximum = 273.15d };
 
         Assert.That(property.IsValid, Is.False);
         Assert.Throws<ArgumentException>(property.EnsureValid);
@@ -57,6 +57,8 @@ public sealed class MaterialPropertyDefinitionTests
         EvidenceStatus: PropertyEvidenceStatus.Illustrative,
         SourceId: "workshop.electrical-thermal-fixture",
         SourceVersion: "1",
+        ValidityQuantity: "temperature",
+        ValidityUnit: "K",
         ValidMinimum: 273.15d,
         ValidMaximum: 373.15d,
         ValidConditions: "Illustrative constant value over the example temperature interval.",
