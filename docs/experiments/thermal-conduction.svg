@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+<title id="title">Heat conduction between two lumped thermal bodies</title>
+<desc id="desc">The Physics model transfers 500 joules from a body at 350 kelvin to a body at 300 kelvin. Final temperatures are 349.5 and 300.5 kelvin. Total sensible-energy residual is 0 joules. Conductivity is illustrative.</desc>
+<rect width="900" height="560" rx="24" fill="#f7f9fc"/>
+<text x="40" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#14253d">Thermal conduction: heat moves down the temperature gradient</text>
+<text x="40" y="75" font-size="14" fill="#475569">Model thermodynamics.lumped-body-conduction · v1 · deterministic C# output</text>
+<rect x="40" y="105" width="270" height="150" rx="16" fill="#fff7ed" stroke="#fb923c" stroke-width="2"/>
+<text x="60" y="137" font-size="19" font-weight="700" fill="#9a3412">Body A · initially hotter</text>
+<text x="60" y="170" font-size="17" fill="#14253d">350 K → 349.5 K</text>
+<text x="60" y="200" font-size="14" fill="#475569">Mass 2 kg · cₚ 500 J/(kg·K)</text>
+<path d="M 315 180 H 360" stroke="#c2410c" stroke-width="5" stroke-linecap="round"/><path d="M 360 180 l -12 -8 v 16 z" fill="#c2410c"/>
+<rect x="375" y="120" width="150" height="120" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<text x="397" y="151" font-size="17" font-weight="700" fill="#14253d">Conduction</text>
+<text x="397" y="181" font-size="17" fill="#14253d">500 J →</text>
+<text x="397" y="208" font-size="14" fill="#475569">G = 10 W/K</text>
+<path d="M 540 180 H 585" stroke="#2563a6" stroke-width="5" stroke-linecap="round"/><path d="M 585 180 l -12 -8 v 16 z" fill="#2563a6"/>
+<rect x="600" y="105" width="260" height="150" rx="16" fill="#eff6ff" stroke="#60a5fa" stroke-width="2"/>
+<text x="620" y="137" font-size="19" font-weight="700" fill="#1d4ed8">Body B · initially cooler</text>
+<text x="620" y="170" font-size="17" fill="#14253d">300 K → 300.5 K</text>
+<text x="620" y="200" font-size="14" fill="#475569">Mass 2 kg · cₚ 500 J/(kg·K)</text>
+<rect x="40" y="280" width="820" height="95" rx="16" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="60" y="310" font-size="18" font-weight="700" fill="#14253d">Energy accounting</text>
+<text x="60" y="339" font-size="16" fill="#14253d">Before 103700 J · after 103700 J · residual 0 J</text>
+<text x="60" y="360" font-size="13" fill="#475569">Positive transfer means A → B; the model rejects a step that would overshoot equilibrium.</text>
+<rect x="40" y="395" width="820" height="120" rx="16" fill="#f0fdf4" stroke="#86efac"/>
+<text x="60" y="425" font-size="18" font-weight="700" fill="#166534">Property provenance and limits</text>
+<text x="60" y="450" font-size="14" fill="#14532d">k = 10 W/(m*K) · status: illustrative</text>
+<text x="60" y="473" font-size="13" fill="#14532d">Validity: temperature 273.15–373.15 K · source/fixture workshop.thermal-conduction-fixture v1</text>
+<text x="60" y="496" font-size="13" fill="#14532d">Illustrative constant properties; no internal gradients, contact resistance, phase change, convection, or radiation.</text>
+<text x="40" y="542" font-size="12" fill="#475569">A bounded two-body conduction primitive · not a validated real-material prediction</text>
+</svg>
