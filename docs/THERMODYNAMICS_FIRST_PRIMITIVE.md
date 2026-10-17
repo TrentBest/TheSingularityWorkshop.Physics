@@ -26,6 +26,10 @@ Applying a net energy transfer `Q` updates the temperature through the inverse r
 
 The implementation rejects invalid/non-finite properties, non-finite transfers, overflowed state, and transfers that would place the body below absolute zero.
 
+![Observed two-body thermal conduction: actual run-record temperatures and zero energy-accounting residual](experiments/thermal-conduction.svg)
+
+*This living image documents the adjacent implemented conduction experiment, not the lumped-state primitive alone. Its material properties are explicitly illustrative.*
+
 ## Why start here
 
 A fire scenario needs energy accounting before it needs a flame representation. This primitive gives later conduction, convection, radiation, and reaction models a small, testable thermal state to exchange energy with. It is not yet a heat-transfer solver or a combustion model.
