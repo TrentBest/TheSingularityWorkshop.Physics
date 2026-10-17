@@ -31,5 +31,6 @@ The tests check the moving-train vertical-launch example, round-trip inversion w
 
 ## Next experiment
 
-Compose the transform with the existing [recorded projectile trajectory](experiments/projectile-trajectory.md): preserve one trajectory in the train frame, derive a second ground-frame view, and compare both using the same logical timestamps. Then add the moving platform's own state only when acceleration is explicitly supported. A cannon fired forward from the train can be a separate variant that changes one declared input.
+The paired experiment now exists: [MovingTrainProjectileExperiment.cs](../Physics/Experiments/MovingTrainProjectileExperiment.cs) integrates one train-frame trajectory and transforms every state into the ground frame at the same logical timestamp. [Its focused tests](../tests/TheSingularityWorkshop.Physics.Tests/MovingTrainProjectileExperimentTests.cs) check preserved vertical motion, horizontal train motion, and a non-zero frame origin.
 
+The remaining work is to serialize the paired samples into a versioned run record and generate an SVG from that record. The paired lesson is documented in [moving-train projectile](experiments/moving-train-projectile.md). A forward-fired cannonball can then be a separate declared-input variant.
