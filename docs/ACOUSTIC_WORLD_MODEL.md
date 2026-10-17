@@ -8,6 +8,9 @@ This document defines composable acoustic capabilities in TheSingularityWorkshop
 
 ## The central idea: resolution follows the listener
 
+![Conceptual acoustic-resolution map showing listener-centred detail, local barriers, a possible reflected path, and coarser far-field regions. This is a design schematic, not solver output.](images/acoustic-listener-resolution.svg)
+
+
 In a dense science-fiction city, the world may contain thousands of simultaneous sound sources. Most do not need equal simulation detail. A listener needs the most accurate and timely result for nearby, relevant sound; distant sources can often use lower-cost propagation summaries, clustered sources, or precomputed environmental responses.
 
 Use an adaptive, listener-centred hierarchy:
