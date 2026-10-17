@@ -1,5 +1,4 @@
 {
-  "$schema": "./lesson-manifest.schema.json",
   "schemaVersion": 1,
   "lessonId": "physics.lesson.free-fall.apple",
   "title": "An apple falls",
@@ -60,5 +59,6 @@
   "relatedTheory": [
     "../THEORY.md",
     "../LEARNING_PATH.md"
-  ]
+  ],
+  "manifestSchema": "./lesson-manifest.schema.json"
 }
