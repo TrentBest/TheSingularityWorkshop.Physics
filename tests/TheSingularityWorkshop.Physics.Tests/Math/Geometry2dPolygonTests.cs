@@ -42,6 +42,40 @@ public sealed class Geometry2dPolygonTests
     }
 
     [Test]
+    public void LocatePoint_HandlesExtremeFiniteCoordinatesWithoutOverflowingPredicates()
+    {
+        Vector2d[] square =
+        {
+            new(-1e308, -1e308), new(1e308, -1e308),
+            new(1e308, 1e308), new(-1e308, 1e308)
+        };
+
+        Assert.That(Geometry2dPolygon.LocatePoint(square, new Vector2d(0, 0)),
+            Is.EqualTo(PointPolygonRelation2d.Inside));
+        Assert.That(Geometry2dPolygon.LocatePoint(square, new Vector2d(1e308, 0)),
+            Is.EqualTo(PointPolygonRelation2d.Boundary));
+        Assert.That(Geometry2dPolygon.LocatePoint(square, new Vector2d(1.7e308, 0)),
+            Is.EqualTo(PointPolygonRelation2d.Outside));
+    }
+
+    [Test]
+    public void LocatePoint_HandlesSubnormalScalePolygon()
+    {
+        double tiny = 1e-320;
+        Vector2d[] square =
+        {
+            new(0, 0), new(tiny, 0), new(tiny, tiny), new(0, tiny)
+        };
+
+        Assert.That(Geometry2dPolygon.LocatePoint(square, new Vector2d(tiny / 2, tiny / 2)),
+            Is.EqualTo(PointPolygonRelation2d.Inside));
+        Assert.That(Geometry2dPolygon.LocatePoint(square, new Vector2d(tiny, tiny / 2)),
+            Is.EqualTo(PointPolygonRelation2d.Boundary));
+        Assert.That(Geometry2dPolygon.LocatePoint(square, new Vector2d(tiny * 2, tiny / 2)),
+            Is.EqualTo(PointPolygonRelation2d.Outside));
+    }
+
+    [Test]
     public void LocatePoint_RejectsNullAndTooFewVertices()
     {
         Assert.Throws<ArgumentNullException>(() =>
