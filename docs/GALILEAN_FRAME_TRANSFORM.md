@@ -8,9 +8,9 @@ A train moves steadily at 20 m/s. A passenger launches a ball straight upward at
 
 At (t=1\) s, the ball's train-frame position is ((0,0,1.5)\) m in this test fixture. The corresponding ground-frame state is at ((20,0,1.5)\) m, moving at ((20,0,8)\) m/s. The ball's vertical motion is unchanged; the ground observer also sees the train's horizontal motion.
 
-![Recorded 3D projectile trajectory reference](experiments/projectile-trajectory.svg)
+![Moving-train projectile: passenger and trackside views](experiments/moving-train-projectile.svg)
 
-*Reference trajectory only; it does not yet show both frames. The paired observer visualization remains a specific next deliverable.*
+*Paired analytical reference graphic for the default teaching case. It is not yet generated from the serialized C# run record; CI-backed rendering is the next step.*
 
 ## The transform
 
@@ -37,4 +37,4 @@ The tests check the moving-train vertical-launch example, round-trip inversion w
 
 The paired experiment now exists: [MovingTrainProjectileExperiment.cs](../Physics/Experiments/MovingTrainProjectileExperiment.cs) integrates one train-frame trajectory and transforms every state into the ground frame at the same logical timestamp. [Its focused tests](../tests/TheSingularityWorkshop.Physics.Tests/MovingTrainProjectileExperimentTests.cs) check preserved vertical motion, horizontal train motion, and a non-zero frame origin.
 
-The paired states now have a versioned JSON run record: [MovingTrainProjectileRunRecord.cs](../Physics/Experiments/MovingTrainProjectileRunRecord.cs). Its focused test checks the actual paired samples, SI units, schema/model versions, and repeatable JSON serialization. The remaining visualization step is to generate a paired SVG from this record and validate it against the recorded C# output. The lesson contract is documented in [moving-train projectile](experiments/moving-train-projectile.md). A forward-fired cannonball can then be a separate declared-input variant.
+The paired states now have a versioned JSON run record: [MovingTrainProjectileRunRecord.cs](../Physics/Experiments/MovingTrainProjectileRunRecord.cs). Its focused test checks the actual paired samples, SI units, schema/model versions, and repeatable JSON serialization. A paired SVG now explains the two observations; the remaining visualization step is to generate it from this record and validate it against the recorded C# output. The lesson contract is documented in [moving-train projectile](experiments/moving-train-projectile.md). A forward-fired cannonball can then be a separate declared-input variant.
