@@ -2,7 +2,7 @@
 
 ![Living scale factor: the solid object smoothly changes between one-half and twice the reference size, while the dashed reference outline stays fixed.](images/scale-factor-living.svg)
 
-**Change the scale, see the consequence.** The solid object cycles smoothly from a linear scale factor of 0.5 to 2.0. The dashed square is the fixed reference at scale 1.0. The number changes with the animation endpoints so the reader can connect the property to the visible object.
+**Change the scale, see the consequence.** The solid object cycles smoothly from a linear scale factor of 0.5 to 2.0. The dashed square is the fixed reference at scale 1.0. The numeric label advances through intermediate values in sync with the smooth size change, so the property remains visible throughout the cycle.
 
 This is a conceptual geometry demonstration, not a physics simulation. The SVG contains the animation and accessible description; no JavaScript, network access, or solver is needed.
 
