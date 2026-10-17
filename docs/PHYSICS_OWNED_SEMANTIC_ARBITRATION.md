@@ -20,7 +20,7 @@ The following pieces are executable and separate by responsibility:
 - `Physics/Materials/PhysicalAssemblyMaterialPropertyMapper.cs` maps each resolved part to property records whose material ID matches exactly. Ambiguous or unresolved parts receive no properties by default; unrelated catalog entries are ignored. Results are validated and sorted deterministically. The mapper preserves property records rather than combining conflicting values or selecting a solver.
 - `Physics/Materials/MaterialPropertyRangeEvaluator.cs` compares an observed validity quantity, unit, and value with a property's declared numeric range. It reports within-range, outside-range, or incomparable; quantity and unit must match exactly, and the assessment retains the property's evidence status, source/version, and numeric bounds. It does not convert units, interpret free-text conditions, or claim that all model assumptions are satisfied.
 
-The tests under `tests/TheSingularityWorkshop.Physics.Tests/Materials/` cover independent steel-tip / wood-shaft / unresolved-fletching identities, assembly relationship validation, rejection of evidence for undeclared parts, explicit-reference precedence, conflicts, unknown identities, deterministic ordering, provenance, and mapping property evidence to the correct parts.
+The tests under `tests/TheSingularityWorkshop.Physics.Tests/Materials/` cover independent steel-tip / wood-shaft / unresolved-fletching identities, assembly relationship validation, rejection of evidence for undeclared parts, explicit-reference precedence, conflicts, unknown identities, deterministic ordering, provenance, and mapping property evidence to the correct parts. `MaterialEvidencePipelineTests` additionally exercises the sequence from declared assembly and caller-supplied identity evidence through property mapping and range assessment, including an unresolved part and a unit mismatch.
 
 These contracts accept declarations/evidence from their caller. They **do not yet** discover arbitrary MicroBundle data, resolve declared provider IDs to typed objects, maintain a cross-provider search index, select compatible model/solver capabilities, or automatically react to bundle installation/removal. The mapping layer also does not decide whether a property's conditions fit a particular simulation state.
 
@@ -69,7 +69,7 @@ Unknown must remain unknown. A discovered label must not be upgraded into unsupp
 
 ## Remaining executable proof
 
-The existing unit tests cover identity resolution, assembly validation, exact-ID property mapping, and explicit range checks that do not silently convert units or infer unstated conditions. The remaining end-to-end proof must demonstrate:
+The existing unit tests cover identity resolution, assembly validation, exact-ID property mapping, explicit range checks that do not silently convert units or infer unstated conditions, and an integrated material-evidence pipeline test. The remaining end-to-end proof must demonstrate:
 
 - discovery from supported MicroBundle-exposed data and relationships;
 - host-level typed provider resolution and compatibility checks;
