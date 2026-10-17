@@ -117,7 +117,7 @@ jobs:
         run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json /tmp/contact-impulse.actual.svg
 
       - name: Verify committed contact response SVG matches actual resolver output
-        run: cmp /tmp/contact-impulse.actual.svg docs/experiments/contact-impulse.svg
+        run: diff -u docs/experiments/contact-impulse.svg /tmp/contact-impulse.actual.svg
 
       - name: Verify contact response SVG against its run record
         run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json docs/experiments/contact-impulse.svg --check
