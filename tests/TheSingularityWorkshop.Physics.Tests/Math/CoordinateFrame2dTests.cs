@@ -9,7 +9,8 @@ public sealed class CoordinateFrame2dTests
     [Test]
     public void FrameIdentity_IsOrdinalAndCaseSensitive()
     {
-        Assert.That(new CoordinateFrame2d("world"), Is.EqualTo(new CoordinateFrame2d("world")));
+        var world = new CoordinateFrame2d("world");
+        Assert.That(world, Is.EqualTo(new CoordinateFrame2d("world")));
         Assert.That(new CoordinateFrame2d("world"), Is.Not.EqualTo(new CoordinateFrame2d("World")));
     }
 
