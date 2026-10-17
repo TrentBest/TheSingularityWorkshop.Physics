@@ -13,7 +13,7 @@ Simulation randomness must be reproducible, addressable, and explicit about what
 - `NextDouble()` returns a value in `[0, 1)` with 32 bits of source precision; ranged doubles and `Chance`, `NextBool`, `Pick`, and Fisher–Yates `Shuffle` are convenience operations.
 
 ```csharp
-using TheSingularityWorkshop.Physics.Math;
+using TheSingularityWorkshop.Physics.Numerics;
 
 var random = new Squirrel3Random(seed: 12345u);
 var massJitter = random.NextDouble(-0.05d, 0.05d);
