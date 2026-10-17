@@ -1,6 +1,6 @@
 # Deterministic Math: Randomness, LUTs, and Numerical Truth
 
-**Status:** the Squirrel3 hash, seeded helper stream, stateless keyed sampler, bounded uniform 1D LUT, and structure-of-arrays Vector3d batch operations are implemented with focused tests. These batch operations are CPU reference code, not SIMD/GPU acceleration. This document distinguishes working primitives from future math capabilities; it does not claim that a general-purpose LUT engine, GPU math backend, or separate Math MicroBundle exists.
+**Status:** the Squirrel3 hash, seeded helper stream, stateless keyed sampler, bounded uniform 1D LUT, structure-of-arrays Vector3d batch operations, and single-pass online descriptive statistics are implemented with focused tests. These batch operations are CPU reference code, not SIMD/GPU acceleration. This document distinguishes working primitives from future math capabilities; it does not claim that a general-purpose LUT engine, GPU math backend, or separate Math MicroBundle exists.
 
 ![Deterministic mathematics workflow: explicit inputs, stable keys, numerical approximation, and error checks](images/deterministic-math-workflow.svg)
 
@@ -31,7 +31,7 @@ var damageVariation = Squirrel3Keyed.UnitDouble(
     seed: 12345u, entityId: 812u, logicalTick: 600u, purposeId: 2u);
 ```
 
-The sample illustrates API usage only; those distributions and values are not a physical material model. For contiguous bulk vector arithmetic, see [Vector3dBatch](../Physics/Math/Vector3dBatch.cs); for the future acceleration boundary, see [GPU Computation Readiness](GPU_COMPUTATION_READINESS.md).
+The sample illustrates API usage only; those distributions and values are not a physical material model. For contiguous bulk vector arithmetic, see [Vector3dBatch](../Physics/Math/Vector3dBatch.cs); for single-pass mean/variance accumulation, see [OnlineStatistics](../Physics/Math/OnlineStatistics.cs); for the future acceleration boundary, see [GPU Computation Readiness](GPU_COMPUTATION_READINESS.md).
 
 ### Determinism rules
 
