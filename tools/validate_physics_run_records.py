@@ -94,7 +94,7 @@ def main(args: list[str]) -> int:
 
     errors = [error for arg in args for error in validate(Path(arg))]
     if errors:
-        print("\\n".join(errors), file=sys.stderr)
+        print("\n".join(errors), file=sys.stderr)
         return 1
 
     print(f"Validated minimal run-record envelope for {len(args)} record(s).")
