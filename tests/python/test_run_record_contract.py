@@ -112,6 +112,21 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         self.assertTrue(any("recognized epistemic status" in e for e in errors))
         self.assertTrue(any("limitations must be an array" in e for e in errors))
 
+    def test_non_string_status_values_are_reported_instead_of_crashing(self):
+        for status in ([], {}, None, 1):
+            with self.subTest(status=status):
+                record = {
+                    "schemaVersion": 1,
+                    "modelId": "test.model",
+                    "modelVersion": 1,
+                    "status": status,
+                    "definition": {},
+                    "result": {},
+                    "limitations": ["test fixture"],
+                }
+                errors = validator.validate(self.write_record(record))
+                self.assertTrue(any("recognized epistemic status" in e for e in errors))
+
     def test_catalog_discovers_shared_fields_without_rewriting_domain_payloads(self):
         paths = [
             ROOT / "docs/experiments/acoustic-observation.run.json",
