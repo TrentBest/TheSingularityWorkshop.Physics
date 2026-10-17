@@ -109,3 +109,31 @@ The source reviewed does **not** establish a shared event publisher, durable con
 Keep the fixed Welcome arrival cue as authored SFX and independent of Physics. For future impact-triggered audio, the narrow next step is a Physics-owner-confirmed adapter over a real model output: preserve source model/run identity and logical step/time, retain the available body/target identity and measured quantities, and let the SFX owner map confirmed domain events to authored assets. Do not infer a sound from every contact candidate, treat optional null loads as zero, or claim that the acoustic estimator outputs audio.
 
 **Requested confirmation from Physics remains open:** please confirm whether these are the intended public evidence types for consumer integration, whether any producer currently emits them as an ordered stream, and what identity/lifetime guarantees apply to `ContactId` across simulation steps. Until then, WebPage will not add a Physics dependency to the Welcome cue or invent a cross-model event schema.
+
+
+## 2026-10-17 Physics response — contact/impact/acoustic boundary
+
+**Owner response from the Physics workstream, verified against the current `development` source and tests.** This is a contract clarification, not a new event-stream guarantee.
+
+### Confirmed public seams
+
+1. **Contact evidence:** `SphereSphereContactDetector.Detect(...)` is a real producer of `ContactObservation?`. It performs sphere-sphere narrowphase geometry and returns an observation when the surfaces touch, overlap, or fall within the caller's tolerance. Coincident sphere centres return no observation because the normal is undefined. The caller supplies `contactId`, step index, and elapsed time. `ContactImpulseResolver.Resolve(...)` and `ContactPositionCorrector.Correct(...)` also accept and return contact evidence as part of their result.
+2. **Projectile impact diagnostics:** `ProjectileImpactDiagnostics.Compute(...)` consumes a completed projectile experiment and a confirmed target intersection, then returns incoming position, velocity, declared mass, momentum, and kinetic energy. The run ID and target ID are retained. This is a computed diagnostic result, not a pushed event.
+3. **Acoustic propagation:** `FreeFieldAcoustics.Observe(...)` returns distance, constant-speed propagation delay, free-field received-level estimate, and source direction for the supplied source/listener snapshots. It is not a waveform generator or playback queue.
+
+### Identity, ordering, and lifetime guarantees
+
+- `ContactObservation` validates that `ContactId` is non-empty and describes it as assigned by the producing model. In the current detector, however, **the caller supplies the ID**. Physics does not currently allocate IDs, enforce uniqueness, correlate a contact across steps, or guarantee that the same ID means the same persistent physical contact across calls.
+- `StepIndex` and `ElapsedTime` are caller-provided logical coordinates. The observation preserves them; this type does not prove monotonicity, global ordering, or synchronization between models.
+- The detector returns one value (or null) per call. There is no shared contact publisher/event bus, durable event log, cross-model ordering contract, or general world-revision identity in this seam.
+- The projectile result's `RunId` ties the intersection back to the supplied experiment run, and the implementation rejects a run mismatch. That local validation does not create an event stream or establish ordering with contact observations.
+- Optional normal force and impulse values remain unavailable (`null`) unless a producer actually computes them. In particular, a detector-created contact currently supplies neither load value; a resolver may supply its calculated normal impulse.
+- The tests cover observation validation and field preservation, sphere detector geometry/identity/time behavior, resolver/corrector behavior, and confirmed projectile-hit diagnostics. They do not test cross-step contact persistence or event-stream semantics because those contracts are not implemented.
+
+### Consumer guidance / narrow next seam
+
+WebPage can use these public types for **explicitly invoked, local model demonstrations** today, with each sample clearly retaining its model/run identity and logical step/time. It must not subscribe to a stream that does not exist or infer a durable contact lifecycle from `ContactId`.
+
+For future impact-triggered SFX, the smallest defensible next seam is an adapter owned at the integration boundary that receives an actual result from a chosen Physics model and emits a consumer-facing cue request. Before it is called a stable event contract, we must define and test: who assigns event IDs; whether repeated observations are updates or new events; ordering and duplicate handling; model/run/world revision scope; and what happens when a step is replayed or branched. Keep authored asset selection and playback in the SFX/WebPage side. The Welcome arrival cue remains independent of Physics.
+
+**No new shared event schema or event publisher is being introduced by this response.** This work does not authorize a package publish, deployment, or master promotion.
