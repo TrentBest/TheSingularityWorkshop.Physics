@@ -2,6 +2,10 @@
 
 This increment introduces a small, renderer-independent terrain primitive that can change a world through a physically accountable event: volcanic material is added to a cell-centered elevation field. It is designed as a first geology capability and as a future input to the hydrodynamics terrain/shoreline work.
 
+![Idealized volcanic deposition: prescribed volume distributed over a cell-centered terrain field](images/volcanic-deposition-concept.svg)
+
+*Conceptual schematic, not a geological prediction. The implemented model deposits a prescribed volume; it does not simulate magma dynamics or predict an eruption.*
+
 ## Implemented model
 
 - A row-major 2D terrain height field with metre-based elevation and horizontal cell dimensions.
