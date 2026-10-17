@@ -99,6 +99,11 @@ public sealed record ProjectileTrajectoryRunRecord
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
+    static ProjectileTrajectoryRunRecord()
+    {
+        SerializerOptions.Converters.Add(new Vector3dJsonConverter());
+    }
+
     /// <summary>Stable identifier for the analytical model.</summary>
     public string ModelId { get; init; } = "kinematics.constant-acceleration-projectile";
 
