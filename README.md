@@ -134,7 +134,7 @@ This is an ideal point-projectile experiment under constant acceleration. A sepa
 - [Thermodynamics: first bounded primitive](docs/THERMODYNAMICS_FIRST_PRIMITIVE.md) — lumped thermal state, sensible energy, assumptions, and limits
 - [Physics capability catalog](docs/PHYSICS_CAPABILITY_CATALOG.md) — implemented source entry points, model scope, limits, and contribution checklist
 - [Physics gap register](docs/PHYSICS_GAP_REGISTER.md) — evidence-based audit of missing cross-domain bridges, priorities, and acceptance gates; includes the [capability atlas SVG](docs/images/physics-capability-atlas.svg)
-- [Physics run-record contract](docs/PHYSICS_RUN_RECORD_CONTRACT.md) — proposed common metadata envelope for cross-domain experiments without flattening domain-specific observations
+- [Physics run-record contract](docs/PHYSICS_RUN_RECORD_CONTRACT.md) — proposed common metadata envelope for cross-domain experiments without flattening domain-specific observations; [CI validator](tools/validate_physics_run_records.py) checks the required envelope on representative acoustic, room-reflection, and electrical-thermal records
 - [Electrical-to-thermal coupling experiment](docs/experiments/electrical-thermal-coupling.md) — first bounded connection between resistive-load power and lumped thermal energy, with a reproducible JSON run record, model-generated SVG, focused tests, and CI checks
 - [Numerical validation playbook](docs/NUMERICAL_VALIDATION.md) — analytical checks, conservation residuals, convergence, determinism, and evidence gates
 - [Physics classes & ontology](docs/PHYSICS_CLASSES.md) — capability domains and their relationships
