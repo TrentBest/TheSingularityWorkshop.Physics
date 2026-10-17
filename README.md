@@ -62,6 +62,31 @@ var json = runRecord.ToJson();
 
 This is a deterministic, one-dimensional constant-acceleration experiment—not a general-purpose rigid-body engine. See the [experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationExperimentTests.cs) and [run-record tests](tests/TheSingularityWorkshop.Physics.Tests/ConstantAccelerationRunRecordTests.cs) for the executable acceptance surface. The run-record format is an initial schema; broad source provenance, uncertainty analysis, the ramp experiment, and coupled models remain future work.
 
+### 3D projectile experiment
+
+The 3D projectile experiment builds on the analytical constant-acceleration solver. It converts a declared launch speed, elevation, and azimuth into an initial velocity under a right-handed, z-up convention, then records the initial state and every fixed logical-step sample. The versioned JSON record preserves the run ID, exact inputs, units, model identity, coordinate convention, and samples.
+
+```csharp
+using TheSingularityWorkshop.Physics.Experiments;
+using TheSingularityWorkshop.Physics.Spatial;
+
+var definition = new ProjectileExperimentDefinition(
+    RunId: "castle-baseline-001",
+    InitialPosition: new Vector3d(0d, 0d, 2d),
+    LaunchSpeed: 30d,
+    ElevationDegrees: 45d,
+    AzimuthDegrees: 0d,
+    Gravity: new Vector3d(0d, 0d, -9.81d),
+    DeltaTime: 0.02d,
+    StepCount: 250);
+
+var result = ProjectileExperiment.Run(definition);
+var record = ProjectileExperimentRunRecord.FromResult(result);
+var json = record.ToJson();
+```
+
+This is an ideal point-projectile experiment under constant acceleration. It does not yet calculate target intersection, impact response, drag, or trebuchet mechanics. See [projectile experiment tests](tests/TheSingularityWorkshop.Physics.Tests/ProjectileExperimentTests.cs) for the executable acceptance surface.
+
 ![Physics architecture](docs/images/physics-architecture.svg)
 
 ![Multi-rate physics process-group scheduling](docs/images/physics-process-group-scheduling.svg)
