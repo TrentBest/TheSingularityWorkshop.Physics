@@ -2,6 +2,10 @@
 
 **Status:** implemented in this branch; CI validation pending. This is a bounded three-dimensional compliant-link model, not a rigid-joint or general articulated solver.
 
+![Living scale-factor illustration: compare half, reference, and double linear scale before interpreting link length](images/scale-factor-living.svg)
+
+The image above illustrates linear scale only. It does not animate this spring-damper solver or imply that its force law is scale-invariant: changing length, mass, stiffness, damping, and timestep can change the system response and its stability.
+
 ## Model
 
 The link acts along the line joining two body origins. For separation length (r), rest length (r_0), unit direction (hat{n}) from body A to body B, and relative radial velocity (v_r), the force on A is
