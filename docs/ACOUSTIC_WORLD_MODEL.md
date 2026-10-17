@@ -182,3 +182,14 @@ The initial implementation lives in `Physics/Acoustics/FreeFieldAcoustics.cs`:
 The baseline uses a constant 343 m/s sound speed by default and the idealized point-source pressure-spreading relation `L(r) = L(r₀) − 20 log₁₀(max(r, r₀)/r₀)`. The level is clamped at the reference distance for closer positions because this far-field approximation should not be extrapolated into the source's near field. Propagation delay still uses the actual separation.
 
 This is an analytical observation model—not a simulated pressure waveform, material interaction, reflection, occlusion, Doppler, ear-canal model, or audible playback. Those require separate contracts and validation. Tests cover delay, inverse-distance pressure-level response, direction, coincident positions, near-field clamping, and invalid inputs.
+
+
+## Implemented increment — bounded first-order room paths (2026-10-17)
+
+The code now includes `AcousticRoomBox` and `FirstOrderRoomReflections.Observe` as a deliberately limited next step beyond free field. A room is an axis-aligned box in metres with one pressure-amplitude reflection coefficient per wall. The model mirrors the source across each wall, intersects the image-source path with the finite wall face, and reports valid first-order paths in a stable wall order.
+
+Each `AcousticReflectionObservation` records the room/source/listener identities, wall ID, reflection point, path length, propagation delay, reflection coefficient, and estimated received dB SPL for that path. The path level applies the same inverse-distance point-source estimate plus `20 log10(reflectionCoefficient)`. A coefficient of zero suppresses that wall's path.
+
+**This is path metadata, not room audio.** The result does not combine direct and reflected paths, and does not model phase, interference, spectrum, frequency-dependent absorption, scattering, diffraction, transmission, occlusion, repeated reflections, reverberant decay, or waveform generation. Source and listener must lie strictly inside the room, and edge/corner hits are excluded to avoid double-counting a path across adjacent faces. Tests cover a known reflection point, path length, delay, per-path level, deterministic wall ordering, and invalid bounds/coefficients/positions.
+
+The next evidence gate is a reproducible experiment record and SVG generated from this model's actual output. Do not present the room as audible or the per-path level as a combined listener level.
