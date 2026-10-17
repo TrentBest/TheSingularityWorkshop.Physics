@@ -10,7 +10,7 @@ The goal is to prevent the repository from becoming a collection of individually
 
 Physics is no longer an empty skeleton. It already contains tested slices in spatial math, kinematics, collision/contact, axial mechanics, thermal accounting, shallow-water models, terrain, electrical load accounting, acoustics, deterministic cell addressing, and timeline/history contracts. The problem is that these capabilities are mostly **islands**: they do not yet form a validated, causal, multi-domain world.
 
-The highest-value work is not another isolated showcase or another round of polishing the same model. It is to establish reusable contracts and make adjacent models exchange quantities correctly. **A first electrical-to-thermal coupling experiment now exists in source with focused tests, a C# run-record generator, a committed JSON fixture, and an SVG rendered from that record. The first test attempt exposed incorrect test assumptions; those were corrected, and the corrected build-and-test run passed. The new run-record/SVG consistency checks have been added to CI and await their first result.**
+The highest-value work is not another isolated showcase or another round of polishing the same model. It is to establish reusable contracts and make adjacent models exchange quantities correctly. **A first electrical-to-thermal coupling experiment now exists in source with focused tests, a C# run-record generator, a committed JSON fixture, and an SVG rendered from that record. The first test attempt exposed incorrect test assumptions; those were corrected, and the corrected build-and-test run passed. The new run-record/SVG consistency checks passed in CI, alongside the full test suite and package-build step.**
 
 ## Current evidence and missing bridges
 
@@ -91,6 +91,6 @@ A slice is not done when a class exists or a diagram looks plausible. It is done
 
 ## What I would do next
 
-Validate the **P1 electrical-to-thermal evidence pipeline** end to end: its run record and SVG are now committed and CI is wired to compare them with fresh output. Do not mark the slice fully accepted until that new CI path is green. Then use concrete friction points from this real exchange to define the minimum reusable **P0 observation/run contract**, rather than designing a generic framework before one real exchange proves what it needs.
+Validate the **P1 electrical-to-thermal evidence pipeline** end to end: its run record and SVG are now committed and CI is wired to compare them with fresh output. The run-record/SVG consistency checks and full build-and-test workflow are now green on `development`. Then use concrete friction points from this real exchange to define the minimum reusable **P0 observation/run contract**, rather than designing a generic framework before one real exchange proves what it needs.
 
 This audit is intended to change priorities: stop deepening isolated capabilities by default; prioritize one tested causal connection at a time.
