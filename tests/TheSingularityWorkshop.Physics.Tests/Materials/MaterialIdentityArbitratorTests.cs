@@ -1,0 +1,110 @@
+using NUnit.Framework;
+using TheSingularityWorkshop.Physics.Materials;
+
+namespace TheSingularityWorkshop.Physics.Tests.Materials;
+
+[TestFixture]
+public sealed class MaterialIdentityArbitratorTests
+{
+    private static readonly IReadOnlyDictionary<string, string> Aliases =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["steel"] = "material:steel",
+            ["wood"] = "material:wood"
+        };
+
+    private static MaterialIdentityArbitrator CreateArbitrator() =>
+        new(["material:steel", "material:wood"], Aliases);
+
+    [Test]
+    public void Arbitrate_ResolvesTipIndependentlyFromShaftAndFletching()
+    {
+        var result = CreateArbitrator().Arbitrate([
+            Evidence("arrow.tip", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "weapon", "tip.material"),
+            Evidence("arrow.shaft", "material:wood", MaterialReferenceEvidenceKind.StructuredDeclaration, "parts", "shaft.material"),
+            Evidence("arrow.fletching", null, MaterialReferenceEvidenceKind.DescriptiveText, "parts", "fletching.description", "feathered construction")
+        ]);
+
+        Assert.That(result.Select(x => x.PartId), Is.EqualTo(new[] { "arrow.fletching", "arrow.shaft", "arrow.tip" }));
+        Assert.That(Find(result, "arrow.tip").MaterialId, Is.EqualTo("material:steel"));
+        Assert.That(Find(result, "arrow.shaft").MaterialId, Is.EqualTo("material:wood"));
+        Assert.That(Find(result, "arrow.fletching").Status, Is.EqualTo(MaterialIdentityResolutionStatus.Unresolved));
+        Assert.That(Find(result, "arrow.fletching").MaterialId, Is.Null);
+    }
+
+    [Test]
+    public void Arbitrate_ExplicitReferenceOutranksContradictoryDescriptiveText()
+    {
+        var result = CreateArbitrator().Arbitrate([
+            Evidence("tip", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "weapon", "materialRef"),
+            Evidence("tip", null, MaterialReferenceEvidenceKind.DescriptiveText, "notes", "description", "wood")
+        ]);
+
+        Assert.That(Find(result, "tip").Status, Is.EqualTo(MaterialIdentityResolutionStatus.Resolved));
+        Assert.That(Find(result, "tip").MaterialId, Is.EqualTo("material:steel"));
+    }
+
+    [Test]
+    public void Arbitrate_ConflictingExplicitReferencesRemainAmbiguous()
+    {
+        var evidence = new[]
+        {
+            Evidence("tip", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "a", "material"),
+            Evidence("tip", "material:wood", MaterialReferenceEvidenceKind.ExplicitReference, "b", "material")
+        };
+
+        var result = CreateArbitrator().Arbitrate(evidence).Single();
+
+        Assert.That(result.Status, Is.EqualTo(MaterialIdentityResolutionStatus.Ambiguous));
+        Assert.That(result.MaterialId, Is.Null);
+        Assert.That(result.Evidence.Select(x => x.SourceBundleId), Is.EqualTo(new[] { "a", "b" }));
+    }
+
+    [Test]
+    public void Arbitrate_IsIndependentOfInputEnumerationOrder()
+    {
+        var evidence = new[]
+        {
+            Evidence("tip", "material:steel", MaterialReferenceEvidenceKind.ExplicitReference, "weapon", "tip.material"),
+            Evidence("shaft", "material:wood", MaterialReferenceEvidenceKind.StructuredDeclaration, "parts", "shaft.material")
+        };
+
+        var forward = CreateArbitrator().Arbitrate(evidence);
+        var reverse = CreateArbitrator().Arbitrate(evidence.Reverse());
+
+        Assert.That(reverse, Is.EqualTo(forward));
+    }
+
+    [Test]
+    public void Arbitrate_UnknownMaterialAndMissingPropertiesAreNotInvented()
+    {
+        var result = CreateArbitrator().Arbitrate([
+            Evidence("part", "material:unregistered-alloy", MaterialReferenceEvidenceKind.ExplicitReference, "bundle", "material")
+        ]).Single();
+
+        Assert.That(result.Status, Is.EqualTo(MaterialIdentityResolutionStatus.Unresolved));
+        Assert.That(result.MaterialId, Is.Null);
+        Assert.That(result.Explanation, Does.Contain("properties remain unspecified"));
+    }
+
+    [Test]
+    public void Arbitrate_KnownAliasResolvesIdentityAndRetainsProvenance()
+    {
+        var result = CreateArbitrator().Arbitrate([
+            Evidence("tip", null, MaterialReferenceEvidenceKind.DescriptiveText, "weapon", "tip.description", "  steel ")
+        ]).Single();
+
+        Assert.That(result.Status, Is.EqualTo(MaterialIdentityResolutionStatus.Resolved));
+        Assert.That(result.MaterialId, Is.EqualTo("material:steel"));
+        Assert.That(result.Evidence.Single().SourceFieldId, Is.EqualTo("tip.description"));
+    }
+
+    private static MaterialIdentityResolution Find(
+        IReadOnlyList<MaterialIdentityResolution> results, string partId) =>
+        results.Single(result => result.PartId == partId);
+
+    private static MaterialReferenceEvidence Evidence(
+        string partId, string? materialId, MaterialReferenceEvidenceKind kind,
+        string bundle, string field, string? observedTerm = null) =>
+        new(partId, materialId, observedTerm, kind, bundle, field);
+}
