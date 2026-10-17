@@ -161,6 +161,15 @@ jobs:
       - name: Verify generated first-order room reflection record matches committed fixture
         run: cmp /tmp/first-order-room-reflection.actual.json docs/experiments/first-order-room-reflection.run.json
 
+      - name: Render first-order room reflection SVG from actual model output
+        run: python3 tools/render_first_order_room_reflection.py /tmp/first-order-room-reflection.actual.json /tmp/first-order-room-reflection.actual.svg
+
+      - name: Verify committed room reflection SVG matches actual model output
+        run: cmp /tmp/first-order-room-reflection.actual.svg docs/experiments/first-order-room-reflection.svg
+
+      - name: Verify room reflection SVG against committed run record
+        run: python3 tools/render_first_order_room_reflection.py docs/experiments/first-order-room-reflection.run.json docs/experiments/first-order-room-reflection.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
