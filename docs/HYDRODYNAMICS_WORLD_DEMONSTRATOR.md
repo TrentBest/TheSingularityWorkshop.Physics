@@ -4,6 +4,10 @@
 
 This is the design and implementation contract for the larger simulator. The first executable reference is documented in [Hydrodynamics: First Executable Wave Reference](HYDRODYNAMICS_FIRST_WAVE_REFERENCE.md). That one-dimensional linear model is a verification step, not the finished hydrodynamics solver.
 
+![Conceptual roadmap for the hydrodynamics world: a bounded basin, propagating and reflected wavefronts, future terrain and obstacles, a floating body, and the staged H0–H3 implementation path. Drawn waves and boat motion are schematic, not solver output.](images/hydrodynamics-world-roadmap.svg)
+
+*This living roadmap image makes the intended experience visible without pretending that the complete world is implemented. The 2D shallow-water model and the broader basin/boat/terrain demonstrator are different maturity levels; each stage needs its own physical checks.*
+
 ## The experience we are building toward
 
 The first public-facing scene should be understandable in seconds and rewarding to explore:
