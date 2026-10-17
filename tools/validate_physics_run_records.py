@@ -45,7 +45,7 @@ def validate(path: Path) -> list[str]:
         if key not in record:
             errors.append(f"{path}: missing required envelope field '{key}'")
 
-    if not isinstance(record.get("schemaVersion"), int) or record.get("schemaVersion", 0) < 1:
+    if (not isinstance(record.get("schemaVersion"), int)\n            or isinstance(record.get("schemaVersion"), bool)\n            or record.get("schemaVersion", 0) < 1):
         errors.append(f"{path}: schemaVersion must be a positive integer")
     if not isinstance(record.get("modelId"), str) or not record.get("modelId", "").strip():
         errors.append(f"{path}: modelId must be a non-empty string")
