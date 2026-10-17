@@ -137,9 +137,14 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         rendered = catalog.render(entries)
         self.assertIn("`observation`", rendered)
         self.assertIn("`room`, `source`, `listener`, `speedOfSoundMetersPerSecond`, `directObservation`, `reflections`", rendered)
-        self.assertIn("`result`, `electricalObservation`", rendered)
+        self.assertIn("`electricalObservation`, `result`", rendered)
         self.assertIn("./acoustic-observation.run.json", rendered)
         self.assertIn("does not claim that records share a physical result schema", rendered)
+
+        all_paths = paths + [ROOT / "docs/experiments/thermal-conduction.run.json"]
+        all_entries = [catalog.load_record(path) for path in all_paths]
+        committed_catalog = (ROOT / "docs/experiments/run-record-catalog.md").read_text(encoding="utf-8")
+        self.assertEqual(catalog.render(all_entries), committed_catalog)
         room_entry = catalog.load_record(paths[1])
         self.assertEqual(
             room_entry["payloads"],
