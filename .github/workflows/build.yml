@@ -194,6 +194,12 @@ jobs:
           PY
           PY
 
+      - name: Render moving-train SVG from actual paired C# states
+        run: python3 tools/render_moving_train_projectile.py /tmp/moving-train-projectile.actual.json /tmp/moving-train-projectile.actual.svg
+
+      - name: Verify committed moving-train living SVG matches the C# run
+        run: cmp /tmp/moving-train-projectile.actual.svg docs/experiments/moving-train-projectile.svg
+
       - name: Execute contact impulse resolver and serialize actual response
         run: dotnet run --project tools/ContactImpulseRunRecordGenerator/ContactImpulseRunRecordGenerator.csproj --configuration Release -- /tmp/contact-impulse.actual.json
 
