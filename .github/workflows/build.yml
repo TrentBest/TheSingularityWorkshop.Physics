@@ -22,6 +22,15 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Execute the apple free-fall teaching experiment
+        run: dotnet run --project tools/FreeFallRunRecordGenerator/FreeFallRunRecordGenerator.csproj --configuration Release -- /tmp/apple-free-fall.actual.json
+
+      - name: Render apple lesson from actual C# states
+        run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json /tmp/apple-free-fall.actual.svg
+
+      - name: Verify committed apple SVG against every recorded state
+        run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json docs/experiments/apple-free-fall.svg --check
+
       - name: Execute C# experiment and serialize actual run record
         run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
 
