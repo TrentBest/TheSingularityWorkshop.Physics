@@ -22,11 +22,11 @@ The envelope identifies the run. The payload remains domain-owned.
 | `modelId` | non-empty string | Stable, namespaced model identity |
 | `modelVersion` | positive integer or version string | Version of the model definition used |
 | `status` | controlled string | Epistemic/production status of the result |
-| `definition` | object | Declared inputs and initial conditions |
+| `definition` | object for normalized records; optional for legacy records | Declared inputs and initial conditions |
 | `result` or domain payload | object | Domain-specific observation(s), never guessed by the envelope |
 | `limitations` | array of strings | Known exclusions and conditions on interpretation |
 
-Existing records predate this contract and may use domain-specific names such as `electricalObservation`, `samples`, `directObservation`, or `reflections` instead of a single `result` object. They remain valid legacy shapes until deliberately migrated; do not rename their payloads merely to satisfy superficial uniformity.
+Existing records predate this contract and may use domain-specific names such as `electricalObservation`, `samples`, `directObservation`, or `reflections` instead of a single `result` object. Legacy records may also keep inputs such as `room`, `source`, and `listener` at the top level rather than grouping them under `definition`. They remain valid legacy shapes until deliberately migrated; consumers must preserve those fields and must not rename payloads merely to satisfy superficial uniformity.
 
 ## Recommended metadata
 
@@ -73,7 +73,7 @@ The run-record catalog and validator demonstrate cross-domain metadata discovery
 
 ## Acceptance evidence and remaining gate
 
-The first cross-domain acceptance gate now has a concrete demonstrator: [inspect_physics_run_records.py](../tools/inspect_physics_run_records.py) reads acoustic observations, room-reflection paths, electrical-to-thermal coupling, and two-body thermal conduction through their shared envelope. It extracts domain-specific summary values while returning each original domain payload unchanged. CI executes the consumer and tests that the payloads are preserved.
+The first cross-domain acceptance gate now has a concrete demonstrator: [inspect_physics_run_records.py](../tools/inspect_physics_run_records.py) reads acoustic observations, room-reflection paths, electrical-to-thermal coupling, and two-body thermal conduction through their shared envelope. It extracts domain-specific summary values while preserving every non-envelope field—including legacy top-level inputs—and passing through recognized optional envelope metadata such as units, logical time, provenance, validation evidence, run identity, coordinate convention, and assumptions. CI executes the consumer and tests that the payloads and metadata are preserved.
 
 The version-1 validator and regression tests reject missing model identity, unsupported schema versions, unknown status, malformed units/provenance/validation metadata, boolean-as-integer versions, and malformed limitations. The [run-record catalog](experiments/run-record-catalog.md) remains a discovery index; the inspector is the payload-aware example.
 
