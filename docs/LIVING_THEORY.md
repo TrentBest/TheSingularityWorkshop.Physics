@@ -46,6 +46,12 @@ Prefer an embedded, self-contained living SVG when it explains the concept. For 
 
 The [scale-factor lesson](SCALE_FACTOR_LIVING.md) shows the property and its visible consequence in the same image. This is a conceptual illustration—not a Physics solver—and demonstrates the minimum expected pattern for property-focused explanations.
 
+### Example: execution order is not identity
+
+![Sequential stream consumption shifts later assignments when an extra request is inserted; keyed samples stay associated with explicit entity, tick, and purpose inputs. This is a conceptual dataflow illustration, not numeric RNG output.](images/keyed-randomness-living.svg)
+
+The [deterministic randomness lesson](DETERMINISTIC_RANDOMNESS.md) contrasts stream order with stable keyed inputs and links the actual C# implementations.
+
 ## Living-image examples already in the documentation
 
 - [Scale factor](SCALE_FACTOR_LIVING.md): the displayed linear scale and visible geometry change together. This is a conceptual property illustration, not solver output.
