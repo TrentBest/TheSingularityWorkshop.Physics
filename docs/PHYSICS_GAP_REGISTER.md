@@ -45,21 +45,11 @@ Before building a general “units framework,” define the minimum common contr
 
 ### P1 — Material properties and one causal cross-domain slice
 
-**Implementation started:** [`ElectricalThermalCouplingExperiment`](../Physics/Experiments/ElectricalThermalCouplingExperiment.cs) now connects the ideal electrical-load observation to the lumped thermal state. Focused tests cover (E=P\Delta t\), a declared absorbed fraction, energy accounting, invalid inputs, overload reporting, and repeatability. This is a deliberately bounded coupling: the fraction is authored, not predicted by a heat-transfer model. 
+**First causal bridge implemented and verified in CI:** [`ElectricalThermalCouplingExperiment`](../Physics/Experiments/ElectricalThermalCouplingExperiment.cs) connects the ideal electrical-load observation to the lumped thermal state. Focused tests cover (E=P\Delta t), a declared absorbed fraction, energy accounting, invalid inputs, overload reporting, and repeatability. The [experiment page](experiments/electrical-thermal-coupling.md), [C# run-record generator](../tools/ElectricalThermalCouplingRunRecordGenerator/Program.cs), [committed JSON run record](experiments/electrical-thermal-coupling.run.json), and [SVG](experiments/electrical-thermal-coupling.svg) are in the repository. CI regenerates the record from the C# model, compares it byte-for-byte with the committed fixture, renders an SVG from fresh output, and verifies the committed SVG against both fresh output and the record. These checks, the full test suite, and package build passed on `development`.
 
-Create a provenance-bearing material/property definition before creating a large material catalogue. Each property needs a value, unit, valid range/conditions, source/version, and status (measured, sourced, estimated, or illustrative). A material name is not a physical model.
+This is deliberately bounded: the absorbed fraction is authored, not predicted by a heat-transfer model; the experiment does not model where untransferred energy goes, changing resistance, external heat exchange, phase change, or spatial gradients. It is not a validated appliance or electrical-arc model.
 
-Then choose one compact integration case with a closed accounting story. Recommended first slice:
-
-**Electrical load → thermal body → temperature/energy observation.**
-
-- ElectricalGrid already computes ideal resistive load power.
-- LumpedThermalState already applies net energy transfer under a constant-specific-heat assumption.
-- The missing bridge is an explicitly declared coupling fraction and timestep: energy entering the body is not silently equal to all electrical energy consumed.
-- Test a known constant-power interval, check (E=P\Delta t\), verify energy accounting at the boundary, and state the excluded mechanisms (heat loss, changing resistance, temperature-dependent properties, phase change).
-- Produce a run record and SVG from the actual run record, with input assumptions and a small numerical table visible beside the picture.
-
-This is deliberately a *bounded integration experiment*, not a claim to simulate a real appliance or electrical arc. It exercises two existing domains and reveals whether the common contracts are adequate. If that coupling is not meaningful for the current goals, the alternative is an impact → impulse/energy diagnostics → explicitly supported target response slice; do not build both in parallel before one is proven.
+**Next P1 work:** create a provenance-bearing material/property definition before building a large material catalogue. Each property needs a value, unit, valid range/conditions, source/version, and status (measured, sourced, estimated, or illustrative). A material name is not a physical model. Use the property record in the next coupled experiment rather than creating another standalone showcase.
 
 ### P2 — Make collision response causal
 
