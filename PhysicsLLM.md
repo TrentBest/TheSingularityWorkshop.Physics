@@ -129,3 +129,18 @@ Implemented on `development`:
 ### Verification update — 2026-10-17
 
 The bounded room-reflection increment is verified at [Physics Build and Tests run 38996272912](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38996272912), commit `325e9db2eb70434b923c2b56edcf6f5f19c5a6f2`. The run passed the focused test suite, generator/fixture comparison, SVG render, exact SVG comparison, and SVG-against-record check. Later commits in this sequence update documentation/coordination only. Keep watching the newest development run for the final branch tip.
+
+
+## 2026-10-17 — Sound Experiences / MicroBundle coordination
+
+The Experiences repository now has a design proposal for composable sound-related Experience ingredients: [Sound Experiences — MicroBundle Design](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/experiences/Sound/README.md). It is a taxonomy and contract proposal, not a claim that sound MicroBundles or an audio engine are implemented.
+
+Boundary for Physics:
+- Continue to own physical acoustic source/propagation/receiver models and reproducible results only where implemented and validated.
+- Do not make Physics depend on Experiences, WebPage, AnyApp, Gestures, audio devices, Visualize, or Renderer.
+- An orchestra, choir, band, instrument, score, venue, microphone, and listener are distinct semantic roles; the Experiences definition should compose them without turning each into a separate Physics model.
+- An event-to-source mapping may describe how a supported collision/impact/fracture event requests sound, but the event label itself is not a waveform.
+- Current first-order room reflections remain path metadata, not synthesized or mixed room audio. Do not report an authored sample or host playback as Physics-generated sound.
+- Before any Physics implementation expands, coordinate the proposed source-excitation, environment, and receiver contracts with the existing [acoustic world model](docs/ACOUSTIC_WORLD_MODEL.md). Prefer one small, testable contract over a broad unvalidated solver.
+
+The Experiences design asks the integration coordinator to inspect the existing MicroBundle descriptor/artifact contracts before defining a parallel schema. WebPage and AnyApp should eventually consume the same versioned Experience definition; neither should privately fork ensemble semantics or Physics calculations. No release, merge to master, publication, or deployment is authorized.
