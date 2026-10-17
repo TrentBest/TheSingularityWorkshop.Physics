@@ -40,4 +40,4 @@ For train velocity \(\mathbf{u}\), train-frame position \(\mathbf{x}_{train}(t)\
 
 This is a classical, non-relativistic model. The frames have parallel axes and constant relative velocity. It does not model train acceleration, drag, launch mechanics, collision, or terrain.
 
-CI runs the generator and verifies that all nine paired samples share timestamps, satisfy the declared Galilean position transform, and preserve vertical velocity. Next: drive the paired SVG from this serialized run record and make CI verify every plotted sample against the C# output.
+CI runs the generator, verifies all nine paired samples share timestamps and satisfy the declared Galilean position transform, then checks each train/ground SVG coordinate against the actual C# output within 0.01 SVG units.
