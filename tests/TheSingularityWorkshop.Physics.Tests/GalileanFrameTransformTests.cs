@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Kinematics;
-using TheSingularityWorkshop.Physics.Math;
+using TheSingularityWorkshop.Physics.Numerics;
 using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.Tests;
