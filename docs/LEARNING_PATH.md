@@ -2,6 +2,8 @@
 
 The Workshop should make learning feel like curiosity, not a prerequisite. A visitor notices something, changes one input, sees what changed, asks why, and can open the mathematics only when ready.
 
+![Apple free-fall lesson: recorded height and velocity over time](experiments/apple-free-fall.svg)
+
 This is an instructional map for the Physics domain, not a claim that every listed model or lesson is implemented. Each lesson must link to the capability catalog and carry an explicit status.
 
 ## The learning loop
