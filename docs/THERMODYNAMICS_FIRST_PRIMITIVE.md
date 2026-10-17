@@ -30,6 +30,10 @@ The implementation rejects invalid/non-finite properties, non-finite transfers, 
 
 *The animated markers and displayed temperatures come from the adjacent conduction experiment's run record, not from this state primitive alone. Its material properties are explicitly illustrative.*
 
+![Conceptual sequence from disordered liquid water through freezing to the open hydrogen-bond network of ice Ih](images/water-cooling-freezing-ice-lattice.svg)
+
+*Conceptual teaching schematic, not molecular-dynamics output. The current `LumpedThermalState` explicitly excludes phase change and latent heat; this image illustrates a future domain that must be modeled separately rather than implying that the present thermal primitive simulates freezing.*
+
 ## Why start here
 
 A fire scenario needs energy accounting before it needs a flame representation. This primitive gives later conduction, convection, radiation, and reaction models a small, testable thermal state to exchange energy with. It is not yet a heat-transfer solver or a combustion model.
