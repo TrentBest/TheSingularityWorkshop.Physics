@@ -14,7 +14,7 @@ Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege
 | CS-01 | How does constant acceleration change a launch? | initial state, gravity, timestep | position/velocity by logical tick | current kernel foundation; adapt and verify |
 | CS-02 | How do elevation and azimuth change the path? | launch speed, elevation, azimuth | sampled position/velocity states | Implemented analytical 3D constant-acceleration runner, angle-to-velocity helper, fixed-step samples and versioned JSON record; target intersection remains next |
 | CS-03 | Does the path intersect the selected wall section? | target position/size | hit/miss and first intersection state | Implemented analytical point-projectile versus fixed AABB; rotated geometry and projectile radius remain unsupported |
-| CS-04 | What arrives at impact? | mass, launch state, gravity | impact velocity, momentum, kinetic energy | confirmed impact |
+| CS-04 | What arrives at impact? | declared projectile mass and launch state | impact velocity, momentum, kinetic energy | Implemented diagnostics from a confirmed CS-03 intersection; response/damage remains separate |
 | CS-05 | What changes when one parameter changes? | one supported field per variant | overlay, exact input diff, measurement delta | run identity/comparison |
 | CS-06 | When does a wall section register damage? | declared material/response parameters | damage state, threshold reason, event | bounded wall response |
 | CS-07 | When does a section fail? | supported loads/thresholds, prior damage | failure decision and cause | structural response |
