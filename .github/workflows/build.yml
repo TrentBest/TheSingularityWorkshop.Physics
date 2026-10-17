@@ -116,7 +116,7 @@ jobs:
           record = json.loads(Path('/tmp/moving-train-projectile.actual.json').read_text(encoding='utf-8'))
           definition = record['definition']
           samples = record['samples']
-          assert record['modelId'] == 'kinematics.galilean-moving-train-projectile'
+          assert record['modelId'] == 'kinematics.moving-train-projectile'
           assert record['schemaVersion'] == 1
           assert len(samples) == definition['stepCount'] + 1 == 9
           train_velocity = definition['trainVelocityInWorld']
