@@ -18,7 +18,7 @@ public sealed class OnlineStatisticsTests
         Assert.That(stats.Mean, Is.EqualTo(4d).Within(1e-14));
         Assert.That(stats.PopulationVariance, Is.EqualTo(8d / 3d).Within(1e-14));
         Assert.That(stats.SampleVariance, Is.EqualTo(4d).Within(1e-14));
-        Assert.That(stats.PopulationStandardDeviation, Is.EqualTo(Math.Sqrt(8d / 3d)).Within(1e-14));
+        Assert.That(stats.PopulationStandardDeviation, Is.EqualTo(System.Math.Sqrt(8d / 3d)).Within(1e-14));
         Assert.That(stats.SampleStandardDeviation, Is.EqualTo(2d).Within(1e-14));
     }
 
