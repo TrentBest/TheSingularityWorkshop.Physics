@@ -72,7 +72,7 @@ public sealed class MaterialIdentityArbitratorTests
         var forward = CreateArbitrator().Arbitrate(evidence);
         var reverse = CreateArbitrator().Arbitrate(evidence.Reverse());
 
-        Assert.That(reverse, Is.EqualTo(forward));
+        Assert.That(Project(reverse), Is.EqualTo(Project(forward)));
     }
 
     [Test]
@@ -98,6 +98,24 @@ public sealed class MaterialIdentityArbitratorTests
         Assert.That(result.MaterialId, Is.EqualTo("material:steel"));
         Assert.That(result.Evidence.Single().SourceFieldId, Is.EqualTo("tip.description"));
     }
+
+    private static object[] Project(IEnumerable<MaterialIdentityResolution> results) =>
+        results.Select(result => (object)new
+        {
+            result.PartId,
+            result.Status,
+            result.MaterialId,
+            result.Explanation,
+            Evidence = result.Evidence.Select(item => new
+            {
+                item.PartId,
+                item.MaterialId,
+                item.ObservedTerm,
+                item.Kind,
+                item.SourceBundleId,
+                item.SourceFieldId
+            }).ToArray()
+        }).ToArray();
 
     private static MaterialIdentityResolution Find(
         IReadOnlyList<MaterialIdentityResolution> results, string partId) =>
