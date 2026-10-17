@@ -42,6 +42,7 @@ Do not force an image into a page when it adds no explanatory value. Prefer a cl
 - **Hydrodynamics:** keep conceptual state diagrams separate from future solver-backed basin/terrain field images. Add living snapshots as model runs become serializable.
 - **Geology:** the volcanic-deposition schematic explains the current prescribed-volume model; future erosion, tectonics, and stratigraphy images must come from bounded models rather than invented geological output.
 - **Math/LUTs:** the interpolation diagram now has a living query marker, but its curve remains conceptual. Next, expose actual `LookupTable1D` error samples and render a run-backed error/convergence plot from them.
+- **Deterministic randomness:** a conceptual living dataflow diagram contrasts order-sensitive stream consumption with identity-keyed samples; it is explicitly not numeric RNG output. The implementations and tests remain the authority for exact values.
 - **Domain coverage:** continue auditing every theory, capability, and experiment page. Where a living image would clarify a concept, embed it inline; where it cannot yet be honestly built, record the exact missing model/data/rendering dependency rather than silently leaving the page text-only.
 
 This policy is an ongoing repository-wide documentation requirement, not a claim that every domain already has a working simulator or a run-backed image.
