@@ -50,11 +50,12 @@ Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege
 
 **Question:** How do launch speed, elevation and azimuth affect a trajectory under the chosen ideal model?
 
-- Inputs: initial position, launch speed, elevation, azimuth, gravity, timestep and duration.
-- Outputs: trajectory samples, apex (if defined), range/time diagnostics and declared model assumptions.
-- Cross-check: derive components from the agreed coordinate convention; for equal launch/landing heights with no drag, compare range against `R=v² sin(2θ)/g`.
-- Acceptance: same inputs reproduce the same result; near-vertical, zero-speed and invalid-input cases are covered.
-- Limitation: the level-ground range formula is not valid as a general answer for a raised or uneven target.
+- Inputs: run ID, initial position, launch speed, elevation, azimuth, gravity vector, fixed timestep and step count.
+- Outputs: initial state plus one ordered position/velocity/time sample per completed step; a model-specific versioned JSON record.
+- Coordinate convention: right-handed, z-up; azimuth is measured in the x-y plane from +X toward +Y; elevation is measured from the x-y plane. Angles are supplied in degrees and persisted with the run definition.
+- Cross-check: compare sampled states against the analytical constant-acceleration solution within a declared tolerance. For equal launch/landing heights with no drag, the level-ground range formula may be used as an independent reference, not as a general answer for raised or uneven targets.
+- Acceptance: same inputs reproduce the same samples; invalid speed/elevation/timestep/step-count inputs are rejected; zero speed and near-vertical launches remain representable.
+- Limitation: this runner does not yet calculate target intersection, impact, range-to-arbitrary-terrain, drag, or trebuchet mechanics.
 
 ### CS-03 — Hit or miss the selected wall section
 
