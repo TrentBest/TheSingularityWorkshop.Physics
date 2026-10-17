@@ -36,7 +36,7 @@ def render(record):
     min_x, max_x = min(p[0] for p in points), max(p[0] for p in points)
     min_y, max_y = min(p[1] for p in points), max(p[1] for p in points)
     span = max(max_x - min_x, max_y - min_y, 1.0)
-    scale = 320.0 / span
+    scale = 200.0 / span
     project = lambda x, y: (100 + (x - min_x) * scale, 280 - (y - min_y) * scale)
     x1, y1 = project(sx, sy)
     x2, y2 = project(lx, ly)
