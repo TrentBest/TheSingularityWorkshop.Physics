@@ -4,7 +4,7 @@ namespace TheSingularityWorkshop.Physics.Numerics;
 /// Squirrel3's 32-bit integer noise hash, exposed as a deterministic random-access primitive.
 /// </summary>
 /// <remarks>
-/// The result is a stable function of <paramref name="position"/> and <paramref name="seed"/>.
+/// The result is a stable function of its position and seed inputs.
 /// Unsigned overflow is intentional and part of the algorithm. This is not a cryptographic generator.
 /// </remarks>
 public static class Squirrel3
