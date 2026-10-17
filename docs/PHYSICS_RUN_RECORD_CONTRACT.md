@@ -67,7 +67,9 @@ A computed record can still use illustrative input values. Status must not imply
 
 The electrical-to-lumped-thermal experiment demonstrates a computed, deterministic coupling record with explicit units, declared definition, computed electrical observation, result, and limitations. Its 50% energy-transfer fraction is an input, not an empirical material parameter. The C# generator calls the model; CI verifies the record and SVG against fresh output.
 
-The projectile, free-fall, acoustic, contact-impulse, and room-reflection experiments have their own record structures. The next practical step is to add metadata where it resolves an actual cross-domain ambiguity—especially property provenance, logical time, coordinate conventions, and validation evidence—then validate a small set of representative records. Do not mass-rewrite all fixtures until a consumer demonstrates the migration is useful.
+The projectile, free-fall, acoustic, contact-impulse, and room-reflection experiments retain their domain-owned record structures. The electrical-to-thermal fixture now carries a provenance-bearing, explicitly illustrative specific-heat property: value and property unit, evidence status, source/fixture version, validity-condition quantity and unit, valid range, and conditions. The [material-property definition](../Physics/Materials/MaterialPropertyDefinition.cs) validates this metadata but does not implement temperature-dependent material behavior or make the fixture value empirical.
+
+The run-record catalog and validator demonstrate cross-domain metadata discovery and basic envelope validation. **The full acceptance gate remains open:** a consumer still needs to read useful values from at least two original domain payloads through the shared envelope while preserving their domain-specific shapes. Continue with a small payload-aware consumer and stronger validation evidence; do not mass-rewrite all fixtures until the migration proves useful.
 
 ## Acceptance gate for a shared contract
 
