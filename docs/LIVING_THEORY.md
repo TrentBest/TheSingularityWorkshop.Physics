@@ -1,6 +1,6 @@
 # Living Theory & Interactive Documentation
 
-The Workshop should generate physics explanations from the same versioned definitions, experiments, and measurements that drive simulations. This is the direction, not a claim that a universal automatic theory generator already exists.
+The Workshop should generate physics explanations from the same versioned definitions, experiments, and measurements that drive simulations. This is the direction, not a claim that a universal automatic theory generator already exists. The [Physics Learning Path](LEARNING_PATH.md) organizes those evidence-backed capabilities into small experiences that teach through observation before requiring formal theory.
 
 ## One source of truth
 
