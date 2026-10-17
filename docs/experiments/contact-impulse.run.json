@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "modelId": "collision.single-contact-normal-impulse",
+  "modelVersion": 1,
+  "units": {
+    "mass": "kg",
+    "velocity": "m/s",
+    "separation": "m",
+    "impulse": "N·s",
+    "time": "s"
+  },
+  "definition": {
+    "contactNormalFromAToB": {
+      "x": 1,
+      "y": 0,
+      "z": 0
+    },
+    "signedSeparationMetres": -0.1,
+    "active": true,
+    "stepIndex": 3,
+    "elapsedTimeSeconds": 0.3,
+    "massAKilograms": 1,
+    "massBKilograms": 1,
+    "restitution": 0,
+    "bodyAInitialVelocityMetresPerSecond": {
+      "x": 1,
+      "y": 0,
+      "z": 0
+    },
+    "bodyBInitialVelocityMetresPerSecond": {
+      "x": -1,
+      "y": 0,
+      "z": 0
+    }
+  },
+  "result": {
+    "normalImpulseNewtonSeconds": 1,
+    "bodyAFinalVelocityMetresPerSecond": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "bodyBFinalVelocityMetresPerSecond": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "achievedRelativeVelocityMetresPerSecond": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "physicalTimeAdvancedSeconds": 0,
+    "posePreserved": true
+  }
+}
