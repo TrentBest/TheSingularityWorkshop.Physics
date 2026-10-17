@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+  <title id="title">Stream order versus keyed deterministic samples</title>
+  <desc id="desc">A conceptual comparison. In a sequential random stream, inserting a request consumes another value and shifts later assignments. In keyed sampling, each entity, logical tick, and purpose selects its own deterministic value, so request order does not change the identity-to-value mapping. The dots are illustrative, not output from the Squirrel3 implementation.</desc>
+  <defs>
+    <style>
+      text{font-family:system-ui,sans-serif;fill:#e8edf5}
+      .muted{fill:#aab7c8;font-size:14px}
+      .heading{font-size:20px;font-weight:700}
+      .label{font-size:15px;font-weight:600}
+      .panel{fill:#111b2b;stroke:#34465f;stroke-width:1.5}
+      .slot{fill:#22344d;stroke:#6e86a8;stroke-width:1.5}
+      .key{fill:#183b3c;stroke:#63c9b7;stroke-width:1.5}
+      .pulse{fill:#f4c95d}
+      .line{stroke:#8195af;stroke-width:2;fill:none}
+      .good{stroke:#63c9b7;stroke-width:2;fill:none}
+      @media(prefers-reduced-motion:reduce){.pulse{display:none}}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8195af"/></marker>
+    <marker id="goodArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#63c9b7"/></marker>
+  </defs>
+  <rect width="960" height="480" rx="18" fill="#09111e"/>
+  <text x="32" y="38" class="muted">DETERMINISM • CONCEPTUAL DATAFLOW, NOT MEASURED RNG OUTPUT</text>
+  <rect class="panel" x="28" y="58" width="440" height="382" rx="14"/>
+  <rect class="panel" x="492" y="58" width="440" height="382" rx="14"/>
+  <text x="52" y="94" class="heading">Sequential stream</text>
+  <text x="52" y="119" class="muted">Assignment depends on who consumes first.</text>
+  <text x="52" y="158" class="label">Original requests</text>
+  <g>
+    <rect class="slot" x="54" y="174" width="104" height="44" rx="8"/><text x="106" y="201" text-anchor="middle" class="label">A ← r₁</text>
+    <rect class="slot" x="174" y="174" width="104" height="44" rx="8"/><text x="226" y="201" text-anchor="middle" class="label">B ← r₂</text>
+    <rect class="slot" x="294" y="174" width="104" height="44" rx="8"/><text x="346" y="201" text-anchor="middle" class="label">C ← r₃</text>
+  </g>
+  <path class="line" marker-end="url(#arrow)" d="M226 228 V253"/>
+  <text x="52" y="276" class="label">Insert a new consumer before B</text>
+  <g>
+    <rect class="slot" x="54" y="292" width="80" height="44" rx="8"/><text x="94" y="319" text-anchor="middle" class="label">A ← r₁</text>
+    <rect x="144" y="292" width="80" height="44" rx="8" fill="#60451d" stroke="#f4c95d" stroke-width="1.5"/><text x="184" y="319" text-anchor="middle" class="label">X ← r₂</text>
+    <rect class="slot" x="234" y="292" width="80" height="44" rx="8"/><text x="274" y="319" text-anchor="middle" class="label">B ← r₃</text>
+    <rect class="slot" x="324" y="292" width="80" height="44" rx="8"/><text x="364" y="319" text-anchor="middle" class="label">C ← r₄</text>
+  </g>
+  <text x="52" y="375" class="muted">Later assignments shift when consumption order changes.</text>
+  <circle class="pulse" r="5"><animateMotion dur="2.8s" repeatCount="indefinite" path="M74 195 L194 195 L314 195"/></circle>
+  <rect x="516" y="132" width="392" height="46" rx="9" fill="#102a32" stroke="#397a77"/>
+  <text x="712" y="160" text-anchor="middle" class="label">seed + entity + tick + purpose</text>
+  <path class="good" marker-end="url(#goodArrow)" d="M712 180 V205"/>
+  <g>
+    <rect class="key" x="520" y="216" width="116" height="58" rx="9"/><text x="578" y="239" text-anchor="middle" class="label">Entity A</text><text x="578" y="259" text-anchor="middle" class="muted">tick 12 · move</text>
+    <rect class="key" x="642" y="216" width="116" height="58" rx="9"/><text x="700" y="239" text-anchor="middle" class="label">Entity B</text><text x="700" y="259" text-anchor="middle" class="muted">tick 12 · move</text>
+    <rect class="key" x="764" y="216" width="116" height="58" rx="9"/><text x="822" y="239" text-anchor="middle" class="label">Entity C</text><text x="822" y="259" text-anchor="middle" class="muted">tick 12 · move</text>
+  </g>
+  <path class="good" marker-end="url(#goodArrow)" d="M578 278 V302 M700 278 V302 M822 278 V302"/>
+  <g fill="#164b48" stroke="#63c9b7" stroke-width="1.5">
+    <circle cx="578" cy="325" r="17"/><circle cx="700" cy="325" r="17"/><circle cx="822" cy="325" r="17"/>
+  </g>
+  <g class="label" text-anchor="middle"><text x="578" y="330">vA</text><text x="700" y="330">vB</text><text x="822" y="330">vC</text></g>
+  <text x="516" y="375" class="muted">Reordering requests preserves each key's result.</text>
+  <text x="516" y="397" class="muted">Change the key inputs to request a different sample.</text>
+  <circle class="pulse" r="5"><animateMotion dur="2.8s" repeatCount="indefinite" path="M578 325 L700 325 L822 325"/></circle>
+  <text x="516" y="422" class="muted">Illustrative mapping only; not actual numeric values.</text>
+</svg>
