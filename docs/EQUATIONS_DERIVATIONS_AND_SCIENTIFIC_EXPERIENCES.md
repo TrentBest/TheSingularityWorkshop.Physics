@@ -50,9 +50,9 @@ Suggested evidence labels: **conceptual**, **analytical**, **model-backed**, **r
 
 For a body of constant mass in an inertial reference frame, the familiar introductory form is:
 
-$
+$$
 \mathbf{F}_{\text{net}} = m\mathbf{a}
-$
+$$
 
 where:
 
@@ -68,24 +68,24 @@ This is a useful form for many classical-mechanics problems. It is not the most 
 
 A common modern statement of the law is:
 
-$
+$$
 \mathbf{F}_{\text{net}} = \frac{d\mathbf{p}}{dt}
-$
+$$
 
 For a body with constant mass, with \(\mathbf{p}=m\mathbf{v}\), and with mass constant during the differentiation:
 
-$
+$$
 \frac{d\mathbf{p}}{dt}
 = \frac{d(m\mathbf{v})}{dt}
 = m\frac{d\mathbf{v}}{dt}
 = m\mathbf{a}
-$
+$$
 
 Therefore, under those stated conditions:
 
-$
+$$
 \mathbf{F}_{\text{net}}=m\mathbf{a}
-$
+$$
 
 This derivation depends on the definitions of momentum and acceleration and on the constant-mass assumption. It does not mean that every problem involving variable-mass systems can be solved by blindly substituting a changing mass into \(F=ma\); the system boundary and momentum flux must be accounted for.
 
@@ -93,7 +93,7 @@ This derivation depends on the definitions of momentum and acceleration and on t
 
 When the model assumptions hold and mass is nonzero:
 
-$
+$$
 \mathbf{a}=\frac{\mathbf{F}_{\text{net}}}{m}
 \qquad
 m=\frac{\lVert\mathbf{F}_{\text{net}}\rVert}{\lVert\mathbf{a}\rVert}
