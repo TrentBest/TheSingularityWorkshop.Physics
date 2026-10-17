@@ -136,10 +136,15 @@ class RunRecordEnvelopeTests(unittest.TestCase):
         entries = [catalog.load_record(path) for path in paths]
         rendered = catalog.render(entries)
         self.assertIn("`observation`", rendered)
-        self.assertIn("`directObservation`, `reflections`", rendered)
+        self.assertIn("`room`, `source`, `listener`, `speedOfSoundMetersPerSecond`, `directObservation`, `reflections`", rendered)
         self.assertIn("`result`, `electricalObservation`", rendered)
         self.assertIn("./acoustic-observation.run.json", rendered)
         self.assertIn("does not claim that records share a physical result schema", rendered)
+        room_entry = catalog.load_record(paths[1])
+        self.assertEqual(
+            room_entry["payloads"],
+            ["room", "source", "listener", "speedOfSoundMetersPerSecond", "directObservation", "reflections"],
+        )
 
     def test_payload_aware_inspector_summarizes_four_domains_and_preserves_payloads(self):
         paths = [
