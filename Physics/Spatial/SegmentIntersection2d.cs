@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace TheSingularityWorkshop.Physics.Spatial;
 
 /// <summary>Describes a segment intersection and its optional unique coordinate.</summary>
@@ -39,11 +41,11 @@ public readonly struct SegmentIntersection2d
 
 /// <summary>Constructs coordinates for intersections of closed 2D segments.</summary>
 /// <remarks>
-/// Topology is determined by <see cref="Geometry2dSegments.ClassifyIntersection"/>. Proper-crossing
-/// coordinates are calculated in scaled coordinates to reduce overflow risk. The construction still
-/// uses binary64 arithmetic: exceptionally ill-conditioned intersections or a result that cannot be
-/// represented as finite binary64 coordinates throw <see cref="ArithmeticException"/>. Exact
-/// predicates do not remove measurement uncertainty or guarantee coordinate accuracy.
+/// Topology is determined by <see cref="Geometry2dSegments.ClassifyIntersection"/>. General proper-crossing
+/// coordinates are constructed from exact integer representations of the supplied binary64 coordinates,
+/// then rounded back to binary64. This avoids losing small segments solely because another endpoint has
+/// a much larger magnitude. The returned coordinate is still rounded and does not remove measurement
+/// uncertainty; an unrepresentable result throws <see cref="ArithmeticException"/>.
 /// </remarks>
 public static partial class Geometry2dSegments
 {
@@ -84,53 +86,67 @@ public static partial class Geometry2dSegments
 
     private static Vector2d ConstructProperIntersection(Vector2d a, Vector2d b, Vector2d c, Vector2d d)
     {
-        // For axis-aligned crossings, the intersection coordinates are input coordinates themselves.
-        // Reuse them directly: normalizing every endpoint together can erase a tiny segment next to
-        // an enormous one, even though the crossing is exactly representable.
-        if (a.Y == b.Y && c.X == d.X)
-            return new Vector2d(c.X, a.Y);
-        if (c.Y == d.Y && a.X == b.X)
-            return new Vector2d(a.X, c.Y);
+        // Axis-aligned crossings have coordinates already present in the input.
+        if (a.Y == b.Y && c.X == d.X) return new Vector2d(c.X, a.Y);
+        if (c.Y == d.Y && a.X == b.X) return new Vector2d(a.X, c.Y);
 
-        double scale = MaxAbs(a.X, a.Y, b.X, b.Y, c.X, c.Y, d.X, d.Y);
-        if (scale == 0d || !double.IsFinite(scale))
-            throw new ArithmeticException("Cannot scale segment coordinates for intersection construction.");
+        // Represent each finite binary64 input exactly as an integer times a shared power of two.
+        double[] values = { a.X, a.Y, b.X, b.Y, c.X, c.Y, d.X, d.Y };
+        var parts = new (BigInteger Mantissa, int Exponent)[values.Length];
+        int minExponent = int.MaxValue;
+        for (int i = 0; i < values.Length; i++)
+        {
+            parts[i] = Decompose(values[i]);
+            if (!parts[i].Mantissa.IsZero && parts[i].Exponent < minExponent)
+                minExponent = parts[i].Exponent;
+        }
+        if (minExponent == int.MaxValue)
+            throw new ArithmeticException("Cannot construct an intersection from zero coordinates.");
 
-        // Normalize before subtraction and cross products to avoid overflow from large finite inputs.
-        double ax = a.X / scale, ay = a.Y / scale;
-        double bx = b.X / scale, by = b.Y / scale;
-        double cx = c.X / scale, cy = c.Y / scale;
-        double dx = d.X / scale, dy = d.Y / scale;
+        var q = new BigInteger[values.Length];
+        for (int i = 0; i < parts.Length; i++)
+            q[i] = parts[i].Mantissa.IsZero ? BigInteger.Zero : parts[i].Mantissa << (parts[i].Exponent - minExponent);
 
-        double rx = bx - ax, ry = by - ay;
-        double sx = dx - cx, sy = dy - cy;
-        double qx = cx - ax, qy = cy - ay;
-        double denominator = Cross(rx, ry, sx, sy);
-        double numerator = Cross(qx, qy, sx, sy);
+        // Implicit lines A*x + B*y + C = 0; determinants stay exact for mixed-scale inputs.
+        BigInteger a1 = q[1] - q[3], b1 = q[2] - q[0], c1 = q[0] * q[3] - q[2] * q[1];
+        BigInteger a2 = q[5] - q[7], b2 = q[6] - q[4], c2 = q[4] * q[7] - q[6] * q[5];
+        BigInteger denominator = a1 * b2 - a2 * b1;
+        if (denominator.IsZero)
+            throw new ArithmeticException("The proper intersection has a zero exact line determinant.");
 
-        if (!double.IsFinite(denominator) || denominator == 0d || !double.IsFinite(numerator))
-            throw new ArithmeticException("The proper intersection is too ill-conditioned to construct reliably.");
-
-        double t = numerator / denominator;
-        double x = (ax + (t * rx)) * scale;
-        double y = (ay + (t * ry)) * scale;
+        double x = RationalToDouble(b1 * c2 - b2 * c1, denominator, minExponent);
+        double y = RationalToDouble(c1 * a2 - c2 * a1, denominator, minExponent);
         if (!double.IsFinite(x) || !double.IsFinite(y))
             throw new ArithmeticException("The intersection coordinate is outside the finite binary64 range.");
-
         return new Vector2d(x, y);
     }
 
-    private static double MaxAbs(
-        double x1, double y1, double x2, double y2,
-        double x3, double y3, double x4, double y4) =>
-        System.Math.Max(
-            System.Math.Max(System.Math.Abs(x1), System.Math.Abs(y1)),
-            System.Math.Max(
-                System.Math.Max(System.Math.Abs(x2), System.Math.Abs(y2)),
-                System.Math.Max(
-                    System.Math.Max(System.Math.Abs(x3), System.Math.Abs(y3)),
-                    System.Math.Max(System.Math.Abs(x4), System.Math.Abs(y4)))));
+    private static (BigInteger Mantissa, int Exponent) Decompose(double value)
+    {
+        long bits = BitConverter.DoubleToInt64Bits(value);
+        bool negative = bits < 0;
+        int exponentBits = (int)((bits >> 52) & 0x7ffL);
+        long fraction = bits & 0x000f_ffff_ffff_ffffL;
+        if (exponentBits == 0 && fraction == 0) return (BigInteger.Zero, 0);
+        BigInteger mantissa;
+        int exponent;
+        if (exponentBits == 0) { mantissa = new BigInteger(fraction); exponent = -1074; }
+        else { mantissa = new BigInteger((1L << 52) | fraction); exponent = exponentBits - 1023 - 52; }
+        return (negative ? -mantissa : mantissa, exponent);
+    }
 
-    private static double Cross(double ax, double ay, double bx, double by) =>
-        (ax * by) - (ay * bx);
+    private static double RationalToDouble(BigInteger numerator, BigInteger denominator, int binaryExponent)
+    {
+        if (numerator.IsZero) return 0d;
+        bool negative = numerator.Sign != denominator.Sign;
+        BigInteger n = BigInteger.Abs(numerator), d = BigInteger.Abs(denominator);
+        long nBits = n.GetBitLength(), dBits = d.GetBitLength();
+        int nShift = (int)System.Math.Max(0L, nBits - 53L);
+        int dShift = (int)System.Math.Max(0L, dBits - 53L);
+        double nHead = (double)(n >> nShift), dHead = (double)(d >> dShift);
+        int exponent = checked(nShift - dShift + binaryExponent);
+        double magnitude = System.Math.ScaleB(nHead / dHead, exponent);
+        return negative ? -magnitude : magnitude;
+    }
+
 }
