@@ -1,4 +1,4 @@
-namespace TheSingularityWorkshop.Physics.Math;
+namespace TheSingularityWorkshop.Physics.Numerics;
 
 /// <summary>
 /// Squirrel3's 32-bit integer noise hash, exposed as a deterministic random-access primitive.
@@ -51,7 +51,7 @@ public sealed class Squirrel3Random
     public uint Seed { get; }
 
     /// <summary>Gets the next unsigned 32-bit value.</summary>
-    public uint NextUInt() => Squirrel3.Hash(_position++, Seed);
+    public uint NextUInt()\n    {\n        var position = _position;\n        _position = unchecked(_position + 1u);\n        return Squirrel3.Hash(position, Seed);\n    }
 
     /// <summary>Returns a value in [0, 1), with 32 bits of source precision.</summary>
     public double NextDouble() => NextUInt() * (1.0 / 4294967296.0);
