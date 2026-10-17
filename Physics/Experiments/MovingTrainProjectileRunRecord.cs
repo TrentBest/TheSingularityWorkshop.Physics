@@ -18,7 +18,7 @@ public sealed record MovingTrainProjectileRunRecord
     }
 
     /// <summary>Stable identity of the paired experiment.</summary>
-    public string ModelId { get; init; } = "kinematics.galilean-moving-train-projectile";
+    public string ModelId { get; init; } = "kinematics.moving-train-projectile";
 
     /// <summary>Version of the model contract.</summary>
     public string ModelVersion { get; init; } = "1";
@@ -41,6 +41,9 @@ public sealed record MovingTrainProjectileRunRecord
 
     /// <summary>Train and ground states paired at each identical logical timestamp.</summary>
     public required IReadOnlyList<MovingTrainProjectileSample> Samples { get; init; }
+
+    /// <summary>Number of completed logical steps.</summary>
+    public int CompletedSteps => Samples.Count - 1;
 
     /// <summary>Creates a durable record from the actual paired experiment output.</summary>
     public static MovingTrainProjectileRunRecord FromResult(MovingTrainProjectileExperimentResult result)
