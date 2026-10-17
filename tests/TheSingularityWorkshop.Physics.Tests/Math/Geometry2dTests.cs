@@ -38,6 +38,16 @@ public sealed class Geometry2dTests
     }
 
     [Test]
+    public void Orient_HandlesDeterminantThatUnderflowsToZero()
+    {
+        var a = new Vector2d(0d, 0d);
+        var b = new Vector2d(double.Epsilon, 0d);
+        var c = new Vector2d(0d, double.Epsilon);
+
+        Assert.That(Geometry2d.Orient(a, b, c), Is.EqualTo(Orientation2d.CounterClockwise));
+    }
+
+    [Test]
     public void Orient_IsInvariantToSwappingFirstTwoPoints()
     {
         var a = new Vector2d(-4d, 2d);
