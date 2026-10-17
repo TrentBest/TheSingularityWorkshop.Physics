@@ -65,7 +65,8 @@ def validate(path: Path) -> list[str]:
     ):
         errors.append(f"{path}: modelVersion must be a positive integer or non-empty string")
 
-    if record.get("status") not in ACCEPTED_STATUSES:
+    status = record.get("status")
+    if not isinstance(status, str) or status not in ACCEPTED_STATUSES:
         errors.append(f"{path}: status must use a recognized epistemic status")
 
     limitations = record.get("limitations")
