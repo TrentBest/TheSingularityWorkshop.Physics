@@ -2,6 +2,10 @@
 
 The Workshop should generate physics explanations from the same versioned definitions, experiments, and measurements that drive simulations. This is the direction, not a claim that a universal automatic theory generator already exists. The [Physics Learning Path](LEARNING_PATH.md) organizes those evidence-backed capabilities into small experiences that teach through observation before requiring formal theory.
 
+## Living-image requirement
+
+A relevant visual belongs inline on the page that explains it; storing an SVG without embedding and contextualizing it is not enough. Follow the [Living Image Standard](LIVING_IMAGE_STANDARD.md): prefer actual model-backed data, label analytical and conceptual visuals honestly, include accessible titles/descriptions, and verify plotted values in CI where feasible. The current [capability atlas](images/physics-capability-atlas.svg) and [living experiment catalog](experiments/run-record-catalog.md) help distinguish implemented evidence from design intent.
+
 ## One source of truth
 
 **Ontology identity → Model definition → Experiment configuration → Deterministic run → Measurements → Explanation artifact**
