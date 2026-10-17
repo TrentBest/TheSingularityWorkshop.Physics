@@ -25,17 +25,25 @@ public readonly struct TriangleIndices2d : IEquatable<TriangleIndices2d>
         CIndex = cIndex;
     }
 
+    /// <summary>Gets the first vertex index in the triangle's preserved winding order.</summary>
     public int AIndex { get; }
+    /// <summary>Gets the second vertex index in the triangle's preserved winding order.</summary>
     public int BIndex { get; }
+    /// <summary>Gets the third vertex index in the triangle's preserved winding order.</summary>
     public int CIndex { get; }
 
+    /// <inheritdoc />
     public bool Equals(TriangleIndices2d other) =>
         AIndex == other.AIndex && BIndex == other.BIndex && CIndex == other.CIndex;
 
+    /// <inheritdoc />
     public override bool Equals(object? obj) => obj is TriangleIndices2d other && Equals(other);
 
+    /// <inheritdoc />
     public override int GetHashCode() => HashCode.Combine(AIndex, BIndex, CIndex);
 
+    /// <summary>Returns whether all three ordered indices are equal.</summary>
     public static bool operator ==(TriangleIndices2d left, TriangleIndices2d right) => left.Equals(right);
+    /// <summary>Returns whether any ordered index differs.</summary>
     public static bool operator !=(TriangleIndices2d left, TriangleIndices2d right) => !left.Equals(right);
 }
