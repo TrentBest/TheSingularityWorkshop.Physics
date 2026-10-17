@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" role="img" aria-labelledby="title desc">
+  <title id="title">Living scale factor: half size to double size</title>
+  <desc id="desc">An animated square scales smoothly from one half to twice its reference width and height. The outline stays fixed. The changing numeric label displays the current scale endpoint. This illustrates uniform linear scale, not a physical simulation.</desc>
+  <defs>
+    <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#dbe3ed" stroke-width="1"/></pattern>
+    <style>
+      text { font-family: Inter, Segoe UI, Arial, sans-serif; }
+      .half-label { animation: half-label 4s ease-in-out infinite; }
+      .double-label { animation: double-label 4s ease-in-out infinite; }
+      .scaled-object { transform-box: fill-box; transform-origin: center; animation: scale-object 4s ease-in-out infinite; }
+      @keyframes scale-object { 0%, 100% { transform: scale(.5); } 50% { transform: scale(2); } }
+      @keyframes half-label { 0%, 46% { opacity: 1; } 50%, 96% { opacity: 0; } 100% { opacity: 1; } }
+      @keyframes double-label { 0%, 46% { opacity: 0; } 50%, 96% { opacity: 1; } 100% { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .scaled-object, .half-label, .double-label { animation: none; }
+        .scaled-object { transform: scale(1); }
+        .half-label, .double-label { opacity: 0; }
+        .half-label { opacity: 1; }
+      }
+    </style>
+  </defs>
+  <rect width="1000" height="520" rx="20" fill="#f7f9fc"/>
+  <text x="42" y="48" fill="#14253d" font-size="27" font-weight="750">SCALE IS A PROPERTY YOU CAN SEE</text>
+  <text x="42" y="77" fill="#475569" font-size="15">One object · one reference · a continuously changing linear scale</text>
+  <rect x="50" y="105" width="610" height="350" rx="10" fill="url(#grid)" stroke="#b9c5d4"/>
+  <line x1="355" y1="120" x2="355" y2="440" stroke="#8796a8" stroke-dasharray="5 6"/>
+  <line x1="70" y1="280" x2="640" y2="280" stroke="#8796a8" stroke-dasharray="5 6"/>
+  <rect x="255" y="180" width="200" height="200" fill="none" stroke="#64748b" stroke-width="3" stroke-dasharray="8 6"/>
+  <g class="scaled-object">
+    <rect x="255" y="180" width="200" height="200" rx="8" fill="#1677c8" fill-opacity=".88" stroke="#075985" stroke-width="3"/>
+    <circle cx="305" cy="230" r="12" fill="#ffffff" fill-opacity=".9"/>
+    <path d="M285 325L335 275L375 315L420 255" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="355" y="475" fill="#475569" font-size="14" text-anchor="middle">Dashed square = reference scale 1×</text>
+  <rect x="700" y="120" width="255" height="310" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="730" y="158" fill="#475569" font-size="14" font-weight="700" letter-spacing="1">CURRENT SCALE</text>
+  <text class="half-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">0.5×</text>
+  <text class="double-label" x="827" y="245" fill="#075985" font-size="66" font-weight="800" text-anchor="middle">2×</text>
+  <text x="730" y="292" fill="#14253d" font-size="16">Width and height</text>
+  <text x="730" y="317" fill="#14253d" font-size="16">multiply by scale.</text>
+  <line x1="730" y1="340" x2="925" y2="340" stroke="#dbe3ed"/>
+  <text x="730" y="370" fill="#475569" font-size="14">At 0.5×: half the width.</text>
+  <text x="730" y="394" fill="#475569" font-size="14">At 2×: double the width.</text>
+  <text x="42" y="500" fill="#64748b" font-size="12">Conceptual property demonstration · no physics solver involved · animation respects reduced-motion preference</text>
+</svg>
