@@ -52,6 +52,8 @@ def validate(path: Path) -> list[str]:
         or schema_version < 1
     ):
         errors.append(f"{path}: schemaVersion must be a positive integer")
+    elif schema_version != 1:
+        errors.append(f"{path}: unsupported schemaVersion; this validator supports version 1")
 
     if not isinstance(record.get("modelId"), str) or not record.get("modelId", "").strip():
         errors.append(f"{path}: modelId must be a non-empty string")
