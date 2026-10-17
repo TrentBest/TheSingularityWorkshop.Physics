@@ -38,6 +38,15 @@ public static class Geometry2dPolygon
         if (count < 3)
             throw new ArgumentException("A polygon requires at least three effective vertices.", nameof(vertices));
 
+        BigInteger twiceAreaUnits = ComputeTwiceAreaUnits(vertices, count);
+
+        // Each coordinate is represented in units of 2^-1074. The shoelace sum
+        // therefore has units of 2^-2148; dividing by two gives area units 2^-2149.
+        return ScaledIntegerToDouble(twiceAreaUnits, -2149);
+    }
+
+    private static BigInteger ComputeTwiceAreaUnits(IReadOnlyList<Vector2d> vertices, int count)
+    {
         BigInteger twiceAreaUnits = BigInteger.Zero;
         for (int i = 0; i < count; i++)
         {
@@ -50,9 +59,7 @@ public static class Geometry2dPolygon
             twiceAreaUnits += x1 * y2 - y1 * x2;
         }
 
-        // Each coordinate is represented in units of 2^-1074. The shoelace sum
-        // therefore has units of 2^-2148; dividing by two gives area units 2^-2149.
-        return ScaledIntegerToDouble(twiceAreaUnits, -2149);
+        return twiceAreaUnits;
     }
 
     private static BigInteger ToSubnormalUnits(double value)
@@ -139,6 +146,108 @@ public static class Geometry2dPolygon
         return windingNumber == 0
             ? PointPolygonRelation2d.Outside
             : PointPolygonRelation2d.Inside;
+    }
+
+    /// <summary>Triangulates a simple polygon into non-overlapping triangles using its original vertex indices.</summary>
+    /// <param name="vertices">At least three effective vertices in boundary order; the first may optionally be repeated at the end.</param>
+    /// <returns>Exactly n - 2 triangles for the effective n-vertex boundary, preserving its winding direction.</returns>
+    /// <exception cref="ArgumentNullException">The vertex collection is null.</exception>
+    /// <exception cref="ArgumentException">The boundary is not simple, has fewer than three effective vertices, has zero signed area, or contains a collinear consecutive triple.</exception>
+    /// <remarks>
+    /// Ear clipping uses exact-sign orientation predicates and O(n²) worst-case work. Consecutive collinear
+    /// vertices are rejected rather than silently removed, so every returned index refers to the original
+    /// effective boundary and each triangle has nonzero area. A repeated closing vertex is excluded from
+    /// the effective boundary. No proximity tolerance is applied.
+    /// </remarks>
+    public static IReadOnlyList<TriangleIndices2d> Triangulate(IReadOnlyList<Vector2d> vertices)
+    {
+        if (vertices is null)
+            throw new ArgumentNullException(nameof(vertices));
+
+        int count = vertices.Count;
+        if (count > 1 && vertices[count - 1] == vertices[0])
+            count--;
+
+        if (count < 3)
+            throw new ArgumentException("A polygon requires at least three effective vertices.", nameof(vertices));
+        if (!IsSimple(vertices))
+            throw new ArgumentException("The polygon boundary must be simple.", nameof(vertices));
+
+        int winding = ComputeTwiceAreaUnits(vertices, count).Sign;
+        if (winding == 0)
+            throw new ArgumentException("The polygon must have nonzero signed area.", nameof(vertices));
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector2d previous = vertices[(i + count - 1) % count];
+            Vector2d current = vertices[i];
+            Vector2d next = vertices[(i + 1) % count];
+            if (Geometry2d.Orient(previous, current, next) == Orientation2d.Collinear)
+                throw new ArgumentException("Consecutive polygon vertices must not be collinear.", nameof(vertices));
+        }
+
+        var remaining = new List<int>(count);
+        for (int i = 0; i < count; i++)
+            remaining.Add(i);
+
+        var triangles = new List<TriangleIndices2d>(count - 2);
+        while (remaining.Count > 3)
+        {
+            bool clippedEar = false;
+            for (int i = 0; i < remaining.Count; i++)
+            {
+                int previousIndex = remaining[(i + remaining.Count - 1) % remaining.Count];
+                int currentIndex = remaining[i];
+                int nextIndex = remaining[(i + 1) % remaining.Count];
+                Vector2d previous = vertices[previousIndex];
+                Vector2d current = vertices[currentIndex];
+                Vector2d next = vertices[nextIndex];
+
+                if (Geometry2d.Orient(previous, current, next).Sign() != winding)
+                    continue;
+
+                bool containsVertex = false;
+                for (int j = 0; j < remaining.Count; j++)
+                {
+                    int candidateIndex = remaining[j];
+                    if (candidateIndex == previousIndex ||
+                        candidateIndex == currentIndex ||
+                        candidateIndex == nextIndex)
+                        continue;
+
+                    if (PointInTriangleInclusive(vertices[candidateIndex], previous, current, next, winding))
+                    {
+                        containsVertex = true;
+                        break;
+                    }
+                }
+
+                if (containsVertex)
+                    continue;
+
+                triangles.Add(new TriangleIndices2d(previousIndex, currentIndex, nextIndex));
+                remaining.RemoveAt(i);
+                clippedEar = true;
+                break;
+            }
+
+            if (!clippedEar)
+                throw new InvalidOperationException("No valid ear was found for a boundary accepted as simple.");
+        }
+
+        triangles.Add(new TriangleIndices2d(remaining[0], remaining[1], remaining[2]));
+        return Array.AsReadOnly(triangles.ToArray());
+    }
+
+    private static bool PointInTriangleInclusive(
+        Vector2d point, Vector2d a, Vector2d b, Vector2d c, int winding)
+    {
+        int ab = Geometry2d.Orient(a, b, point).Sign();
+        int bc = Geometry2d.Orient(b, c, point).Sign();
+        int ca = Geometry2d.Orient(c, a, point).Sign();
+        return winding > 0
+            ? ab >= 0 && bc >= 0 && ca >= 0
+            : ab <= 0 && bc <= 0 && ca <= 0;
     }
 
     /// <summary>Determines whether the vertices describe a simple closed polygon boundary.</summary>
