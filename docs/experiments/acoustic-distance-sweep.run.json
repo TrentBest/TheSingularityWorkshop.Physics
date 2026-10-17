@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "modelId": "acoustics.free-field-distance-sweep",
+  "modelVersion": 1,
+  "status": "computed-from-physics-model",
+  "source": {
+    "id": "studio-source",
+    "positionMeters": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "referenceLevelDbSpl": 80,
+    "referenceDistanceMeters": 1
+  },
+  "speedOfSoundMetersPerSecond": 343,
+  "observations": [
+    {
+      "listenerId": "listener-1m",
+      "distanceMeters": 1,
+      "propagationDelaySeconds": 0.0029154518950437317,
+      "receivedLevelDbSpl": 80
+    },
+    {
+      "listenerId": "listener-2m",
+      "distanceMeters": 2,
+      "propagationDelaySeconds": 0.005830903790087463,
+      "receivedLevelDbSpl": 73.97940008672037
+    },
+    {
+      "listenerId": "listener-5m",
+      "distanceMeters": 5,
+      "propagationDelaySeconds": 0.014577259475218658,
+      "receivedLevelDbSpl": 66.02059991327963
+    },
+    {
+      "listenerId": "listener-10m",
+      "distanceMeters": 10,
+      "propagationDelaySeconds": 0.029154518950437317,
+      "receivedLevelDbSpl": 60
+    }
+  ],
+  "limitations": [
+    "Analytical free-field estimates; not audio waveforms.",
+    "No room reflections, absorption, occlusion, frequency response, source motion, or Doppler."
+  ]
+}
