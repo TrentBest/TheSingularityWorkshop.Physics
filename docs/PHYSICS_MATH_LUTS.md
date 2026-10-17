@@ -2,7 +2,7 @@
 
 **Purpose:** define where lookup tables (LUTs) belong in the Workshop physics stack, how they complement analytical mathematics, and how Castle Siege can use them without turning approximations into hidden truth.
 
-**Status:** architecture/design contract. This document does not claim a general LUT runtime or a Math MicroBundle has been located or implemented. The Math MicroBundle's exact repository/package remains to be identified from the installed ecosystem before any dependency is added.
+**Status:** design contract plus one implemented numerical primitive. [`LookupTable1D`](../Physics/Math/LookupTable1D.cs) now samples a finite one-dimensional domain uniformly and performs bounded linear interpolation; focused tests compare its sine approximation against `System.Math.Sin`. This is not a general multi-dimensional LUT runtime, nor evidence that a separate Math MicroBundle exists. The exact Math MicroBundle repository/package remains to be identified before any dependency is added.
 
 Related: [Castle Siege Physics Domain](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Experiment Catalog](CASTLE_SIEGE_EXPERIMENT_CATALOG.md) · [Physics classes](PHYSICS_CLASSES.md) · [Living theory](LIVING_THEORY.md).
 
@@ -141,3 +141,19 @@ The LOD system must remain separate from physical truth. A distant fragment may 
 ## 10. Recommended first LUT experiment
 
 Start with a small bounded numerical table whose analytic reference is known. Compare direct evaluation with LUT evaluation at sample points and randomized in-range points; measure error, throughput, and memory. Then test one empirical/material-response curve only after a defensible source or explicitly illustrative profile is chosen. Do not start by placing every equation into a table.
+
+
+## Implemented first LUT primitive: bounded uniform 1D
+
+The current implementation is deliberately small and auditable:
+
+- construct with a finite increasing input interval and at least two samples;
+- sample both endpoints and uniformly spaced interior points from a caller-supplied function;
+- reject non-finite sample outputs;
+- linearly interpolate only inside the inclusive declared interval;
+- reject NaN, infinity, and out-of-domain input rather than silently extrapolating;
+- expose sample count and payload bytes, excluding runtime object/array overhead.
+
+The focused tests check endpoint behavior, exact linear interpolation, a sine approximation error bound across 10,001 test inputs, invalid bounds, invalid function output, and out-of-domain rejection. This is a numerical smoke test and bounded API contract, not yet a performance result or a universal LUT framework.
+
+Source: [LookupTable1D](../Physics/Math/LookupTable1D.cs) · [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Numerics/LookupTable1DTests.cs).
