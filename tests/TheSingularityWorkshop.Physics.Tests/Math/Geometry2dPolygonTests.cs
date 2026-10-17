@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Spatial;
 
@@ -177,6 +178,74 @@ public sealed class Geometry2dPolygonTests
             new Vector2d(0, 0), new Vector2d(1, 0), new Vector2d(0, 0)
         }));
         Assert.Throws<ArgumentNullException>(() => Geometry2dPolygon.SignedArea(null!));
+    }
+
+    [Test]
+    public void Triangulate_ProducesNMinusTwoTrianglesWithMatchingWinding()
+    {
+        Vector2d[] square = { new(0, 0), new(4, 0), new(4, 4), new(0, 4) };
+        Vector2d[] clockwise = { new(0, 0), new(0, 4), new(4, 4), new(4, 0) };
+        Vector2d[] concave =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(2, 2), new(0, 4)
+        };
+
+        AssertTriangulation(square, expectedSignedArea: 16d);
+        AssertTriangulation(clockwise, expectedSignedArea: -16d);
+        AssertTriangulation(concave, expectedSignedArea: 12d);
+    }
+
+    [Test]
+    public void Triangulate_ExcludesRepeatedClosingVertexFromReturnedIndices()
+    {
+        Vector2d[] closedSquare =
+        {
+            new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(0, 0)
+        };
+
+        var triangles = Geometry2dPolygon.Triangulate(closedSquare);
+
+        Assert.That(triangles, Has.Count.EqualTo(2));
+        Assert.That(triangles.SelectMany(t => new[] { t.AIndex, t.BIndex, t.CIndex }),
+            Is.All.LessThan(4));
+    }
+
+    [Test]
+    public void Triangulate_RejectsNonSimpleAndCollinearConsecutiveVertices()
+    {
+        Vector2d[] bowTie =
+        {
+            new(0, 0), new(4, 4), new(0, 4), new(4, 0)
+        };
+        Vector2d[] collinearCorner =
+        {
+            new(0, 0), new(2, 0), new(4, 0), new(4, 4), new(0, 4)
+        };
+
+        Assert.Throws<ArgumentException>(() => Geometry2dPolygon.Triangulate(bowTie));
+        Assert.Throws<ArgumentException>(() => Geometry2dPolygon.Triangulate(collinearCorner));
+        Assert.Throws<ArgumentNullException>(() => Geometry2dPolygon.Triangulate(null!));
+    }
+
+    private static void AssertTriangulation(Vector2d[] polygon, double expectedSignedArea)
+    {
+        var triangles = Geometry2dPolygon.Triangulate(polygon);
+        Assert.That(triangles, Has.Count.EqualTo(polygon.Length - 2));
+
+        double totalArea = 0d;
+        int expectedWinding = Math.Sign(expectedSignedArea);
+        foreach (TriangleIndices2d triangle in triangles)
+        {
+            Vector2d a = polygon[triangle.AIndex];
+            Vector2d b = polygon[triangle.BIndex];
+            Vector2d c = polygon[triangle.CIndex];
+            Orientation2d orientation = Geometry2d.Orient(a, b, c);
+            Assert.That((int)orientation, Is.EqualTo(expectedWinding));
+
+            totalArea += ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) / 2d;
+        }
+
+        Assert.That(totalArea, Is.EqualTo(expectedSignedArea).Within(1e-12));
     }
 
     [Test]
