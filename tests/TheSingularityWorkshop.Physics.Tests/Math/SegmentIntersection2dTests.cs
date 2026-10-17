@@ -85,6 +85,17 @@ public sealed class SegmentIntersection2dTests
     }
 
     [Test]
+    public void Intersect_ExtremeMixedScaleNonAxisAlignedCrossingReturnsOrigin()
+    {
+        // This crossing cannot use the axis-aligned coordinate shortcut. Exact integer line
+        // construction must preserve the tiny vertical segment beside the extreme diagonal.
+        var result = Intersect((-1e308, -1e308), (1e308, 1e308),
+            (0, -1e-300), (0, 1e-300));
+
+        Assert.That(result.Kind, Is.EqualTo(SegmentIntersectionKind2d.ProperIntersection));
+        Assert.That(result.Point, Is.EqualTo(new Vector2d(0, 0)));
+    }
+    [Test]
     public void Intersect_TinyScaleCrossingReturnsFinitePoint()
     {
         // Exercise a crossing with subnormal-scale components; the coordinate construction must
