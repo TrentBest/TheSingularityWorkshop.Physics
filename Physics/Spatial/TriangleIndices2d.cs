@@ -9,6 +9,12 @@ namespace TheSingularityWorkshop.Physics.Spatial;
 /// </remarks>
 public readonly struct TriangleIndices2d : IEquatable<TriangleIndices2d>
 {
+    /// <summary>Creates a triangle index triple with distinct, non-negative indices.</summary>
+    /// <param name="aIndex">First vertex index.</param>
+    /// <param name="bIndex">Second vertex index.</param>
+    /// <param name="cIndex">Third vertex index.</param>
+    /// <exception cref="ArgumentOutOfRangeException">An index is negative.</exception>
+    /// <exception cref="ArgumentException">Two or more indices are equal.</exception>
     public TriangleIndices2d(int aIndex, int bIndex, int cIndex)
     {
         if (aIndex < 0)
