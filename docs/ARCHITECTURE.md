@@ -35,6 +35,14 @@ Physics classes are capability domains, not a fixed number of ontological layers
 
 A bounded fire experiment might compose units and time, material/fuel data, heat transfer, reaction/combustion, optional gas flow and buoyancy, and measurements. A simpler flame demonstration may intentionally omit gas chemistry and disclose that scope.
 
+## Physics-owned semantic arbitration
+
+Physics owns the domain arbitration that interprets the data exposed by participating MicroBundles: identifying material and part candidates, resolving supported relationships, and choosing compatible physical capabilities. This is distinct from a host's generic provider lookup. A provider ID can locate a capability; it cannot decide whether a description means steel, whether a tip belongs to an arrow, or whether the available properties are sufficient for a physical model.
+
+For example, an arrow may be described across multiple bundles. Physics should resolve an explicitly identified steel tip as steel, independently resolve the shaft and fletching, and compose the arrow only where the available data supports those relationships. Names and strings are evidence of differing strength, not automatic truth. Preserve provenance, conflicts, unknown properties, and explicit/default/inferred status; do not silently invent physical constants or infer the entire object's material from one part.
+
+The contract and worked example are in [Physics-owned semantic arbitration](PHYSICS_OWNED_SEMANTIC_ARBITRATION.md). This is the intended architecture; the complete arbitration lifecycle and its tests are not yet implemented.
+
 ## First executable experiment
 
 The initial implemented experiment is intentionally narrow: one-dimensional constant acceleration. Its definition captures the initial kinematic state, constant acceleration, positive logical timestep, and step count. The result retains the exact definition and a state sample for the initial condition plus every completed step.
