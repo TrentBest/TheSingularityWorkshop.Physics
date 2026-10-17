@@ -35,7 +35,7 @@ A puddle splash should not require loading an ocean-scale solver. An ocean scene
 Rain, snow, wind, temperature, humidity, radiation, and pressure can affect multiple domains. The architecture should represent weather as time-varying conditions and forcing providers, each declaring units, coverage, cadence, provenance, uncertainty, and supported phenomena.
 
 Examples of coupled effects:
-- **Rain:** adds water and momentum to surfaces and basins; can form puddles, increase runoff, alter traction, and change visibility.
+- **Rain:** adds water to surfaces and basins; can form puddles, increase runoff, alter traction, and change visibility. In the current implementation, `RainfallRateField2D` converts rate to depth, and `BathymetricShallowWaterBasin2D.ApplyRainfall` adds that depth to matching cells without adding horizontal momentum or advancing simulation time. This is an explicit source-splitting step; the caller owns interval and ordering, and the basin rechecks its CFL bound before committing. It is not yet a runoff, infiltration, or atmospheric solver.
 - **Snow:** accumulates as a phase-dependent material; compacts or melts under declared conditions; affects load, friction, insulation, and available liquid water.
 - **Wind:** applies forces/stresses to exposed bodies and water surfaces, changes wave generation and drift, and can affect vehicle control and visibility.
 - **Temperature and radiation:** change heat exchange, evaporation, freezing/melting, density, and material behavior within the chosen model's validity.
