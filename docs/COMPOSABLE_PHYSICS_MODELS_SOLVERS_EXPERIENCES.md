@@ -128,6 +128,12 @@ This is the target knowledge map. Every topic progresses through clear status le
 
 This map is intentionally broad. It is a research and implementation agenda, not an assertion that the package contains all of these models. Each topic needs a bounded first slice, a reliable reference case, tests, and an honest capability entry before being advertised as implemented.
 
+## Environmental interaction scales and role-constrained actions
+
+The water/weather interaction contract and the cross-package gesture boundary are expanded in [Environmental Interaction Scales and Gestures](ENVIRONMENTAL_INTERACTION_SCALES_AND_GESTURES.md). It distinguishes puddles, pools, lakes, rivers, and coastal/ocean regimes by geometry, boundary conditions, forcing, and scale—not merely by object name—and treats rain, snow, and wind as time-varying inputs that can couple to water, terrain, materials, and participants.
+
+It also defines the intended Experience-level selection chain from task and actor qualification through platform capabilities, environment, candidate gesture prerequisites, and observed physical feedback. Physics owns physical state and constraints; Gestures owns motion patterns; neither package becomes dependent on the other. Carrier operations, aircraft-specific controls, and command roles are examples of the target architecture, not validated operational simulations.
+
 ## Data and scientific provenance
 
 Physical property data and reference observations should carry as much of the following as applicable:
