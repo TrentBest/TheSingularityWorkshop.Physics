@@ -18,7 +18,7 @@
 |---|---:|
 | Source-listener distance | 5 m |
 | Propagation delay | 0.014577259475218658 s |
-| Estimated received level | 66.020599913279625 dB SPL |
+| Estimated received level | 66.02059991327962 dB SPL |
 | Direction from listener toward source | (-0.6, -0.8, 0) |
 
 The delay is distance divided by the configured sound speed. The level estimate follows `L(r) = L(r₀) − 20 log₁₀(max(r, r₀)/r₀)`. The direction vector points from the listener toward the source, consistent with the model's API.
