@@ -71,10 +71,10 @@ Related: [Domain specification](CASTLE_SIEGE_PHYSICS_DOMAIN.md) · [Castle Siege
 
 **Question:** What measurable motion reaches the target?
 
-- Inputs: confirmed impact, projectile mass and pre-impact velocity.
-- Outputs: momentum `p=mv`, kinetic energy `E=½m|v|²`, and any supported normal/tangential decomposition.
-- Acceptance: units and vector frame are explicit; values are tied to the run and impact event.
-- Limitation: incoming energy/momentum do not alone specify deformation, fracture, penetration or wall collapse.
+- Inputs: a confirmed CS-03 intersection, the matching experiment run, and positive finite projectile mass in kilograms.
+- Outputs: run/target identity, intersection time and position, incoming velocity, momentum `p=mv`, and kinetic energy `E=½m|v|²` in SI units.
+- Acceptance: mismatched run identity, misses, and invalid mass are rejected; values are derived from the actual intersection state and tied to the source run/target.
+- Limitation: incoming energy/momentum do not alone specify impulse response, deformation, fracture, penetration or wall collapse. Those require separate response models.
 
 ### CS-05 — Baseline versus one-factor variant
 
