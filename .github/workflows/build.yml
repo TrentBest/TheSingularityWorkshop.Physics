@@ -37,8 +37,10 @@ jobs:
           scheduling_doc = Path('docs/PROCESS_GROUP_SCHEDULING.md').read_text(encoding='utf-8')
           lut = Path('docs/images/lookup-table-interpolation.svg').read_text(encoding='utf-8')
           lut_doc = Path('docs/PHYSICS_MATH_LUTS.md').read_text(encoding='utf-8')
+          keyed_randomness = Path('docs/images/keyed-randomness-living.svg').read_text(encoding='utf-8')
+          keyed_randomness_doc = Path('docs/DETERMINISTIC_RANDOMNESS.md').read_text(encoding='utf-8')
           import xml.etree.ElementTree as ET
-          for image_path in ('docs/images/scale-factor-living.svg', 'docs/images/spring-damper-living.svg', 'docs/images/physics-process-group-scheduling.svg', 'docs/images/lookup-table-interpolation.svg'):
+          for image_path in ('docs/images/scale-factor-living.svg', 'docs/images/spring-damper-living.svg', 'docs/images/physics-process-group-scheduling.svg', 'docs/images/lookup-table-interpolation.svg', 'docs/images/keyed-randomness-living.svg'):
               ET.parse(image_path)
           checks = {
               'accessible SVG title': '<title id="title">' in svg,
@@ -54,6 +56,8 @@ jobs:
               'scheduling diagram has distinct moving cadence pulses': scheduling.count('<animateMotion') >= 3 and 'pulse timing is conceptual' in scheduling,
               'scheduling page explains pulse timing limitations': 'animation timing is illustrative' in scheduling_doc,
               'LUT interpolation image animates a query marker': '<animateMotion' in lut and 'query-marker' in lut and 'images/lookup-table-interpolation.svg' in lut_doc,
+              'keyed randomness diagram shows the key contract and is explicitly conceptual': '<animateMotion' in keyed_randomness and 'entity' in keyed_randomness.lower() and 'conceptual' in keyed_randomness.lower(),
+              'keyed randomness lesson embeds the accessible diagram and links implementations': 'images/keyed-randomness-living.svg' in keyed_randomness_doc and 'Squirrel3Random.cs' in keyed_randomness_doc and 'Squirrel3Keyed.cs' in keyed_randomness_doc,
           }
           for name, passed in checks.items():
               print(f'{"PASS" if passed else "FAIL"}: {name}')
