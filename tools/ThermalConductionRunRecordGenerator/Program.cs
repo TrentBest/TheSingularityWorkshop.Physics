@@ -8,6 +8,25 @@ if (args.Length is < 1 or > 2 || (args.Length == 2 && args[1] != "--check"))
     return 2;
 }
 
+var firstSpecificHeatCapacity = new MaterialPropertyDefinition(
+    MaterialId: "illustrative-solid-a",
+    PropertyId: "specific-heat-capacity",
+    Value: 500d,
+    Unit: "J/(kg*K)",
+    EvidenceStatus: PropertyEvidenceStatus.Illustrative,
+    SourceId: "workshop.thermal-conduction-fixture",
+    SourceVersion: "1",
+    ValidityQuantity: "temperature",
+    ValidityUnit: "K",
+    ValidMinimum: 273.15d,
+    ValidMaximum: 373.15d,
+    ValidConditions: "Illustrative constant specific heat over the example temperature interval.",
+    StandardUncertainty: null);
+firstSpecificHeatCapacity.EnsureValid();
+
+var secondSpecificHeatCapacity = firstSpecificHeatCapacity with { MaterialId = "illustrative-solid-b" };
+secondSpecificHeatCapacity.EnsureValid();
+
 var conductivity = new MaterialPropertyDefinition(
     MaterialId: "illustrative-solid",
     PropertyId: "thermal-conductivity",
@@ -24,8 +43,8 @@ var conductivity = new MaterialPropertyDefinition(
     StandardUncertainty: null);
 conductivity.EnsureValid();
 
-var first = new LumpedThermalState(2d, 350d, 500d, 273.15d);
-var second = new LumpedThermalState(2d, 300d, 500d, 273.15d);
+var first = new LumpedThermalState(2d, 350d, firstSpecificHeatCapacity.Value, 273.15d);
+var second = new LumpedThermalState(2d, 300d, secondSpecificHeatCapacity.Value, 273.15d);
 const double area = 1d;
 const double separation = 1d;
 const double duration = 1d;
@@ -60,6 +79,22 @@ var record = new
             massKilograms = first.MassKilograms,
             temperatureKelvin = first.TemperatureKelvin,
             specificHeatCapacityJoulesPerKilogramKelvin = first.SpecificHeatCapacityJoulesPerKilogramKelvin,
+            specificHeatCapacityProperty = new
+            {
+                materialId = firstSpecificHeatCapacity.MaterialId,
+                propertyId = firstSpecificHeatCapacity.PropertyId,
+                value = firstSpecificHeatCapacity.Value,
+                unit = firstSpecificHeatCapacity.Unit,
+                evidenceStatus = firstSpecificHeatCapacity.EvidenceStatus.ToString().ToLowerInvariant(),
+                sourceId = firstSpecificHeatCapacity.SourceId,
+                sourceVersion = firstSpecificHeatCapacity.SourceVersion,
+                validityQuantity = firstSpecificHeatCapacity.ValidityQuantity,
+                validityUnit = firstSpecificHeatCapacity.ValidityUnit,
+                validMinimum = firstSpecificHeatCapacity.ValidMinimum,
+                validMaximum = firstSpecificHeatCapacity.ValidMaximum,
+                validConditions = firstSpecificHeatCapacity.ValidConditions,
+                standardUncertainty = firstSpecificHeatCapacity.StandardUncertainty
+            },
             referenceTemperatureKelvin = first.ReferenceTemperatureKelvin
         },
         secondInitialState = new
@@ -67,6 +102,22 @@ var record = new
             massKilograms = second.MassKilograms,
             temperatureKelvin = second.TemperatureKelvin,
             specificHeatCapacityJoulesPerKilogramKelvin = second.SpecificHeatCapacityJoulesPerKilogramKelvin,
+            specificHeatCapacityProperty = new
+            {
+                materialId = secondSpecificHeatCapacity.MaterialId,
+                propertyId = secondSpecificHeatCapacity.PropertyId,
+                value = secondSpecificHeatCapacity.Value,
+                unit = secondSpecificHeatCapacity.Unit,
+                evidenceStatus = secondSpecificHeatCapacity.EvidenceStatus.ToString().ToLowerInvariant(),
+                sourceId = secondSpecificHeatCapacity.SourceId,
+                sourceVersion = secondSpecificHeatCapacity.SourceVersion,
+                validityQuantity = secondSpecificHeatCapacity.ValidityQuantity,
+                validityUnit = secondSpecificHeatCapacity.ValidityUnit,
+                validMinimum = secondSpecificHeatCapacity.ValidMinimum,
+                validMaximum = secondSpecificHeatCapacity.ValidMaximum,
+                validConditions = secondSpecificHeatCapacity.ValidConditions,
+                standardUncertainty = secondSpecificHeatCapacity.StandardUncertainty
+            },
             referenceTemperatureKelvin = second.ReferenceTemperatureKelvin
         },
         thermalConductivity = new
