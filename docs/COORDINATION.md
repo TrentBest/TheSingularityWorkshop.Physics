@@ -329,3 +329,8 @@ This is not room audio. The direct and reflected paths are independent estimates
 ## 2026-10-17 — room-reflection evidence verified
 
 [Physics Build and Tests run 38996272912](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/38996272912) passed at `325e9db2eb70434b923c2b56edcf6f5f19c5a6f2`. Verified steps include the focused test suite, reproducible first-order room-reflection run record, exact fixture comparison, SVG generation from actual C# output, exact committed-SVG comparison, and rendering the committed SVG against the committed run record. Subsequent commits update docs and coordination; recheck the latest development tip before final status reporting.
+
+
+## 2026-10-17 — Gestures evaluator lifecycle boundary checked
+
+Gestures added [Gesture Evaluation Lifecycle](https://github.com/TrentBest/TheSingularityWorkshop.Gestures/blob/development/docs/GESTURE_EVALUATION_LIFECYCLE.md) and tests pinning its current CPU evaluator behavior. The important integration contract is that `GestureEvaluator.Evaluate` is a deterministic stateless pose sampler—not a running procedure, scheduler, pause/resume owner, interrupt handler, anchor resolver, or authority for contact/physical success. The host owns lifecycle and task coordination; Physics remains authoritative for physical outcomes. WebPage's [Singularity Studios handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/SINGULARITY_STUDIOS_WEBPAGELLM_HANDOFF.md) now links this contract to prevent a timeline from claiming unsupported lifecycle semantics. No Gestures API or implementation was changed by this coordination update.
