@@ -45,24 +45,31 @@ public static class PhysicalAssemblyMaterialPropertyMapper
                     .ToArray(),
                 StringComparer.Ordinal);
 
+        if (assemblyResolution.Parts.Any(part =>
+            part is null ||
+            string.IsNullOrWhiteSpace(part.PartId) ||
+            !Enum.IsDefined(part.Status) ||
+            (part.Status == MaterialIdentityResolutionStatus.Resolved
+                ? string.IsNullOrWhiteSpace(part.MaterialId)
+                : part.MaterialId is not null)))
+            throw new ArgumentException("Assembly material results must have valid part identities, statuses, and status-consistent material IDs.", nameof(assemblyResolution));
+
         var partIds = new HashSet<string>(StringComparer.Ordinal);
         var results = new List<PhysicalPartMaterialPropertyMap>(assemblyResolution.Parts.Count);
         foreach (var part in assemblyResolution.Parts.OrderBy(part => part.PartId, StringComparer.Ordinal))
         {
-            if (part is null || string.IsNullOrWhiteSpace(part.PartId) ||
-                !Enum.IsDefined(part.Status) || !partIds.Add(part.PartId))
-                throw new ArgumentException("Assembly material results must contain unique, valid part identities and statuses.", nameof(assemblyResolution));
+            if (!partIds.Add(part.PartId))
+                throw new ArgumentException("Assembly material results must contain unique part identities.", nameof(assemblyResolution));
 
-            var isResolved = part.Status == MaterialIdentityResolutionStatus.Resolved &&
-                !string.IsNullOrWhiteSpace(part.MaterialId);
-            var matched = isResolved && byMaterial.TryGetValue(part.MaterialId!, out var available)
-                ? available
-                : Array.Empty<MaterialPropertyDefinition>();
+            var matched = part.Status == MaterialIdentityResolutionStatus.Resolved &&
+                byMaterial.TryGetValue(part.MaterialId!, out var available)
+                    ? available
+                    : Array.Empty<MaterialPropertyDefinition>();
 
             results.Add(new PhysicalPartMaterialPropertyMap(
                 part.PartId,
                 part.Status,
-                isResolved ? part.MaterialId : null,
+                part.MaterialId,
                 matched));
         }
 
