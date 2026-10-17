@@ -351,3 +351,26 @@ Ownership:
 - FSM_COS composes capabilities; it does not become an audio callback loop.
 
 Current acoustic boundary is unchanged: free-field observations and first-order room-reflection paths are analytical metadata; no Physics waveform synthesis, signal mixing, or complete room-acoustics simulation is claimed. Before executable bundles are authored, inspect the existing MicroBundle descriptor/artifact schemas and reuse them rather than inventing a parallel format. No master merge, release, publication, or deployment is authorized.
+
+
+## 2026-10-17 — Physics ↔ Gestures via MicroBundle arbitration
+
+**Owner:** cross-domain integration coordination  
+**Audience:** Physics, Gestures, MicroBundleDomain/FSM_COS, and experience authors  
+**Status:** architecture contract only; no executable adapter or FSM_COS arbitration is claimed by this entry.
+
+The Gestures workstream added [Physics and Gestures: MicroBundle Arbitration Without Package Coupling](https://github.com/TrentBest/TheSingularityWorkshop.Gestures/blob/development/docs/PHYSICS_MICROBUNDLE_ARBITRATION.md). This captures the intended interweaving: keep both core packages independently usable, then select compatible providers and a narrow adapter at the Workshop composition boundary.
+
+### Source-grounded seam
+
+- Physics provides `Physics.Collision.ContactObservation`: contact/body identity, world-frame geometry and relative velocity, signed separation, logical step/time, and optional force/impulse values when computed. It does not by itself establish support, grip, friction, or a general contact solution.
+- Gestures provides its own `TheSingularityWorkshop.Gestures.ContactObservation`: a higher-level assessment of presence and load outcome consumed by `ContactRecoveryPolicy`.
+- These are not interchangeable DTOs. A raw Physics contact must not be converted directly into `Supported` or `Slipping` without a model/context that justifies that assessment.
+- The adapter and any required assessment model should be independently acquirable capabilities. MicroBundle descriptors should declare provided/consumed contract identities, versions, units/time semantics, optional values, and limitations. Inspect and reuse the existing MicroBundle descriptor/artifact schema before authoring actual manifests; this entry does not define a parallel schema.
+- Physics remains unaware of Gestures, MicroBundleDomain, and FSM_COS. Gestures remains unaware of Physics concrete types. The host/composition layer resolves the compatible capabilities and supplies explicit mappings and logical-time semantics.
+
+### Suggested first proof
+
+A wet-stone foot-placement example can demonstrate the boundary: Gesture intent → Physics contact evidence → selected support/slip assessment → adapter → Gestures recovery recommendation → next attempt → new Physics evidence. The living output must distinguish raw measurements, assessed outcomes, requested motion, and achieved physical result, and include unknown/failure cases. Until the adapter, tests, and generator exist, this remains a proposed proof—not an implemented integration.
+
+This direction follows Physics' learning principle: expose the atomic physical construct and its geometry/state first, then connect the math, units, assumptions, and derivation so a learner can follow deeper explanation at their own pace. Gestures should consume the physical result instead of duplicating its equations. No package reference, release, publication, or master promotion is authorized by this coordination entry.
