@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="840" viewBox="0 0 1200 840" role="img" aria-labelledby="title desc">
+<title id="title">Physics capability atlas: islands and bridges</title>
+<desc id="desc">A status map of existing tested physics domains and the missing shared contracts and causal coupling that connect them into a world.</desc>
+<defs>
+  <style>
+    .bg{fill:#10151d}.panel{fill:#1a2430;stroke:#46586c;stroke-width:1.5}.live{fill:#173a35;stroke:#53c8a0;stroke-width:2}.bridge{fill:#382d19;stroke:#e6b85c;stroke-width:2;stroke-dasharray:7 5}.planned{fill:#272b35;stroke:#77869a;stroke-width:1.5;stroke-dasharray:5 4}.h1{font:700 27px Arial,sans-serif;fill:#f4f7fb}.h2{font:700 17px Arial,sans-serif;fill:#f4f7fb}.body{font:14px Arial,sans-serif;fill:#d5dee8}.small{font:12px Arial,sans-serif;fill:#aebdcd}.green{fill:#70e0b7}.amber{fill:#f0c76b}.line{stroke:#6f8296;stroke-width:2;fill:none}.arrow{stroke:#e6b85c;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.tag{font:700 11px Arial,sans-serif;letter-spacing:1px}
+  </style>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#e6b85c"/></marker>
+</defs>
+<rect class="bg" width="1200" height="840" rx="18"/>
+<text x="40" y="48" class="h1">PHYSICS CAPABILITY ATLAS</text>
+<text x="40" y="74" class="body">The repo has working islands. The next job is to connect them with tested, causal contracts.</text>
+<rect x="40" y="98" width="1120" height="62" rx="10" class="panel"/>
+<text x="60" y="123" class="tag green">EXISTING FOUNDATION</text>
+<text x="60" y="145" class="body">Vector / quaternion / pose · explicit SI assumptions · deterministic bounded models · focused tests · experiment JSON / SVG</text>
+<path class="line" d="M600 160 V185"/>
+<rect x="40" y="185" width="1120" height="112" rx="12" class="bridge"/>
+<text x="62" y="211" class="tag amber">P0 · SHARED CONTRACTS — MISSING AS A REUSABLE CROSS-DOMAIN LAYER</text>
+<text x="62" y="238" class="h2">Units + frame/sign meaning · model/data provenance · observation kind + logical time</text>
+<text x="62" y="264" class="body">Committed vs requested time · balance residuals · run-record schema usable across multiple domains</text>
+<path class="arrow" d="M600 297 V322"/>
+<text x="40" y="350" class="h2">IMPLEMENTED / TESTED DOMAIN SLICES</text>
+<text x="1160" y="350" text-anchor="end" class="small">Status means bounded scope only—not a complete engine</text>
+<g>
+<rect x="40" y="370" width="265" height="112" rx="10" class="live"/>
+<text x="58" y="396" class="h2">Mechanics</text><text x="58" y="420" class="body">Kinematics · projectiles</text><text x="58" y="440" class="body">contact · impulse · springs</text><text x="58" y="463" class="small">No general rigid-body solver</text>
+<rect x="325" y="370" width="265" height="112" rx="10" class="live"/>
+<text x="343" y="396" class="h2">Thermal</text><text x="343" y="420" class="body">Lumped sensible energy</text><text x="343" y="440" class="body">constant specific heat</text><text x="343" y="463" class="small">No transfer / phase change</text>
+<rect x="610" y="370" width="265" height="112" rx="10" class="live"/>
+<text x="628" y="396" class="h2">Hydrodynamics</text><text x="628" y="420" class="body">1D wave · 2D shallow water</text><text x="628" y="440" class="body">terrain-aware basin</text><text x="628" y="463" class="small">No body/fluid coupling</text>
+<rect x="895" y="370" width="265" height="112" rx="10" class="live"/>
+<text x="913" y="396" class="h2">Electricity</text><text x="913" y="420" class="body">Ideal DC resistive loads</text><text x="913" y="440" class="body">demand / capacity accounting</text><text x="913" y="463" class="small">No transient network solver</text>
+</g>
+<g>
+<rect x="40" y="500" width="265" height="92" rx="10" class="live"/>
+<text x="58" y="526" class="h2">Acoustics</text><text x="58" y="550" class="body">Free-field + first reflections</text><text x="58" y="573" class="small">Path metadata, not audio</text>
+<rect x="325" y="500" width="265" height="92" rx="10" class="live"/>
+<text x="343" y="526" class="h2">Terrain / geology</text><text x="343" y="550" class="body">Bounded 2D deposition</text><text x="343" y="573" class="small">No erosion / thermal coupling</text>
+<rect x="610" y="500" width="265" height="92" rx="10" class="live"/>
+<text x="628" y="526" class="h2">Time / history</text><text x="628" y="550" class="body">Ledger · checkpoint · lineage</text><text x="628" y="573" class="small">No universal coupled rollback</text>
+<rect x="895" y="500" width="265" height="92" rx="10" class="live"/>
+<text x="913" y="526" class="h2">Spatial math</text><text x="913" y="550" class="body">Vector3d · Quaterniond · Pose3d</text><text x="913" y="573" class="small">Frame policy needs consistency</text>
+</g>
+<path class="arrow" d="M458 592 V620 H310 V644"/>
+<path class="arrow" d="M742 592 V620 H890 V644"/>
+<rect x="40" y="644" width="530" height="116" rx="12" class="bridge"/>
+<text x="62" y="672" class="tag amber">P1 · RECOMMENDED FIRST BRIDGE</text>
+<text x="62" y="699" class="h2">Electrical power → thermal energy</text>
+<text x="62" y="723" class="body">Declare coupling fraction + Δt; check E = PΔt</text>
+<text x="62" y="744" class="small">Real cross-domain test + run JSON + SVG from actual output</text>
+<rect x="590" y="644" width="570" height="116" rx="12" class="planned"/>
+<text x="612" y="672" class="tag">NEXT BRIDGES</text>
+<text x="612" y="699" class="h2">Material properties · impact → response · fluid ↔ body</text>
+<text x="612" y="723" class="body">Then coupled world snapshots, replay, reactions and fields</text>
+<text x="612" y="744" class="small">Do not call any bridge implemented before tests prove it</text>
+<text x="40" y="805" class="small">Green = bounded source + tests exist · Amber = shared contract / coupling gap · Dashed = proposed work</text>
+<text x="1160" y="805" text-anchor="end" class="small">Audit baseline: development @ 0231763</text>
+</svg>
