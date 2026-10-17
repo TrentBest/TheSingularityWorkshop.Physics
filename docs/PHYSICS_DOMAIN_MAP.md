@@ -4,7 +4,7 @@
 
 ![Physics domain map: concepts and relationships](images/physics-ontology-map.svg)
 
-A domain becomes implemented only when it has an explicit state model, units and conventions, governing assumptions, validated numerical behavior, tests, and observable outputs. A name on this page is a planned domain unless its implementation is linked and tested.
+A domain becomes implemented only when it has an explicit state model, units and conventions, governing assumptions, validated numerical behavior, tests, and observable outputs. A name on this page is a planned domain unless its implementation is linked and tested. The broader mathematical foundation is tracked in the [Mathematics Domain Map](MATHEMATICS_DOMAIN_MAP.md); the data-layout and numerical contracts for future acceleration are in [GPU Computation Readiness](GPU_COMPUTATION_READINESS.md).
 
 ## The physical picture
 
