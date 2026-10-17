@@ -283,6 +283,47 @@ public sealed class Geometry2dPolygonTests
         Assert.Throws<ArgumentNullException>(() => Geometry2dPolygon.Triangulate(null!));
     }
 
+    [Test]
+    public void Triangulate_HandlesCombPolygonInBothWindingDirections()
+    {
+        Vector2d[] counterClockwise =
+        {
+            new(0, 0), new(8, 0), new(8, 4), new(6, 4),
+            new(6, 2), new(5, 2), new(5, 4), new(3, 4),
+            new(3, 2), new(2, 2), new(2, 4), new(0, 4)
+        };
+        Vector2d[] clockwise = counterClockwise.Reverse().ToArray();
+
+        AssertTriangulationCoversInterior(counterClockwise, expectedWinding: 1);
+        AssertTriangulationCoversInterior(clockwise, expectedWinding: -1);
+    }
+
+    private static void AssertTriangulationCoversInterior(Vector2d[] polygon, int expectedWinding)
+    {
+        var triangles = Geometry2dPolygon.Triangulate(polygon);
+        Assert.That(triangles, Has.Count.EqualTo(polygon.Length - 2));
+
+        double signedTriangleAreaSum = 0d;
+        foreach (TriangleIndices2d triangle in triangles)
+        {
+            Vector2d a = polygon[triangle.AIndex];
+            Vector2d b = polygon[triangle.BIndex];
+            Vector2d c = polygon[triangle.CIndex];
+            Assert.That((int)Geometry2d.Orient(a, b, c), Is.EqualTo(expectedWinding));
+
+            // A triangle's centroid must remain inside the polygon or on its boundary.
+            var centroid = new Vector2d((a.X + b.X + c.X) / 3d, (a.Y + b.Y + c.Y) / 3d);
+            Assert.That(Geometry2dPolygon.LocatePoint(polygon, centroid),
+                Is.Not.EqualTo(PointPolygonRelation2d.Outside));
+
+            signedTriangleAreaSum += ((b.X - a.X) * (c.Y - a.Y) -
+                (b.Y - a.Y) * (c.X - a.X)) / 2d;
+        }
+
+        double polygonArea = Geometry2dPolygon.SignedArea(polygon);
+        Assert.That(signedTriangleAreaSum, Is.EqualTo(polygonArea).Within(1e-12));
+    }
+
     private static void AssertTriangulation(Vector2d[] polygon, double expectedSignedArea)
     {
         var triangles = Geometry2dPolygon.Triangulate(polygon);
