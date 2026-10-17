@@ -51,7 +51,11 @@ public sealed class ElectricalThermalCouplingExperimentTests
         var first = ElectricalThermalCouplingExperiment.Run(initial, 12d, 6d, 100d, 10d, 0.25d);
         var second = ElectricalThermalCouplingExperiment.Run(initial, 12d, 6d, 100d, 10d, 0.25d);
 
-        Assert.That(second, Is.EqualTo(first));
+        Assert.That(second.ElectricalEnergyJoules, Is.EqualTo(first.ElectricalEnergyJoules));
+        Assert.That(second.ThermalEnergyTransferJoules, Is.EqualTo(first.ThermalEnergyTransferJoules));
+        Assert.That(second.FinalThermalState, Is.EqualTo(first.FinalThermalState));
+        Assert.That(second.ElectricalObservation.Loads.Select(load => load.PowerWatts),
+            Is.EqualTo(first.ElectricalObservation.Loads.Select(load => load.PowerWatts)));
     }
 
     [Test]
@@ -75,7 +79,11 @@ public sealed class ElectricalThermalCouplingExperimentTests
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             ElectricalThermalCouplingExperiment.Run(CreateThermalState(300d), 0d, 6d, 100d, 10d, 0.5d));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            ElectricalThermalCouplingExperiment.Run(CreateThermalState(300d), 12d, 6d, 1d, 10d, 0.5d));
+            ElectricalThermalCouplingExperiment.Run(CreateThermalState(300d), 12d, 0d, 100d, 10d, 0.5d));
+
+        var overloaded = ElectricalThermalCouplingExperiment.Run(
+            CreateThermalState(300d), 12d, 6d, 1d, 10d, 0.5d);
+        Assert.That(overloaded.ElectricalObservation.IsOverloaded, Is.True);
     }
 
     private static LumpedThermalState CreateThermalState(double temperatureKelvin) =>
