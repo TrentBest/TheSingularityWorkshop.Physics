@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
 <title id="title">Heat conduction between two lumped thermal bodies</title>
-<desc id="desc">The Physics model transfers 500 joules from a body at 350 kelvin to a body at 300 kelvin. Final temperatures are 349.5 and 300.5 kelvin. Total sensible-energy residual is 0 joules. Conductivity is illustrative.</desc>
+<desc id="desc">The Physics model transfers 500 joules from a body at 350 kelvin to a body at 300 kelvin. Final temperatures are 349.5 and 300.5 kelvin. Total sensible-energy residual is 0 joules. Conductivity is illustrative. Animated markers illustrate the transfer direction.</desc>
 <rect width="900" height="560" rx="24" fill="#f7f9fc"/>
 <text x="40" y="46" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#14253d">Thermal conduction: heat moves down the temperature gradient</text>
 <text x="40" y="75" font-size="14" fill="#475569">Model thermodynamics.lumped-body-conduction · v1 · deterministic C# output</text>
@@ -14,6 +14,8 @@
 <text x="397" y="181" font-size="17" fill="#14253d">500 J →</text>
 <text x="397" y="208" font-size="14" fill="#475569">G = 10 W/K</text>
 <path d="M 540 180 H 585" stroke="#2563a6" stroke-width="5" stroke-linecap="round"/><path d="M 585 180 l -12 -8 v 16 z" fill="#2563a6"/>
+<circle r="5" fill="#c2410c"><animateMotion dur="1.6s" repeatCount="indefinite" path="M 320 180 L 355 180"/></circle>
+<circle r="5" fill="#2563a6"><animateMotion dur="1.6s" repeatCount="indefinite" path="M 545 180 L 580 180"/></circle>
 <rect x="600" y="105" width="260" height="150" rx="16" fill="#eff6ff" stroke="#60a5fa" stroke-width="2"/>
 <text x="620" y="137" font-size="19" font-weight="700" fill="#1d4ed8">Body B · initially cooler</text>
 <text x="620" y="170" font-size="17" fill="#14253d">300 K → 300.5 K</text>
