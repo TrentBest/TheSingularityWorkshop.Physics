@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
   <title id="title">Multi-rate physics process-group scheduling</title>
-  <desc id="desc">A fixed logical simulation heartbeat named TickAll feeds independent FSM_API domain schedulers. Each scheduler invokes its own physical domain process group at its configured cadence. Events can wake a domain early. All domains exchange explicit quantities and events through shared physical state, while rendering observes rather than owns physical truth.</desc>
+  <desc id="desc">A fixed logical simulation heartbeat named TickAll feeds independent FSM_API domain schedulers. Animated pulses illustrate that each scheduler has its own cadence; pulse timing is conceptual, not measured runtime behavior. Events can wake a domain early. All domains exchange explicit quantities and events through shared physical state, while rendering observes rather than owns physical truth.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
       <path d="M0,0 L0,6 L9,3 z" fill="#526579"/>
@@ -15,6 +15,7 @@
       .box{stroke-width:2;rx:18}
       .edge{fill:none;stroke:#526579;stroke-width:2.5;marker-end:url(#arrow)}
       .dash{stroke-dasharray:8 7}
+      @media (prefers-reduced-motion: reduce) { .pulse { display:none; } }
     </style>
   </defs>
   <rect width="1200" height="760" fill="#f8fafc"/>
@@ -29,6 +30,10 @@
   <path d="M600 230 H490 V254" class="edge"/>
   <path d="M600 230 H790 V254" class="edge"/>
   <path d="M600 230 H1010 V254" class="edge"/>
+  <!-- Moving pulses show distinct conceptual cadences; they are not runtime measurements. -->
+  <circle class="pulse" r="7" fill="#31734c"><animateMotion dur="2s" repeatCount="indefinite" path="M600 200 V230 H190 V254"/></circle>
+  <circle class="pulse" r="7" fill="#a56a13"><animateMotion dur="4s" repeatCount="indefinite" path="M600 200 V230 H490 V254"/></circle>
+  <circle class="pulse" r="7" fill="#7252a0"><animateMotion dur="1s" repeatCount="indefinite" path="M600 200 V230 H790 V254"/></circle>
 
   <rect x="52" y="254" width="276" height="126" class="box" fill="#dcece3" stroke="#31734c"/>
   <text x="190" y="286" text-anchor="middle" class="label">Electricity FSM</text>
@@ -74,4 +79,5 @@
   <text x="888" y="651" text-anchor="middle" class="body">Renderer / player UI does not invent physical results</text>
   <text x="888" y="673" text-anchor="middle" class="small">Track logical time, work cost, events, and model error.</text>
   <path d="M900 500 H1010 V590" class="edge"/>
+  <text x="52" y="735" class="small">Animated pulses are illustrative only; proposed cadence is not measured or implemented runtime behavior.</text>
 </svg>
