@@ -2,6 +2,10 @@
 
 The flat-bed prototype and the terrain-aware increment are renderer-independent, depth-averaged two-dimensional shallow-water models on a regular rectangular grid. They advance water depth and depth-integrated horizontal momentum with finite-volume Rusanov fluxes and impermeable outer walls.
 
+![Shallow-water model concepts: free surface, bed elevation, water depth, and cell-to-cell flux](images/shallow-water-concepts.svg)
+
+*Conceptual schematic, not a solver snapshot. The actual model is depth-averaged 2D shallow water; see the tests and experiments below for executable evidence.*
+
 ## Bathymetric increment
 
 `BathymetricShallowWaterBasin2D` accepts a cell-centered bed-elevation field as well as initial water depth. It reconstructs the left and right water depths at each face against the higher of the two bed elevations, evaluates the Rusanov flux on those reconstructed states, then applies side-specific hydrostatic pressure corrections. This hydrostatic reconstruction is designed to preserve a still lake with a constant free-surface elevation over uneven terrain.
