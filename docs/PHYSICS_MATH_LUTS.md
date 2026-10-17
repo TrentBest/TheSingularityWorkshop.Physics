@@ -4,6 +4,10 @@
 
 ![Lookup-table sampling and interpolation: reference curve, sampled nodes, and bounded linear segments](images/lookup-table-interpolation.svg)
 
+![Living scale-factor illustration: a reference outline stays fixed while the object changes between half and double scale](images/scale-factor-living.svg)
+
+A table's input scale and a displayed object's geometric scale are different concepts, but both need explicit domains and visible consequences. The living scale image is a conceptual property demo; it does not claim that `LookupTable1D` itself is animated or uses this scale.
+
 *Conceptual numerical diagram. The implemented `LookupTable1D` uses bounded linear interpolation; exact error depends on the table and input function.*
 
 **Status:** design contract plus one implemented numerical primitive. [`LookupTable1D`](../Physics/Math/LookupTable1D.cs) now samples a finite one-dimensional domain uniformly and performs bounded linear interpolation; focused tests compare its sine approximation against `System.Math.Sin`. This is not a general multi-dimensional LUT runtime, nor evidence that a separate Math MicroBundle exists. The exact Math MicroBundle repository/package remains to be identified before any dependency is added.
