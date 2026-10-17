@@ -203,7 +203,7 @@ public static class Geometry2dPolygon
                 Vector2d current = vertices[currentIndex];
                 Vector2d next = vertices[nextIndex];
 
-                if (Geometry2d.Orient(previous, current, next).Sign() != winding)
+                if ((int)Geometry2d.Orient(previous, current, next) != winding)
                     continue;
 
                 bool containsVertex = false;
@@ -242,9 +242,9 @@ public static class Geometry2dPolygon
     private static bool PointInTriangleInclusive(
         Vector2d point, Vector2d a, Vector2d b, Vector2d c, int winding)
     {
-        int ab = Geometry2d.Orient(a, b, point).Sign();
-        int bc = Geometry2d.Orient(b, c, point).Sign();
-        int ca = Geometry2d.Orient(c, a, point).Sign();
+        int ab = (int)Geometry2d.Orient(a, b, point);
+        int bc = (int)Geometry2d.Orient(b, c, point);
+        int ca = (int)Geometry2d.Orient(c, a, point);
         return winding > 0
             ? ab >= 0 && bc >= 0 && ca >= 0
             : ab <= 0 && bc <= 0 && ca <= 0;
