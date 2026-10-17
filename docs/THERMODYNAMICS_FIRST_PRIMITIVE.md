@@ -28,7 +28,7 @@ The implementation rejects invalid/non-finite properties, non-finite transfers, 
 
 ![Observed two-body thermal conduction: actual run-record temperatures and zero energy-accounting residual](experiments/thermal-conduction.svg)
 
-*This living image documents the adjacent implemented conduction experiment, not the lumped-state primitive alone. Its material properties are explicitly illustrative.*
+*The animated markers and displayed temperatures come from the adjacent conduction experiment's run record, not from this state primitive alone. Its material properties are explicitly illustrative.*
 
 ## Why start here
 
