@@ -9,7 +9,8 @@
     <None Include="LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" />
+    <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" Condition="'$(UseLocalMicroBundleDomain)' != 'true'" />
+    <ProjectReference Include="MicroBundleDomain/TheSingularityWorkshop.MicroBundleDomain.csproj" Condition="'$(UseLocalMicroBundleDomain)' == 'true'" />
     <ProjectReference Include="TheSingularityWorkshop.Physics.csproj" />
   </ItemGroup>
 </Project>
