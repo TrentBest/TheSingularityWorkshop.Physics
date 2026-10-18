@@ -49,6 +49,15 @@ The lost kinetic energy is an accounting quantity, **not** a solved thermal fiel
 
 This prevents tunnelling for the linear trajectories supplied to the detector, but it is not an exact continuous collision solver for the curved paths of gravitationally accelerated bodies. Its accuracy depends on the interval and the trajectory approximation. A future acceleration-aware detector may need to bound curvature or inspect the integrator's trajectory rather than extrapolate a straight line. The detector also does not coordinate multiple candidate encounters: a caller must sort events deterministically and revalidate later events after an earlier merger changes the body set.
 
+
+## Gravity-integrated encounter handling
+
+`OrbitalGravityEncounterCoordinator.ResolveMergers` connects the velocity-Verlet N-body stepper to the explicit merger policy. The caller supplies the total interval, a maximum trial-step duration, and (G). For each trial step, the coordinator integrates the current system to an endpoint, treats each body's start-to-end displacement as a linear chord, and runs the swept-sphere detector against those chords. If a contact is estimated, it integrates the system from the step start to the estimated event time, projects the selected pair to touching separation while preserving their centre of mass, applies the merger policy, and rebuilds the state before continuing.
+
+This is a useful next rung between isolated linear encounter experiments and a full event-driven gravitational solver. It includes gravitational acceleration in the trajectory endpoints and bounds the interval over which a chord is used. **It is still approximate:** the chord is not the exact curved trajectory, and this implementation does not calculate a rigorous curvature bound or guarantee that every collision is detected for an arbitrary timestep. Choose the maximum step for the scenario and perform convergence tests; reducing it generally improves the local path approximation at greater computational cost. The positional projection is a numerical contact correction, not a physical impact/deformation model.
+
+The coordinator is deterministic for the same input states, constants, and step size. Candidate contacts are ordered by estimated time of impact and then ordinal body IDs; after each merger, contacts are recomputed against the changed state. The existing `OrbitalEncounterCoordinator.ResolveLinearMergers` remains the simpler constant-velocity tool when gravity integration is not intended.
+
 ## Deterministic encounter orchestration
 
 `OrbitalEncounterCoordinator.ResolveLinearMergers` coordinates a finite, constant-velocity interval without mutating the caller's input states. It sorts body identities, evaluates swept contacts for each unique pair, and chooses the earliest candidate by time of impact; exact time ties are broken by ordinal `BodyAId` and then `BodyBId`.
