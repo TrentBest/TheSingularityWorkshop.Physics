@@ -59,6 +59,39 @@ public sealed class OrbitalGravityEncounterCoordinatorTests
     }
 
     [Test]
+    public void ResolveMergers_HalvingStepConvergesOnEstimatedGravitationalContactTime()
+    {
+        var coarse = ContactTime(maximumStepSeconds: 0.5d);
+        var medium = ContactTime(maximumStepSeconds: 0.25d);
+        var fine = ContactTime(maximumStepSeconds: 0.125d);
+        var reference = ContactTime(maximumStepSeconds: 0.03125d);
+
+        Assert.That(Math.Abs(medium - reference), Is.LessThan(Math.Abs(coarse - reference)),
+            $"Halving the step should improve contact-time convergence: coarse={coarse:R}, medium={medium:R}, reference={reference:R}.");
+        Assert.That(Math.Abs(fine - reference), Is.LessThan(Math.Abs(medium - reference)),
+            $"Halving the step should improve contact-time convergence again: medium={medium:R}, fine={fine:R}, reference={reference:R}.");
+    }
+
+    private static double ContactTime(double maximumStepSeconds)
+    {
+        var central = new OrbitalBodyState(
+            "central", 1000d, 0.75d, Vector3d.Zero, Vector3d.Zero);
+        var incoming = new OrbitalBodyState(
+            "incoming", 1d, 0.25d, new Vector3d(10d, 0d, 0d), new Vector3d(-1d, 0d, 0d));
+
+        var result = OrbitalGravityEncounterCoordinator.ResolveMergers(
+            [central, incoming],
+            intervalSeconds: 10d,
+            maximumStepSeconds,
+            gravitationalConstantM3PerKgSecondSquared: 0.001d);
+
+        Assert.That(result.TimedMergeEvents, Has.Count.EqualTo(1));
+        Assert.That(result.TimedMergeEvents[0].TimeSeconds, Is.InRange(0d, 10d));
+        Assert.That(result.TimedMergeEvents[0].MergeEvent, Is.EqualTo(result.MergeEvents[0]));
+        return result.TimedMergeEvents[0].TimeSeconds;
+    }
+
+    [Test]
     public void ResolveMergers_RejectsInvalidStepDuration()
     {
         var body = Body("body", Vector3d.Zero, Vector3d.Zero);
