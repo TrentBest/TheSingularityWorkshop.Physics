@@ -37,7 +37,13 @@ public sealed record WorldTimeDefinition(
     {
         ValidateElapsedSeconds(elapsedSeconds);
         EnsureValid();
-        return elapsedSeconds / RotationPeriodSeconds;
+        var cycles = elapsedSeconds / RotationPeriodSeconds;
+        if (!double.IsFinite(cycles))
+        {
+            throw new OverflowException("The requested elapsed time exceeds the finite local rotation-cycle range.");
+        }
+
+        return cycles;
     }
 
     /// <summary>Returns the fractional local rotation phase in [0, 1), measured from the epoch.</summary>
