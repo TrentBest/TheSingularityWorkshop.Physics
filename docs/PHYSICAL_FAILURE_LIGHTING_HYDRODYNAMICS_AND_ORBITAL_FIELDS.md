@@ -81,7 +81,19 @@ Keep three categories distinct:
 
 Never label the second or third category as experimentally validated reality.
 
-## 7. Acceptance criteria
+## 7. Implemented CPU reference slice: world time and orbital forcing
+
+The following narrow, tested implementation now exists alongside this broader design contract:
+
+- [WorldTimeDefinition](../Physics/Astronomy/WorldTimeDefinition.cs) declares a stable world ID, epoch ID, and positive rotation period in SI seconds. It reports local rotation cycles/phase separately from elapsed seconds and conventional Earth-reference days. Earth days are a comparison scale, not an assumption that the world uses Earth's calendar.
+- [OrbitalTidePotentialBaker](../Physics/Astronomy/OrbitalTidePotentialBaker.cs) deterministically samples the quadrupole differential tidal potential for one perturber, circular orbit, and equatorial observer. Its inputs explicitly include perturber mass, orbital distance, world radius, gravitational constant, orbital and rotation periods, initial sub-body longitude, observer longitude, epoch, and sample grid.
+- [Focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Astronomy/OrbitalTidePotentialBakerTests.cs) cover determinism, endpoint inclusion, interpolation, closed-horizon rejection, defensive sample copying, an aligned turning point, and invalid input. World-clock tests are in [WorldTimeDefinitionTests](../tests/TheSingularityWorkshop.Physics.Tests/Astronomy/WorldTimeDefinitionTests.cs).
+
+**Strict limits:** this table stores differential tidal potential (m²/s²) and its time derivative, not ocean height or a KingTideIncoming forecast. The current reference model omits eccentricity, orbital inclination, multiple perturbers, deformation/Love numbers, latitude variation, local bathymetry, basin response, weather, and coast geometry. Semantic Rising, Falling, and TurningPoint states are therefore states of this potential signal only. A later local-response model must combine the forcing with a declared physical response before classifying sea-level extremes. The gravitational constant is caller-supplied; test values are illustrative and are not an empirical planet definition.
+
+The canonical output is CPU data first. A later texture encoder may pack samples into pixels/channels, but it must declare channel units, sample interval, quantization/error, interpolation, epoch, horizon, and out-of-range behavior. A channel packing convention must not silently reinterpret every channel as a different time slice unless that encoding is explicitly versioned.
+
+## 8. Acceptance criteria
 
 A capability is not “implemented” because a diagram or texture exists. It requires:
 - explicit state, units, frames, initial/boundary conditions, and model validity;
@@ -92,7 +104,7 @@ A capability is not “implemented” because a diagram or texture exists. It re
 - defined behavior for missing data, out-of-range queries, stale tables, and model changes;
 - a clear contract separating authoritative physical outputs from rendering and cinematic controls.
 
-## Implementation sequence
+## 9. Implementation sequence
 
 1. Complete reusable material property, condition, provenance, and model-applicability contracts.
 2. Add focused thermal phase-transition and brittle-failure reference cases with synthetic/illustrative parameters clearly marked.
