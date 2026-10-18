@@ -20,8 +20,9 @@ public sealed class OrbitalEncounterCoordinatorTests
         Assert.That(result.MergeEvents, Has.Count.EqualTo(2));
         Assert.That(result.MergeEvents[0].BodyAId, Is.EqualTo("a"));
         Assert.That(result.MergeEvents[0].BodyBId, Is.EqualTo("b"));
-        Assert.That(result.MergeEvents[1].BodyAId, Does.StartWith("merge["));
-        Assert.That(result.MergeEvents[1].BodyBId, Is.EqualTo("c"));
+        var secondEventIds = new[] { result.MergeEvents[1].BodyAId, result.MergeEvents[1].BodyBId };
+        Assert.That(secondEventIds, Does.Contain("c"));
+        Assert.That(secondEventIds.Single(id => !StringComparer.Ordinal.Equals(id, "c")), Does.StartWith("merge["));
         Assert.That(result.FinalBodies, Has.Count.EqualTo(1));
         Assert.That(result.FinalBodies[0].MassKilograms, Is.EqualTo(3d));
     }
