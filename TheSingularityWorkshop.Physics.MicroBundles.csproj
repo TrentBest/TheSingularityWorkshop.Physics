@@ -1,8 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><TreatWarningsAsErrors>true</TreatWarningsAsErrors><GenerateDocumentationFile>true</GenerateDocumentationFile><IsPackable>true</IsPackable><GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>TheSingularityWorkshop.Physics.MicroBundles</PackageId><Version>0.1.0-alpha.1</Version><Authors>The Singularity Workshop</Authors><Company>The Singularity Workshop</Company>
-    <Description>MicroBundle adapters exposing tested Physics contact capabilities without host or experience dependencies.</Description><PackageLicenseExpression>MIT</PackageLicenseExpression><RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Physics</RepositoryUrl><RepositoryType>git</RepositoryType>
+    <Description>MicroBundle adapters exposing tested Physics contact capabilities without host or experience dependencies.</Description><PackageLicenseExpression>MIT</PackageLicenseExpression><PackageReadmeFile>README.md</PackageReadmeFile><RepositoryUrl>https://github.com/TrentBest/TheSingularityWorkshop.Physics</RepositoryUrl><RepositoryType>git</RepositoryType>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Physics/**/*.cs" />
+    <Compile Include="Physics/MicroBundles/**/*.cs" />
+    <Compile Remove="tests/**/*.cs" />
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" />
     <ProjectReference Include="TheSingularityWorkshop.Physics.csproj" />
