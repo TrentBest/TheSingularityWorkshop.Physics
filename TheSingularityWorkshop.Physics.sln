@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Phys
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Physics.Tests", "tests\TheSingularityWorkshop.Physics.Tests\TheSingularityWorkshop.Physics.Tests.csproj", "{72F1E7D1-72A5-40D5-9A14-40BC7F0A3A2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Physics.MicroBundles", "TheSingularityWorkshop.Physics.MicroBundles.csproj", "{B60F57C4-7D2E-4C4B-91D5-520100000001}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSingularityWorkshop.Physics.MicroBundles.Tests", "tests\MicroBundles\TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj", "{B60F57C4-7D2E-4C4B-91D5-520100000002}"
+EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
         Debug|Any CPU = Debug|Any CPU
