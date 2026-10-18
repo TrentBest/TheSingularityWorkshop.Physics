@@ -27,7 +27,9 @@ public sealed class RigidBodyIntegratorTests
             Assert.That(next.StepIndex, Is.EqualTo(8));
             Assert.That(next.ElapsedTime, Is.EqualTo(0.85d).Within(1e-14));
             Assert.That(next.LinearVelocity, Is.EqualTo(new Vector3d(2d, -4.905d, -1d)));
-            Assert.That(next.Pose.Position, Is.EqualTo(new Vector3d(2d, -0.4525d, 2.5d)));
+            Assert.That(next.Pose.Position.X, Is.EqualTo(2d).Within(1e-14));
+            Assert.That(next.Pose.Position.Y, Is.EqualTo(-0.4525d).Within(1e-14));
+            Assert.That(next.Pose.Position.Z, Is.EqualTo(2.5d).Within(1e-14));
             Assert.That(next.AngularVelocity, Is.EqualTo(initial.AngularVelocity));
             Assert.That(initial.StepIndex, Is.EqualTo(7), "The input snapshot must remain immutable.");
             Assert.That(initial.Pose.Position, Is.EqualTo(new Vector3d(1d, 2d, 3d)));
