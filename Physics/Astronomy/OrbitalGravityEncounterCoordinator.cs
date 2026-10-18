@@ -21,7 +21,7 @@ public static class OrbitalGravityEncounterCoordinator
     /// <param name="maximumStepSeconds">Finite positive upper bound for each trial integration step.</param>
     /// <param name="gravitationalConstantM3PerKgSecondSquared">Explicit Newtonian gravitational constant.</param>
     /// <returns>Final bodies and deterministic merger history for the full interval.</returns>
-    public static OrbitalEncounterResult ResolveMergers(
+    public static OrbitalGravityEncounterResult ResolveMergers(
         IEnumerable<OrbitalBodyState> bodies,
         double intervalSeconds,
         double maximumStepSeconds,
@@ -47,6 +47,7 @@ public static class OrbitalGravityEncounterCoordinator
         }
 
         var events = new List<OrbitalMergeEvent>();
+        var timedEvents = new List<OrbitalTimedMergeEvent>();
         var remaining = intervalSeconds;
 
         while (remaining > 0d && current.Count > 0)
@@ -110,9 +111,11 @@ public static class OrbitalGravityEncounterCoordinator
             current.Add(merge.MergedBody);
             current.Sort(static (left, right) => StringComparer.Ordinal.Compare(left.BodyId, right.BodyId));
             events.Add(merge);
+            timedEvents.Add(new OrbitalTimedMergeEvent(intervalSeconds - remaining, merge));
         }
 
-        return new OrbitalEncounterResult(current, events, intervalSeconds);
+        return new OrbitalGravityEncounterResult(
+            current.AsReadOnly(), events.AsReadOnly(), timedEvents.AsReadOnly(), intervalSeconds);
     }
 
     private static OrbitalSweptCollision? FindInitialOverlap(
