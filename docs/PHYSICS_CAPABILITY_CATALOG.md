@@ -18,6 +18,8 @@ Visual documentation is part of the capability contract: see the [Living Image S
 
 **Planned coupled domains:** [Physical failure, lighting, hydrodynamics, orbital fields, and world time](PHYSICAL_FAILURE_LIGHTING_HYDRODYNAMICS_AND_ORBITAL_FIELDS.md) specifies the intended contracts for material failure, physical versus display illumination, large-scale water motion, forge-baked orbital/tide tables, and world-time conventions. This is design documentation, not evidence that these solvers or tide tables are implemented.
 
+**Implemented astronomy/time primitives:** [`WorldTimeDefinition`](../Physics/Astronomy/WorldTimeDefinition.cs) separates local rotation cycles/phase from Earth-reference elapsed days. [`OrbitalTidePotentialBaker`](../Physics/Astronomy/OrbitalTidePotentialBaker.cs) produces a deterministic CPU table of simplified differential tidal potential and its derivative for one circular-orbit, equatorial-observer case; [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Astronomy/OrbitalTidePotentialBakerTests.cs) cover sampling and validation. This is not an ocean-height, coastal-tide, or king-tide predictor; see the implementation limits in the linked design contract.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
