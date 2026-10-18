@@ -2,7 +2,9 @@
 
 This experiment compares the same one-kilogram body under the same gravity, starting height, and initial velocity. The only model switch is quadratic aerodynamic drag.
 
-The height and velocity SVG is generated from the recorded run JSON by the renderer command below. CI executes the C# model first, then renders and parses the resulting SVG; no separate physics implementation exists in the renderer.
+![Height and vertical velocity traces from the recorded C# experiment](falling-body-drag.svg)
+
+The SVG is generated from the recorded run JSON. CI executes the C# model first, renders the result, and compares the generated image byte-for-byte with the committed illustration; the renderer does not implement a second physics solver.
 
 ## Declared inputs
 
