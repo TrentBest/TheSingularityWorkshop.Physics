@@ -45,8 +45,9 @@ public sealed class PhysicsMicroBundleTests
         Assert.Equal(3, result.Contact.StepIndex);
         Assert.NotNull(result.Contact.NormalImpulseNewtonSeconds);
         Assert.True(result.Contact.NormalImpulseNewtonSeconds.Value >= 0);
-        Assert.Equal(-1, result.BodyA.LinearVelocity.X, 10);
-        Assert.Equal(0, result.BodyB.LinearVelocity.X, 10);
+        // Equal masses with zero restitution share the closing velocity: both leave at -0.5 m/s.
+        Assert.Equal(-0.5, result.BodyA.LinearVelocity.X, 10);
+        Assert.Equal(-0.5, result.BodyB.LinearVelocity.X, 10);
     }
 
     private static RigidBodyState Body(string id, Vector3d position, Vector3d velocity) =>
