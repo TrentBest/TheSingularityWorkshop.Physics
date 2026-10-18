@@ -44,8 +44,8 @@ public sealed class PhysicsMicroBundleTests
         var result = response.Resolve(contact, a, 1, b, 1);
         Assert.Equal(3, result.Contact.StepIndex);
         Assert.True(result.Contact.NormalImpulseNewtonSeconds >= 0);
-        Assert.Equal(0, result.BodyA.LinearVelocity.X, 10);
-        Assert.Equal(-1, result.BodyB.LinearVelocity.X, 10);
+        Assert.Equal(-1, result.BodyA.LinearVelocity.X, 10);
+        Assert.Equal(0, result.BodyB.LinearVelocity.X, 10);
     }
 
     private static RigidBodyState Body(string id, Vector3d position, Vector3d velocity) =>
