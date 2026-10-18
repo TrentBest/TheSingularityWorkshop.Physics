@@ -100,6 +100,7 @@ public static class OrbitalEncounterCoordinator
             current.RemoveAll(body =>
                 StringComparer.Ordinal.Equals(body.BodyId, next.BodyAId) ||
                 StringComparer.Ordinal.Equals(body.BodyId, next.BodyBId));
+            merge = WithUniqueMergedIdentity(merge, current);
             current.Add(merge.MergedBody);
             current.Sort(static (left, right) => StringComparer.Ordinal.Compare(left.BodyId, right.BodyId));
             events.Add(merge);
@@ -112,6 +113,21 @@ public static class OrbitalEncounterCoordinator
             current = Drift(current, remaining);
 
         return new OrbitalEncounterResult(current.AsReadOnly(), events.AsReadOnly(), intervalSeconds);
+    }
+
+    private static OrbitalMergeEvent WithUniqueMergedIdentity(
+        OrbitalMergeEvent merge,
+        IReadOnlyCollection<OrbitalBodyState> survivors)
+    {
+        var baseId = merge.MergedBody.BodyId;
+        var candidateId = baseId;
+        var suffix = 1;
+        while (survivors.Any(body => StringComparer.Ordinal.Equals(body.BodyId, candidateId)))
+            candidateId = $"{baseId}#{suffix++}";
+
+        return StringComparer.Ordinal.Equals(candidateId, baseId)
+            ? merge
+            : merge with { MergedBody = merge.MergedBody with { BodyId = candidateId } };
     }
 
     private static List<OrbitalBodyState> Drift(IEnumerable<OrbitalBodyState> bodies, double seconds)
