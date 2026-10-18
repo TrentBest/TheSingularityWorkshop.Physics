@@ -2,6 +2,8 @@
 
 This roadmap separates architecture from completed functionality. Items move to “implemented” only with code, tests, and documented scope.
 
+The scale and capacity contract is defined in [Physics Across Scales](PHYSICS_ACROSS_SCALES.md). It distinguishes local interaction, active scenes, regions, persistent worlds, and timeline-scale simulation, and sets evidence gates for capacity claims. It is a design contract, not an implementation checklist.
+
 ## Stage 0 — Establish the domain
 
 - [x] Create a dedicated Physics repository.
