@@ -40,21 +40,30 @@ public sealed class NewtonianNBodyStepperTests
         // For equal unit masses at separation 2 with G=1, each body orbits at radius 1.
         // The exact angular velocity is 0.5 rad/s, so the period is 4*pi seconds.
         const double period = 4d * Math.PI;
-        var coarseError = CircularOrbitPositionError(128, period);
-        var mediumError = CircularOrbitPositionError(256, period);
-        var fineError = CircularOrbitPositionError(512, period);
+        var coarseError = CircularOrbitError(128, period);
+        var mediumError = CircularOrbitError(256, period);
+        var fineError = CircularOrbitError(512, period);
 
-        Assert.That(mediumError, Is.LessThan(coarseError),
-            "Halving the timestep should reduce the full-period trajectory error.");
-        Assert.That(fineError, Is.LessThan(mediumError),
-            "Halving the timestep again should further reduce the full-period trajectory error.");
-        Assert.That(coarseError / mediumError, Is.GreaterThan(3d),
+        Assert.That(mediumError.Position, Is.LessThan(coarseError.Position),
+            "Halving the timestep should reduce the full-period position error.");
+        Assert.That(fineError.Position, Is.LessThan(mediumError.Position),
+            "Halving the timestep again should further reduce the full-period position error.");
+        Assert.That(coarseError.Position / mediumError.Position, Is.GreaterThan(3d),
             "Velocity Verlet should approach second-order global position convergence in this smooth orbit.");
-        Assert.That(mediumError / fineError, Is.GreaterThan(3d),
-            "The finer refinement should retain approximately second-order convergence.");
+        Assert.That(mediumError.Position / fineError.Position, Is.GreaterThan(3d),
+            "The finer refinement should retain approximately second-order position convergence.");
+
+        Assert.That(mediumError.Velocity, Is.LessThan(coarseError.Velocity),
+            "Halving the timestep should reduce the full-period velocity error.");
+        Assert.That(fineError.Velocity, Is.LessThan(mediumError.Velocity),
+            "Halving the timestep again should further reduce the full-period velocity error.");
+        Assert.That(coarseError.Velocity / mediumError.Velocity, Is.GreaterThan(3d),
+            "Velocity Verlet should approach second-order global velocity convergence in this smooth orbit.");
+        Assert.That(mediumError.Velocity / fineError.Velocity, Is.GreaterThan(3d),
+            "The finer refinement should retain approximately second-order velocity convergence.");
     }
 
-    private static double CircularOrbitPositionError(int steps, double period)
+    private static (double Position, double Velocity) CircularOrbitError(int steps, double period)
     {
         var initial = CircularBinary();
         var advanced = initial;
@@ -62,9 +71,13 @@ public sealed class NewtonianNBodyStepperTests
         for (var i = 0; i < steps; i++)
             advanced = NewtonianNBodyStepper.Step(advanced, deltaTime, G);
 
-        return advanced.Zip(initial, (actual, expected) =>
+        var positionError = advanced.Zip(initial, (actual, expected) =>
                 (actual.PositionMeters - expected.PositionMeters).Magnitude)
             .Max();
+        var velocityError = advanced.Zip(initial, (actual, expected) =>
+                (actual.VelocityMetersPerSecond - expected.VelocityMetersPerSecond).Magnitude)
+            .Max();
+        return (positionError, velocityError);
     }
 
     [Test]
