@@ -8,6 +8,8 @@ A domain becomes implemented only when it has an explicit state model, units and
 
 Material composition and discovery now have an initial implementation slice: explicit assembly/part declarations, per-part material identity arbitration, provenance-aware property records, and a mapper from resolved part identities to matching property evidence. The next layer is cross-provider discovery and compatibility matching from those properties to models and solvers; it is not yet implemented. See [Composable Physics: composition-level material discovery](COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md#composition-level-material-discovery-and-physics-mapping) for the staged contract.
 
+The expanded contract for brittle fracture, shattering, melting, illumination, gas expansion, dam-break/coastal flow, orbital forcing, precomputed tidal fields, and non-Earth world time is in [Physical failure, lighting, hydrodynamics, orbital fields, and world time](PHYSICAL_FAILURE_LIGHTING_HYDRODYNAMICS_AND_ORBITAL_FIELDS.md). These are planned domains unless individually linked to tested implementations.
+
 ## The physical picture
 
 A world contains matter and fields. They carry state and energy; models describe how that state changes; solvers advance it through declared logical time; observations report what happened. Coupled domains exchange quantities through explicit interfaces rather than secretly reaching into each other's internals.
