@@ -66,7 +66,7 @@ public sealed class OrbitalEncounterCoordinatorTests
 
         var result = OrbitalEncounterCoordinator.ResolveLinearMergers(new[] { a, b, survivor }, 1d);
 
-        Assert.That(result.FinalBodies.Select(body => body.BodyId).Distinct(StringComparer.Ordinal), Has.Count.EqualTo(2));
+        Assert.That(result.FinalBodies.Select(body => body.BodyId).Distinct(StringComparer.Ordinal).Count(), Is.EqualTo(2));
         Assert.That(result.FinalBodies.Select(body => body.BodyId), Does.Contain("merge[1:a1:b]#1"));
         Assert.That(result.FinalBodies.Select(body => body.BodyId), Does.Contain("merge[1:a1:b]"));
         Assert.That(result.MergeEvents, Has.Count.EqualTo(1));
