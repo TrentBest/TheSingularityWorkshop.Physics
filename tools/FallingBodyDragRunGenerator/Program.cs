@@ -61,7 +61,11 @@ var record = new
     }
 };
 
-var json = JsonSerializer.Serialize(record, new JsonSerializerOptions { WriteIndented = true });
+var json = JsonSerializer.Serialize(record, new JsonSerializerOptions
+{
+    WriteIndented = true,
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+});
 var outputPath = Path.GetFullPath(args[0]);
 Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
 File.WriteAllText(outputPath, json + Environment.NewLine);
