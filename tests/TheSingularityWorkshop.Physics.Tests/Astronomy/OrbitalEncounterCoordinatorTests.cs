@@ -58,6 +58,22 @@ public sealed class OrbitalEncounterCoordinatorTests
     }
 
     [Test]
+    public void ResolveLinearMergers_DisambiguatesGeneratedIdentityWhenItMatchesASurvivor()
+    {
+        var a = Body("a", 1d, 0.5d, Vector3d.Zero, Vector3d.Zero);
+        var b = Body("b", 1d, 0.5d, new Vector3d(1d, 0d, 0d), Vector3d.Zero);
+        var survivor = Body("merge[1:a1:b]", 1d, 0.5d, new Vector3d(100d, 0d, 0d), Vector3d.Zero);
+
+        var result = OrbitalEncounterCoordinator.ResolveLinearMergers(new[] { a, b, survivor }, 1d);
+
+        Assert.That(result.FinalBodies.Select(body => body.BodyId).Distinct(StringComparer.Ordinal), Has.Count.EqualTo(2));
+        Assert.That(result.FinalBodies.Select(body => body.BodyId), Does.Contain("merge[1:a1:b]#1"));
+        Assert.That(result.FinalBodies.Select(body => body.BodyId), Does.Contain("merge[1:a1:b]"));
+        Assert.That(result.MergeEvents, Has.Count.EqualTo(1));
+        Assert.That(result.MergeEvents[0].MergedBody.BodyId, Is.EqualTo("merge[1:a1:b]#1"));
+    }
+
+    [Test]
     public void ResolveLinearMergers_RejectsDuplicateBodyIdentities()
     {
         var a = Body("same", 1d, 0.5d, Vector3d.Zero, Vector3d.Zero);
