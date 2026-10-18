@@ -396,8 +396,8 @@ jobs:
 
       - name: Package contact MicroBundles for repository ingestion
         run: |
-          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- Physics.MicroBundles/bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
-          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- Physics.MicroBundles/bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
           python3 - <<'PY'
           import struct
           from pathlib import Path
