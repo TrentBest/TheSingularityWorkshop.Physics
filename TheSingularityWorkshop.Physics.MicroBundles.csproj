@@ -5,6 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="TheSingularityWorkshop.MicroBundleDomain" Version="1.0.1" />
-    <ProjectReference Include="../TheSingularityWorkshop.Physics.csproj" />
+    <ProjectReference Include="TheSingularityWorkshop.Physics.csproj" />
   </ItemGroup>
 </Project>
