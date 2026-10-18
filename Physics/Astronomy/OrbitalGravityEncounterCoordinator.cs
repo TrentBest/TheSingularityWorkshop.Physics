@@ -52,9 +52,21 @@ public static class OrbitalGravityEncounterCoordinator
         while (remaining > 0d && current.Count > 0)
         {
             var stepDuration = Math.Min(maximumStepSeconds, remaining);
-            var predicted = NewtonianNBodyStepper.Step(
-                current, stepDuration, gravitationalConstantM3PerKgSecondSquared);
-            var candidates = FindChordContacts(current, predicted, stepDuration);
+            var initialContact = FindInitialOverlap(current);
+            OrbitalBodyState[] predicted = [];
+            List<OrbitalSweptCollision> candidates;
+            if (initialContact is not null)
+            {
+                // Resolve existing overlap before evaluating point-mass gravity, which is singular
+                // when two input centres coincide.
+                candidates = [initialContact];
+            }
+            else
+            {
+                predicted = NewtonianNBodyStepper.Step(
+                    current, stepDuration, gravitationalConstantM3PerKgSecondSquared);
+                candidates = FindChordContacts(current, predicted, stepDuration);
+            }
 
             if (candidates.Count == 0)
             {
@@ -101,6 +113,25 @@ public static class OrbitalGravityEncounterCoordinator
         }
 
         return new OrbitalEncounterResult(current, events, intervalSeconds);
+    }
+
+    private static OrbitalSweptCollision? FindInitialOverlap(
+        IReadOnlyList<OrbitalBodyState> bodies)
+    {
+        for (var i = 0; i < bodies.Count; i++)
+        {
+            for (var j = i + 1; j < bodies.Count; j++)
+            {
+                var combinedRadius = bodies[i].RadiusMeters + bodies[j].RadiusMeters;
+                if (!double.IsFinite(combinedRadius))
+                    throw new ArithmeticException("Combined body radius exceeded the finite numeric range.");
+
+                if (Vector3d.Distance(bodies[i].PositionMeters, bodies[j].PositionMeters) <= combinedRadius)
+                    return new OrbitalSweptCollision(bodies[i].BodyId, bodies[j].BodyId, 0d);
+            }
+        }
+
+        return null;
     }
 
     private static List<OrbitalSweptCollision> FindChordContacts(
