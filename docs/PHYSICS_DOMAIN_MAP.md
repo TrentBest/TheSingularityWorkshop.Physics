@@ -162,3 +162,8 @@ This map is a plan, not a claim of completion. On `development`, bounded executa
 
 ---
 [Physics roadmap](ROADMAP.md) · [Physics classes & ontology](PHYSICS_CLASSES.md) · [Theory and evidence](THEORY.md)
+
+
+## MicroBundle packaging boundary
+
+The separate `TheSingularityWorkshop.Physics.MicroBundles` adapter project exposes only existing tested sphere-sphere contact observation and translational normal-impulse response. It depends downward on Physics core and MicroBundleDomain; the core does not depend on MicroBundleDomain, Experiences, a renderer, or a host. These wrappers are not a full rigid-body simulation. Typed provider lookup remains a composition-host responsibility, as documented in the [MicroBundle provider resolution contract](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain/blob/development/docs/PROVIDER_RESOLUTION_CONTRACT.md).
