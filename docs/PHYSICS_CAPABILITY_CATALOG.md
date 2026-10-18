@@ -20,6 +20,8 @@ Visual documentation is part of the capability contract: see the [Living Image S
 
 **Implemented astronomy/time primitives:** [`WorldTimeDefinition`](../Physics/Astronomy/WorldTimeDefinition.cs) separates local rotation cycles/phase from Earth-reference elapsed days. [`OrbitalTidePotentialBaker`](../Physics/Astronomy/OrbitalTidePotentialBaker.cs) produces a deterministic CPU table of simplified differential tidal potential and its derivative for one circular-orbit, equatorial-observer case; [focused tests](../tests/TheSingularityWorkshop.Physics.Tests/Astronomy/OrbitalTidePotentialBakerTests.cs) cover sampling and validation. This is not an ocean-height, coastal-tide, or king-tide predictor; see the implementation limits in the linked design contract.
 
+**Physics-driven experiences:** [Marble Run and Domino Studio](MARBLE_RUN_AND_DOMINO_STUDIO.md) defines the experience/Physics ownership boundary, target geometry and image-to-layout contracts, benchmark gates, and a staged implementation plan. It is an experience design contract, not evidence that high-count rolling dynamics or a complete domino chain-reaction solver exists.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
