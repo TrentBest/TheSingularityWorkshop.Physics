@@ -45,7 +45,7 @@ def render(record):
     p = [
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" role="img" aria-labelledby="title desc">',
         '<title id="title">Falling body: drag changes the motion</title>',
-        f'<desc id="desc">Two trajectories from {len(drag)} recorded C# samples each. The no-drag case falls farther and reaches a greater downward speed than the same body with quadratic drag. The SVG renders recorded values and does not solve the physics.</desc>',
+        f'<desc id="desc">Two trajectories from {len(drag)} actual recorded C# states per case. The no-drag case falls farther and reaches a greater downward speed than the same body with quadratic drag. The SVG renders recorded values and does not solve the physics.</desc>',
         '<rect width="1000" height="650" rx="18" fill="#f7fafc"/>',
         '<text x="36" y="43" font-family="Segoe UI,Arial,sans-serif" font-size="26" font-weight="700" fill="#183047">Same body. Same gravity. One difference: air resistance.</text>',
         f'<text x="36" y="72" font-family="Segoe UI,Arial,sans-serif" font-size="13" fill="#526578">Actual recorded C# states · {len(drag)} samples per case · {duration:.2f} s · semi-implicit Euler</text>',
