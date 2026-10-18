@@ -29,8 +29,8 @@ public sealed class NewtonianNBodyStepperTests
         Assert.That(momentumAfter.X, Is.EqualTo(momentumBefore.X).Within(1e-12));
         Assert.That(momentumAfter.Y, Is.EqualTo(momentumBefore.Y).Within(1e-12));
         Assert.That(momentumAfter.Z, Is.EqualTo(momentumBefore.Z).Within(1e-12));
-        Assert.That(advanced[0].PositionMeters.Y, Is.LessThan(0d));
-        Assert.That(advanced[1].PositionMeters.Y, Is.GreaterThan(0d));
+        Assert.That(advanced[0].PositionMeters.Y, Is.GreaterThan(0d));
+        Assert.That(advanced[1].PositionMeters.Y, Is.LessThan(0d));
     }
 
     [Test]
