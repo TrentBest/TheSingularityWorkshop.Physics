@@ -76,7 +76,7 @@ public sealed class OrbitalGravityEncounterCoordinatorTests
             $"Halving the step should improve contact-time convergence again: medium={medium:R} (error {mediumError:R}), fine={fine:R} (error {fineError:R}), analytic={reference:R}.");
     }
 
-    private static double AnalyticRadialContactTime()
+    private static double EnergyDerivedRadialContactTimeReference()
     {
         // Relative two-body motion obeys r'' = -G(m1 + m2)/r^2. Energy conservation
         // gives |dr/dt| = sqrt(v0^2 + 2G(m1 + m2)(1/r - 1/r0)); integrate dt = -dr/(dr/dt)
