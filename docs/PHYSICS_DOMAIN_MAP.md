@@ -10,6 +10,8 @@ Material composition and discovery now have an initial implementation slice: exp
 
 The expanded contract for brittle fracture, shattering, melting, illumination, gas expansion, dam-break/coastal flow, orbital forcing, precomputed tidal fields, and non-Earth world time is in [Physical failure, lighting, hydrodynamics, orbital fields, and world time](PHYSICAL_FAILURE_LIGHTING_HYDRODYNAMICS_AND_ORBITAL_FIELDS.md). These are planned domains unless individually linked to tested implementations.
 
+Marble Run and Domino Studio are planned **experiences consuming Physics**, not Physics MicroBundles. Their geometry editing, image interpretation, layout conversion, and presentation stay in the experience layer; shared body state, contact mechanics, deterministic stepping, and physical observations stay in Physics. See [Marble Run and Domino Studio](MARBLE_RUN_AND_DOMINO_STUDIO.md) for staged acceptance gates. This is a design contract, not a claim that a general rigid-body or high-count marble solver is complete.
+
 ## The physical picture
 
 A world contains matter and fields. They carry state and energy; models describe how that state changes; solvers advance it through declared logical time; observations report what happened. Coupled domains exchange quantities through explicit interfaces rather than secretly reaching into each other's internals.
