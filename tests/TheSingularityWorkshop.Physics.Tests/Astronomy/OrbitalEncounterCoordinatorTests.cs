@@ -66,7 +66,10 @@ public sealed class OrbitalEncounterCoordinatorTests
             () => OrbitalEncounterCoordinator.ResolveLinearMergers(new[] { a, b }, 1d));
     }
 
-    [Test]
+    [TestCase(0d)]
+    [TestCase(-1d)]
+    [TestCase(double.NaN)]
+    [TestCase(double.PositiveInfinity)]
     public void ResolveLinearMergers_RejectsInvalidInterval(double intervalSeconds)
     {
         var body = Body("a", 1d, 0.5d, Vector3d.Zero, Vector3d.Zero);
