@@ -43,6 +43,22 @@ public sealed class OrbitalGravityEncounterCoordinatorTests
     }
 
     [Test]
+    public void ResolveMergers_InitiallyCoincidentBodiesMergeBeforeSingularGravityEvaluation()
+    {
+        var a = Body("a", Vector3d.Zero, Vector3d.Zero);
+        var b = Body("b", Vector3d.Zero, Vector3d.Zero);
+
+        var result = OrbitalGravityEncounterCoordinator.ResolveMergers(
+            [a, b], intervalSeconds: 1d, maximumStepSeconds: 0.1d,
+            gravitationalConstantM3PerKgSecondSquared: 1d);
+
+        Assert.That(result.MergeEvents, Has.Count.EqualTo(1));
+        Assert.That(result.FinalBodies, Has.Count.EqualTo(1));
+        Assert.That(result.FinalBodies[0].MassKilograms, Is.EqualTo(2d));
+        Assert.That(result.FinalBodies[0].PositionMeters.X, Is.EqualTo(0d).Within(1e-12));
+    }
+
+    [Test]
     public void ResolveMergers_RejectsInvalidStepDuration()
     {
         var body = Body("body", Vector3d.Zero, Vector3d.Zero);
