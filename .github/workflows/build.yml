@@ -17,6 +17,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Checkout generic MicroBundle packer
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.Experiences
+          ref: development
+          path: Experiences
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
@@ -387,6 +394,25 @@ jobs:
       - name: Test Physics MicroBundles
         run: dotnet test tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj --configuration Release
 
+      - name: Package contact MicroBundles for repository ingestion
+        run: |
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- Physics.MicroBundles/bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- Physics.MicroBundles/bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          expected = {
+              'artifacts/physics-sphere-sphere-contact.mbundle': 5201,
+              'artifacts/physics-normal-impulse-response.mbundle': 5202,
+          }
+          for filename, bundle_id in expected.items():
+              payload = Path(filename).read_bytes()
+              magic, schema, actual_id, assembly_size = struct.unpack('<4sIQI', payload[:20])
+              assert magic == b'FSMB' and schema == 1 and actual_id == bundle_id
+              assert assembly_size == len(payload) - 20 and assembly_size > 0
+              print(f'PASS: {filename} carries bundle {actual_id} and a complete assembly payload')
+          PY
+
       - name: Test with coverage
         run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
 
@@ -400,4 +426,4 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: physics-nuget-package
-          path: ./artifacts/*.nupkg
+          path: ./artifacts/*
