@@ -112,6 +112,28 @@ jobs:
       - name: Verify committed apple SVG against every recorded state
         run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json docs/experiments/apple-free-fall.svg --check
 
+      - name: Execute the falling-body drag comparison
+        run: dotnet run --project tools/FallingBodyDragRunGenerator/FallingBodyDragRunGenerator.csproj --configuration Release -- /tmp/falling-body-drag.actual.json
+
+      - name: Render and validate the falling-body drag living image
+        run: |
+          python3 tools/render_falling_body_drag.py /tmp/falling-body-drag.actual.json /tmp/falling-body-drag.actual.svg
+          python3 - <<'PY'
+          import json
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          record = json.loads(Path('/tmp/falling-body-drag.actual.json').read_text(encoding='utf-8'))
+          svg = Path('/tmp/falling-body-drag.actual.svg')
+          root = ET.parse(svg).getroot()
+          assert root.tag.endswith('svg')
+          assert len(record['vacuumSamples']) == 101
+          assert len(record['dragSamples']) == 101
+          assert record['validation']['dragReducesDownwardSpeed']
+          assert record['validation']['dragReducesDistanceFallen']
+          assert 'actual recorded C# states' in ''.join(root.itertext())
+          print('Falling-body drag run record and generated SVG verified.')
+          PY
+
       - name: Execute C# experiment and serialize actual run record
         run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
 
