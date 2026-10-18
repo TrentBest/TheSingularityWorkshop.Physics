@@ -390,8 +390,11 @@ jobs:
       - name: Test with coverage
         run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
 
-      - name: Verify package can be created
+      - name: Verify core package can be created
         run: dotnet pack TheSingularityWorkshop.Physics.csproj --configuration Release --no-restore --output ./artifacts
+
+      - name: Verify MicroBundle adapter package can be created
+        run: dotnet pack TheSingularityWorkshop.Physics.MicroBundles.csproj --configuration Release --no-restore --output ./artifacts
 
       - name: Upload package artifact
         uses: actions/upload-artifact@v7
