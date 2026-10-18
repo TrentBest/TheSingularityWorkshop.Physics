@@ -16,6 +16,8 @@ Visual documentation is part of the capability contract: see the [Living Image S
 
 **Condition-qualified property fact contract:** [`PropertyValueRecord`](../Physics/Chemistry/PropertyValueRecord.cs) represents sourced point/range values or explicit availability states, with units, conditions, uncertainty, evidence class, and provenance. Focused validation tests are in [`PropertyValueRecordTests`](../tests/TheSingularityWorkshop.Physics.Tests/Chemistry/PropertyValueRecordTests.cs). This is a data contract, not yet a property database, importer, condition matcher, or physics solver.
 
+**Planned coupled domains:** [Physical failure, lighting, hydrodynamics, orbital fields, and world time](PHYSICAL_FAILURE_LIGHTING_HYDRODYNAMICS_AND_ORBITAL_FIELDS.md) specifies the intended contracts for material failure, physical versus display illumination, large-scale water motion, forge-baked orbital/tide tables, and world-time conventions. This is design documentation, not evidence that these solvers or tide tables are implemented.
+
 ## Reading capability status
 
 - **Implemented primitive** — a concrete model or data contract exists in source and has a focused test suite.
