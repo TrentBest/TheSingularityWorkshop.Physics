@@ -378,6 +378,15 @@ jobs:
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
+      - name: Restore Physics MicroBundles
+        run: dotnet restore tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj
+
+      - name: Build Physics MicroBundles
+        run: dotnet build TheSingularityWorkshop.Physics.MicroBundles.csproj --configuration Release
+
+      - name: Test Physics MicroBundles
+        run: dotnet test tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj --configuration Release
+
       - name: Test with coverage
         run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
 
