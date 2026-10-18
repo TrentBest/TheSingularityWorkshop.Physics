@@ -59,12 +59,12 @@ public sealed class OrbitalGravityEncounterCoordinatorTests
     }
 
     [Test]
-    public void ResolveMergers_HalvingStepConvergesOnAnalyticRadialContactTime()
+    public void ResolveMergers_HalvingStepConvergesOnEnergyDerivedRadialReference()
     {
         var coarse = ContactTime(maximumStepSeconds: 0.5d);
         var medium = ContactTime(maximumStepSeconds: 0.25d);
         var fine = ContactTime(maximumStepSeconds: 0.125d);
-        var reference = AnalyticRadialContactTime();
+        var reference = EnergyDerivedRadialContactTimeReference();
 
         var coarseError = Math.Abs(coarse - reference);
         var mediumError = Math.Abs(medium - reference);
