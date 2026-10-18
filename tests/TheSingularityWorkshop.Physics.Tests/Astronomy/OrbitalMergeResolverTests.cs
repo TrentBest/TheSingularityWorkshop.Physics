@@ -27,7 +27,7 @@ public sealed class OrbitalMergeResolverTests
         Assert.That(result, Is.Not.Null);
         var merged = result!.MergedBody;
         Assert.That(merged.MassKilograms, Is.EqualTo(5d));
-        AssertVector(merged.PositionMeters, new Vector3d(-0.1d, 0d, 0d));
+        AssertVector(merged.PositionMeters, new Vector3d(0.1d, 0d, 0d));
         AssertVector(merged.VelocityMetersPerSecond, new Vector3d(0.6d, 1.6d, 0d));
 
         var expectedRadius = Math.Cbrt(1d + 8d);
