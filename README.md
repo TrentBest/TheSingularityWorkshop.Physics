@@ -11,7 +11,7 @@
 
 ![Physics paradigm: same reality, a different way to build it](docs/images/physics-paradigm.svg)
 
-**Celestial mechanics:** [Newtonian gravity-field foundation, units, limits, and implementation gates](docs/CELESTIAL_MECHANICS_FOUNDATION.md)
+**Celestial mechanics:** [Newtonian gravity field and first fixed-step N-body integrator, units, limits, and validation gates](docs/CELESTIAL_MECHANICS_FOUNDATION.md) · [gravity-field evaluator](Physics/Astronomy/NewtonianGravityField.cs) · [orbital state](Physics/Astronomy/OrbitalBodyState.cs) · [velocity-Verlet stepper](Physics/Astronomy/NewtonianNBodyStepper.cs)
 
 **Explore the knowledge graph:** [equations, derivations, and scientific experiences](docs/EQUATIONS_DERIVATIONS_AND_SCIENTIFIC_EXPERIENCES.md) · [composable models, solvers, and experiences](docs/COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md) · [mathematics domain map](docs/MATHEMATICS_DOMAIN_MAP.md) · [GPU computation readiness](docs/GPU_COMPUTATION_READINESS.md)
 
