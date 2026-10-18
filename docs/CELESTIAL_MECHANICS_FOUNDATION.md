@@ -1,6 +1,6 @@
 # Celestial Mechanics Foundation
 
-**Status:** a Newtonian gravity-field evaluator and a first fixed-step N-body integrator are implemented with focused tests. Finite-body collision/merger policy, planetary impact physics, and Experience persistence are not implemented by these components.
+**Status:** a Newtonian gravity-field evaluator, fixed-step N-body integrator, and explicit pairwise perfect-inelastic merge policy are implemented with focused tests. This is not a complete collision system: swept collision detection, multi-body encounter orchestration, bounce/fragmentation, angular-momentum storage, planetary impact physics, and Experience persistence remain out of scope.
 
 ## Gravity field
 
@@ -27,23 +27,38 @@ Acceleration is in m/s²; specific potential is in m²/s². Positions are metres
 3. Re-evaluate acceleration at the new positions.
 4. Advance velocities with \(\mathbf{v}_{n+1}=\mathbf{v}_n+\frac12(\mathbf{a}_n+\mathbf{a}_{n+1})\Delta t\).
 
-This is a simple deterministic O(N²) reference stepper. Input states are validated and sorted by stable ID. The caller is responsible for choosing a suitable timestep and for deciding how often to step. The radius is carried as physical metadata but does not yet affect gravity or resolve contact. Coincident body centers are rejected as singular rather than silently merged. Current tests cover a symmetric circular binary, center-of-mass and momentum behavior, input-order determinism, invalid state, and empty state. These tests are a starting validation surface, not a claim of production-grade long-horizon orbital accuracy.
+This is a simple deterministic O(N²) reference stepper. Input states are validated and sorted by stable ID. The caller is responsible for choosing a suitable timestep and for deciding how often to step. Radius is physical metadata here; it does not soften gravity or resolve contact. Coincident body centres are rejected as singular rather than silently merged.
+
+The tests include a symmetric circular binary, centre-of-mass and momentum behaviour, input-order determinism, invalid-state handling, empty state, bounded energy/angular-momentum drift over a full orbit, and timestep-convergence comparisons. These are focused numerical checks, not a claim of production-grade long-horizon orbital accuracy.
+
+## Explicit pairwise merge policy
+
+`OrbitalMergeResolver.TryMerge` is an opt-in policy for one pair of spherical bodies whose endpoint spheres overlap or touch. It does not mutate inputs or automatically alter the N-body collection.
+
+For an accepted pair, it:
+- conserves total mass, centre of mass, and linear momentum;
+- computes a volume-additive equivalent spherical radius;
+- emits a stable, pair-derived `OrbitalMergeEvent`; and
+- reports the relative translational kinetic energy removed by the perfectly inelastic merge.
+
+The lost kinetic energy is an accounting quantity, **not** a solved thermal field. This policy has no spin/deformation model and does not conserve angular momentum by storing it in the merged body's rotation. It is not a general-purpose asteroid-impact outcome model. Because it checks endpoint overlap only, fast bodies can tunnel through each other unless the caller chooses a sufficiently small timestep or adds swept collision detection. Multi-body collision ordering is not handled here.
 
 ## What this enables
 
 - A gravity-field overlay whose vectors and potential contours derive from the same body placements as the Experience.
-- Repeatable orbital previews and a foundation for comparing integrator drift over declared horizons.
-- A source of initial conditions for later encounter and impact models.
+- Repeatable orbital previews and testable integration drift/convergence.
+- A deterministic, explicitly selected baseline for low-complexity merger experiments.
 - Reproducible CPU reference samples that renderers can turn into arrows, contours, heatmaps, or a gravity-well metaphor.
+- A future impact handoff that records source states and the selected encounter policy rather than disguising visual effects as computed physics.
 
 ## What it does not do
 
-Neither component advances finite planetary interiors, detects or resolves collisions, conserves energy exactly, models relativistic effects, or calculates shockwaves. Point-mass gravity is singular at the source and is not a planetary interior model. The optional “gravity well” surface is a visual encoding of a scalar field, not a literal force law. A collision does not necessarily stabilize a system.
+These components do not advance finite planetary interiors, provide continuous collision detection, resolve elastic bounces or fragmentation, conserve energy exactly, model relativistic effects, or calculate shockwaves. Point-mass gravity is singular at the source and is not a planetary interior model. The optional “gravity well” surface is a visual encoding of a scalar field, not a literal force law. A collision does not necessarily stabilize a system.
 
 ## Next physics gates
 
-1. **Numerical evidence:** measure energy and angular-momentum drift over documented timestep/horizon sweeps; add convergence checks and near-encounter stress cases.
-2. **Finite-body encounters:** define contact detection and explicit merge/bounce/fragmentation policy, with conservation accounting and deterministic event records.
+1. **Encounter coverage:** add swept sphere contact or an explicit timestep/contact contract, then handle deterministic multi-body event ordering.
+2. **Alternative outcomes:** define bounce and fragmentation as separate policies with explicit momentum/angular-momentum/energy accounting rather than assuming every contact merges.
 3. **Impact handoff:** preserve pre-impact state and provide a versioned initial-condition record for a distinct local impact model. Do not claim planetary-scale shock physics until a validated solver supports it.
 4. **Experience evidence:** save and reopen a scenario, derive field visualization from authoritative samples, and show event/timeline provenance.
 
