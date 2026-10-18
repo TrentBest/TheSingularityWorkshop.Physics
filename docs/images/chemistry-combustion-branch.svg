@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Chemistry to combustion: current evidence and missing causal links</title>
+  <desc id="desc">A conceptual branch map. Existing contracts for chemical element identity, property evidence, thermal state and surface combustion cell state feed into planned stoichiometry, kinetics, energy accounting and transport. A validated combustion experiment and a run-backed living diagram are future acceptance gates, not current capabilities.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526579"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#172334}
+      .heading{font-size:27px;font-weight:700}
+      .sub{font-size:15px;fill:#526579}
+      .label{font-size:18px;font-weight:700}
+      .body{font-size:14px}
+      .small{font-size:12px;fill:#526579}
+      .existing{fill:#e5f4eb;stroke:#2c8054;stroke-width:2}
+      .gap{fill:#fff0d9;stroke:#b56b16;stroke-width:2;stroke-dasharray:7 5}
+      .future{fill:#edf0f5;stroke:#526579;stroke-width:2;stroke-dasharray:5 5}
+      .edge{stroke:#526579;stroke-width:2;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="#fbfcfe"/>
+  <text x="48" y="52" class="heading">Chemistry → reaction → combustion</text>
+  <text x="48" y="80" class="sub">Conceptual gap map • green = existing contract/model slice • amber = missing causal model • grey = future evidence gate</text>
+
+  <rect x="48" y="118" width="310" height="100" rx="12" class="existing"/>
+  <text x="68" y="149" class="label">Identity &amp; evidence</text>
+  <text x="68" y="174" class="body">Element identity and provenance</text>
+  <text x="68" y="195" class="body">Condition-qualified property records</text>
+
+  <rect x="445" y="118" width="310" height="100" rx="12" class="gap"/>
+  <text x="465" y="149" class="label">Reaction definition</text>
+  <text x="465" y="174" class="body">Species, balanced stoichiometry,</text>
+  <text x="465" y="195" class="body">limiting reactant, reference energy</text>
+
+  <rect x="842" y="118" width="310" height="100" rx="12" class="gap"/>
+  <text x="862" y="149" class="label">Kinetics</text>
+  <text x="862" y="174" class="body">Rate law, temperature dependence,</text>
+  <text x="862" y="195" class="body">validity range and timestep error</text>
+
+  <path d="M358 168 H435" class="edge"/>
+  <path d="M755 168 H832" class="edge"/>
+
+  <rect x="48" y="288" width="310" height="108" rx="12" class="existing"/>
+  <text x="68" y="320" class="label">Thermal primitives</text>
+  <text x="68" y="346" class="body">Lumped thermal state and bounded</text>
+  <text x="68" y="367" class="body">conduction exist separately</text>
+  <text x="68" y="385" class="small">Not yet a general reactive energy solver</text>
+
+  <rect x="445" y="288" width="310" height="108" rx="12" class="existing"/>
+  <text x="465" y="320" class="label">Surface cell state</text>
+  <text x="465" y="346" class="body">Fuel, oxygen, thermal energy, area,</text>
+  <text x="465" y="367" class="body">material identity and surface normal</text>
+  <text x="465" y="385" class="small">State contract only; no reaction update</text>
+
+  <rect x="842" y="288" width="310" height="108" rx="12" class="gap"/>
+  <text x="862" y="320" class="label">Coupled reaction step</text>
+  <text x="862" y="346" class="body">Inventory change, heat release,</text>
+  <text x="862" y="367" class="body">element/mass/energy residuals</text>
+  <text x="862" y="385" class="small">No solver currently claimed</text>
+
+  <path d="M600 218 V278" class="edge"/>
+  <path d="M755 342 H832" class="edge"/>
+  <path d="M358 342 H435" class="edge"/>
+
+  <rect x="180" y="470" width="360" height="104" rx="12" class="gap"/>
+  <text x="200" y="502" class="label">Transport and flame behavior</text>
+  <text x="200" y="528" class="body">Oxygen/fuel transport, ignition spread,</text>
+  <text x="200" y="549" class="body">gas generation, pressure and extinction</text>
+
+  <rect x="660" y="470" width="360" height="104" rx="12" class="future"/>
+  <text x="680" y="502" class="label">Evidence-backed experiment</text>
+  <text x="680" y="528" class="body">Versioned run record, reference tests,</text>
+  <text x="680" y="549" class="body">conservation checks and timestep study</text>
+
+  <path d="M997 396 V435 H360 V460" class="edge"/>
+  <path d="M540 522 H650" class="edge"/>
+
+  <rect x="180" y="630" width="840" height="78" rx="12" class="future"/>
+  <text x="210" y="660" class="label">Run-backed living image</text>
+  <text x="210" y="684" class="body">Generate the diagram from actual recorded model output; CI checks plotted values against the run.</text>
+  <path d="M840 574 V610" class="edge"/>
+
+  <text x="48" y="738" class="small">This is a conceptual map of implementation gaps, not a combustion simulation or a claim of measured flame behavior.</text>
+</svg>
