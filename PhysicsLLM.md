@@ -231,3 +231,10 @@ Ownership boundary:
 - For Domino Studio, image conversion creates an editable proposal, not uniquely inferred 3D truth. Save source digest, conversion version/parameters, units, coordinate frame, generated placements and user edits. The first push initializes a physical event; all later toppling must emerge from supported dynamics, and failed propagation is valid.
 - Add no experience-specific MicroBundles to Physics and no renderer/image pipeline dependencies. Update capability claims only when code, focused tests and reproducible evidence exist.
 - No package publication, release, master promotion or deployment is authorized.
+
+
+## 2026-10-18 — contact capability MicroBundles
+
+Added the separate project `TheSingularityWorkshop.Physics.MicroBundles.csproj` with two thin, typed adapters around existing tested core capabilities: sphere-sphere contact observation (bundle 5201) and translational normal impulse response (bundle 5202). Focused tests verify stable provider IDs, geometric evidence without invented force/impulse values, and wrapper behavior against the core resolver.
+
+This is intentionally not a complete marble/domino engine. It does not add box/domino contact, rigid-body integration, friction, angular impulse, resting contacts, or a provider registry. Provider IDs are declarations; the host must resolve typed instances explicitly. Next implement and test the CPU rigid-body vertical slice in core Physics before building higher-level bundles or claiming the experiences run physically. The companion consumer contracts are in [Experiences](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md). No publication or release is authorized.
