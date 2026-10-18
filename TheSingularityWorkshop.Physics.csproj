@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Compile Remove="Physics/MicroBundles/**/*.cs" />
+    <Compile Remove="MicroBundleDomain/**/*.cs" />
     <Compile Remove="Experiences/**/*.cs" />
     <Compile Remove="tests/**/*.cs" />
     <Compile Remove="tools/**/*.cs" />
