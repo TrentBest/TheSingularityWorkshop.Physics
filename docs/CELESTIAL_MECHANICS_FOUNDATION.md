@@ -1,6 +1,6 @@
 # Celestial Mechanics Foundation
 
-**Status:** a Newtonian gravity-field evaluator, fixed-step N-body integrator, and explicit pairwise perfect-inelastic merge policy are implemented with focused tests. This is not a complete collision system: swept collision detection, multi-body encounter orchestration, bounce/fragmentation, angular-momentum storage, planetary impact physics, and Experience persistence remain out of scope.
+**Status:** a Newtonian gravity-field evaluator, fixed-step N-body integrator, explicit pairwise perfectly inelastic merge policy, and linear swept-sphere contact detector are implemented with focused tests. Deterministic multi-body encounter orchestration, bounce/fragmentation, angular-momentum storage, planetary impact physics, and Experience persistence remain out of scope.
 
 ## Gravity field
 
@@ -41,7 +41,13 @@ For an accepted pair, it:
 - emits a stable, pair-derived `OrbitalMergeEvent`; and
 - reports the relative translational kinetic energy removed by the perfectly inelastic merge.
 
-The lost kinetic energy is an accounting quantity, **not** a solved thermal field. This policy has no spin/deformation model and does not conserve angular momentum by storing it in the merged body's rotation. It is not a general-purpose asteroid-impact outcome model. Because it checks endpoint overlap only, fast bodies can tunnel through each other unless the caller chooses a sufficiently small timestep or adds swept collision detection. Multi-body collision ordering is not handled here.
+The lost kinetic energy is an accounting quantity, **not** a solved thermal field. This policy has no spin/deformation model and does not conserve angular momentum by storing it in the merged body's rotation. It is not a general-purpose asteroid-impact outcome model. Because it checks endpoint overlap only, fast bodies can tunnel through each other unless the caller chooses a sufficiently small timestep or uses swept collision detection. Multi-body collision ordering is not handled here.
+
+## Linear swept-sphere contact detection
+
+`OrbitalSweptCollisionDetector.TryDetect` tests two spherical bodies over a positive, finite interval under a constant-velocity (straight-line) trajectory assumption. It solves the relative-motion sphere-contact quadratic and returns the earliest contact time in the interval, including time zero for initial overlap/touch. Results order the two body IDs ordinally so reversing the arguments does not change event identity. No body state is mutated, and detection does not select a response policy.
+
+This prevents tunnelling for the linear trajectories supplied to the detector, but it is not an exact continuous collision solver for the curved paths of gravitationally accelerated bodies. Its accuracy depends on the interval and the trajectory approximation. A future acceleration-aware detector may need to bound curvature or inspect the integrator's trajectory rather than extrapolate a straight line. The detector also does not coordinate multiple candidate encounters: a caller must sort events deterministically and revalidate later events after an earlier merger changes the body set.
 
 ## What this enables
 
@@ -53,11 +59,11 @@ The lost kinetic energy is an accounting quantity, **not** a solved thermal fiel
 
 ## What it does not do
 
-These components do not advance finite planetary interiors, provide continuous collision detection, resolve elastic bounces or fragmentation, conserve energy exactly, model relativistic effects, or calculate shockwaves. Point-mass gravity is singular at the source and is not a planetary interior model. The optional “gravity well” surface is a visual encoding of a scalar field, not a literal force law. A collision does not necessarily stabilize a system.
+These components do not advance finite planetary interiors, provide acceleration-aware continuous collision detection, resolve elastic bounces or fragmentation, conserve energy exactly, model relativistic effects, or calculate shockwaves. Point-mass gravity is singular at the source and is not a planetary interior model. The optional “gravity well” surface is a visual encoding of a scalar field, not a literal force law. A collision does not necessarily stabilize a system.
 
 ## Next physics gates
 
-1. **Encounter coverage:** add swept sphere contact or an explicit timestep/contact contract, then handle deterministic multi-body event ordering.
+1. **Encounter orchestration:** gather swept-contact candidates, order them by contact time and stable body identities, then revalidate each candidate after earlier events alter the body set. The current swept detector assumes linear trajectories over each interval.
 2. **Alternative outcomes:** define bounce and fragmentation as separate policies with explicit momentum/angular-momentum/energy accounting rather than assuming every contact merges.
 3. **Impact handoff:** preserve pre-impact state and provide a versioned initial-condition record for a distinct local impact model. Do not claim planetary-scale shock physics until a validated solver supports it.
 4. **Experience evidence:** save and reopen a scenario, derive field visualization from authoritative samples, and show event/timeline provenance.
