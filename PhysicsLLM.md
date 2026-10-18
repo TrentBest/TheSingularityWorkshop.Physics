@@ -205,3 +205,14 @@ Follow [Element and Material Data Architecture](docs/ELEMENT_AND_MATERIAL_DATA_A
 8. No package publishing or release without explicit authorization.
 
 The target is a physically inspectable model whose flames are emitted from solved heat/reaction state, not a script or shader that merely looks plausible. Preserve the distinction between authoritative simulation and presentation particles.
+
+
+## 2026-10-18 — world time and CPU orbital-forcing table
+
+Implemented on `development`:
+- `Physics/Astronomy/WorldTimeDefinition.cs` defines a world-local rotation period and epoch, with local rotation phase/cycles and a separate conventional Earth-reference day conversion.
+- `Physics/Astronomy/OrbitalTidePotentialBaker.cs` bakes deterministic CPU samples for a bounded single-perturber model: circular orbit, equatorial observer, caller-supplied SI gravitational constant, orbital/rotation periods, phase, radius, mass, and distance. Each sample stores differential tidal potential (m²/s²), its analytical time derivative (m²/s³), and the derivative state `Rising`, `Falling`, or `TurningPoint`.
+- Focused NUnit tests cover time conversion, determinism, endpoints, interpolation, bounds rejection, sample immutability, aligned turning points, and invalid input.
+- The physical-effects design contract and capability catalog now distinguish this implemented reference slice from the planned local ocean-response model.
+
+Important boundary: this is not a sea-level model and does not predict `KingTideIncoming`/`Outgoing`. The next physics layer should compose orbital forcing from all relevant perturbers, then apply a declared planet/ocean/basin response model. Only that response can support local sea-level extrema and semantic tide states. Texture encoding follows only after the CPU table is the canonical tested output; define units, quantization error, epoch, sample spacing, interpolation and out-of-range policy before assigning pixel channels. Test constants are illustrative, not a sourced world dataset. No package publication or release is authorized.
