@@ -1,87 +1,112 @@
-using NUnit.Framework;
-using TheSingularityWorkshop.Physics.Astronomy;
 using TheSingularityWorkshop.Physics.Spatial;
 
-namespace TheSingularityWorkshop.Physics.Tests.Astronomy;
+namespace TheSingularityWorkshop.Physics.Astronomy;
 
-[TestFixture]
-public sealed class NewtonianNBodyStepperTests
+/// <summary>A deterministic fixed-step Newtonian N-body integrator using velocity Verlet.</summary>
+/// <remarks>
+/// This is a non-relativistic point-mass gravity integrator. Radius is carried as physical state but
+/// does not soften gravity or resolve contact. A step that places two bodies at the same position is
+/// rejected as singular. Caller owns the fixed timestep and must select it based on the scenario;
+/// this class does not adapt time or schedule process groups. Results are returned in ordinal body-ID
+/// order. This first version favors clarity and reproducibility over large-N performance.
+/// </remarks>
+public static class NewtonianNBodyStepper
 {
-    private const double G = 1d;
-
-    [Test]
-    public void Step_TwoEqualBodiesOnCircularOrbit_PreservesCenterOfMassAndMomentum()
+    /// <summary>Advances a complete N-body state by one positive fixed timestep.</summary>
+    /// <param name="bodies">Current body states in a shared inertial Cartesian frame.</param>
+    /// <param name="deltaTimeSeconds">Positive fixed timestep in seconds.</param>
+    /// <param name="gravitationalConstantM3PerKgSecondSquared">Explicit G in m³/(kg·s²).</param>
+    /// <returns>The advanced states, ordered by stable body ID.</returns>
+    public static OrbitalBodyState[] Step(
+        IEnumerable<OrbitalBodyState> bodies,
+        double deltaTimeSeconds,
+        double gravitationalConstantM3PerKgSecondSquared)
     {
-        var bodies = CircularBinary();
-        var momentumBefore = TotalMomentum(bodies);
-        var centerBefore = CenterOfMass(bodies);
+        ArgumentNullException.ThrowIfNull(bodies);
+        if (!double.IsFinite(deltaTimeSeconds) || deltaTimeSeconds <= 0d)
+            throw new ArgumentOutOfRangeException(nameof(deltaTimeSeconds), "Timestep must be finite and positive.");
+        if (!double.IsFinite(gravitationalConstantM3PerKgSecondSquared) ||
+            gravitationalConstantM3PerKgSecondSquared <= 0d)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(gravitationalConstantM3PerKgSecondSquared),
+                "The gravitational constant must be finite and positive.");
+        }
 
-        var advanced = bodies;
-        for (var i = 0; i < 1000; i++)
-            advanced = NewtonianNBodyStepper.Step(advanced, 0.01d, G);
+        var current = bodies.Select(body =>
+        {
+            ArgumentNullException.ThrowIfNull(body);
+            return body.EnsureValid();
+        }).OrderBy(body => body.BodyId, StringComparer.Ordinal).ToArray();
 
-        var momentumAfter = TotalMomentum(advanced);
-        var centerAfter = CenterOfMass(advanced);
+        for (var index = 1; index < current.Length; index++)
+        {
+            if (StringComparer.Ordinal.Equals(current[index - 1].BodyId, current[index].BodyId))
+                throw new ArgumentException("Body IDs must be unique.", nameof(bodies));
+        }
 
-        Assert.That(centerAfter.X, Is.EqualTo(centerBefore.X).Within(1e-12));
-        Assert.That(centerAfter.Y, Is.EqualTo(centerBefore.Y).Within(1e-12));
-        Assert.That(centerAfter.Z, Is.EqualTo(centerBefore.Z).Within(1e-12));
-        Assert.That(momentumAfter.X, Is.EqualTo(momentumBefore.X).Within(1e-12));
-        Assert.That(momentumAfter.Y, Is.EqualTo(momentumBefore.Y).Within(1e-12));
-        Assert.That(momentumAfter.Z, Is.EqualTo(momentumBefore.Z).Within(1e-12));
-        Assert.That(advanced[0].PositionMeters.Y, Is.LessThan(0d));
-        Assert.That(advanced[1].PositionMeters.Y, Is.GreaterThan(0d));
+        if (current.Length == 0)
+            return [];
+
+        var initialAccelerations = CalculateAccelerations(current, gravitationalConstantM3PerKgSecondSquared);
+        var halfDeltaTimeSquared = 0.5d * deltaTimeSeconds * deltaTimeSeconds;
+        var halfDeltaTime = 0.5d * deltaTimeSeconds;
+        var predicted = new OrbitalBodyState[current.Length];
+
+        for (var i = 0; i < current.Length; i++)
+        {
+            var body = current[i];
+            var nextPosition = body.PositionMeters +
+                               body.VelocityMetersPerSecond * deltaTimeSeconds +
+                               initialAccelerations[i] * halfDeltaTimeSquared;
+            predicted[i] = body with { PositionMeters = nextPosition };
+        }
+
+        var nextAccelerations = CalculateAccelerations(predicted, gravitationalConstantM3PerKgSecondSquared);
+        var result = new OrbitalBodyState[current.Length];
+        for (var i = 0; i < current.Length; i++)
+        {
+            var nextVelocity = current[i].VelocityMetersPerSecond +
+                               (initialAccelerations[i] + nextAccelerations[i]) * halfDeltaTime;
+            result[i] = predicted[i] with { VelocityMetersPerSecond = nextVelocity };
+        }
+
+        return result;
     }
 
-    [Test]
-    public void Step_IsDeterministicAndIndependentOfInputEnumerationOrder()
+    private static Vector3d[] CalculateAccelerations(
+        IReadOnlyList<OrbitalBodyState> bodies,
+        double gravitationalConstantM3PerKgSecondSquared)
     {
-        var bodies = CircularBinary();
-        var forward = NewtonianNBodyStepper.Step(bodies, 0.01d, G);
-        var reverse = NewtonianNBodyStepper.Step(bodies.Reverse(), 0.01d, G);
+        var accelerations = new Vector3d[bodies.Count];
+        for (var i = 0; i < bodies.Count; i++)
+        {
+            var acceleration = Vector3d.Zero;
+            for (var j = 0; j < bodies.Count; j++)
+            {
+                if (i == j)
+                    continue;
 
-        Assert.That(forward, Is.EqualTo(reverse));
-    }
+                var offset = bodies[j].PositionMeters - bodies[i].PositionMeters;
+                var distance = offset.Magnitude;
+                if (distance == 0d)
+                {
+                    throw new ArgumentException(
+                        $"Bodies '{bodies[i].BodyId}' and '{bodies[j].BodyId}' occupy the same point; point-mass gravity is singular.");
+                }
 
-    [Test]
-    public void Step_RejectsInvalidTimestepDuplicateIdsAndCoincidentBodies()
-    {
-        var body = new OrbitalBodyState("body", 1d, 0.1d, Vector3d.Zero, Vector3d.Zero);
+                var distanceCubed = distance * distance * distance;
+                var scale = gravitationalConstantM3PerKgSecondSquared *
+                            bodies[j].MassKilograms / distanceCubed;
+                if (!double.IsFinite(scale))
+                    throw new ArithmeticException("Calculating N-body acceleration exceeded the finite numeric range.");
 
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            NewtonianNBodyStepper.Step([body], 0d, G));
-        Assert.Throws<ArgumentException>(() =>
-            NewtonianNBodyStepper.Step(
-                [body, body with { PositionMeters = new Vector3d(1d, 0d, 0d) }],
-                0.01d,
-                G));
-        Assert.Throws<ArgumentException>(() =>
-            NewtonianNBodyStepper.Step(
-                [body, body with { BodyId = "other" }],
-                0.01d,
-                G));
-    }
+                acceleration += offset * scale;
+            }
 
-    [Test]
-    public void Step_EmptyStateRemainsEmpty()
-    {
-        Assert.That(NewtonianNBodyStepper.Step([], 0.01d, G), Is.Empty);
-    }
+            accelerations[i] = acceleration;
+        }
 
-    private static OrbitalBodyState[] CircularBinary() =>
-    [
-        new OrbitalBodyState("a", 1d, 0.01d, new Vector3d(-1d, 0d, 0d), new Vector3d(0d, -0.5d, 0d)),
-        new OrbitalBodyState("b", 1d, 0.01d, new Vector3d(1d, 0d, 0d), new Vector3d(0d, 0.5d, 0d))
-    ];
-
-    private static Vector3d TotalMomentum(IEnumerable<OrbitalBodyState> bodies) =>
-        bodies.Aggregate(Vector3d.Zero, (total, body) =>
-            total + body.VelocityMetersPerSecond * body.MassKilograms);
-
-    private static Vector3d CenterOfMass(IReadOnlyCollection<OrbitalBodyState> bodies)
-    {
-        var totalMass = bodies.Sum(body => body.MassKilograms);
-        return bodies.Aggregate(Vector3d.Zero, (weighted, body) =>
-            weighted + body.PositionMeters * body.MassKilograms) / totalMass;
+        return accelerations;
     }
 }
