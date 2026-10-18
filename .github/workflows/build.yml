@@ -118,6 +118,7 @@ jobs:
       - name: Render and validate the falling-body drag living image
         run: |
           python3 tools/render_falling_body_drag.py /tmp/falling-body-drag.actual.json /tmp/falling-body-drag.actual.svg
+          cmp /tmp/falling-body-drag.actual.svg docs/experiments/falling-body-drag.svg
           python3 - <<'PY'
           import json
           import xml.etree.ElementTree as ET
