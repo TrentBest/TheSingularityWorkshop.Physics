@@ -59,17 +59,47 @@ public sealed class OrbitalGravityEncounterCoordinatorTests
     }
 
     [Test]
-    public void ResolveMergers_HalvingStepConvergesOnEstimatedGravitationalContactTime()
+    public void ResolveMergers_HalvingStepConvergesOnAnalyticRadialContactTime()
     {
         var coarse = ContactTime(maximumStepSeconds: 0.5d);
         var medium = ContactTime(maximumStepSeconds: 0.25d);
         var fine = ContactTime(maximumStepSeconds: 0.125d);
-        var reference = ContactTime(maximumStepSeconds: 0.03125d);
+        var reference = AnalyticRadialContactTime();
 
-        Assert.That(Math.Abs(medium - reference), Is.LessThan(Math.Abs(coarse - reference)),
-            $"Halving the step should improve contact-time convergence: coarse={coarse:R}, medium={medium:R}, reference={reference:R}.");
-        Assert.That(Math.Abs(fine - reference), Is.LessThan(Math.Abs(medium - reference)),
-            $"Halving the step should improve contact-time convergence again: medium={medium:R}, fine={fine:R}, reference={reference:R}.");
+        var coarseError = Math.Abs(coarse - reference);
+        var mediumError = Math.Abs(medium - reference);
+        var fineError = Math.Abs(fine - reference);
+
+        Assert.That(mediumError, Is.LessThan(coarseError),
+            $"Halving the step should improve contact-time convergence: coarse={coarse:R} (error {coarseError:R}), medium={medium:R} (error {mediumError:R}), analytic={reference:R}.");
+        Assert.That(fineError, Is.LessThan(mediumError),
+            $"Halving the step should improve contact-time convergence again: medium={medium:R} (error {mediumError:R}), fine={fine:R} (error {fineError:R}), analytic={reference:R}.");
+    }
+
+    private static double AnalyticRadialContactTime()
+    {
+        // Relative two-body motion obeys r'' = -G(m1 + m2)/r^2. Energy conservation
+        // gives |dr/dt| = sqrt(v0^2 + 2G(m1 + m2)(1/r - 1/r0)); integrate dt = -dr/(dr/dt)
+        // from the contact radius (1 m) to the initial separation (10 m).
+        const double gravitationalParameter = 0.001d * (1000d + 1d);
+        const double initialSeparation = 10d;
+        const double contactSeparation = 1d;
+        const double initialRadialSpeed = 1d;
+        const int intervals = 10000; // even interval count for composite Simpson integration
+        var step = (initialSeparation - contactSeparation) / intervals;
+
+        double Integrand(double separation) =>
+            1d / Math.Sqrt(initialRadialSpeed * initialRadialSpeed +
+                           2d * gravitationalParameter * (1d / separation - 1d / initialSeparation));
+
+        var sum = Integrand(contactSeparation) + Integrand(initialSeparation);
+        for (var i = 1; i < intervals; i++)
+        {
+            var weight = i % 2 == 0 ? 2d : 4d;
+            sum += weight * Integrand(contactSeparation + i * step);
+        }
+
+        return sum * step / 3d;
     }
 
     private static double ContactTime(double maximumStepSeconds)
