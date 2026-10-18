@@ -33,6 +33,40 @@ public sealed class NewtonianNBodyStepperTests
         Assert.That(advanced[1].PositionMeters.Y, Is.LessThan(0d));
     }
 
+
+    [Test]
+    public void Step_CircularBinaryReturnsToAnalyticState_WithSecondOrderPositionConvergence()
+    {
+        // For equal unit masses at separation 2 with G=1, each body orbits at radius 1.
+        // The exact angular velocity is 0.5 rad/s, so the period is 4*pi seconds.
+        const double period = 4d * Math.PI;
+        var coarseError = CircularOrbitPositionError(128, period);
+        var mediumError = CircularOrbitPositionError(256, period);
+        var fineError = CircularOrbitPositionError(512, period);
+
+        Assert.That(mediumError, Is.LessThan(coarseError),
+            "Halving the timestep should reduce the full-period trajectory error.");
+        Assert.That(fineError, Is.LessThan(mediumError),
+            "Halving the timestep again should further reduce the full-period trajectory error.");
+        Assert.That(coarseError / mediumError, Is.GreaterThan(3d),
+            "Velocity Verlet should approach second-order global position convergence in this smooth orbit.");
+        Assert.That(mediumError / fineError, Is.GreaterThan(3d),
+            "The finer refinement should retain approximately second-order convergence.");
+    }
+
+    private static double CircularOrbitPositionError(int steps, double period)
+    {
+        var initial = CircularBinary();
+        var advanced = initial;
+        var deltaTime = period / steps;
+        for (var i = 0; i < steps; i++)
+            advanced = NewtonianNBodyStepper.Step(advanced, deltaTime, G);
+
+        return advanced.Zip(initial, (actual, expected) =>
+                (actual.PositionMeters - expected.PositionMeters).Magnitude)
+            .Max();
+    }
+
     [Test]
     public void Step_IsDeterministicAndIndependentOfInputEnumerationOrder()
     {
