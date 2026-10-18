@@ -1,6 +1,6 @@
 # Celestial Mechanics Foundation
 
-**Status:** a Newtonian gravity-field evaluator, fixed-step N-body integrator, explicit pairwise perfectly inelastic merge policy, and linear swept-sphere contact detector are implemented with focused tests. Deterministic multi-body encounter orchestration, bounce/fragmentation, angular-momentum storage, planetary impact physics, and Experience persistence remain out of scope.
+**Status:** a Newtonian gravity-field evaluator, fixed-step N-body integrator, explicit pairwise perfectly inelastic merge policy, linear swept-sphere contact detector, and deterministic linear-encounter coordinator are implemented with focused tests. Bounce/fragmentation, angular-momentum storage, planetary impact physics, and Experience persistence remain out of scope.
 
 ## Gravity field
 
@@ -49,6 +49,14 @@ The lost kinetic energy is an accounting quantity, **not** a solved thermal fiel
 
 This prevents tunnelling for the linear trajectories supplied to the detector, but it is not an exact continuous collision solver for the curved paths of gravitationally accelerated bodies. Its accuracy depends on the interval and the trajectory approximation. A future acceleration-aware detector may need to bound curvature or inspect the integrator's trajectory rather than extrapolate a straight line. The detector also does not coordinate multiple candidate encounters: a caller must sort events deterministically and revalidate later events after an earlier merger changes the body set.
 
+## Deterministic encounter orchestration
+
+`OrbitalEncounterCoordinator.ResolveLinearMergers` coordinates a finite, constant-velocity interval without mutating the caller's input states. It sorts body identities, evaluates swept contacts for each unique pair, and chooses the earliest candidate by time of impact; exact time ties are broken by ordinal `BodyAId` and then `BodyBId`.
+
+After selecting a contact, it linearly drifts all current bodies to that event time, applies the explicit perfectly inelastic merge policy, removes the two source bodies, inserts the merged body, and rebuilds the candidate set for the remaining interval. Rebuilding is essential: a merger changes the body's identity, position, velocity, radius, and possible future contacts, so later candidates from the previous body set would be stale. Simultaneous contacts are resolved sequentially using the stable tie-break and recalculated after each outcome; this is deterministic, but it is not a claim that the chosen order models every possible multi-contact material outcome.
+
+The coordinator is a **linear-drift encounter experiment**, not a gravity integrator. It does not apply gravitational acceleration during the interval, and therefore should be coupled to short integration steps or replaced by trajectory-aware event handling for curved gravitational paths. Every contact currently uses the merger policy; alternative response policies are a separate future layer. A tiny geometric correction is applied only if floating-point rounding leaves a predicted contact infinitesimally outside the merger's endpoint-overlap check; the correction preserves the pair's centre of mass.
+
 ## What this enables
 
 - A gravity-field overlay whose vectors and potential contours derive from the same body placements as the Experience.
@@ -63,7 +71,7 @@ These components do not advance finite planetary interiors, provide acceleration
 
 ## Next physics gates
 
-1. **Encounter orchestration:** gather swept-contact candidates, order them by contact time and stable body identities, then revalidate each candidate after earlier events alter the body set. The current swept detector assumes linear trajectories over each interval.
+1. **Trajectory-aware encounter handling:** integrate event detection with gravity-step trajectories or bound curvature error instead of relying only on straight-line drift over each interval.
 2. **Alternative outcomes:** define bounce and fragmentation as separate policies with explicit momentum/angular-momentum/energy accounting rather than assuming every contact merges.
 3. **Impact handoff:** preserve pre-impact state and provide a versioned initial-condition record for a distinct local impact model. Do not claim planetary-scale shock physics until a validated solver supports it.
 4. **Experience evidence:** save and reopen a scenario, derive field visualization from authoritative samples, and show event/timeline provenance.
