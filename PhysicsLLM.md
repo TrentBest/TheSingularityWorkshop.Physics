@@ -216,3 +216,18 @@ Implemented on `development`:
 - The physical-effects design contract and capability catalog now distinguish this implemented reference slice from the planned local ocean-response model.
 
 Important boundary: this is not a sea-level model and does not predict `KingTideIncoming`/`Outgoing`. The next physics layer should compose orbital forcing from all relevant perturbers, then apply a declared planet/ocean/basin response model. Only that response can support local sea-level extrema and semantic tide states. Texture encoding follows only after the CPU table is the canonical tested output; define units, quantization error, epoch, sample spacing, interpolation and out-of-range policy before assigning pixel channels. Test constants are illustrative, not a sourced world dataset. No package publication or release is authorized.
+
+
+## 2026-10-18 — Marble Run and Domino Studio experience handoff
+
+Design contract: [Marble Run and Domino Studio](docs/MARBLE_RUN_AND_DOMINO_STUDIO.md).
+
+Ownership boundary:
+- Marble Run and Domino Studio are experiences consuming Physics, not Physics MicroBundles. Their scene construction, image interpretation, image-to-layout conversion, editing tools, camera, presentation, and run controls belong to the experience/consumer layer.
+- Physics owns shared physical state, geometry/collision contracts, contact observations and response, deterministic stepping, and measurable results. Keep Physics free of renderer, UI, image-processing, Unity, WebPage, and Experiences dependencies.
+- Audit and reuse current rigid-body/contact primitives before creating duplicate types. Existing contact support is bounded; do not describe it as a complete frictional/angular multi-body solver.
+- Build a CPU reference vertical slice first: falling sphere and standing box/domino, then supported contact/impact response, then small marble-track and two-domino fixtures. Add friction, resting contacts, scaling and acceleration as individually tested increments.
+- For Marble Run, thousands of marbles is a benchmark target, not a promise. Record hardware, timestep, contact density, wall-clock cost, solver iterations and physical error diagnostics.
+- For Domino Studio, image conversion creates an editable proposal, not uniquely inferred 3D truth. Save source digest, conversion version/parameters, units, coordinate frame, generated placements and user edits. The first push initializes a physical event; all later toppling must emerge from supported dynamics, and failed propagation is valid.
+- Add no experience-specific MicroBundles to Physics and no renderer/image pipeline dependencies. Update capability claims only when code, focused tests and reproducible evidence exist.
+- No package publication, release, master promotion or deployment is authorized.
