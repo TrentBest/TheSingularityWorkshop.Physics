@@ -154,3 +154,10 @@ A useful test suite should answer more than “did it run?” It should help est
 [Physics home](../README.md) · [FSM_API](https://github.com/TrentBest/FSM_API) · [Workshop ontology](https://github.com/TrentBest/TheSingularityWorkshop.Ontology) · [Issues](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues)
 
 <p align="center"><em>Build understanding. Make reality inspectable.</em><br/><strong>The Singularity Workshop</strong></p>
+
+
+## MicroBundle adapters for existing contact primitives
+
+**Implemented in source:** the separate project [TheSingularityWorkshop.Physics.MicroBundles](../TheSingularityWorkshop.Physics.MicroBundles.csproj) exposes typed, host-neutral wrappers for the existing sphere-sphere geometric contact detector and frictionless translational normal-impulse resolver. Bundle IDs 5201 and 5202 declare provider IDs; tests exercise the wrappers against the underlying Physics methods.
+
+**Important limit:** the adapter package does not implement provider registration or universal service resolution. MicroBundleDomain provider IDs are metadata until a composition host resolves a loaded bundle instance to the typed provider contract. These adapters do not add rigid-body integration, domino/box collision, friction, angular response, persistent contacts, or a many-marble solver. See the [MicroBundle provider resolution contract](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain/blob/development/docs/PROVIDER_RESOLUTION_CONTRACT.md) and the [Experience ownership contract](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md).
