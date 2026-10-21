@@ -89,6 +89,10 @@ public sealed class SeededPointSet2dTests
 
         var points = SeededPointSet2d.Generate(128, minimum, minimum, maximum, maximum, 3u);
 
-        Assert.That(points, Is.All.Matches<Vector2d>(p => p.X == minimum && p.Y == minimum));
+        foreach (var point in points)
+        {
+            Assert.That(point.X, Is.EqualTo(minimum));
+            Assert.That(point.Y, Is.EqualTo(minimum));
+        }
     }
 }
