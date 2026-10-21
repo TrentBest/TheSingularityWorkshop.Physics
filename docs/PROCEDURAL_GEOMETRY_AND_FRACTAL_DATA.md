@@ -1,6 +1,6 @@
 # Procedural Geometry and Fractal Data Contract
 
-**Status:** design contract with one initial primitive implemented on the feature branch: bounded seeded 2D point sampling. This document does not claim that a fractal renderer, procedural-mud solver, terrain generator, or general procedural-geometry API is implemented.
+**Status:** design contract with one initial primitive implemented and tested on development: bounded seeded 2D point sampling. This document does not claim that a fractal renderer, procedural-mud solver, terrain generator, or general procedural-geometry API is implemented.
 
 ## Decision
 
@@ -86,4 +86,4 @@ A first implementation should not be considered complete until focused tests est
 
 ## Current status
 
-The repository already contains reusable foundations including finite 2D geometry predicates, polygon operations, vector/matrix primitives, lookup-table support, online statistics, and deterministic Squirrel3 sampling. The first narrow implementation is [SeededPointSet2d](../Physics/Spatial/SeededPointSet2d.cs): bounded, deterministic point samples with a stable index order and no renderer dependency. It is deliberately not described as a fractal or physical material generator. Next, prove that GUI.SVG can display the exact returned sample set and verify the displayed count/bounds against the source data before expanding to recursive rules, fields, contours, or physical coupling.
+The repository already contains reusable foundations including finite 2D geometry predicates, polygon operations, vector/matrix primitives, lookup-table support, online statistics, and deterministic Squirrel3 sampling. The first narrow implementation is [SeededPointSet2d](../Physics/Spatial/SeededPointSet2d.cs): bounded, deterministic point samples with a stable index order and no renderer dependency. The [run-record exporter](../samples/SeededPointSet2dExport/README.md) serializes the actual API output into a versioned, renderer-independent JSON record and verifies every serialized coordinate against the in-memory result. CI checks the record identity, sample count, finite coordinates, and declared half-open bounds. It is deliberately not described as a fractal or physical material generator. Next, prove that GUI.SVG can display this exact exported sample set before expanding to recursive rules, fields, contours, or physical coupling.

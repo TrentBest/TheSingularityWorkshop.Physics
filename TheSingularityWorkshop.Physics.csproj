@@ -28,6 +28,7 @@
     <Compile Remove="Experiences/**/*.cs" />
     <Compile Remove="tests/**/*.cs" />
     <Compile Remove="tools/**/*.cs" />
+    <Compile Remove="samples/**/*.cs" />
     <None Include="README.md" Pack="true" PackagePath="" />
     <None Include="LICENSE" Pack="true" PackagePath="" />
     <None Include="docs/**/*.md" Pack="true" PackagePath="docs/" />
