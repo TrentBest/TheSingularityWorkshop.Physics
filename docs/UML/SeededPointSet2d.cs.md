@@ -5,7 +5,7 @@
 **Responsibility:** `TheSingularityWorkshop.Physics.Spatial.SeededPointSet2d` maps each stable point index to independent X/Y samples using `Squirrel3.Hash`. It returns the generated `Vector2d` values in index order through a read-only collection.
 
 **Implementation source:** [`Physics/Spatial/SeededPointSet2d.cs`](../../Physics/Spatial/SeededPointSet2d.cs)  
-**Class diagram:** [`SeededPointSet2d.svg`](SeededPointSet2d.svg)  
+**Class diagram:** [SeededPointSet2dUML.md](SeededPointSet2dUML.md) · [SVG rendering](SeededPointSet2d.svg)  
 **Executable recipe:** [Seeded point-set exporter](../../samples/SeededPointSet2dExport/README.md)  
 **Tests:** [`SeededPointSet2dTests.cs`](../../tests/TheSingularityWorkshop.Physics.Tests/Spatial/SeededPointSet2dTests.cs)
 
