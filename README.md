@@ -192,5 +192,6 @@ Timeline history contracts (checkpoint envelopes, ordered event records, and val
 
 - [Mathematics Domain Map](docs/MATHEMATICS_DOMAIN_MAP.md) — broad coverage, implementation status, and gaps.
 - [2D Geometry Foundation](docs/GEOMETRY_FOUNDATION_2D.md) — vector conventions, numerical limits, and the next geometry slices.
-- [Procedural Geometry and Fractal Data](docs/PROCEDURAL_GEOMETRY_AND_FRACTAL_DATA.md) — Physics-owned math, renderer-independent generated data, reproducibility, and evidence gates; a design proposal, not an implemented generator.
+- [Source UML index](docs/UML/README.md) — class diagrams maintained alongside selected source changes.
+- [Procedural Geometry and Fractal Data](docs/PROCEDURAL_GEOMETRY_AND_FRACTAL_DATA.md) — Physics-owned math, renderer-independent generated data, reproducibility, and evidence gates; includes the first bounded point-sampling primitive.
 - [GPU Computation Readiness](docs/GPU_COMPUTATION_READINESS.md) — backend-neutral data and numerical contracts.
