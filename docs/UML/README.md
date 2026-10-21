@@ -5,7 +5,7 @@ This folder records manually maintained UML-style diagrams for selected C# sourc
 ## Current diagrams
 
 - [SeededPointSet2d](SeededPointSet2dUML.md) — dedicated class diagram; [SVG rendering](SeededPointSet2d.svg) · [source companion and use case](SeededPointSet2d.cs.md).
-- [MandelbrotEscapeTime2d](MandelbrotEscapeTime2d.svg) — bounded row-major escape-time grid, immutable sample records, finite complex-plane window, and explicit work limits.
+- [MandelbrotEscapeTime2d](MandelbrotEscapeTime2dUML.md) — dedicated class diagram; [SVG rendering](MandelbrotEscapeTime2d.svg) · [source companion and use case](MandelbrotEscapeTime2d.cs.md).
 
 ## Maintenance rule
 
