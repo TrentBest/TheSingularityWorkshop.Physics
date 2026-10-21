@@ -36,6 +36,30 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Export deterministic seeded point-set run record
+        run: dotnet run --project samples/SeededPointSet2dExport/SeededPointSet2dExport.csproj --configuration Release -- /tmp/seeded-point-set-2d.run.json
+
+      - name: Verify exported point-set run-record contract
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/seeded-point-set-2d.run.json').read_text(encoding='utf-8'))
+          assert record['modelId'] == 'procedural.seeded-point-set-2d'
+          assert record['modelVersion'] == '1' and record['schemaVersion'] == 1
+          assert record['pointCount'] == len(record['points']) == 128
+          bounds = record['bounds']
+          assert bounds['convention'] == 'minimum-inclusive, maximum-exclusive'
+          for index, point in enumerate(record['points']):
+              assert point['index'] == index
+              assert math.isfinite(point['x']) and math.isfinite(point['y'])
+              assert bounds['minX'] <= point['x'] < bounds['maxX']
+              assert bounds['minY'] <= point['y'] < bounds['maxY']
+          print('Verified 128 serialized points, stable indices, finite coordinates, and declared half-open bounds.')
+          PY
+
       - name: Verify living scale illustration is embedded and accessible
         run: |
           python3 - <<'PY'
