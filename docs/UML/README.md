@@ -4,7 +4,7 @@ This folder records manually maintained UML-style diagrams for selected C# sourc
 
 ## Current diagrams
 
-- [SeededPointSet2d](SeededPointSet2d.svg) — class diagram for the static generator, Squirrel3 dependency, read-only result, and finite half-open bounds; see the [source companion](SeededPointSet2d.cs.md) for the contract, use case, source, and tests.
+- [SeededPointSet2d](SeededPointSet2dUML.md) — dedicated class diagram; [SVG rendering](SeededPointSet2d.svg) · [source companion and use case](SeededPointSet2d.cs.md).
 - [MandelbrotEscapeTime2d](MandelbrotEscapeTime2d.svg) — bounded row-major escape-time grid, immutable sample records, finite complex-plane window, and explicit work limits.
 
 ## Maintenance rule
