@@ -1,6 +1,6 @@
 # Procedural Geometry and Fractal Data Contract
 
-**Status:** design contract with one initial primitive implemented and tested on development: bounded seeded 2D point sampling. This document does not claim that a fractal renderer, procedural-mud solver, terrain generator, or general procedural-geometry API is implemented.
+**Status:** two narrow mathematical primitives are implemented and tested on development: bounded seeded 2D point sampling and bounded Mandelbrot escape-time classification. This document does not claim that a fractal renderer, procedural-mud solver, terrain generator, or general procedural-geometry API is implemented.
 
 ## Decision
 
@@ -55,7 +55,7 @@ Use the existing deterministic Squirrel3 facilities when a procedural model need
 ## First proof sequence
 
 1. **Mandelbrot browser experiment:** expose the complex-plane window, iteration cap, pixel/sample resolution, and zoom history. Label the output as a mathematical visualization, not a physics simulation. Record the exact inputs.
-2. **Deterministic data proof:** generate a bounded, seeded set of geometry samples in Physics and test replayability, bounds, limits, and edge cases without referencing a renderer.
+2. **Deterministic data proof:** SeededPointSet2d generates bounded seeded geometry samples; MandelbrotEscapeTime2d computes a bounded escape-time grid. Both are tested without referencing a renderer.
 3. **Manifestation proof:** render that same generated result through GUI.SVG and verify that the displayed sample count, bounds, and identifiers agree with the Physics output. SVG is a view of the data, not the source of truth.
 4. **Geometry usefulness proof:** turn a selected procedural result into a well-defined contour or triangle set only when the chosen algorithm supports that topology. Test validity and degeneracy; do not silently repair invalid geometry.
 5. **Physical coupling proof:** choose one narrowly scoped use case—such as impact-driven particle/debris placement or a bounded deposition field—and compare it with a declared reference case. Report model assumptions and error; do not label it “mud physics” based only on appearance.

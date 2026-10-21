@@ -13,7 +13,7 @@
 
 **Celestial mechanics:** [Newtonian gravity field and first fixed-step N-body integrator, units, limits, and validation gates](docs/CELESTIAL_MECHANICS_FOUNDATION.md) · [gravity-field evaluator](Physics/Astronomy/NewtonianGravityField.cs) · [orbital state](Physics/Astronomy/OrbitalBodyState.cs) · [velocity-Verlet stepper](Physics/Astronomy/NewtonianNBodyStepper.cs)
 
-**Procedural data proof:** [seeded 2D point-set API](Physics/Spatial/SeededPointSet2d.cs) · [run-record exporter sample](samples/SeededPointSet2dExport/README.md) · [procedural geometry and fractal data contract](docs/PROCEDURAL_GEOMETRY_AND_FRACTAL_DATA.md)
+**Procedural data proof:** [seeded 2D point-set API](Physics/Spatial/SeededPointSet2d.cs) · [Mandelbrot escape-time sampler](Physics/Spatial/MandelbrotEscapeTime2d.cs) · [run-record exporter sample](samples/SeededPointSet2dExport/README.md) · [procedural geometry and fractal data contract](docs/PROCEDURAL_GEOMETRY_AND_FRACTAL_DATA.md)
 
 **Explore the knowledge graph:** [physics and mathematics branch atlas](docs/PHYSICS_BRANCH_ATLAS.md) ·  [equations, derivations, and scientific experiences](docs/EQUATIONS_DERIVATIONS_AND_SCIENTIFIC_EXPERIENCES.md) · [composable models, solvers, and experiences](docs/COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md) · [mathematics domain map](docs/MATHEMATICS_DOMAIN_MAP.md) · [GPU computation readiness](docs/GPU_COMPUTATION_READINESS.md)
 
