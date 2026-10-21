@@ -36,6 +36,38 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Export bounded Mandelbrot escape-time run record
+        run: dotnet run --project samples/MandelbrotEscapeTime2dExport/MandelbrotEscapeTime2dExport.csproj --configuration Release -- /tmp/mandelbrot-escape-time-2d.run.json
+
+      - name: Verify exported Mandelbrot run-record contract
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/mandelbrot-escape-time-2d.run.json').read_text(encoding='utf-8'))
+          assert record['modelId'] == 'mathematics.mandelbrot-escape-time-2d'
+          assert record['modelVersion'] == '1' and record['schemaVersion'] == 1
+          width, height = record['width'], record['height']
+          samples = record['samples']
+          assert record['sampleCount'] == len(samples) == width * height == 16000
+          assert record['maxIterations'] == 80
+          bounds = record['bounds']
+          assert bounds['convention'] == 'minimum-inclusive, maximum-exclusive; cell centers sampled'
+          escaped = 0
+          for index, sample in enumerate(samples):
+              assert sample['column'] == index % width and sample['row'] == index // width
+              assert math.isfinite(sample['real']) and math.isfinite(sample['imaginary'])
+              assert bounds['minReal'] <= sample['real'] < bounds['maxReal']
+              assert bounds['minImaginary'] <= sample['imaginary'] < bounds['maxImaginary']
+              assert 1 <= sample['iterations'] <= record['maxIterations']
+              assert isinstance(sample['escaped'], bool)
+              escaped += sample['escaped']
+          assert 0 < escaped < len(samples), 'expected both escaping and non-escaping samples'
+          print(f"Verified {len(samples)} serialized Mandelbrot samples; {escaped} escaped; stable grid order and bounds.")
+          PY
+
       - name: Export deterministic seeded point-set run record
         run: dotnet run --project samples/SeededPointSet2dExport/SeededPointSet2dExport.csproj --configuration Release -- /tmp/seeded-point-set-2d.run.json
 
