@@ -11,6 +11,8 @@
 
 ![Physics paradigm: same reality, a different way to build it](docs/images/physics-paradigm.svg)
 
+**Explore:** [Evidence-led Gallery](docs/GALLERY.md) · [Operation Sith branch reconciliation](docs/OPERATION_SITH_BRANCH_RECONCILIATION.md)
+
 **Celestial mechanics:** [Newtonian gravity field and first fixed-step N-body integrator, units, limits, and validation gates](docs/CELESTIAL_MECHANICS_FOUNDATION.md) · [gravity-field evaluator](Physics/Astronomy/NewtonianGravityField.cs) · [orbital state](Physics/Astronomy/OrbitalBodyState.cs) · [velocity-Verlet stepper](Physics/Astronomy/NewtonianNBodyStepper.cs)
 
 **Procedural data proof:** [seeded 2D point-set API](Physics/Spatial/SeededPointSet2d.cs) · [Mandelbrot escape-time sampler](Physics/Spatial/MandelbrotEscapeTime2d.cs) · [run-record exporter sample](samples/SeededPointSet2dExport/README.md) · [procedural geometry and fractal data contract](docs/PROCEDURAL_GEOMETRY_AND_FRACTAL_DATA.md)
