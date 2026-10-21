@@ -1,6 +1,6 @@
 # Procedural Geometry and Fractal Data Contract
 
-**Status:** design proposal. This document defines a candidate boundary and validation plan; it does not claim that a fractal renderer, procedural-mud solver, terrain generator, or general procedural-geometry API is implemented.
+**Status:** design contract with one initial primitive implemented on the feature branch: bounded seeded 2D point sampling. This document does not claim that a fractal renderer, procedural-mud solver, terrain generator, or general procedural-geometry API is implemented.
 
 ## Decision
 
@@ -86,4 +86,4 @@ A first implementation should not be considered complete until focused tests est
 
 ## Current status
 
-The repository already contains reusable foundations including finite 2D geometry predicates, polygon operations, vector/matrix primitives, lookup-table support, online statistics, and deterministic Squirrel3 sampling. Their existence makes this direction plausible; it does **not** mean the procedural generator described here exists. The first implementation should be selected after reviewing these existing primitives and choosing one bounded, testable output contract.
+The repository already contains reusable foundations including finite 2D geometry predicates, polygon operations, vector/matrix primitives, lookup-table support, online statistics, and deterministic Squirrel3 sampling. The first narrow implementation is [SeededPointSet2d](../Physics/Spatial/SeededPointSet2d.cs): bounded, deterministic point samples with a stable index order and no renderer dependency. It is deliberately not described as a fractal or physical material generator. Next, prove that GUI.SVG can display the exact returned sample set and verify the displayed count/bounds against the source data before expanding to recursive rules, fields, contours, or physical coupling.
