@@ -2,7 +2,7 @@
 
 **Audit date:** 2026-10-21  
 **Canonical branches:** `master`, `development`  
-**Current disposition:** Four branches are reconciled and ready for the user's manual deletion after a final live inventory check. The two Mandelbrot branches are also now reconciled at tree level; refresh inventory and confirm CI before treating the Physics cleanup gate as complete.
+**Current disposition:** All six non-canonical branches are reconciled and ready for the user's manual deletion. Final live inventory was refreshed on 2026-10-21 and the latest ledger CI run (39679952669) passed.
 
 ## Branches reviewed
 
@@ -40,4 +40,4 @@ The following recent `development` runs completed successfully:
 
 ## Cleanup gate
 
-This is an evidence ledger, not authorization to delete branches. All six branches have now had their compare file lists and the relevant differing current files reviewed. No branch has been deleted by this audit. Refresh the live branch inventory and verify the latest documentation CI before considering the six Physics branches ready for user-led manual deletion.
+This is an evidence ledger, not authorization to delete branches. All six branches have now had their compare file lists and the relevant differing current files reviewed. No branch has been deleted by this audit. Final verification complete: live inventory still shows the six reviewed non-canonical branches plus `master` and `development`; latest documentation CI passed. All six are ready for user-led manual deletion. No branch was deleted by this audit.
