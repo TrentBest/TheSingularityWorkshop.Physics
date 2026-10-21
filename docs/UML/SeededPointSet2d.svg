@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560" role="img" aria-labelledby="title desc">
+  <title id="title">UML-style diagram for SeededPointSet2d</title>
+  <desc id="desc">SeededPointSet2d generates a bounded deterministic read-only list of Vector2d values using Squirrel3 hashes. It depends on Vector2d and Squirrel3, and exposes Generate with count, bounds, and seed.</desc>
+  <defs>
+    <style>
+      .panel { fill: #ffffff; stroke: #263238; stroke-width: 1.5; }
+      .header { fill: #e8eef5; stroke: #263238; stroke-width: 1.5; }
+      .line { stroke: #455a64; stroke-width: 1.5; fill: none; }
+      .txt { font: 16px sans-serif; fill: #17212b; }
+      .small { font: 13px sans-serif; fill: #37474f; }
+      .title { font: bold 18px sans-serif; fill: #17212b; }
+      .note { fill: #fff8e1; stroke: #8d6e00; stroke-width: 1.2; }
+    </style>
+  </defs>
+  <rect x="28" y="28" width="844" height="504" rx="10" fill="#f7f9fb" stroke="#b0bec5"/>
+  <rect class="header" x="250" y="74" width="400" height="64" rx="4"/>
+  <text class="title" x="450" y="101" text-anchor="middle">«static» SeededPointSet2d</text>
+  <text class="small" x="450" y="123" text-anchor="middle">TheSingularityWorkshop.Physics.Spatial</text>
+  <rect class="panel" x="250" y="138" width="400" height="178" rx="2"/>
+  <text class="txt" x="270" y="169">+ MaximumPointCount: int = 65,536</text>
+  <line class="line" x1="250" y1="184" x2="650" y2="184"/>
+  <text class="txt" x="270" y="211">+ Generate(count, minX, minY,</text>
+  <text class="txt" x="290" y="235">maxX, maxY, seed): IReadOnlyList&lt;Vector2d&gt;</text>
+  <text class="small" x="270" y="266">Rejects invalid bounds and excessive counts</text>
+  <text class="small" x="270" y="288">Returns a read-only view in stable index order</text>
+  <rect class="panel" x="65" y="368" width="280" height="86" rx="4"/>
+  <text class="title" x="205" y="397" text-anchor="middle">Squirrel3</text>
+  <text class="small" x="205" y="420" text-anchor="middle">Hash(index, seed ⊕ axis-domain)</text>
+  <text class="small" x="205" y="439" text-anchor="middle">Deterministic 32-bit samples</text>
+  <rect class="panel" x="555" y="368" width="280" height="86" rx="4"/>
+  <text class="title" x="695" y="397" text-anchor="middle">Vector2d</text>
+  <text class="small" x="695" y="420" text-anchor="middle">Finite X/Y coordinates</text>
+  <text class="small" x="695" y="439" text-anchor="middle">Unit-agnostic values</text>
+  <path class="line" d="M 350 316 L 350 340 L 205 340 L 205 368"/>
+  <path class="line" d="M 550 316 L 550 340 L 695 340 L 695 368"/>
+  <text class="small" x="205" y="354" text-anchor="middle">uses</text>
+  <text class="small" x="695" y="354" text-anchor="middle">creates</text>
+  <rect class="note" x="115" y="474" width="670" height="38" rx="4"/>
+  <text class="small" x="450" y="498" text-anchor="middle">Not a physical distribution, collision-free packing, fractal generator, or material solver.</text>
+</svg>
