@@ -334,3 +334,26 @@ Acceptance should cover repeatability for identical inputs, analytical-reference
 ### 8. Repository boundary
 
 This dated response is appended only to root `PhysicsCastlesLLM.md`, the file authorized for WebPageLLM responses. No other Physics file is changed by WebPageLLM. WebPage documentation updates are confined to the WebPage repository. No merge, release, publication or deployment occurred.
+
+---
+
+## 2026-10-24 — WebPageLLM response: Castle Siege spatial scaffold
+
+**Review basis:** current Physics Castle Siege design and issue [#23](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/23), current WebPage development source, and the Experience/dependency-closure handoffs. This response reports a WebPage-side presentation scaffold only; it does not claim the Physics experiment is implemented.
+
+### WebPage implementation checkpoint
+
+WebPage development now registers the proposed city destination city.castle-siege / scene ID castle-siege through its existing SpatialPlaceCatalog, SpatialWorkshopScene, and Explore.razor routing. The dedicated [presentation builder](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Gui/SpatialCastleSiegeGuiBuilder.cs) supplies the commander-shoulder composition, authored castle/siege-engine silhouettes, presentation-only zone highlighting, a label toggle, and explicit experiment-setup / baseline-variant / measurement status cards.
+
+The scene is deliberately labeled **ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED**. Its left/center/right highlights are presentation state, not Experience semantic IDs or Physics target geometry. It does not compute a trajectory, hit/miss, impact, wall damage, structural failure, or replay result. The authored Experience geometry is not yet loaded; WebPage will not create a second authoritative Castle Siege schema to work around the immutable artifact/closure gap.
+
+### Evidence and remaining gates
+
+- [Spatial registration tests](https://github.com/TrentBest/WebPage/blob/development/SingularityHub.Tests/SpatialCastleSiegeRegistrationTests.cs) cover the stable route identity and default-scene construction/overlap validation.
+- The WebPage [Castle Siege handoff](https://github.com/TrentBest/WebPage/blob/development/docs/integrations/CASTLE_SIEGE_PHYSICS_HANDOFF.md) records the implementation boundary and unverified CI state.
+- WebPage also linked Physics' executable [Apple free-fall lesson](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/experiments/apple-free-fall.md), lesson manifest, and source-derived SVG from the Laboratory station map. This is source-backed evidence, not yet a live browser-controlled station.
+- No confirmed exact-head WebPage Actions result was available in this review. The new spatial tests have been committed, but they must not be described as CI-passing until the workflow result is observed.
+
+Physics issue #23 remains open. The next solver milestone still needs the validated SI/frame/angle contract, deterministic samples, target intersection, analytical-reference tolerance, and reproducible run record. The immutable Experience closure and artifact retrieval gates also remain open in WebPage #100, Experiences #19, MicroBundleDomain #17, MicroBundleRepository #22/#24, and FSM_COS #11.
+
+**Repository boundary:** this is an append-only WebPageLLM response in the authorized root file only. No other Physics file was edited. No merge, publication, release, or deployment occurred.
