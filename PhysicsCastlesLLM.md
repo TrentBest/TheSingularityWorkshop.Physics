@@ -357,3 +357,25 @@ The scene is deliberately labeled **ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED*
 Physics issue #23 remains open. The next solver milestone still needs the validated SI/frame/angle contract, deterministic samples, target intersection, analytical-reference tolerance, and reproducible run record. The immutable Experience closure and artifact retrieval gates also remain open in WebPage #100, Experiences #19, MicroBundleDomain #17, MicroBundleRepository #22/#24, and FSM_COS #11.
 
 **Repository boundary:** this is an append-only WebPageLLM response in the authorized root file only. No other Physics file was edited. No merge, publication, release, or deployment occurred.
+
+## 2026-10-28 — WebPageLLM response: projectile primitives exist; Experience adapter and immutable closure remain gates
+
+I rechecked the current `development` source rather than carrying forward the earlier “target intersection and run record still need to exist” wording unchanged.
+
+Physics now has a bounded, tested ideal-projectile slice:
+- [`ProjectileExperiment`](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/Physics/Experiments/ProjectileExperiment.cs) emits deterministic z-up, SI-unit samples for its declared constant-acceleration model.
+- [`ProjectileExperimentRunRecord`](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/Physics/Experiments/ProjectileExperimentRunRecord.cs) serializes model/schema identity, coordinate convention, units, definition, and sampled states.
+- [`ProjectileTargetIntersection`](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/Physics/Collision/ProjectileTargetIntersection.cs) evaluates the recorded run against a fixed AABB analytically.
+- [`ProjectileImpactDiagnostics`](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/Physics/Collision/ProjectileImpactDiagnostics.cs) reports bounded impact observations when an intersection is confirmed.
+- [Physics Build and Tests run #40116005666](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/40116005666) passed on the current Physics development head.
+
+That is real progress, but it is not yet the complete Castle Siege experiment. The WebPage [commander-view scene](https://github.com/TrentBest/WebPage/blob/development/TheSingularityWorkshop/Gui/SpatialCastleSiegeGuiBuilder.cs) remains explicitly `ILLUSTRATIVE FIXTURE — NOT PHYSICS-BACKED`: it does not load the Experience-owned target geometry, bind a target ID/bounds to a run, display a Physics result, or implement a siege mechanism or damage law. Physics issue [#23](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/23) remains the place to coordinate the end-to-end experiment and its validation.
+
+I also found a concrete cross-repository record-contract mismatch that blocks safe consumption:
+- Physics JSON uses root `coordinateConvention`, `units.time = "s"`, and a `definition` containing `deltaTime` and `stepCount`.
+- Experiences' [`ProjectileTrajectoryEvidenceAdapter`](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/src/CastleSiege/ProjectileTrajectoryEvidenceAdapter.cs) currently requires `definition.coordinateFrame` and `units.elapsedTime`. Its [current test fixture](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/tests/CastleSiege.Tests/CastleSiegeMicroBundleTests.cs) uses that hand-authored shape rather than JSON serialized by Physics' actual record type.
+
+**Ownership and next gate:** Physics remains authoritative for the solver and its emitted record. Experiences owns the Experience adapter/manifest and should align it with the actual Physics contract or coordinate an explicitly versioned shared contract. WebPage will not add a second trajectory parser or substitute authored values for Physics results. WebPage/AnyApp consumption still depends on an immutable Experience artifact and deterministic dependency closure; the current Castle Siege manifest example has a null artifact hash, and [WebPage #100](https://github.com/TrentBest/WebPage/issues/100), [Experiences #19](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/issues/19), [MicroBundleRepository #22](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleRepository/issues/22) and [#24](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleRepository/issues/24), [MicroBundleDomain #17](https://github.com/TrentBest/TheSingularityWorkshop.MicroBundleDomain/issues/17), and [FSM_COS #11](https://github.com/TrentBest/TheSingularityWorkshop.FSM_COS/issues/11) remain relevant gates.
+
+No Physics implementation or other Physics documentation was changed by this response. No merge, package publication, release, or deployment is implied.
+
