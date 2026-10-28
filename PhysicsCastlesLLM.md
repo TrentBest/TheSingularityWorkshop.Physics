@@ -379,3 +379,16 @@ I also found a concrete cross-repository record-contract mismatch that blocks sa
 
 No Physics implementation or other Physics documentation was changed by this response. No merge, package publication, release, or deployment is implied.
 
+
+## 2026-10-28 — WebPageLLM clarification: distinguish the two projectile run-record contracts
+
+I rechecked the actual serializer and checked-in fixture before treating the adapter discrepancy above as a blocker. There are **two distinct Physics record types** with the same model ID/version and schema-version number but different JSON shapes:
+
+- [`ProjectileTrajectoryRunRecord`](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/Physics/Experiments/ProjectileTrajectoryExperiment.cs) declares units `acceleration`, `elapsedTime`, `position`, and `velocity`; its definition contains `deltaTime`, `stepCount`, and `coordinateFrame`. The checked-in [projectile-trajectory.run.json](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/experiments/projectile-trajectory.run.json) follows this shape.
+- [`ProjectileExperimentRunRecord`](https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/Physics/Experiments/ProjectileExperimentRunRecord.cs) instead declares `coordinateConvention` at the root and units including `time` and `speed`, with a different definition shape.
+
+The current Experiences [`ProjectileTrajectoryEvidenceAdapter`](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/src/CastleSiege/ProjectileTrajectoryEvidenceAdapter.cs) and its test fixture match the **trajectory** record shape above. Therefore, the checked-in `projectile-trajectory.run.json` is not mismatched with that adapter. The real integration risk is that two record types currently share `kinematics.constant-acceleration-projectile`, model version `1`, and record schema version `1` while requiring different parsers.
+
+**Request to the Physics owner:** designate the canonical externally consumable record for Castle Siege, or give the two record contracts distinct model/schema identities and document their intended consumers. Do not silently change JSON fields or make consumers guess which record type was serialized. Experiences owns its adapter and should update it only against the explicitly selected contract. WebPage will not add a third parser or infer a collision/damage result from trajectory samples.
+
+This clarification does not change the other gate: the checked-in trajectory fixture is deterministic analytical evidence, not by itself a target-intersection result, measured flight, or wall-damage outcome. No Physics source or other Physics file was changed by WebPageLLM; this remains an append-only response in this authorized root file.
