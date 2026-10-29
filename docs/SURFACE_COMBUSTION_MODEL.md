@@ -46,7 +46,13 @@ World gravity defines the up direction. Buoyant hot-gas transport tends upward r
 
 ## 4. Reaction and energy accounting
 
-For each reaction step, calculate the reaction extent from the declared rate law and available reactants, then cap it by every limiting reactant. Consume fuel and oxygen according to balanced stoichiometry; release heat from the declared reaction enthalpy/profile; account for products and losses in explicit terms.
+### Current executable reference slice
+
+`SurfaceCombustionStepper.Step` now provides a deterministic CPU reference step over stable cell IDs. For each cell it accepts explicit parameters for maximum fuel-consumption rate, oxygen mass required per fuel mass, heat release per fuel mass, ignition-temperature threshold, lumped thermal capacity, and reference temperature. It exchanges oxygen over declared graph connections before reaction, excludes blocked edges, limits total outgoing transport to the source inventory, then caps fuel consumption by the rate limit, available fuel, and available oxygen. Fuel and oxygen are consumed together and declared heat release is added to the cell's thermal energy. Results include per-cell initial/final state, consumption, heat release, temperatures, totals, and an oxygen-transport residual.
+
+This is intentionally a **bounded accounting model**, not validated material chemistry. The temperature-threshold/max-rate law is not Arrhenius kinetics; the graph exchange rule assumes equal oxygen control-volume sizes and is not airflow; thermal energy is lumped and does not transfer between cells. There is no ambient oxygen boundary, reaction-product ledger, smoke/soot chemistry, flame-source transfer, or inter-cell heat propagation yet. Parameters must be explicit and their evidence/validity documented by the experiment.
+
+For each reaction step, calculate the reaction extent from the declared rate law and available reactants, then cap it by every limiting reactant. Consume fuel and oxygen according to the selected reaction's declared stoichiometry; release heat from the declared reaction energy; account for products and losses in explicit terms when those ledgers are implemented.
 
 The minimum accepted invariants are:
 
@@ -57,7 +63,7 @@ The minimum accepted invariants are:
 - timestep, cell area/volume, transport method, boundary conditions, and stability limits are explicit;
 - results are deterministic for identical inputs, model versions, and random keys under the documented execution contract.
 
-The first implementation should begin with a single-cell accounting reference model and tests. Neighbor transport, spatial flame feedback, smoke/soot, expansion, buoyancy, and GPU execution are separate increments. Do not claim full combustion because a surface field can be updated.
+The current reference step includes a bounded graph oxygen-exchange pass and per-cell inventory/heat accounting. Next increments are: reference-grounded reaction profiles and product/mass ledgers; ambient oxygen boundary conditions; inter-cell heat transfer with a declared stability rule; source-to-surface ignition; and only then richer propagation, gas expansion, buoyancy, or GPU parity. Do not claim full combustion because these scalar fields evolve.
 
 ## 5. Three-texture concept and the fire triangle
 
@@ -79,11 +85,11 @@ Record algorithm identity/version, seed, key schema, and logical tick when rando
 
 ## 7. Staged acceptance plan
 
-1. **Data contracts:** validate element identity and provenance; preserve material-property evidence and validity ranges; define surface-cell quantities, units, normal, and source identity.
-2. **Single-cell reaction reference:** use a named, balanced reaction profile and sourced or explicitly illustrative values. Test limiting reagents, non-negativity, mass bookkeeping, heat release, invalid inputs, and determinism.
-3. **Surface ignition:** model source-to-surface heat transfer, ignition conditions, and material response. Test ignition/no-ignition boundaries and ensure the source does not directly set target state.
-4. **Neighbor transport:** add heat and oxidizer transport with grid spacing, timestep, boundary conditions, stability checks, and conservation/positivity tests.
-5. **Flame and smoke outputs:** derive emission/particles from reaction and thermal state. Presentation output cannot feed back as untracked energy.
-6. **GPU parity:** only after a deterministic CPU reference and tolerances exist, add packed texture layouts and compare GPU outputs against the reference. GPU work belongs behind renderer-independent Physics contracts.
+1. **Data contracts — present:** stable cell identity, explicit inventories, area, thermal energy, and normalized surface normal are validated by `SurfaceCombustionCellState`.
+2. **Bounded CPU step — implemented, validation pending:** `SurfaceCombustionStepper` performs deterministic ordering, explicit graph oxygen exchange, blocked-edge handling, reactant-limited fuel/oxygen consumption, and heat accounting. Focused tests cover reaction limits, blocked/open transport, outgoing-inventory limits, input validation, and stable result order. Run the repository test suite before treating this slice as validated.
+3. **Reference chemistry — next:** introduce a named balanced reaction profile, sourced/illustrative evidence classification, product ledger, and mass/element residuals; replace generic ratio inputs with reaction-derived stoichiometry where evidence supports it.
+4. **Boundaries and coupled transport — next:** add explicit ambient oxygen boundaries and inter-cell heat transfer with stability, positivity, and conservation tests. Current oxygen graph exchange assumes equal-sized control volumes and does not model airflow.
+5. **Ignition and source transfer — later:** model source-to-surface energy transfer and material response; the source must not directly set target state.
+6. **Flame/smoke outputs and GPU parity — later:** derive presentation from authoritative recorded state; compare any packed/GPU field implementation against the deterministic CPU reference.
 
 Every stage updates the capability catalog only when source and tests support the new status. This plan does not imply the later stages already exist.
