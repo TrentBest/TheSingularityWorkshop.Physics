@@ -92,11 +92,13 @@ public sealed record SurfaceOxygenBoundaryCondition(
     double SupplyRateKilogramsPerSecond,
     bool IsBlocked = false)
 {
+    /// <summary>Whether this boundary has a non-empty cell ID and finite non-negative supply rate.</summary>
     public bool IsValid =>
         !string.IsNullOrWhiteSpace(CellId) &&
         double.IsFinite(SupplyRateKilogramsPerSecond) &&
         SupplyRateKilogramsPerSecond >= 0d;
 
+    /// <summary>Throws when this boundary condition is invalid.</summary>
     public void EnsureValid()
     {
         if (!IsValid)
