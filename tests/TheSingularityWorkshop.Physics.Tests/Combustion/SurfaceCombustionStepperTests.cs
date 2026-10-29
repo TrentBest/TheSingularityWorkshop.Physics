@@ -31,7 +31,7 @@ public sealed class SurfaceCombustionStepperTests
     {
         var cell = Cell("hot", fuel: 0.02d, oxygen: 0.005d, energy: 100d);
         var result = SurfaceCombustionStepper.Step(
-            [cell], ParameterMap(("hot", Parameters(rate: 0.01d, oxygenRatio: 0.5d, heat: 2000d))],
+            [cell], ParameterMap(("hot", Parameters(rate: 0.01d, oxygenRatio: 0.5d, heat: 2000d)))],
             [], durationSeconds: 1d);
 
         var step = result.Cells.Single();
