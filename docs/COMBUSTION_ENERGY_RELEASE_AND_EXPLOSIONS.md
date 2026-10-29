@@ -20,7 +20,7 @@ E_{\mathrm{released}} = m_{\mathrm{reacted}}\, e_{\mathrm{chemical}}
 
 The released energy is not automatically blast energy. It may be partitioned among mechanical work, thermal energy, radiation, and effects not yet modelled. A fire may release energy over many steps; a rapid pressure event needs a distinct event model with an explicit duration and pressure/impulse contract.
 
-CombustionEnergyReleaseCalculator implements this limited energy ledger. It requires a material-specific, source-attributed specific-chemical-energy property in J/kg, rejects reacted mass greater than stored mass, and requires explicit energy-partition fractions whose sum is at most one. Any remainder stays visible as unallocated released energy; the calculator does not silently turn it into mechanical damage.
+CombustionEnergyReleaseCalculator implements this limited energy ledger. It requires a material-specific, source-attributed specific-chemical-energy property in J/kg, checks fuel temperature against the property's declared validity range, rejects reacted mass greater than stored mass, and requires explicit energy-partition fractions whose sum is at most one. Any remainder stays visible as unallocated released energy; the calculator does not silently turn it into mechanical damage.
 
 Its illustrative test fixture is bookkeeping-only and is not evidence for a real fuel property.
 
