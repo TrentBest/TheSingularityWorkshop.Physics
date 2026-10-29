@@ -13,9 +13,9 @@ public sealed class PhaseChangeThermalStateTests
 
         var result = initial.ApplyNetEnergyTransfer(10_000d);
 
-        Assert.That(result.TemperatureKelvin, Is.EqualTo(280d).Within(1e-12));
+        Assert.That(result.TemperatureKelvin, Is.EqualTo(275d).Within(1e-12));
         Assert.That(result.LiquidFraction, Is.EqualTo(0d));
-        Assert.That(result.EnthalpyRelativeToTransitionJoules, Is.EqualTo(-20_000d).Within(1e-9));
+        Assert.That(result.EnthalpyRelativeToTransitionJoules, Is.EqualTo(-10_000d).Within(1e-9));
     }
 
     [Test]
@@ -46,7 +46,7 @@ public sealed class PhaseChangeThermalStateTests
     {
         var initial = CreateState(temperatureKelvin: 290d, liquidFraction: 1d);
 
-        var result = initial.ApplyNetEnergyTransfer(-70_000d);
+        var result = initial.ApplyNetEnergyTransfer(-90_000d);
 
         Assert.That(result.TemperatureKelvin, Is.EqualTo(280d));
         Assert.That(result.LiquidFraction, Is.EqualTo(0.5d).Within(1e-12));
@@ -57,7 +57,7 @@ public sealed class PhaseChangeThermalStateTests
     {
         var initial = CreateState(temperatureKelvin: 280d, liquidFraction: 0.5d);
 
-        var result = initial.ApplyNetEnergyTransfer(-60_000d);
+        var result = initial.ApplyNetEnergyTransfer(-70_000d);
 
         Assert.That(result.TemperatureKelvin, Is.EqualTo(270d).Within(1e-12));
         Assert.That(result.LiquidFraction, Is.EqualTo(0d));
@@ -102,6 +102,6 @@ public sealed class PhaseChangeThermalStateTests
             SolidSpecificHeatCapacityJoulesPerKilogramKelvin: 1_000d,
             LiquidSpecificHeatCapacityJoulesPerKilogramKelvin: 2_000d,
             TransitionTemperatureKelvin: 280d,
-            SpecificLatentHeatJoulesPerKilogram: 100_000d,
+            SpecificLatentHeatJoulesPerKilogram: 50_000d,
             LiquidFraction: liquidFraction);
 }
