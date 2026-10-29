@@ -200,4 +200,19 @@ public sealed class SurfaceCombustionStepperTests
             [hot], parameters, [], [new SurfaceOxygenBoundaryCondition("missing", 0.01d)], 1d));
     }
 
+
+    [Test]
+    public void RejectsNullBoundaryCollectionAndInvalidBoundaryRates()
+    {
+        var hot = Cell("hot");
+        var parameters = ParameterMap(("hot", Parameters()));
+
+        Assert.Throws<ArgumentNullException>(() => SurfaceCombustionStepper.Step(
+            [hot], parameters, [], (IReadOnlyList<SurfaceOxygenBoundaryCondition>)null!, 1d));
+        Assert.Throws<ArgumentException>(() => SurfaceCombustionStepper.Step(
+            [hot], parameters, [], [new SurfaceOxygenBoundaryCondition("hot", -0.01d)], 1d));
+        Assert.Throws<ArgumentException>(() => SurfaceCombustionStepper.Step(
+            [hot], parameters, [], [new SurfaceOxygenBoundaryCondition("hot", double.NaN)], 1d));
+    }
+
 }
