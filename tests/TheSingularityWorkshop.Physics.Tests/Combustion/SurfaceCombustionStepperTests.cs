@@ -158,4 +158,46 @@ public sealed class SurfaceCombustionStepperTests
                 [a, b], parameters,
                 [edge, new SurfaceOxygenTransportConnection("b", "a", 0.2d)], 1d));
     }
+
+    [Test]
+    public void OpenAmbientBoundarySuppliesOxygenAndAccountsForExternalMass()
+    {
+        var hot = Cell("hot", fuel: 0.02d, oxygen: 0d, energy: 100d);
+        var result = SurfaceCombustionStepper.Step(
+            [hot], ParameterMap(("hot", Parameters(rate: 0.01d, oxygenRatio: 1d))),
+            [], [new SurfaceOxygenBoundaryCondition("hot", 0.02d)], 1d);
+
+        var step = result.Cells.Single();
+        Assert.That(result.TotalOxygenSuppliedByBoundariesKilograms, Is.EqualTo(0.02d).Within(1e-12d));
+        Assert.That(step.OxygenAfterTransportKilograms, Is.EqualTo(0.02d).Within(1e-12d));
+        Assert.That(step.OxygenConsumedKilograms, Is.EqualTo(0.01d).Within(1e-12d));
+        Assert.That(step.FinalState.OxygenMassKilograms, Is.EqualTo(0.01d).Within(1e-12d));
+        Assert.That(result.OxygenTransportResidualKilograms, Is.EqualTo(0d).Within(1e-12d));
+    }
+
+    [Test]
+    public void BlockedAmbientBoundaryCannotReplenishOxygenStarvedFuel()
+    {
+        var hot = Cell("hot", fuel: 0.02d, oxygen: 0d, energy: 100d);
+        var result = SurfaceCombustionStepper.Step(
+            [hot], ParameterMap(("hot", Parameters())),
+            [], [new SurfaceOxygenBoundaryCondition("hot", 0.02d, IsBlocked: true)], 1d);
+
+        Assert.That(result.TotalOxygenSuppliedByBoundariesKilograms, Is.Zero);
+        Assert.That(result.Cells.Single().FuelConsumedKilograms, Is.Zero);
+        Assert.That(result.Cells.Single().FinalState.FuelMassKilograms, Is.EqualTo(0.02d));
+    }
+
+    [Test]
+    public void RejectsDuplicateOrUnknownOxygenBoundaries()
+    {
+        var hot = Cell("hot");
+        var parameters = ParameterMap(("hot", Parameters()));
+        var boundary = new SurfaceOxygenBoundaryCondition("hot", 0.01d);
+        Assert.Throws<ArgumentException>(() => SurfaceCombustionStepper.Step(
+            [hot], parameters, [], [boundary, boundary], 1d));
+        Assert.Throws<ArgumentException>(() => SurfaceCombustionStepper.Step(
+            [hot], parameters, [], [new SurfaceOxygenBoundaryCondition("missing", 0.01d)], 1d));
+    }
+
 }
