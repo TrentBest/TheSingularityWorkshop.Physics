@@ -85,7 +85,8 @@ public sealed record SurfaceReactionProfile(
                 !double.IsFinite(RelativeMassBalanceTolerance) ||
                 RelativeMassBalanceTolerance < 0d ||
                 !TermsAreValidAndUnique(Reactants) ||
-                !TermsAreValidAndUnique(Products))
+                !TermsAreValidAndUnique(Products) ||
+                !SharedSpeciesDefinitionsAreConsistent(Reactants, Products))
                 return false;
 
             var reactantAtoms = CountAtoms(Reactants);
@@ -118,6 +119,26 @@ public sealed record SurfaceReactionProfile(
         foreach (var term in terms)
         {
             if (term is null || !term.IsValid || !ids.Add(term.Species.SpeciesId))
+                return false;
+        }
+
+        return true;
+    }
+
+    private static bool SharedSpeciesDefinitionsAreConsistent(
+        IReadOnlyList<SurfaceReactionStoichiometricTerm> reactants,
+        IReadOnlyList<SurfaceReactionStoichiometricTerm> products)
+    {
+        var reactantSpecies = reactants.ToDictionary(x => x.Species.SpeciesId, x => x.Species, StringComparer.Ordinal);
+        foreach (var product in products)
+        {
+            if (!reactantSpecies.TryGetValue(product.Species.SpeciesId, out var reactant))
+                continue;
+
+            if (reactant.MolarMassKilogramsPerMole != product.Species.MolarMassKilogramsPerMole ||
+                reactant.ElementAtomCounts.Count != product.Species.ElementAtomCounts.Count ||
+                reactant.ElementAtomCounts.Any(x =>
+                    !product.Species.ElementAtomCounts.TryGetValue(x.Key, out var count) || count != x.Value))
                 return false;
         }
 
