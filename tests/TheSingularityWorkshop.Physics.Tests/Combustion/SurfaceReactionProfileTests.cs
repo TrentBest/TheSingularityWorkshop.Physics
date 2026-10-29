@@ -64,6 +64,21 @@ public sealed class SurfaceReactionProfileTests
     }
 
     [Test]
+    public void RejectsConflictingDefinitionsForSpeciesIdSharedAcrossBothSides()
+    {
+        var reaction = MethaneCombustion() with
+        {
+            Products =
+            [
+                new(Species("methane", 0.044009d, ("C", 1), ("O", 2)), 1),
+                new(Species("water-vapor", 0.018015d, ("H", 2), ("O", 1)), 2)
+            ]
+        };
+
+        Assert.That(reaction.IsValid, Is.False);
+    }
+
+    [Test]
     public void RejectsDuplicateSpeciesTermsOnOneSide()
     {
         var reaction = MethaneCombustion() with
