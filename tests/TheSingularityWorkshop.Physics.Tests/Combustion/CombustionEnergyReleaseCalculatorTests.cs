@@ -17,7 +17,7 @@ public sealed class CombustionEnergyReleaseCalculatorTests
     public void SeparatesStoredEnergyReleasedEnergyAndMechanicalBudget()
     {
         var result = CombustionEnergyReleaseCalculator.Calculate(
-            "illustrative-diesel", 100d, 10d, 43_000_000d, EnergyEvidence(),
+            "illustrative-diesel", 100d, 10d, 43_000_000d, EnergyEvidence(), 293.15d,
             mechanicalEnergyFraction: 0.2d, thermalEnergyFraction: 0.5d, radiantEnergyFraction: 0.1d);
 
         Assert.That(result.ChemicalEnergyAvailableJoules, Is.EqualTo(4_300_000_000d));
@@ -33,7 +33,7 @@ public sealed class CombustionEnergyReleaseCalculatorTests
     public void ZeroReactedMassReleasesNoEnergy()
     {
         var result = CombustionEnergyReleaseCalculator.Calculate(
-            "illustrative-diesel", 5d, 0d, 43_000_000d, EnergyEvidence(), 1d, 0d, 0d);
+            "illustrative-diesel", 5d, 0d, 43_000_000d, EnergyEvidence(), 293.15d, 1d, 0d, 0d);
 
         Assert.That(result.ChemicalEnergyReleasedJoules, Is.Zero);
         Assert.That(result.MechanicalEnergyJoules, Is.Zero);
@@ -44,20 +44,28 @@ public sealed class CombustionEnergyReleaseCalculatorTests
     public void RejectsFractionsThatOverAllocateReleasedEnergy()
     {
         Assert.Throws<ArgumentException>(() => CombustionEnergyReleaseCalculator.Calculate(
-            "illustrative-diesel", 1d, 1d, 43_000_000d, EnergyEvidence(), 0.6d, 0.3d, 0.2d));
+            "illustrative-diesel", 1d, 1d, 43_000_000d, EnergyEvidence(), 293.15d, 0.6d, 0.3d, 0.2d));
     }
 
     [Test]
     public void RejectsReactedMassGreaterThanStoredFuel()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => CombustionEnergyReleaseCalculator.Calculate(
-            "illustrative-diesel", 1d, 1.1d, 43_000_000d, EnergyEvidence(), 0.2d, 0.5d, 0.1d));
+            "illustrative-diesel", 1d, 1.1d, 43_000_000d, EnergyEvidence(), 293.15d, 0.2d, 0.5d, 0.1d));
+    }
+
+    [Test]
+    public void RejectsFuelTemperatureOutsideEvidenceRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => CombustionEnergyReleaseCalculator.Calculate(
+            "illustrative-diesel", 1d, 1d, 43_000_000d, EnergyEvidence(), 600d, 0.2d, 0.5d, 0.1d));
     }
 
     [Test]
     public void RejectsEnergyThatDoesNotMatchMaterialEvidence()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => CombustionEnergyReleaseCalculator.Calculate(
-            "illustrative-diesel", 1d, 1d, 42_000_000d, EnergyEvidence(), 0.2d, 0.5d, 0.1d));
+            "illustrative-diesel", 1d, 1d, 42_000_000d, EnergyEvidence(), 293.15d, 0.2d, 0.5d, 0.1d));
     }
 }
+
