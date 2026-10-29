@@ -218,6 +218,43 @@ public sealed class BathymetricShallowWaterBasin2DTests
     }
 
     [Test]
+    public void ApplyRainfallAndAdvance_ReplaysDeterministicallyAndAccountsForAddedVolume()
+    {
+        const int width = 3;
+        const int height = 3;
+        const double timeStep = 0.005d;
+        const int steps = 20;
+        var initialDepth = Enumerable.Repeat(0.2d, width * height).ToArray();
+        var bed = new double[width * height];
+        var rain = new RainfallRateField2D(width, height,
+            new[] { 0d, 0d, 0d, 0d, 0.001d, 0d, 0d, 0d, 0d });
+        var first = new BathymetricShallowWaterBasin2D(width, height, 1d, 1d, timeStep, initialDepth, bed);
+        var second = new BathymetricShallowWaterBasin2D(width, height, 1d, 1d, timeStep, initialDepth, bed);
+        var initialVolume = first.WaterVolume;
+
+        for (var step = 0; step < steps; step++)
+        {
+            first.ApplyRainfall(rain, timeStep);
+            first.Advance();
+            second.ApplyRainfall(rain, timeStep);
+            second.Advance();
+        }
+
+        Assert.That(first.WaterVolume, Is.EqualTo(initialVolume + 0.001d * timeStep * steps).Within(1e-10),
+            "Closed boundaries should conserve the volume introduced by repeated rainfall.");
+        Assert.That(first.SnapshotDepth(), Is.EqualTo(second.SnapshotDepth()),
+            "Identical rainfall forcing and solver ordering should reproduce cell depths.");
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
+        {
+            Assert.That(first.SampleVelocityX(x, y), Is.EqualTo(second.SampleVelocityX(x, y)));
+            Assert.That(first.SampleVelocityY(x, y), Is.EqualTo(second.SampleVelocityY(x, y)));
+        }
+        Assert.That(first.StepCount, Is.EqualTo(steps));
+        Assert.That(first.SimulationTime, Is.EqualTo(steps * timeStep).Within(1e-12));
+    }
+
+    [Test]
     public void ApplyRainfall_RejectsMismatchedGridWithoutChangingState()
     {
         var basin = new BathymetricShallowWaterBasin2D(
