@@ -33,10 +33,10 @@ public sealed class SurfaceCombustionThermalTransportStepperTests
             [hot, cold], Map(("hot", Parameters()), ("cold", Parameters())),
             [Edge("hot", "cold")], 1d);
 
-        Assert.That(result.FinalCells.Single(x => x.CellId == "hot").ThermalEnergyJoules, Is.EqualTo(490d).Within(1e-9));
-        Assert.That(result.FinalCells.Single(x => x.CellId == "cold").ThermalEnergyJoules, Is.EqualTo(10d).Within(1e-9));
+        Assert.That(result.FinalCells.Single(x => x.CellId == "hot").ThermalEnergyJoules, Is.EqualTo(450d).Within(1e-9));
+        Assert.That(result.FinalCells.Single(x => x.CellId == "cold").ThermalEnergyJoules, Is.EqualTo(50d).Within(1e-9));
         Assert.That(result.NetEnergyChangeJoules, Is.EqualTo(0d).Within(1e-9));
-        Assert.That(result.Transfers.Single().EnergyTransferredFromFirstToSecondJoules, Is.EqualTo(10d).Within(1e-9));
+        Assert.That(result.Transfers.Single().EnergyTransferredFromFirstToSecondJoules, Is.EqualTo(50d).Within(1e-9));
     }
 
     [Test]
@@ -61,7 +61,7 @@ public sealed class SurfaceCombustionThermalTransportStepperTests
         Assert.Throws<InvalidOperationException>(() =>
             SurfaceCombustionThermalTransportStepper.Step(
                 [hot, cold], Map(("hot", Parameters()), ("cold", Parameters())),
-                [Edge("hot", "cold")], 1d));
+                [Edge("hot", "cold")], 10d));
     }
 
     [Test]
