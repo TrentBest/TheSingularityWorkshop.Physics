@@ -134,8 +134,10 @@ public sealed record SurfaceCombustionStepResult(
 /// </summary>
 /// <remarks>
 /// The model assumes equal oxygen control-volume sizes for graph exchange, one lumped thermal
-/// capacity per cell, and a temperature-threshold/max-rate reaction law. It does not model ambient
-/// oxygen boundaries, products, heat transfer between cells, convection, radiation, or fluid flow.
+/// capacity per cell, and a temperature-threshold/max-rate reaction law. Optional ambient oxygen
+/// boundaries add a declared mass rate to a cell before graph transport; they do not model pressure,
+/// airflow, or reservoir depletion. The stepper does not yet model reaction products, heat transfer
+/// between cells, convection, radiation, or fluid flow.
 /// Cell IDs define identity; texture/UV layouts are presentation mappings only.
 /// </remarks>
 public static class SurfaceCombustionStepper
