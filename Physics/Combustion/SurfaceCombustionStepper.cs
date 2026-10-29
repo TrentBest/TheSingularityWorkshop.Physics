@@ -145,7 +145,7 @@ public static class SurfaceCombustionStepper
                 throw new OverflowException($"Temperature for cell '{cell.CellId}' is outside finite double range.");
         }
 
-        var edgeKeys = new HashSet<string>(StringComparer.Ordinal);
+        var edgeKeys = new HashSet<(string First, string Second)>();
         var outgoing = new Dictionary<string, List<(string DestinationId, double Amount)>>(StringComparer.Ordinal);
         foreach (var connection in connections)
         {
@@ -154,8 +154,8 @@ public static class SurfaceCombustionStepper
                 throw new ArgumentException("Every transport connection endpoint must identify a supplied cell.", nameof(connections));
 
             var edgeKey = string.CompareOrdinal(connection.FirstCellId, connection.SecondCellId) < 0
-                ? connection.FirstCellId + "\u001f" + connection.SecondCellId
-                : connection.SecondCellId + "\u001f" + connection.FirstCellId;
+                ? (connection.FirstCellId, connection.SecondCellId)
+                : (connection.SecondCellId, connection.FirstCellId);
             if (!edgeKeys.Add(edgeKey))
                 throw new ArgumentException("Only one transport connection may exist for an unordered cell pair.", nameof(connections));
 
