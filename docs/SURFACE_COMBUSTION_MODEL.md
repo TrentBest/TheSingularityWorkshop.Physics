@@ -97,3 +97,18 @@ Record algorithm identity/version, seed, key schema, and logical tick when rando
 6. **Flame/smoke outputs and GPU parity — later:** derive presentation from authoritative recorded state; compare any packed/GPU field implementation against the deterministic CPU reference.
 
 Every stage updates the capability catalog only when source and tests support the new status. This plan does not imply the later stages already exist.
+
+
+## 8. Coupled conduction-driven ignition: current reference increment
+
+`SurfaceCombustionSimulationStepper.Step` now composes the existing conduction and reaction primitives in an explicit order for one interval:
+
+1. Apply conduction along the supplied `SurfaceThermalTransportConnection` graph, using declared conductivity evidence, contact area, separation, and duration.
+2. Evaluate reaction against those updated cell temperatures, declared ignition thresholds, fuel inventories, and oxygen inventories/boundaries.
+3. Return the conduction result and combustion result separately, so internal energy transfer is not confused with reaction heat release.
+
+This makes a small deterministic form of fire spread possible without object-specific ignition scripts: a neighboring cell can react during the interval only if computed conduction raises it to the configured ignition threshold and reactants are available. Heat released by reaction is added after that interval's conduction and therefore influences later intervals. This is an integration convention, not a claim that a real flame spreads through conduction alone; convection, radiation, flame-source transfer, moisture/pyrolysis, airflow, and material-specific kinetics remain unmodeled in this slice.
+
+Focused tests use explicitly illustrative parameters to show that a neighbor below threshold does not consume fuel, a neighbor heated above threshold does consume fuel, internal conduction energy is conserved separately from reaction heat, and an oxygen-starved neighbor remains unburned even when hot. These tests validate the software contract, not empirical ignition thresholds for wood, paper, wax, or any other real material.
+
+**Important next step:** the orchestration still accepts `SurfaceCombustionCellParameters` directly. It does not yet derive these parameters from material composition or select a reaction profile based on elemental inventory. That mapping must preserve property units, evidence class, source/version, temperature applicability, and uncertainty; element identity alone cannot supply a material's ignition temperature or reaction kinetics. See [issue #37](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/37) for the staged implementation and acceptance criteria.
