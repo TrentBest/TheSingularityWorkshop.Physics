@@ -36,6 +36,7 @@ public static class CombustionEnergyReleaseCalculator
         double reactedFuelMassKilograms,
         double specificChemicalEnergyJoulesPerKilogram,
         MaterialPropertyDefinition energyEvidence,
+        double fuelTemperatureKelvin,
         double mechanicalEnergyFraction,
         double thermalEnergyFraction,
         double radiantEnergyFraction)
@@ -44,6 +45,10 @@ public static class CombustionEnergyReleaseCalculator
             throw new ArgumentException("Material identity is required.", nameof(materialId));
         ArgumentNullException.ThrowIfNull(energyEvidence);
         energyEvidence.EnsureValid();
+        if (!double.IsFinite(fuelTemperatureKelvin) ||
+            fuelTemperatureKelvin < energyEvidence.ValidMinimum ||
+            fuelTemperatureKelvin > energyEvidence.ValidMaximum)
+            throw new ArgumentOutOfRangeException(nameof(fuelTemperatureKelvin), "Fuel temperature is outside the declared energy-property validity range.");
 
         if (!string.Equals(energyEvidence.MaterialId, materialId, StringComparison.Ordinal) ||
             !string.Equals(energyEvidence.PropertyId, "specific-chemical-energy", StringComparison.Ordinal) ||
