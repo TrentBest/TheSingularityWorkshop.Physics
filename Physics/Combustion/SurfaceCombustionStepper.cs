@@ -81,6 +81,29 @@ public sealed record SurfaceOxygenTransportConnection(
     }
 }
 
+
+/// <summary>Declared oxygen supply from an external ambient reservoir to one cell.</summary>
+/// <param name="CellId">Stable identity of the receiving cell.</param>
+/// <param name="SupplyRateKilogramsPerSecond">Maximum oxygen mass supplied per second while this boundary is open.</param>
+/// <param name="IsBlocked">When true, the boundary supplies no oxygen.</param>
+/// <remarks>The reservoir is external to the modeled cells; supplied mass is reported separately.</remarks>
+public sealed record SurfaceOxygenBoundaryCondition(
+    string CellId,
+    double SupplyRateKilogramsPerSecond,
+    bool IsBlocked = false)
+{
+    public bool IsValid =>
+        !string.IsNullOrWhiteSpace(CellId) &&
+        double.IsFinite(SupplyRateKilogramsPerSecond) &&
+        SupplyRateKilogramsPerSecond >= 0d;
+
+    public void EnsureValid()
+    {
+        if (!IsValid)
+            throw new ArgumentException("Oxygen boundary conditions require a cell ID and finite non-negative supply rate.", nameof(SurfaceOxygenBoundaryCondition));
+    }
+}
+
 /// <summary>Per-cell accounting for one bounded combustion step.</summary>
 public sealed record SurfaceCombustionCellStepResult(
     SurfaceCombustionCellState InitialState,
@@ -99,7 +122,8 @@ public sealed record SurfaceCombustionStepResult(
     double TotalFuelConsumedKilograms,
     double TotalOxygenConsumedKilograms,
     double TotalHeatReleasedJoules,
-    double OxygenTransportResidualKilograms);
+    double OxygenTransportResidualKilograms,
+    double TotalOxygenSuppliedByBoundariesKilograms);
 
 /// <summary>
 /// Deterministic CPU reference step for a bounded, cell-based surface reaction.
@@ -123,6 +147,20 @@ public static class SurfaceCombustionStepper
         IReadOnlyList<SurfaceCombustionCellState> cells,
         IReadOnlyDictionary<string, SurfaceCombustionCellParameters> parametersByCellId,
         IReadOnlyList<SurfaceOxygenTransportConnection> connections,
+        double durationSeconds) =>
+        Step(cells, parametersByCellId, connections, [], durationSeconds);
+
+    /// <summary>Advances one interval with explicit external oxygen reservoirs and internal graph transport.</summary>
+    /// <param name="cells">Current cell states. IDs must be unique.</param>
+    /// <param name="parametersByCellId">Declared reaction and thermal parameters for every cell.</param>
+    /// <param name="connections">Explicit graph edges; blocked edges are ignored for oxygen exchange.</param>
+    /// <param name="boundaries">External oxygen reservoirs; each cell may have at most one boundary.</param>
+    /// <param name="durationSeconds">Positive logical timestep in seconds.</param>
+    public static SurfaceCombustionStepResult Step(
+        IReadOnlyList<SurfaceCombustionCellState> cells,
+        IReadOnlyDictionary<string, SurfaceCombustionCellParameters> parametersByCellId,
+        IReadOnlyList<SurfaceOxygenTransportConnection> connections,
+        IReadOnlyList<SurfaceOxygenBoundaryCondition> boundaries,
         double durationSeconds)
     {
         ArgumentNullException.ThrowIfNull(cells);
@@ -145,6 +183,34 @@ public static class SurfaceCombustionStepper
                 throw new OverflowException($"Temperature for cell '{cell.CellId}' is outside finite double range.");
         }
 
+        var boundaryIds = new HashSet<string>(StringComparer.Ordinal);
+        var oxygenSupplied = 0d;
+        var transportStates = new Dictionary<string, SurfaceCombustionCellState>(states, StringComparer.Ordinal);
+        foreach (var boundary in boundaries)
+        {
+            ArgumentNullException.ThrowIfNull(boundary);
+            boundary.EnsureValid();
+            if (!states.ContainsKey(boundary.CellId))
+                throw new ArgumentException("Every oxygen boundary must identify a supplied cell.", nameof(boundaries));
+            if (!boundaryIds.Add(boundary.CellId))
+                throw new ArgumentException("Only one oxygen boundary condition may exist per cell.", nameof(boundaries));
+            if (boundary.IsBlocked || boundary.SupplyRateKilogramsPerSecond == 0d)
+                continue;
+            var supplied = boundary.SupplyRateKilogramsPerSecond * durationSeconds;
+            if (!double.IsFinite(supplied))
+                throw new OverflowException("Ambient oxygen supply is outside finite double range.");
+            var updated = transportStates[boundary.CellId] with
+            {
+                OxygenMassKilograms = transportStates[boundary.CellId].OxygenMassKilograms + supplied
+            };
+            if (!double.IsFinite(updated.OxygenMassKilograms))
+                throw new OverflowException("Ambient oxygen inventory is outside finite double range.");
+            transportStates[boundary.CellId] = updated;
+            oxygenSupplied += supplied;
+            if (!double.IsFinite(oxygenSupplied))
+                throw new OverflowException("Total ambient oxygen supply is outside finite double range.");
+        }
+
         var edgeKeys = new HashSet<(string First, string Second)>();
         var outgoing = new Dictionary<string, List<(string DestinationId, double Amount)>>(StringComparer.Ordinal);
         foreach (var connection in connections)
@@ -162,8 +228,8 @@ public static class SurfaceCombustionStepper
             if (connection.IsBlocked || connection.ExchangeFractionPerStep == 0d)
                 continue;
 
-            var firstOxygen = states[connection.FirstCellId].OxygenMassKilograms;
-            var secondOxygen = states[connection.SecondCellId].OxygenMassKilograms;
+            var firstOxygen = transportStates[connection.FirstCellId].OxygenMassKilograms;
+            var secondOxygen = transportStates[connection.SecondCellId].OxygenMassKilograms;
             var difference = firstOxygen - secondOxygen;
             if (difference == 0d)
                 continue;
@@ -185,7 +251,7 @@ public static class SurfaceCombustionStepper
             var requestedTotal = transfers.Sum(x => x.Amount);
             if (!double.IsFinite(requestedTotal))
                 throw new OverflowException("Total requested oxygen exchange is outside finite double range.");
-            var available = states[sourceId].OxygenMassKilograms;
+            var available = transportStates[sourceId].OxygenMassKilograms;
             var scale = requestedTotal > available && requestedTotal > 0d ? available / requestedTotal : 1d;
             foreach (var transfer in transfers)
             {
@@ -208,7 +274,7 @@ public static class SurfaceCombustionStepper
         {
             var initial = states[cellId];
             var parameters = parametersByCellId[cellId];
-            var oxygenAfterTransport = initial.OxygenMassKilograms + oxygenDeltas[cellId];
+            var oxygenAfterTransport = transportStates[cellId].OxygenMassKilograms + oxygenDeltas[cellId];
             if (oxygenAfterTransport < 0d && oxygenAfterTransport > -1e-14d)
                 oxygenAfterTransport = 0d;
             if (!double.IsFinite(oxygenAfterTransport) || oxygenAfterTransport < 0d)
@@ -270,7 +336,7 @@ public static class SurfaceCombustionStepper
             throw new OverflowException("Combustion step totals are outside finite double range.");
 
         return new SurfaceCombustionStepResult(
-            durationSeconds, results, totalFuelConsumed, totalOxygenConsumed, totalHeatReleased, oxygenResidual);
+            durationSeconds, results, totalFuelConsumed, totalOxygenConsumed, totalHeatReleased, oxygenResidual, oxygenSupplied);
     }
 
     /// <summary>Derives temperature from declared lumped heat capacity and reference temperature.</summary>
