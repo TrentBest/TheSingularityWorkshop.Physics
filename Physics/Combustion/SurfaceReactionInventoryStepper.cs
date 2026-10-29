@@ -91,8 +91,8 @@ public static class SurfaceReactionInventoryStepper
                 inventory.SpeciesMassKilograms.GetValueOrDefault(reactant.Species.SpeciesId));
 
         var extent = SurfaceReactionExtentCalculator.Calculate(profile, availableReactants, requestedExtentMoles);
-        var nextMasses = new Dictionary<string, double>(
-            inventory.SpeciesMassKilograms, StringComparer.Ordinal);
+        var nextMasses = inventory.SpeciesMassKilograms.ToDictionary(
+            x => x.Key, x => x.Value, StringComparer.Ordinal);
 
         foreach (var consumed in extent.ReactantMassConsumedKilograms)
         {
