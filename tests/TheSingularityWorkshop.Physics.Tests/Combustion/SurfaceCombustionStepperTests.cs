@@ -102,6 +102,23 @@ public sealed class SurfaceCombustionStepperTests
     }
 
     [Test]
+    public void BlockedOxygenPathLeavesHotFuelUnburnedWhenCellIsOxygenStarved()
+    {
+        var source = Cell("source", fuel: 0d, oxygen: 0.1d, energy: 0d);
+        var hotTarget = Cell("target", fuel: 0.1d, oxygen: 0d, energy: 100d);
+        var parameters = ParameterMap(("source", Parameters()), ("target", Parameters()));
+        var connection = new SurfaceOxygenTransportConnection("source", "target", 1d, IsBlocked: true);
+
+        var result = SurfaceCombustionStepper.Step([source, hotTarget], parameters, [connection], 1d);
+        var target = result.Cells.Single(x => x.InitialState.CellId == "target");
+
+        Assert.That(target.InitialState.FuelMassKilograms, Is.EqualTo(0.1d));
+        Assert.That(target.OxygenAfterTransportKilograms, Is.Zero);
+        Assert.That(target.FuelConsumedKilograms, Is.Zero);
+        Assert.That(target.FinalState.ThermalEnergyJoules, Is.EqualTo(hotTarget.ThermalEnergyJoules));
+    }
+
+    [Test]
     public void ResultsAreOrderedByStableCellIdRegardlessOfInputOrder()
     {
         var a = Cell("a");
