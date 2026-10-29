@@ -170,6 +170,7 @@ public static class SurfaceCombustionStepper
         ArgumentNullException.ThrowIfNull(cells);
         ArgumentNullException.ThrowIfNull(parametersByCellId);
         ArgumentNullException.ThrowIfNull(connections);
+        ArgumentNullException.ThrowIfNull(boundaries);
         if (!double.IsFinite(durationSeconds) || durationSeconds <= 0d)
             throw new ArgumentOutOfRangeException(nameof(durationSeconds), "Duration must be finite and positive.");
 
