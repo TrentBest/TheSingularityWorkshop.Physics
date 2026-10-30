@@ -95,6 +95,48 @@ public sealed class PhaseChangeThermalStateTests
         Assert.That((state with { TemperatureKelvin = 279d, LiquidFraction = 0.2d }).IsValid, Is.False);
     }
 
+    [Test]
+    public void ApplyNetEnergyTransfer_ZeroTransferPreservesState()
+    {
+        var initial = CreateState(temperatureKelvin: 280d, liquidFraction: 0.25d);
+
+        var result = initial.ApplyNetEnergyTransfer(0d);
+
+        Assert.That(result, Is.EqualTo(initial));
+    }
+
+    [Test]
+    public void ApplyNetEnergyTransfer_ExactLatentEnergyBoundaryCompletesMelting()
+    {
+        var initial = CreateState(temperatureKelvin: 280d, liquidFraction: 0.5d);
+
+        var result = initial.ApplyNetEnergyTransfer(50_000d);
+
+        Assert.That(result.TemperatureKelvin, Is.EqualTo(280d));
+        Assert.That(result.LiquidFraction, Is.EqualTo(1d));
+        Assert.That(result.EnthalpyRelativeToTransitionJoules, Is.EqualTo(100_000d).Within(1e-9));
+    }
+
+    [Test]
+    public void ApplyNetEnergyTransfer_ExactLatentEnergyBoundaryCompletesFreezing()
+    {
+        var initial = CreateState(temperatureKelvin: 280d, liquidFraction: 0.5d);
+
+        var result = initial.ApplyNetEnergyTransfer(-50_000d);
+
+        Assert.That(result.TemperatureKelvin, Is.EqualTo(280d));
+        Assert.That(result.LiquidFraction, Is.EqualTo(0d));
+        Assert.That(result.EnthalpyRelativeToTransitionJoules, Is.EqualTo(0d));
+    }
+
+    [Test]
+    public void ApplyNetEnergyTransfer_RejectsFiniteTransferThatOverflowsEnergy()
+    {
+        var initial = CreateState(temperatureKelvin: 280d, liquidFraction: 1d);
+
+        Assert.Throws<OverflowException>(() => initial.ApplyNetEnergyTransfer(double.MaxValue));
+    }
+
     private static PhaseChangeThermalState CreateState(double temperatureKelvin, double liquidFraction) =>
         new(
             MassKilograms: 2d,
