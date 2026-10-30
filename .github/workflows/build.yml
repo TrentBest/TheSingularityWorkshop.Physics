@@ -36,6 +36,59 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Generate deterministic hydrodynamics rainfall run record from Physics
+        env:
+          PHYSICS_SOURCE_REVISION: ${{ github.sha }}
+        run: dotnet run --project tools/HydrodynamicsRainfallRunRecordGenerator/HydrodynamicsRainfallRunRecordGenerator.csproj --configuration Release -- /tmp/hydrodynamics-rainfall.run.json
+
+      - name: Validate hydrodynamics rainfall state and water-volume accounting
+        run: |
+          python3 tools/validate_physics_run_records.py /tmp/hydrodynamics-rainfall.run.json
+          python3 - <<'PY'
+          import json
+          import math
+          import os
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/hydrodynamics-rainfall.run.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          result = record['result']
+          validation = record['validation']
+          width = definition['grid']['width']
+          height = definition['grid']['height']
+          samples = record['samples']
+          assert record['modelId'] == 'hydrodynamics.bathymetric-rainfall-accumulation-2d'
+          assert record['status'] == 'computed-from-physics-model'
+          assert record['provenance']['sourceRevision'] == os.environ['PHYSICS_SOURCE_REVISION']
+          assert (width, height) == (12, 8)
+          assert definition['stepCount'] == result['completedSteps'] == 1200
+          assert result['simulationTimeSeconds'] == 60
+          assert [sample['step'] for sample in samples] == [0, 300, 600, 900, 1200]
+          assert [sample['simulationTimeSeconds'] for sample in samples] == [0, 15, 30, 45, 60]
+          expected_volume = sum(definition['rainfall']['ratesMetersPerSecond']) * 60 * definition['grid']['cellAreaSquareMeters']
+          assert math.isclose(result['expectedRainVolumeCubicMeters'], expected_volume, rel_tol=0, abs_tol=1e-14)
+          assert math.isclose(result['finalWaterVolumeCubicMeters'], expected_volume, rel_tol=0, abs_tol=1e-10)
+          assert abs(result['volumeResidualCubicMeters']) <= 1e-10
+          assert validation['allDepthsFiniteAndNonNegative']
+          assert validation['completedExpectedStepCount']
+          assert validation['elapsedTimeMatchesRequestedDuration']
+          assert validation['volumeBalanceWithinTolerance']
+          assert len(result['finalDepthMeters']) == width * height
+          for sample in samples:
+              depths = sample['depthMeters']
+              assert len(depths) == width * height
+              assert all(math.isfinite(value) and value >= 0 for value in depths)
+          assert any(value > 0 for value in result['finalDepthMeters'])
+          assert result['maximumDepthMeters'] > 0
+          print(f"Verified {len(samples)} actual basin snapshots, {result['completedSteps']} steps, and water-balance residual {result['volumeResidualCubicMeters']:.3e} m^3.")
+          PY
+
+      - name: Upload hydrodynamics rainfall run record
+        uses: actions/upload-artifact@v7
+        with:
+          name: hydrodynamics-rainfall-run-record
+          path: /tmp/hydrodynamics-rainfall.run.json
+
       - name: Export bounded Mandelbrot escape-time run record
         run: dotnet run --project samples/MandelbrotEscapeTime2dExport/MandelbrotEscapeTime2dExport.csproj --configuration Release -- /tmp/mandelbrot-escape-time-2d.run.json
 
