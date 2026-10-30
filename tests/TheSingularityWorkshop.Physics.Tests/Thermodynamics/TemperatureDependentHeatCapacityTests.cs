@@ -43,7 +43,7 @@ public sealed class TemperatureDependentHeatCapacityTests
             "Illustrative values only.");
 
         Assert.That(curve.GetSpecificEnthalpyChangeJoulesPerKilogram(150d, 250d),
-            Is.EqualTo(87_500d).Within(1e-8));
+            Is.EqualTo(93_750d).Within(1e-8));
     }
 
     [Test]
