@@ -36,7 +36,7 @@ These are behavioral invariants, not a claim that the current solver models indi
 - Each step builds a candidate state and commits only after all cells pass finite, non-negative-depth checks.
 - Automated tests cover still-water equilibrium over an uneven bed, evolution of a free-surface disturbance over terrain, closed-basin water-volume conservation, defensive snapshots, still water against a dry shoreline, a one-step wetting front, and multi-step downhill wetting over an inclined bed.
 - `ApplyRainfall` adds `rate × duration` to each matching cell's water depth, adds no horizontal momentum, and does not advance solver time or step count. The caller owns source duration and ordering relative to `Advance()`; this is an explicit source-splitting choice, not an automatic rainfall clock.
-- Rainfall tests cover per-cell depth changes, total added water volume, wetting of dry cells, deterministic replay, grid mismatch, invalid input, and CFL rejection without partial depth mutation. The repeated-rain test interleaves source application and solver steps, so its source interval is explicit.
+- Rainfall tests cover per-cell depth changes, total added water volume, wetting of dry cells, deterministic replay, grid mismatch, invalid input, large and near-boundary CFL rejection without partial depth mutation; constructor tests exercise both sides of the configured CFL limit. The repeated-rain test interleaves source application and solver steps, so its source interval is explicit.
 - The flat-bed solver's tests additionally cover disturbance propagation, repeatability, and CFL rejection.
 
 ## Reproducible rainfall experiment
