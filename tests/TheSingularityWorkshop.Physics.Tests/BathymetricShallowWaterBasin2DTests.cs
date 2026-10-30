@@ -284,6 +284,53 @@ public sealed class BathymetricShallowWaterBasin2DTests
     }
 
     [Test]
+    public void Constructor_AcceptsTimeStepJustBelowCflLimit()
+    {
+        const double gravity = 9.80665d;
+        var cflLimit = 0.45d / (2d * Math.Sqrt(gravity));
+
+        Assert.DoesNotThrow(() => new BathymetricShallowWaterBasin2D(
+            2, 2, 1d, 1d, cflLimit * (1d - 1e-8d),
+            new[] { 1d, 1d, 1d, 1d },
+            new[] { 0d, 0d, 0d, 0d },
+            gravity));
+    }
+
+    [Test]
+    public void Constructor_RejectsTimeStepJustAboveCflLimit()
+    {
+        const double gravity = 9.80665d;
+        var cflLimit = 0.45d / (2d * Math.Sqrt(gravity));
+
+        Assert.Throws<InvalidOperationException>(() => new BathymetricShallowWaterBasin2D(
+            2, 2, 1d, 1d, cflLimit * (1d + 1e-8d),
+            new[] { 1d, 1d, 1d, 1d },
+            new[] { 0d, 0d, 0d, 0d },
+            gravity));
+    }
+
+    [Test]
+    public void ApplyRainfall_RejectsSmallCflBoundaryCrossingWithoutChangingState()
+    {
+        const double gravity = 9.80665d;
+        var cflLimit = 0.45d / (2d * Math.Sqrt(gravity));
+        var basin = new BathymetricShallowWaterBasin2D(
+            2, 2, 1d, 1d, cflLimit * (1d - 1e-8d),
+            new[] { 1d, 1d, 1d, 1d },
+            new[] { 0d, 0d, 0d, 0d },
+            gravity);
+        var before = basin.SnapshotDepth();
+        var rainfall = new RainfallRateField2D(2, 2, new[] { 1e-6d, 1e-6d, 1e-6d, 1e-6d });
+
+        Assert.Throws<InvalidOperationException>(() => basin.ApplyRainfall(rainfall, 0.1d));
+
+        Assert.That(basin.SnapshotDepth(), Is.EqualTo(before),
+            "A small CFL-boundary crossing must not partially commit rainfall.");
+        Assert.That(basin.StepCount, Is.EqualTo(0));
+        Assert.That(basin.SimulationTime, Is.EqualTo(0d));
+    }
+
+    [Test]
     public void Constructor_RejectsNonFiniteBedElevation()
     {
         Assert.Throws<ArgumentException>(() => new BathymetricShallowWaterBasin2D(
