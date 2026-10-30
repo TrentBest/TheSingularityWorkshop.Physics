@@ -39,6 +39,10 @@ These are behavioral invariants, not a claim that the current solver models indi
 - Rainfall tests cover per-cell depth changes, total added water volume, wetting of dry cells, deterministic replay, grid mismatch, invalid input, and CFL rejection without partial depth mutation. The repeated-rain test interleaves source application and solver steps, so its source interval is explicit.
 - The flat-bed solver's tests additionally cover disturbance propagation, repeatability, and CFL rejection.
 
+## Reproducible rainfall experiment
+
+The [rainfall accumulation run](experiments/hydrodynamics-rainfall.md) executes the real bathymetric basin for 60 seconds under a localized rainfall patch. It records actual per-cell depth snapshots and verifies that the final closed-basin volume matches the rainfall input. Physics CI uploads the source-pinned JSON run record for downstream consumers. This validates source/volume accounting for the declared scenario; it does not validate infiltration, drainage, runoff routing, or spatial convergence.
+
 ## Wet/dry shoreline increment
 
 The terrain-aware model accepts zero depth for dry cells. Dry-cell velocity samples return zero, dry cells carry no momentum, and hydrostatic reconstruction supports a still free surface terminating against bed elevations above that surface. Tests check that a lake at rest remains balanced with a dry shoreline, and that water can advance into initially dry cells while keeping depths finite and non-negative and conserving total water volume. The inclined-bed test checks that a wet upper region loses water while an initially dry, lower-elevation cell becomes wet across multiple time steps.
