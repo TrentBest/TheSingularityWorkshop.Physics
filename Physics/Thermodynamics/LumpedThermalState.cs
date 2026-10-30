@@ -28,6 +28,8 @@ public readonly record struct LumpedThermalState(
         double.IsFinite(SpecificHeatCapacityJoulesPerKilogramKelvin) &&
         SpecificHeatCapacityJoulesPerKilogramKelvin > 0d &&
         double.IsFinite(ReferenceTemperatureKelvin) && ReferenceTemperatureKelvin >= 0d &&
+        double.IsFinite(MassKilograms * SpecificHeatCapacityJoulesPerKilogramKelvin) &&
+        MassKilograms * SpecificHeatCapacityJoulesPerKilogramKelvin > 0d &&
         double.IsFinite(SensibleEnergyRelativeToReferenceJoules);
 
     /// <summary>
