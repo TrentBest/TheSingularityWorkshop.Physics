@@ -129,13 +129,12 @@ public sealed class TemperatureDependentHeatCapacity
         var specificEnergy = netEnergyTransferJoules / massKilograms;
         if (!double.IsFinite(specificEnergy))
             throw new OverflowException("Specific energy transfer is outside finite double range.");
-        var target = GetSpecificEnthalpyChangeJoulesPerKilogram(
-            initialTemperatureKelvin, MaximumTemperatureKelvin) + specificEnergy;
         var minimumEnergy = GetSpecificEnthalpyChangeJoulesPerKilogram(
             initialTemperatureKelvin, MinimumTemperatureKelvin);
         var maximumEnergy = GetSpecificEnthalpyChangeJoulesPerKilogram(
             initialTemperatureKelvin, MaximumTemperatureKelvin);
-        if (!double.IsFinite(target) || target < minimumEnergy || target > maximumEnergy)
+        if (!double.IsFinite(minimumEnergy) || !double.IsFinite(maximumEnergy) ||
+            specificEnergy < minimumEnergy || specificEnergy > maximumEnergy)
             throw new ArgumentOutOfRangeException(nameof(netEnergyTransferJoules),
                 "Energy transfer would move the body outside the heat-capacity curve's declared temperature range.");
 
@@ -165,7 +164,7 @@ public sealed class TemperatureDependentHeatCapacity
             var segmentEnd = Math.Min(endKelvin, _samples[segment + 1].TemperatureKelvin);
             var cpStart = GetSpecificHeatCapacity(cursor);
             var cpEnd = GetSpecificHeatCapacity(segmentEnd);
-            var area = (cpStart + cpEnd) * 0.5d * (segmentEnd - cursor);
+            var area = (cpStart * 0.5d + cpEnd * 0.5d) * (segmentEnd - cursor);
             total += area;
             if (!double.IsFinite(total))
                 throw new OverflowException("Integrated specific enthalpy is outside finite double range.");
