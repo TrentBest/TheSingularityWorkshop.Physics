@@ -36,9 +36,12 @@ public readonly record struct PhaseChangeThermalState(
                 !double.IsFinite(LiquidFraction) || LiquidFraction < 0d || LiquidFraction > 1d)
                 return false;
 
-            if (!double.IsFinite(MassKilograms * SolidSpecificHeatCapacityJoulesPerKilogramKelvin) ||
-                !double.IsFinite(MassKilograms * LiquidSpecificHeatCapacityJoulesPerKilogramKelvin) ||
-                !double.IsFinite(MassKilograms * SpecificLatentHeatJoulesPerKilogram) ||
+            var solidHeatCapacity = MassKilograms * SolidSpecificHeatCapacityJoulesPerKilogramKelvin;
+            var liquidHeatCapacity = MassKilograms * LiquidSpecificHeatCapacityJoulesPerKilogramKelvin;
+            var latentEnergy = MassKilograms * SpecificLatentHeatJoulesPerKilogram;
+            if (!double.IsFinite(solidHeatCapacity) || solidHeatCapacity <= 0d ||
+                !double.IsFinite(liquidHeatCapacity) || liquidHeatCapacity <= 0d ||
+                !double.IsFinite(latentEnergy) || latentEnergy <= 0d ||
                 !double.IsFinite(EnthalpyRelativeToTransitionJoules))
                 return false;
 
