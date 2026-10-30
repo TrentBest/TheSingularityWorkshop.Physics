@@ -88,6 +88,19 @@ public sealed class LumpedThermalStateTests
     }
 
     [Test]
+    public void IsValid_RejectsDerivedHeatCapacityThatUnderflowsToZero()
+    {
+        var state = new LumpedThermalState(
+            MassKilograms: 1e-200,
+            TemperatureKelvin: 300d,
+            SpecificHeatCapacityJoulesPerKilogramKelvin: 1e-200,
+            ReferenceTemperatureKelvin: 273.15d);
+
+        Assert.That(state.IsValid, Is.False);
+        Assert.Throws<ArgumentException>(() => state.ApplyNetEnergyTransfer(1d));
+    }
+
+    [Test]
     public void IsValid_RejectsOverflowedSensibleEnergy()
     {
         var state = new LumpedThermalState(
