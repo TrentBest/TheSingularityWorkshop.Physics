@@ -37,8 +37,9 @@ public sealed class PhaseChangeThermalStateTests
 
         var result = initial.ApplyNetEnergyTransfer(20_000d);
 
-        Assert.That(result.TemperatureKelvin, Is.EqualTo(290d).Within(1e-12));
+        Assert.That(result.TemperatureKelvin, Is.EqualTo(285d).Within(1e-12));
         Assert.That(result.LiquidFraction, Is.EqualTo(1d));
+        Assert.That(result.EnthalpyRelativeToTransitionJoules, Is.EqualTo(120_000d).Within(1e-9));
     }
 
     [Test]
@@ -130,11 +131,19 @@ public sealed class PhaseChangeThermalStateTests
     }
 
     [Test]
-    public void ApplyNetEnergyTransfer_RejectsFiniteTransferThatOverflowsEnergy()
+    public void IsValid_RejectsDerivedThermalQuantitiesThatUnderflowToZero()
     {
-        var initial = CreateState(temperatureKelvin: 280d, liquidFraction: 1d);
+        var state = new PhaseChangeThermalState(
+            MassKilograms: 1e-200,
+            TemperatureKelvin: 280d,
+            SolidSpecificHeatCapacityJoulesPerKilogramKelvin: 1e-200,
+            LiquidSpecificHeatCapacityJoulesPerKilogramKelvin: 1e-200,
+            TransitionTemperatureKelvin: 280d,
+            SpecificLatentHeatJoulesPerKilogram: 1e-200,
+            LiquidFraction: 1d);
 
-        Assert.Throws<OverflowException>(() => initial.ApplyNetEnergyTransfer(double.MaxValue));
+        Assert.That(state.IsValid, Is.False);
+        Assert.Throws<ArgumentException>(() => state.ApplyNetEnergyTransfer(1d));
     }
 
     private static PhaseChangeThermalState CreateState(double temperatureKelvin, double liquidFraction) =>
