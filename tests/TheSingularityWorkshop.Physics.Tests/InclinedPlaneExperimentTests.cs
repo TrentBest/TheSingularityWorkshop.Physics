@@ -49,7 +49,7 @@ public sealed class InclinedPlaneExperimentTests
     {
         var result = InclinedPlaneExperiment.Run(
             new InclinedPlaneExperimentDefinition(1d, Math.PI / 6d, 2d));
-        var record = InclinedPlaneRunRecord.FromResult(result);
+        var record = InclinedPlaneRunRecord.FromResult(result, "test-revision");
 
         var first = record.ToJson();
         var second = InclinedPlaneRunRecord.FromResult(result, "test-revision").ToJson();
