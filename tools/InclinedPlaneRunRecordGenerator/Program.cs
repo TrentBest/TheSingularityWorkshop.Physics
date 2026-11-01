@@ -15,7 +15,8 @@ var definition = new InclinedPlaneExperimentDefinition(
     GravitationalAccelerationMetersPerSecondSquared: 9.80665d);
 
 var result = InclinedPlaneExperiment.Run(definition);
-var record = InclinedPlaneRunRecord.FromResult(result);
+var sourceRevision = Environment.GetEnvironmentVariable("PHYSICS_SOURCE_REVISION") ?? "local";
+var record = InclinedPlaneRunRecord.FromResult(result, sourceRevision);
 var outputPath = Path.GetFullPath(args[0]);
 Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
 File.WriteAllText(outputPath, record.ToJson() + Environment.NewLine);

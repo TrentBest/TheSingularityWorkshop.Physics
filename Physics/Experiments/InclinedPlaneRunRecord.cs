@@ -34,6 +34,9 @@ public sealed record InclinedPlaneRunRecord
             ["velocity"] = "m/s"
         };
 
+    /// <summary>Source revision used to produce the record.</summary>
+    public required InclinedPlaneRunProvenance Provenance { get; init; }
+
     /// <summary>Exact inputs supplied to the experiment.</summary>
     public required InclinedPlaneExperimentDefinition Definition { get; init; }
 
@@ -41,12 +44,16 @@ public sealed record InclinedPlaneRunRecord
     public required InclinedPlaneResult Result { get; init; }
 
     /// <summary>Creates a record from the actual experiment result.</summary>
-    public static InclinedPlaneRunRecord FromResult(InclinedPlaneExperimentResult result)
+    public static InclinedPlaneRunRecord FromResult(
+        InclinedPlaneExperimentResult result,
+        string sourceRevision)
     {
         ArgumentNullException.ThrowIfNull(result);
+        ArgumentException.ThrowIfNullOrWhiteSpace(sourceRevision);
 
         return new InclinedPlaneRunRecord
         {
+            Provenance = new InclinedPlaneRunProvenance(sourceRevision),
             Definition = result.Definition,
             Result = result.Outcome
         };
@@ -55,3 +62,7 @@ public sealed record InclinedPlaneRunRecord
     /// <summary>Serializes the record as human-readable JSON.</summary>
     public string ToJson() => JsonSerializer.Serialize(this, SerializerOptions);
 }
+
+/// <summary>Build provenance for a reproducible inclined-plane run.</summary>
+/// <param name="SourceRevision">Repository revision used to generate the record.</param>
+public sealed record InclinedPlaneRunProvenance(string SourceRevision);
