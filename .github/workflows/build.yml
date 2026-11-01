@@ -13,6 +13,8 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-24.04
+    env:
+      PHYSICS_SOURCE_REVISION: ${{ github.sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -37,8 +39,6 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Generate deterministic hydrodynamics rainfall run record from Physics
-        env:
-          PHYSICS_SOURCE_REVISION: ${{ github.sha }}
         run: dotnet run --project tools/HydrodynamicsRainfallRunRecordGenerator/HydrodynamicsRainfallRunRecordGenerator.csproj --configuration Release -- /tmp/hydrodynamics-rainfall.run.json
 
       - name: Validate hydrodynamics rainfall state and water-volume accounting
