@@ -51,7 +51,10 @@ public sealed class InclinedPlaneExperimentTests
             new InclinedPlaneExperimentDefinition(1d, Math.PI / 6d, 2d));
         var record = InclinedPlaneRunRecord.FromResult(result);
 
-        Assert.That(record.ToJson(), Is.EqualTo(record.ToJson()));
+        var first = record.ToJson();
+        var second = InclinedPlaneRunRecord.FromResult(result, "test-revision").ToJson();
+
+        Assert.That(second, Is.EqualTo(first));
     }
 
     [Test]
