@@ -1,3 +1,5 @@
+![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg)
+
 # Electricity: from charge carriers to the Singularity Grid
 
 Electricity must be an evolving physical domain, not a collection of glowing wires and sparks. A switch changes circuit state; that change alters current and power; loads aggregate into a local distribution network; the network changes what the power plant must supply. Every visualization should be an observation of that model.
@@ -67,6 +69,12 @@ Transistors deserve their own executable learning experiences. The first version
 
 **PNP BJT:** mirror the polarity and doping arrangement; show conventional current entering the emitter and leaving the collector in forward-active operation. Keep current arrows and electron/hole motion separately labelled, because they are not the same direction.
 
+The **base is the thin, lightly doped middle region**—not a generic place where electrons arrive from the collector. In an NPN device operating in the forward-active region, the forward-biased emitter-base junction injects electrons from the N-type emitter into the thin P-type base. Because the base is thin and lightly doped, most injected electrons cross it without recombining and are swept into the collector by the reverse-biased collector-base junction. A smaller fraction recombines with holes in the base; the resulting base current helps control the much larger collector-to-emitter conventional current. **Electron motion is from emitter to collector; conventional current through the external collector-emitter path is from collector to emitter.**
+
+In a PNP device, the doping and voltage polarities are reversed. Holes are injected from the P-type emitter through the thin, lightly doped N-type base and collected at the P-type collector. Conventional current in the main PNP path is from emitter to collector. Keep the carrier picture distinct from the conventional-current convention: holes move with conventional current, while electron motion is opposite to it.
+
+The diagram above is conceptual: its moving carriers teach direction and region roles, not a quantitative carrier-transport solution. A future numerical device model must declare its approximation and operating region rather than pretending this schematic is a transistor simulator.
+
 **MOSFET follow-on:** show gate voltage establishing or removing a conductive channel, gate insulation, threshold behavior, and the difference between a conceptual switch and a complete device model.
 
 Every transistor experience should expose operating region and assumptions. A simplified educational model must not be presented as SPICE-grade device simulation. The next numerical step is a bounded, documented piecewise transistor model, with tests for cutoff, active region, saturation, polarity, and limiting behavior before adding circuit coupling.
@@ -134,3 +142,7 @@ This work is for physical education and fictional-world simulation. Power plant 
 ---
 
 [Physics home](../README.md) · [Roadmap](ROADMAP.md) · [Living theory](LIVING_THEORY.md) · [Process-group scheduling](PROCESS_GROUP_SCHEDULING.md)
+
+---
+
+![The Singularity Workshop](https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png)
