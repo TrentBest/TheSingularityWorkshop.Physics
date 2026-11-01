@@ -4,7 +4,7 @@
 
 A shallow ramp feels like an easier route, but it is also a longer route. For an ideal frictionless slider released from rest through the same vertical drop, every ramp angle gives the same final speed. The shallow ramp has less acceleration and more distance to cover, so it takes longer.
 
-This lesson connects the free-body diagram, Newton's second law, constant-acceleration kinematics, and conservation of mechanical energy. The model is executable and tested; the evidence-linked run record and interactive GUI laboratory are the next delivery slice.
+This lesson connects the free-body diagram, Newton's second law, constant-acceleration kinematics, and conservation of mechanical energy. The model is executable and tested, and CI generates a versioned run record from its actual output. The interactive GUI laboratory is the next presentation slice.
 
 ## Model boundary
 
@@ -99,13 +99,13 @@ Notice what is absent from the final expression: the ramp angle and the mass. Fo
 
 ## Implementation and evidence
 
-The executable model is [InclinedPlaneSolver](../../Physics/Kinematics/InclinedPlaneSolver.cs). Its focused tests are in [InclinedPlaneSolverTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneSolverTests.cs). They check the analytical force and motion equations, the same-height/same-final-speed result across angles, mass cancellation in ideal motion, the vertical limiting case, and invalid inputs.
+The executable model is [InclinedPlaneSolver](../../Physics/Kinematics/InclinedPlaneSolver.cs), wrapped by [InclinedPlaneExperiment](../../Physics/Experiments/InclinedPlaneExperiment.cs). Its focused tests are in [InclinedPlaneSolverTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneSolverTests.cs) and [InclinedPlaneExperimentTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneExperimentTests.cs). The [versioned run record](../../Physics/Experiments/InclinedPlaneRunRecord.cs) preserves declared inputs, SI units, model identity, and actual model output. CI regenerates and checks the default record against the analytical identities.
 
 The current implementation is not a rolling model. A rolling body requires rotational inertia and a no-slip contact constraint; friction then supplies a torque even when there is no energy-dissipating slip. Sliding friction, static friction, rolling resistance, and air resistance are different model terms and must not be silently combined.
 
 ## Visualization and laboratory status
 
-The Physics core remains renderer-independent. The Workshop GUI package is the intended reusable presentation and interaction layer; this repository does not introduce a competing UI or renderer. The interactive Pages controls, synchronized plots/animation, and a run-record-backed living visual remain pending GUI integration and the experiment evidence pipeline.
+The Physics core remains renderer-independent. The Workshop GUI package is the intended reusable presentation and interaction layer; this repository does not introduce a competing UI or renderer. The interactive Pages controls, synchronized plots/animation, and a GUI-backed living visual remain pending GUI integration. The Physics-side run-record evidence pipeline is implemented and checked in CI.
 
 When that laboratory is connected, it should expose only supported controls, display SI units, distinguish input from computed output, and let learners compare mass and angle changes independently. Its displayed values must come from the Physics model's reproducible run record, not from a second browser-side physics implementation.
 
@@ -113,6 +113,7 @@ When that laboratory is connected, it should expose only supported controls, dis
 
 - [Physics learning path](../LEARNING_PATH.md)
 - [Mathematics domain map](../MATHEMATICS_DOMAIN_MAP.md)
+- [Inclined-plane experiment generator](../../tools/InclinedPlaneRunRecordGenerator/Program.cs)
 - [Constant-acceleration solver](../../Physics/Kinematics/ConstantAccelerationSolver.cs)
 - [Numerical validation playbook](../NUMERICAL_VALIDATION.md)
 - [Issue #39: inclined-plane teaching lab](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/39)

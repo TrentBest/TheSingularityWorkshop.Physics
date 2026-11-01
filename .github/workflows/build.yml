@@ -89,6 +89,51 @@ jobs:
           name: hydrodynamics-rainfall-run-record
           path: /tmp/hydrodynamics-rainfall.run.json
 
+      - name: Export inclined-plane run record from the Physics model
+        run: dotnet run --project tools/InclinedPlaneRunRecordGenerator/InclinedPlaneRunRecordGenerator.csproj --configuration Release -- /tmp/inclined-plane.run.json
+
+      - name: Validate inclined-plane run record against analytical identities
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/inclined-plane.run.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          result = record['result']
+          assert record['modelId'] == 'mechanics.frictionless-inclined-plane'
+          assert record['modelVersion'] == '1' and record['schemaVersion'] == 1
+          assert definition['massKilograms'] == 1.0
+          assert math.isclose(definition['angleRadians'], math.pi / 6, rel_tol=0, abs_tol=1e-15)
+          assert definition['verticalDropMeters'] == 2.0
+          assert definition['gravitationalAccelerationMetersPerSecondSquared'] == 9.80665
+          assert record['units']['mass'] == 'kg' and record['units']['angle'] == 'rad'
+          assert record['units']['length'] == 'm' and record['units']['force'] == 'N'
+          angle = definition['angleRadians']
+          drop = definition['verticalDropMeters']
+          gravity = definition['gravitationalAccelerationMetersPerSecondSquared']
+          mass = definition['massKilograms']
+          expected = {
+              'pathLengthMeters': drop / math.sin(angle),
+              'accelerationMetersPerSecondSquared': gravity * math.sin(angle),
+              'parallelGravityForceNewtons': mass * gravity * math.sin(angle),
+              'normalForceNewtons': mass * gravity * math.cos(angle),
+              'travelTimeSeconds': math.sqrt(2 * drop / gravity) / math.sin(angle),
+              'finalSpeedMetersPerSecond': math.sqrt(2 * gravity * drop),
+          }
+          for key, value in expected.items():
+              assert math.isclose(result[key], value, rel_tol=0, abs_tol=1e-12), (key, result[key], value)
+          assert record['provenance']['sourceRevision'] == __import__('os').environ['PHYSICS_SOURCE_REVISION']
+          print('Verified inclined-plane model identity, SI units, input provenance, force decomposition, travel time, and energy-derived final speed.')
+          PY
+
+      - name: Upload inclined-plane run record
+        uses: actions/upload-artifact@v7
+        with:
+          name: inclined-plane-run-record
+          path: /tmp/inclined-plane.run.json
+
       - name: Export bounded Mandelbrot escape-time run record
         run: dotnet run --project samples/MandelbrotEscapeTime2dExport/MandelbrotEscapeTime2dExport.csproj --configuration Release -- /tmp/mandelbrot-escape-time-2d.run.json
 
