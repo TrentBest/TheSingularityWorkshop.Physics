@@ -55,8 +55,8 @@ public sealed record DerivativeDerivationRecord
     public double EstimatedAbsoluteErrorIndicator { get; init; }
 
     /// <summary>
-    /// Evaluates a deterministic scalar function at the four points used by central
-    /// differences with steps h and h/2, then records the derivation and its actual samples.
+    /// Evaluates a deterministic scalar function at the four secant points used by central
+    /// differences with steps h and h/2, plus the center point used to anchor a tangent visualization.
     /// </summary>
     public static DerivativeDerivationRecord Create(
         string derivationId,
@@ -91,9 +91,9 @@ public sealed record DerivativeDerivationRecord
             coordinate + fineStep,
             coordinate + coarseStep
         };
-        if (coordinates.Any(value => !double.IsFinite(value) || value == coordinate) ||
+        if (coordinates.Where(value => value != coordinate).Any(value => !double.IsFinite(value)) ||
             coordinates.Distinct().Count() != coordinates.Length)
-            throw new ArgumentException("The steps must produce four distinct finite sample coordinates.", nameof(coarseStep));
+            throw new ArgumentException("The steps must produce four distinct finite secant coordinates and a finite center coordinate.", nameof(coarseStep));
 
         var samples = coordinates
             .Select(sampleX => new DerivativeSample(sampleX, function(sampleX)))
@@ -140,7 +140,13 @@ public sealed record DerivativeDerivationRecord
 }
 
 /// <summary>A function evaluation preserved as part of a derivative derivation.</summary>
+/// <param name="Coordinate">Independent-variable coordinate at which the function was evaluated.</param>
+/// <param name="Value">Finite function output recorded at the coordinate.</param>
 public sealed record DerivativeSample(double Coordinate, double Value);
 
 /// <summary>A named mathematical operation in a structured derivation.</summary>
+/// <param name="Sequence">One-based position in the derivation.</param>
+/// <param name="Rule">Name of the mathematical rule or operation.</param>
+/// <param name="Expression">Readable equation representing the operation.</param>
+/// <param name="Explanation">Description of how the operation uses the recorded data.</param>
 public sealed record DerivativeRuleStep(int Sequence, string Rule, string Expression, string Explanation);
