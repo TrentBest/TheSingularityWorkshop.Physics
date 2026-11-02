@@ -35,7 +35,7 @@ public sealed record DerivativeDerivationRecord
     public required string EvaluationCoordinate { get; init; }
     /// <summary>Declared smoothness, determinism, and model assumptions.</summary>
     public required IReadOnlyList<string> Assumptions { get; init; }
-    /// <summary>Actual function evaluations ordered from outer lower to outer upper coordinate.</summary>
+    /// <summary>Actual function evaluations ordered from outer lower through the evaluation coordinate to outer upper.</summary>
     public required IReadOnlyList<DerivativeSample> Samples { get; init; }
     /// <summary>Ordered mathematical operations used to obtain the estimate.</summary>
     public required IReadOnlyList<DerivativeRuleStep> Steps { get; init; }
@@ -87,6 +87,7 @@ public sealed record DerivativeDerivationRecord
         {
             coordinate - coarseStep,
             coordinate - fineStep,
+            coordinate,
             coordinate + fineStep,
             coordinate + coarseStep
         };
@@ -100,8 +101,8 @@ public sealed record DerivativeDerivationRecord
         if (samples.Any(sample => !double.IsFinite(sample.Value)))
             throw new ArithmeticException("The function returned a non-finite sample.");
 
-        var coarse = (samples[3].Value - samples[0].Value) / (2d * coarseStep);
-        var fine = (samples[2].Value - samples[1].Value) / (2d * fineStep);
+        var coarse = (samples[4].Value - samples[0].Value) / (2d * coarseStep);
+        var fine = (samples[3].Value - samples[1].Value) / (2d * fineStep);
         var correction = (fine - coarse) / 3d;
         var estimate = fine + correction;
         if (!double.IsFinite(coarse) || !double.IsFinite(fine) ||
