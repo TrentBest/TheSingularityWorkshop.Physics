@@ -55,6 +55,8 @@ is returned as an **estimated absolute error indicator**. It is not a proof or g
 
 Making \(h\) arbitrarily small does not always improve the answer. When \(f(x+h)\) and \(f(x-h)\) are nearly equal, subtraction can lose significant digits. A practical step balances truncation error against roundoff and the scale of the function.
 
+A step-size sweep makes this tradeoff observable. For a known function such as \(f(x)=\sin x\), evaluate the Richardson estimate over a logarithmic sequence of decreasing steps and compare each result with the analytical reference \(\cos x\). The absolute difference is the actual error for this reference problem; the Richardson correction is only an indicator. In the truncation-dominated region, refinement should improve the estimate. Eventually, roundoff and finite-precision sampling can stop that improvement or reverse it. The best observed step is specific to the function, coordinate, precision, and implementation; it is not a universal constant.
+
 The implementation validates finite coordinates, positive finite steps, distinct finite sample coordinates, finite function samples, and finite arithmetic. The Richardson method evaluates the function four times, so the function should be deterministic and side-effect free. Neither method infers units, selects an optimal step, or differentiates vector-valued functions.
 
 ## 04 — See it in a minute: compute and refine a known derivative
@@ -86,7 +88,7 @@ The generator compares the recorded estimate with the analytical derivative for 
 
 ![Living derivative visualization generated from the actual C# derivation record](experiments/derivative-derivation.svg)
 
-**Evidence classification:** source-backed implementation with focused automated tests and a reproducibly generated, model-backed SVG tied to the actual C# sample record. The analytical derivative of the selected quadratic is an independent reference identity. No measured physical data is involved. An actual step-size/error sweep remains future work.
+**Evidence classification:** source-backed implementation with focused automated tests and a reproducibly generated, model-backed SVG tied to the actual C# sample record. The analytical derivative of the selected quadratic is an independent reference identity. A focused automated sweep over twelve decreasing steps compares Richardson estimates of \(\sin x\) with the independent \(\cos x\) reference and verifies the expected truncation-to-roundoff tradeoff. No measured physical data is involved. A generated sweep run record and its own living plot remain future work.
 
 ## 05 — Choose your next step
 
