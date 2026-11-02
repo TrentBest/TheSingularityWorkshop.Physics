@@ -606,7 +606,16 @@ jobs:
           PY
 
       - name: Verify committed derivative run record matches actual C# samples
-        run: diff -u docs/experiments/derivative-derivation.run.json /tmp/derivative-derivation.run.json
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          actual = json.loads(Path('/tmp/derivative-derivation.run.json').read_text(encoding='utf-8'))
+          committed = json.loads(Path('docs/experiments/derivative-derivation.run.json').read_text(encoding='utf-8'))
+          assert actual == committed, 'Committed derivative run record is stale relative to the C# generator.'
+          print('Committed derivative run record matches the actual C# samples and derivation contract.')
+          PY
 
       - name: Render secant-to-tangent SVG from actual C# derivation record
         run: python3 tools/render_derivative_derivation.py /tmp/derivative-derivation.run.json /tmp/derivative-derivation.svg
