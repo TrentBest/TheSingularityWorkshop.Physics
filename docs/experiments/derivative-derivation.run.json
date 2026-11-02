@@ -57,7 +57,7 @@
   "fineStep": 0.1,
   "coarseSecantSlope": 26.000000000000032,
   "fineSecantSlope": 26.000000000000014,
-  "richardsonCorrection": -5.921189464667502e-15,
+  "richardsonCorrection": -5.921189464667502E-15,
   "derivativeEstimate": 26.000000000000007,
-  "estimatedAbsoluteErrorIndicator": 5.921189464667502e-15
+  "estimatedAbsoluteErrorIndicator": 5.921189464667502E-15
 }
