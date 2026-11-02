@@ -19,22 +19,39 @@ public sealed record DerivativeDerivationRecord
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
+    /// <summary>Version of this derivation-record schema.</summary>
     public int SchemaVersion { get; init; } = 1;
+    /// <summary>Stable identifier for the mathematical demonstration.</summary>
     public required string DerivationId { get; init; }
+    /// <summary>Human-readable expression for the sampled function.</summary>
     public required string FunctionExpression { get; init; }
+    /// <summary>Caller-declared unit label for the independent variable.</summary>
     public required string InputUnit { get; init; }
+    /// <summary>Caller-declared unit label for the function output.</summary>
     public required string OutputUnit { get; init; }
+    /// <summary>Output-unit per input-unit label; no dimensional analysis is performed.</summary>
     public required string DerivativeUnit { get; init; }
+    /// <summary>Invariant-culture representation of the evaluation coordinate.</summary>
     public required string EvaluationCoordinate { get; init; }
+    /// <summary>Declared smoothness, determinism, and model assumptions.</summary>
     public required IReadOnlyList<string> Assumptions { get; init; }
+    /// <summary>Actual function evaluations ordered from outer lower to outer upper coordinate.</summary>
     public required IReadOnlyList<DerivativeSample> Samples { get; init; }
+    /// <summary>Ordered mathematical operations used to obtain the estimate.</summary>
     public required IReadOnlyList<DerivativeRuleStep> Steps { get; init; }
+    /// <summary>Outer symmetric sample offset.</summary>
     public double CoarseStep { get; init; }
+    /// <summary>Inner symmetric sample offset, equal to half the coarse step.</summary>
     public double FineStep { get; init; }
+    /// <summary>Central-difference slope computed from the outer sample pair.</summary>
     public double CoarseSecantSlope { get; init; }
+    /// <summary>Central-difference slope computed from the inner sample pair.</summary>
     public double FineSecantSlope { get; init; }
+    /// <summary>Richardson extrapolation correction added to the fine slope.</summary>
     public double RichardsonCorrection { get; init; }
+    /// <summary>Richardson-extrapolated derivative estimate.</summary>
     public double DerivativeEstimate { get; init; }
+    /// <summary>Correction magnitude; an asymptotic indicator, not a rigorous error bound.</summary>
     public double EstimatedAbsoluteErrorIndicator { get; init; }
 
     /// <summary>
