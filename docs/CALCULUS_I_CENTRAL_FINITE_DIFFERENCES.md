@@ -76,6 +76,14 @@ Console.WriteLine(estimate.EstimatedAbsoluteError);
 
 The focused tests compare central differences against analytical polynomial and trigonometric derivatives, verify Richardson refinement for sine, verify cancellation of the leading error term for a quartic polynomial, and exercise invalid inputs, non-finite samples, overflow, and the four-evaluation contract.
 
+A structured derivation can also be generated from the actual function evaluations. The renderer-independent record stores the four sampled coordinates and values, the coarse and fine secant slopes, the Richardson correction, three named rule steps, assumptions, and caller-declared unit labels. Run the deterministic teaching experiment with:
+
+```bash
+dotnet run --project tools/DerivativeDerivationRunRecordGenerator/DerivativeDerivationRunRecordGenerator.csproj --configuration Release -- /tmp/derivative-derivation.run.json
+```
+
+The generator compares the recorded estimate with the analytical derivative for this known quadratic. CI independently checks the schema, samples, rule sequence, unit labels, and numerical result. This is structured numerical evidence, not symbolic differentiation or a proof engine.
+
 **Evidence classification:** source-backed implementation with focused automated tests. No measured physical data or independent reference dataset is involved. A living secant-to-tangent plot and an actual step-size sweep remain future work.
 
 ## 05 — Choose your next step
