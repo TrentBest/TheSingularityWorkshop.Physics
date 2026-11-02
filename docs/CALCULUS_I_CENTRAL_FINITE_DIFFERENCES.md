@@ -3,19 +3,19 @@
 
 # Calculus I — Estimating a Derivative from Samples
 
-**Status:** Implemented bounded numerical primitive; source-checked against the development branch. The central-difference routine is tested in CI; it does not yet produce an error estimate or a living plot.
+**Status:** Implemented bounded numerical primitive; source-checked against the development branch. Central difference and a Richardson-refined estimate are covered by focused automated tests. The reported error is an asymptotic indicator, not a rigorous bound.
 
 ## 01 — What: a derivative is a local rate of change
 
 Imagine measuring the position of a moving object at nearby times. Average velocity over an interval is displacement divided by elapsed time. Instantaneous velocity asks a sharper question: what rate of change applies at one instant?
 
-For a scalar function (f(x)), the derivative at (x) is the limit of the secant slope as the two sample locations approach one another:
+For a scalar function \(f\), the derivative at \(x\) is the limit of the secant slope as the two sample locations approach one another:
 
 \[
 f'(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.
 \]
 
-The derivative has units of *output units per input unit*. If (f) is position in metres and (x) is time in seconds, (f'(x)) is velocity in metres per second.
+The derivative has units of *output units per input unit*. If \(f\) is position in metres and \(x\) is time in seconds, \(f'(x)\) is velocity in metres per second.
 
 ## 02 — Why: measurements and models are often sampled
 
@@ -29,51 +29,54 @@ D_h f(x)=\frac{f(x+h)-f(x-h)}{2h}.
 
 Symmetry cancels the leading first-order bias found in a one-sided difference. It is a useful first derivative estimator when the function can be evaluated on both sides of the requested point.
 
-## 03 — How: assumptions and numerical behavior
+## 03 — How: truncation error and Richardson extrapolation
 
-Assume (f) is sufficiently smooth near (x), and choose a positive step (h). Taylor expansion gives:
-
-\[
-f(x+h)=f(x)+hf'(x)+\frac{h^2}{2}f''(x)+\frac{h^3}{6}f'''(x)+O(h^4)
-\]
-
-\[
-f(x-h)=f(x)-hf'(x)+\frac{h^2}{2}f''(x)-\frac{h^3}{6}f'''(x)+O(h^4).
-\]
-
-Subtracting the second expansion from the first and dividing by (2h) yields:
+Assume \(f\) is sufficiently smooth near \(x\), and choose a positive step \(h\). Taylor expansion gives:
 
 \[
 D_h f(x)=f'(x)+\frac{h^2}{6}f'''(x)+O(h^4).
 \]
 
-For a sufficiently smooth function, the leading truncation error is therefore proportional to (h^2). This does **not** mean that making (h) arbitrarily small always improves the answer. Floating-point evaluations have finite precision; when (f(x+h)) and (f(x-h)) are nearly equal, their subtraction can lose significant digits. A practical step balances truncation error against roundoff and the scale of the function.
+For a sufficiently smooth function, the leading truncation error is proportional to \(h^2\). Halving the step therefore reduces that leading term by approximately four, provided the calculation is in its asymptotic regime and roundoff is not dominant.
 
-The current implementation deliberately requires the caller to choose (h). It validates that:
-- (x) and (h) are finite, and (h) is positive;
-- (x-h) and (x+h) are distinct, finite sample coordinates;
-- both function samples, the numerator, denominator, and final estimate are finite.
+Let \(D_h\) be the estimate at step \(h\), and \(D_{h/2}\) the estimate at half that step. Their leading error terms can be cancelled:
 
-It throws rather than silently returning a non-finite result. It does not infer units, choose an optimal step, estimate uncertainty, handle discontinuities, or differentiate vector-valued functions.
+\[
+D_{\mathrm{R}}=D_{h/2}+\frac{D_{h/2}-D_h}{3}.
+\]
 
-## 04 — See it in a minute: verify a known derivative
+The magnitude of the correction,
 
-For (f(x)=3x^2+2x-7), the analytical derivative is (f'(x)=6x+2). At (x=4), the expected result is (26).
+\[
+E_{\mathrm{est}}=\left|\frac{D_{h/2}-D_h}{3}\right|,
+\]
+
+is returned as an **estimated absolute error indicator**. It is not a proof or guaranteed upper bound. It can be misleading near discontinuities, when the selected steps are outside the asymptotic regime, or when floating-point cancellation dominates.
+
+Making \(h\) arbitrarily small does not always improve the answer. When \(f(x+h)\) and \(f(x-h)\) are nearly equal, subtraction can lose significant digits. A practical step balances truncation error against roundoff and the scale of the function.
+
+The implementation validates finite coordinates, positive finite steps, distinct finite sample coordinates, finite function samples, and finite arithmetic. The Richardson method evaluates the function four times, so the function should be deterministic and side-effect free. Neither method infers units, selects an optimal step, or differentiates vector-valued functions.
+
+## 04 — See it in a minute: compute and refine a known derivative
+
+For \(f(x)=3x^2+2x-7\), the analytical derivative is \(f'(x)=6x+2\). At \(x=4\), the expected result is \(26\).
 
 ```csharp
 using TheSingularityWorkshop.Physics.Numerics;
 
-double estimate = FiniteDifferences.CentralDifference(
-    x => (3d * x * x) + (2d * x) - 7d,
-    x: 4d,
-    step: 1e-3);
+DerivativeEstimate estimate =
+    FiniteDifferences.CentralDifferenceWithErrorEstimate(
+        x => (3d * x * x) + (2d * x) - 7d,
+        x: 4d,
+        step: 1e-3);
 
-// estimate is approximately 26
+Console.WriteLine(estimate.Value);
+Console.WriteLine(estimate.EstimatedAbsoluteError);
 ```
 
-The focused tests also compare the numerical estimate for sine against its analytical cosine derivative, verify a constant function, and exercise invalid coordinates, invalid steps, non-finite samples, and overflow.
+The focused tests compare central differences against analytical polynomial and trigonometric derivatives, verify Richardson refinement for sine, verify cancellation of the leading error term for a quartic polynomial, and exercise invalid inputs, non-finite samples, overflow, and the four-evaluation contract.
 
-**Evidence classification:** source-backed implementation with focused automated tests. No measured physical data or independent reference dataset is involved. A living secant-to-tangent picture and an explicit step-size/error sweep remain future work.
+**Evidence classification:** source-backed implementation with focused automated tests. No measured physical data or independent reference dataset is involved. A living secant-to-tangent plot and an actual step-size sweep remain future work.
 
 ## 05 — Choose your next step
 
@@ -83,7 +86,7 @@ The focused tests also compare the numerical estimate for sine against its analy
 - Numerical evidence rules: [Numerical Validation](NUMERICAL_VALIDATION.md)
 - Learning route: [Physics Learning Path](LEARNING_PATH.md)
 
-A natural extension is to compare estimates at (h) and (h/2), report an error estimate with clearly stated smoothness assumptions, and generate a living plot from those actual computed samples.
+Next, generate a living derivative plot and its step-size/error sweep from the actual function samples and estimate records, then add an independently referenced quadrature primitive.
 
 ---
 
