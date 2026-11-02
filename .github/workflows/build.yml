@@ -606,7 +606,7 @@ jobs:
           PY
 
       - name: Verify committed derivative run record matches actual C# samples
-        run: cmp /tmp/derivative-derivation.run.json docs/experiments/derivative-derivation.run.json
+        run: diff -u docs/experiments/derivative-derivation.run.json /tmp/derivative-derivation.run.json
 
       - name: Render secant-to-tangent SVG from actual C# derivation record
         run: python3 tools/render_derivative_derivation.py /tmp/derivative-derivation.run.json /tmp/derivative-derivation.svg
