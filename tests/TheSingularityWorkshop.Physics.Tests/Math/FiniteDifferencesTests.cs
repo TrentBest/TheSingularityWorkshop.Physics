@@ -77,6 +77,24 @@ public sealed class FiniteDifferencesTests
     }
 
     [Test]
+    public void RichardsonEstimate_StepSizeSweepShowsTruncationAndRoundoffTradeoff()
+    {
+        var steps = Enumerable.Range(1, 12).Select(power => Math.Pow(10d, -power)).ToArray();
+        var errors = steps.Select(step =>
+        {
+            var estimate = FiniteDifferences.CentralDifferenceWithErrorEstimate(Math.Sin, 0.7d, step);
+            return Math.Abs(estimate.Value - Math.Cos(0.7d));
+        }).ToArray();
+
+        var minimumErrorIndex = Array.IndexOf(errors, errors.Min());
+
+        Assert.That(minimumErrorIndex, Is.GreaterThan(0), "The coarsest step should still show truncation error.");
+        Assert.That(minimumErrorIndex, Is.LessThan(errors.Length - 1), "The finest step should show roundoff influence.");
+        Assert.That(errors[minimumErrorIndex], Is.LessThan(errors[0]));
+        Assert.That(errors[minimumErrorIndex], Is.LessThan(errors[^1]));
+    }
+
+    [Test]
     public void RichardsonEstimate_RejectsNullAndUnrepresentableFineStep()
     {
         Assert.Throws<ArgumentNullException>(() =>
