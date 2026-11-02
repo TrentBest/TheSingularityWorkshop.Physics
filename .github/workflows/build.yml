@@ -605,6 +605,18 @@ jobs:
           print('Verified structured calculus derivation: four actual samples, three named rules, declared assumptions and units, and analytical derivative agreement.')
           PY
 
+      - name: Verify committed derivative run record matches actual C# samples
+        run: cmp /tmp/derivative-derivation.run.json docs/experiments/derivative-derivation.run.json
+
+      - name: Render secant-to-tangent SVG from actual C# derivation record
+        run: python3 tools/render_derivative_derivation.py /tmp/derivative-derivation.run.json /tmp/derivative-derivation.svg
+
+      - name: Verify committed living derivative SVG against actual samples
+        run: cmp /tmp/derivative-derivation.svg docs/experiments/derivative-derivation.svg
+
+      - name: Verify living derivative SVG renderer is reproducible
+        run: python3 tools/render_derivative_derivation.py docs/experiments/derivative-derivation.run.json docs/experiments/derivative-derivation.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
