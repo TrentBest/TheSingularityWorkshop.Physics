@@ -14,11 +14,11 @@
   "samples": [
     {
       "coordinate": 3.8,
-      "value": 43.92
+      "value": 43.919999999999995
     },
     {
       "coordinate": 3.9,
-      "value": 46.43
+      "value": 46.42999999999999
     },
     {
       "coordinate": 4,
@@ -26,11 +26,11 @@
     },
     {
       "coordinate": 4.1,
-      "value": 51.63
+      "value": 51.629999999999995
     },
     {
       "coordinate": 4.2,
-      "value": 54.32
+      "value": 54.32000000000001
     }
   ],
   "steps": [
@@ -55,9 +55,9 @@
   ],
   "coarseStep": 0.2,
   "fineStep": 0.1,
-  "coarseSecantSlope": 26,
-  "fineSecantSlope": 26,
-  "richardsonCorrection": 0,
-  "derivativeEstimate": 26,
-  "estimatedAbsoluteErrorIndicator": 0
+  "coarseSecantSlope": 26.000000000000032,
+  "fineSecantSlope": 26.000000000000014,
+  "richardsonCorrection": -5.921189464667502e-15,
+  "derivativeEstimate": 26.000000000000007,
+  "estimatedAbsoluteErrorIndicator": 5.921189464667502e-15
 }
