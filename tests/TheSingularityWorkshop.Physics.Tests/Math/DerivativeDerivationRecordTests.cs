@@ -21,9 +21,9 @@ public sealed class DerivativeDerivationRecordTests
             x => { calls.Add(x); return (3d * x * x) + (2d * x) - 7d; });
 
         Assert.That(record.DerivativeUnit, Is.EqualTo("m^2/m"));
-        Assert.That(record.Samples, Has.Count.EqualTo(4));
+        Assert.That(record.Samples, Has.Count.EqualTo(5));
         Assert.That(record.Samples.Select(sample => sample.Coordinate),
-            Is.EqualTo(new[] { 3.9d, 3.95d, 4.05d, 4.1d }));
+            Is.EqualTo(new[] { 3.9d, 3.95d, 4d, 4.05d, 4.1d }));
         Assert.That(record.Samples.Select(sample => sample.Value),
             Is.EqualTo(calls.Select(x => (3d * x * x) + (2d * x) - 7d)));
         Assert.That(record.DerivativeEstimate, Is.EqualTo(26d).Within(1e-12));
