@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "derivationId": "calculus.central-difference.quadratic-at-four",
+  "functionExpression": "f(x) = 3x^2 + 2x - 7",
+  "inputUnit": "s",
+  "outputUnit": "m",
+  "derivativeUnit": "m/s",
+  "evaluationCoordinate": "4",
+  "assumptions": [
+    "The scalar function is smooth over the sampled interval.",
+    "The function is deterministic and side-effect free.",
+    "The displayed units are caller-declared labels; the numerical routine does not perform dimensional analysis."
+  ],
+  "samples": [
+    {
+      "coordinate": 3.8,
+      "value": 43.92
+    },
+    {
+      "coordinate": 3.9,
+      "value": 46.43
+    },
+    {
+      "coordinate": 4,
+      "value": 49
+    },
+    {
+      "coordinate": 4.1,
+      "value": 51.63
+    },
+    {
+      "coordinate": 4.2,
+      "value": 54.32
+    }
+  ],
+  "steps": [
+    {
+      "sequence": 1,
+      "rule": "Central difference",
+      "expression": "D(h) = [f(x+h) - f(x-h)] / (2h)",
+      "explanation": "Compute the coarse secant slope from the two outer samples."
+    },
+    {
+      "sequence": 2,
+      "rule": "Central difference at half-step",
+      "expression": "D(h/2) = [f(x+h/2) - f(x-h/2)] / h",
+      "explanation": "Compute the fine secant slope from the two inner samples."
+    },
+    {
+      "sequence": 3,
+      "rule": "Second-order Richardson extrapolation",
+      "expression": "D_R = D(h/2) + [D(h/2) - D(h)] / 3",
+      "explanation": "Cancel the leading O(h^2) central-difference truncation term when the smooth-function asymptotic assumptions hold."
+    }
+  ],
+  "coarseStep": 0.2,
+  "fineStep": 0.1,
+  "coarseSecantSlope": 26,
+  "fineSecantSlope": 26,
+  "richardsonCorrection": 0,
+  "derivativeEstimate": 26,
+  "estimatedAbsoluteErrorIndicator": 0
+}
