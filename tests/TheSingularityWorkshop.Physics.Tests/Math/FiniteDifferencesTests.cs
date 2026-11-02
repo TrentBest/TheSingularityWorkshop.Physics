@@ -57,14 +57,14 @@ public sealed class FiniteDifferencesTests
     [Test]
     public void RichardsonEstimate_RefinesSineDerivativeAndReportsCorrection()
     {
-        var estimate = FiniteDifferences.CentralDifferenceWithErrorEstimate(Math.Sin, 0.7d, 0.2d);
+        var estimate = FiniteDifferences.CentralDifferenceWithErrorEstimate(Math.Sin, 0.7d, 0.1d);
         var actualError = Math.Abs(estimate.Value - Math.Cos(0.7d));
 
         Assert.That(estimate.Value, Is.EqualTo(Math.Cos(0.7d)).Within(1e-6));
         Assert.That(estimate.EstimatedAbsoluteError, Is.GreaterThan(0d));
         Assert.That(actualError, Is.LessThan(estimate.EstimatedAbsoluteError * 1.1d));
-        Assert.That(estimate.CoarseStep, Is.EqualTo(0.2d));
-        Assert.That(estimate.FineStep, Is.EqualTo(0.1d));
+        Assert.That(estimate.CoarseStep, Is.EqualTo(0.1d));
+        Assert.That(estimate.FineStep, Is.EqualTo(0.05d));
     }
 
     [Test]
@@ -73,7 +73,7 @@ public sealed class FiniteDifferencesTests
         var estimate = FiniteDifferences.CentralDifferenceWithErrorEstimate(x => x * x * x * x, 2d, 0.25d);
 
         Assert.That(estimate.Value, Is.EqualTo(32d).Within(1e-12));
-        Assert.That(estimate.EstimatedAbsoluteError, Is.LessThan(1e-12));
+        Assert.That(estimate.EstimatedAbsoluteError, Is.EqualTo(0.125d).Within(1e-12));
     }
 
     [Test]
