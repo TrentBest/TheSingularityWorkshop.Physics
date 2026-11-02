@@ -576,6 +576,35 @@ jobs:
       - name: Test run-record envelope and catalog edge cases
         run: python3 -m unittest discover -s tests/python -v
 
+      - name: Generate structured derivative derivation from actual function samples
+        run: dotnet run --project tools/DerivativeDerivationRunRecordGenerator/DerivativeDerivationRunRecordGenerator.csproj --configuration Release -- /tmp/derivative-derivation.run.json
+
+      - name: Validate derivative derivation contract and numerical evidence
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/derivative-derivation.run.json').read_text(encoding='utf-8'))
+          assert record['schemaVersion'] == 1
+          assert record['derivationId'] == 'calculus.central-difference.quadratic-at-four'
+          assert record['functionExpression'] == 'f(x) = 3x^2 + 2x - 7'
+          assert record['inputUnit'] == 's' and record['outputUnit'] == 'm'
+          assert record['derivativeUnit'] == 'm/s'
+          assert len(record['samples']) == 4
+          assert [sample['coordinate'] for sample in record['samples']] == [3.8, 3.9, 4.1, 4.2]
+          assert len(record['steps']) == 3
+          assert record['steps'][0]['rule'] == 'Central difference'
+          assert 'Richardson' in record['steps'][2]['rule']
+          assert len(record['assumptions']) == 3
+          assert math.isclose(record['coarseSecantSlope'], 26.0, rel_tol=0, abs_tol=1e-12)
+          assert math.isclose(record['fineSecantSlope'], 26.0, rel_tol=0, abs_tol=1e-12)
+          assert math.isclose(record['derivativeEstimate'], 26.0, rel_tol=0, abs_tol=1e-12)
+          assert record['estimatedAbsoluteErrorIndicator'] == 0.0
+          print('Verified structured calculus derivation: four actual samples, three named rules, declared assumptions and units, and analytical derivative agreement.')
+          PY
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
