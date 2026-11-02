@@ -4,8 +4,8 @@
 <rect width="960" height="540" fill="#ffffff"/>
 <text x="48" y="42" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#172554">From secant slopes to a tangent estimate</text>
 <text x="48" y="70" font-family="Arial, sans-serif" font-size="15" fill="#334155">f(x) = 3x^2 + 2x - 7</text>
-<path d="M 105 395 H 865" stroke="#64748b" stroke-width="1.5"/>
-<path d="M 105 90 V 395" stroke="#64748b" stroke-width="1.5"/>
+<path d="M 105.0 395.0 H 865.0" stroke="#64748b" stroke-width="1.5"/>
+<path d="M 105.0 90.0 V 395.0" stroke="#64748b" stroke-width="1.5"/>
 <path d="M 105.000 362.678 L 865.000 119.516" fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="8 6"/>
 <path d="M 295.000 303.992 L 675.000 182.411" fill="none" stroke="#0f766e" stroke-width="3" stroke-dasharray="5 4"/>
 <path d="M 105.000 362.678 L 295.000 303.992 L 485.000 243.903 L 675.000 182.411 L 865.000 119.516" fill="none" stroke="#1d4ed8" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
