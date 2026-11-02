@@ -592,8 +592,8 @@ jobs:
           assert record['functionExpression'] == 'f(x) = 3x^2 + 2x - 7'
           assert record['inputUnit'] == 's' and record['outputUnit'] == 'm'
           assert record['derivativeUnit'] == 'm/s'
-          assert len(record['samples']) == 4
-          assert [sample['coordinate'] for sample in record['samples']] == [3.8, 3.9, 4.1, 4.2]
+          assert len(record['samples']) == 5
+          assert [sample['coordinate'] for sample in record['samples']] == [3.8, 3.9, 4.0, 4.1, 4.2]
           assert len(record['steps']) == 3
           assert record['steps'][0]['rule'] == 'Central difference'
           assert 'Richardson' in record['steps'][2]['rule']
