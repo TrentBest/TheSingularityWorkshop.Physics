@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # Physics and Mathematics Branch Atlas
 
 **Purpose:** map the known domain of the Physics package into distinct branches, distinguish executable capability from architecture, and choose the next branch by evidence-backed maturity rather than visual appeal.
@@ -98,3 +101,7 @@ A model-backed diagram for this branch is complete only when:
 - the page links to source, tests, run record, and renderer.
 
 The accompanying chemistry-to-combustion branch diagram is intentionally a **conceptual gap map**, not simulation output. It shows which causal links a future living experiment must implement before it can honestly visualize a burning surface.
+
+---
+
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="320" /></p>
