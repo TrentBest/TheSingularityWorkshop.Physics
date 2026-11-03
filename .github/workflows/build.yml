@@ -667,6 +667,61 @@ jobs:
       - name: Verify committed living derivative sweep against committed run record
         run: python3 tools/render_derivative_step_size_sweep.py docs/experiments/derivative-step-size-sweep.run.json docs/experiments/derivative-step-size-sweep.svg --check
 
+      - name: Generate numerical quadrature run record from the Physics implementation
+        run: dotnet run --project tools/QuadratureRunRecordGenerator/QuadratureRunRecordGenerator.csproj --configuration Release -- /tmp/quadrature.actual.json
+
+      - name: Validate quadrature record against analytical integral
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+
+          record = json.loads(Path('/tmp/quadrature.actual.json').read_text(encoding='utf-8'))
+          assert record['schemaVersion'] == 1
+          assert record['modelId'] == 'mathematics.composite-simpson-quadrature'
+          assert record['functionExpression'] == 'f(t) = exp(-t)'
+          assert record['inputUnit'] == 's' and record['outputUnit'] == '1/s' and record['integralUnit'] == '1'
+          assert record['coarseIntervalCount'] == 16 and record['fineIntervalCount'] == 32
+          assert len(record['samples']) == 17
+          reference = 1 - math.exp(-1)
+          assert math.isclose(record['analyticalReference'], reference, rel_tol=0, abs_tol=1e-15)
+          assert math.isclose(record['integralEstimate'], record['analyticalReference'], rel_tol=0, abs_tol=1e-8)
+          assert record['actualAbsoluteError'] <= 1e-8
+          assert record['estimatedAbsoluteErrorIndicator'] > 0
+          samples = record['samples']
+          assert samples[0]['coordinate'] == 0 and samples[0]['cumulativeIntegral'] == 0
+          assert samples[-1]['coordinate'] == 1
+          for index, sample in enumerate(samples):
+              assert sample['index'] == index
+              assert math.isfinite(sample['coordinate']) and math.isfinite(sample['functionValue'])
+              assert math.isfinite(sample['cumulativeIntegral'])
+              assert math.isclose(sample['coordinate'], index / 16, rel_tol=0, abs_tol=1e-15)
+              if index:
+                  assert sample['cumulativeIntegral'] >= samples[index - 1]['cumulativeIntegral']
+          print('Verified seventeen actual quadrature samples, cumulative area, units, and the analytical exponential integral.')
+          PY
+
+      - name: Render area-accumulation SVG from actual quadrature samples
+        run: |
+          python3 tools/render_quadrature.py /tmp/quadrature.actual.json /tmp/quadrature.actual.svg
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('/tmp/quadrature.actual.svg').getroot()
+          assert root.tag.endswith('svg')
+          assert any(element.tag.endswith('title') and element.text and element.text.strip() for element in root.iter())
+          assert any(element.tag.endswith('desc') and element.text and element.text.strip() for element in root.iter())
+          print('Generated quadrature area visualization is well-formed and accessible SVG.')
+          PY
+
+      - name: Upload quadrature run record and living SVG
+        uses: actions/upload-artifact@v7
+        with:
+          name: quadrature-area-experiment
+          path: |
+            /tmp/quadrature.actual.json
+            /tmp/quadrature.actual.svg
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
