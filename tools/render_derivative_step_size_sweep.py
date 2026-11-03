@@ -59,7 +59,7 @@ def render(record):
 {''.join(ticks)}
 <path d="M {left} {top} V {bottom} H {right}" fill="none" stroke="#334155" stroke-width="2"/>
 <path d="{path(actual)}" fill="none" stroke="#1d4ed8" stroke-width="3"/>
-<path d="{path(indicator)}" fill="none" stroke="#c2410c" stroke-width="3" stroke-dasharray="8 5"/>
+<path d="{path(plotted_indicator)}" fill="none" stroke="#c2410c" stroke-width="3" stroke-dasharray="8 5"/>
 {actual_points}
 {indicator_points}
 <circle cx="150" cy="682" r="5" fill="#1d4ed8"/><text x="164" y="687" font-family="Arial,sans-serif" font-size="15" fill="#1e293b">Actual absolute error vs cos(x)</text>
