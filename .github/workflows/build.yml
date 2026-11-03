@@ -702,6 +702,18 @@ jobs:
           print('Verified seventeen actual quadrature samples, cumulative area, units, and the analytical exponential integral.')
           PY
 
+      - name: Verify committed quadrature run record matches actual Physics output
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          actual = json.loads(Path('/tmp/quadrature.actual.json').read_text(encoding='utf-8'))
+          committed = json.loads(Path('docs/experiments/quadrature-area.run.json').read_text(encoding='utf-8'))
+          assert actual == committed, 'Committed quadrature run record is stale relative to the C# generator.'
+          print('Committed quadrature run record matches the actual C# quadrature samples.')
+          PY
+
       - name: Render area-accumulation SVG from actual quadrature samples
         run: |
           python3 tools/render_quadrature.py /tmp/quadrature.actual.json /tmp/quadrature.actual.svg
@@ -714,7 +726,7 @@ jobs:
           print('Generated quadrature area visualization is well-formed and accessible SVG.')
           PY
 
-      - name: Upload quadrature run record and living SVG
+      - name: Verify committed quadrature SVG against actual samples\n        run: cmp /tmp/quadrature.actual.svg docs/experiments/quadrature-area.svg\n\n      - name: Verify quadrature renderer reproduces committed SVG\n        run: python3 tools/render_quadrature.py docs/experiments/quadrature-area.run.json docs/experiments/quadrature-area.svg --check\n\n      - name: Upload quadrature run record and living SVG
         uses: actions/upload-artifact@v7
         with:
           name: quadrature-area-experiment
