@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "experimentId": "calculus.richardson.step-size-sweep.sin-at-0.7",
+  "functionExpression": "f(x) = sin(x)",
+  "coordinate": 0.7,
+  "inputUnit": "rad",
+  "outputUnit": "dimensionless",
+  "derivativeUnit": "dimensionless/rad",
+  "reference": "Math.Sin / Math.Cos analytical identity",
+  "evidenceClassification": "model-backed numerical experiment compared with an analytical reference",
+  "errorIndicatorMeaning": "Richardson correction magnitude is an asymptotic indicator, not a rigorous error bound.",
+  "samples": [
+    {
+      "step": 0.1,
+      "coarseStep": 0.1,
+      "fineStep": 0.05,
+      "derivativeEstimate": 0.7648420279897836,
+      "richardsonCorrectionIndicator": 0.000318485116836779,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 1.5929470487119346e-7
+    },
+    {
+      "step": 0.01,
+      "coarseStep": 0.01,
+      "fineStep": 0.005,
+      "derivativeEstimate": 0.764842187268557,
+      "richardsonCorrectionIndicator": 0.000003186822529939922,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 1.593147835876607e-11
+    },
+    {
+      "step": 0.001,
+      "coarseStep": 0.001,
+      "fineStep": 0.0005,
+      "derivativeEstimate": 0.7648421872844721,
+      "richardsonCorrectionIndicator": 3.1868415314069885e-8,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 1.6431300764452317e-14
+    },
+    {
+      "step": 0.0001,
+      "coarseStep": 0.0001,
+      "fineStep": 0.00005,
+      "derivativeEstimate": 0.7648421872841205,
+      "richardsonCorrectionIndicator": 3.1863400806741993e-10,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 3.680389326632394e-13
+    },
+    {
+      "step": 0.00001,
+      "coarseStep": 0.00001,
+      "fineStep": 0.000005,
+      "derivativeEstimate": 0.7648421872896715,
+      "richardsonCorrectionIndicator": 5.551115123125783e-12,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 5.182965168160081e-12
+    },
+    {
+      "step": 0.000001,
+      "coarseStep": 0.000001,
+      "fineStep": 5e-7,
+      "derivativeEstimate": 0.76484218723231,
+      "richardsonCorrectionIndicator": 1.850371707708594e-11,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 5.217848375593803e-11
+    },
+    {
+      "step": 1e-7,
+      "coarseStep": 1e-7,
+      "fineStep": 5e-8,
+      "derivativeEstimate": 0.7648421873618361,
+      "richardsonCorrectionIndicator": 0,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 7.734757279109772e-11
+    },
+    {
+      "step": 1e-8,
+      "coarseStep": 1e-8,
+      "fineStep": 5e-9,
+      "derivativeEstimate": 0.7648421895822821,
+      "richardsonCorrectionIndicator": 0,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 2.297793622041411e-9
+    },
+    {
+      "step": 1e-9,
+      "coarseStep": 1e-9,
+      "fineStep": 5e-10,
+      "derivativeEstimate": 0.7648421895822821,
+      "richardsonCorrectionIndicator": 0,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 2.297793622041411e-9
+    },
+    {
+      "step": 1e-10,
+      "coarseStep": 1e-10,
+      "fineStep": 5e-11,
+      "derivativeEstimate": 0.7648411533741258,
+      "richardsonCorrectionIndicator": 3.7007434154171886e-7,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 0.000001033910362657764
+    },
+    {
+      "step": 1e-11,
+      "coarseStep": 1e-11,
+      "fineStep": 5e-12,
+      "derivativeEstimate": 0.764828940920855,
+      "richardsonCorrectionIndicator": 0.0000037007434154171883,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 0.000013246363633534486
+    },
+    {
+      "step": 1e-12,
+      "coarseStep": 1e-12,
+      "fineStep": 5e-13,
+      "derivativeEstimate": 0.764980671400887,
+      "richardsonCorrectionIndicator": 0.00003700743415417188,
+      "analyticalDerivative": 0.7648421872844885,
+      "actualAbsoluteError": 0.00013848411639849623
+    }
+  ]
+}
