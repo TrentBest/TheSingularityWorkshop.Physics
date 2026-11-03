@@ -664,6 +664,15 @@ jobs:
           print('Generated derivative error plot is well-formed SVG.')
           PY
 
+      - name: Render canonical committed derivative sweep for artifact recovery
+        run: python3 tools/render_derivative_step_size_sweep.py docs/experiments/derivative-step-size-sweep.run.json /tmp/derivative-step-size-sweep.canonical.svg
+
+      - name: Upload canonical derivative sweep SVG for exact artifact recovery
+        uses: actions/upload-artifact@v7
+        with:
+          name: canonical-derivative-step-size-sweep-svg
+          path: /tmp/derivative-step-size-sweep.canonical.svg
+
       - name: Verify committed living derivative sweep against committed run record
         run: python3 tools/render_derivative_step_size_sweep.py docs/experiments/derivative-step-size-sweep.run.json docs/experiments/derivative-step-size-sweep.svg --check
 
