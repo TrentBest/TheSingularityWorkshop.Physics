@@ -283,6 +283,9 @@ jobs:
 
           record = json.loads(Path('/tmp/shapes-and-space.actual.json').read_text(encoding='utf-8'))
           committed = json.loads(Path('docs/experiments/shapes-and-space.run.json').read_text(encoding='utf-8'))
+          if record != committed:
+              print('ACTUAL_SHAPES_AND_SPACE_RECORD=' + json.dumps(record, sort_keys=True))
+              print('COMMITTED_SHAPES_AND_SPACE_RECORD=' + json.dumps(committed, sort_keys=True))
           assert record == committed, 'Committed Shapes and Space record differs from actual Physics geometry API output.'
           definition = record['definition']
           result = record['result']
