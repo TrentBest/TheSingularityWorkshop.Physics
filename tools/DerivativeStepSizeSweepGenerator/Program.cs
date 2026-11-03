@@ -44,13 +44,13 @@ var options = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPo
 File.WriteAllText(outputPath, JsonSerializer.Serialize(record, options) + Environment.NewLine);
 
 var minimum = samples.MinBy(sample => sample.ActualAbsoluteError)!;
-if (minimum.Step >= samples[0].step || minimum.Step <= samples[^1].step)
+if (minimum.Step >= samples[0].Step || minimum.Step <= samples[^1].Step)
 {
     Console.Error.WriteLine("The sweep did not expose an interior minimum in actual error.");
     return 1;
 }
 
-Console.WriteLine($"Wrote {samples.Count} Richardson estimates to {outputPath}; minimum actual error {minimum.actualAbsoluteError:R} at h={minimum.Step:R}.");
+Console.WriteLine($"Wrote {samples.Count} Richardson estimates to {outputPath}; minimum actual error {minimum.ActualAbsoluteError:R} at h={minimum.Step:R}.");
 return 0;
 
 internal sealed record SweepRecord(
