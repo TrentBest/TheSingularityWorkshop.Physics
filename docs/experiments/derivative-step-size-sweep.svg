@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="720" viewBox="0 0 1160 720" role="img" aria-labelledby="title desc">
+<title id="title">Derivative step-size sweep: actual error and Richardson indicator</title>
+<desc id="desc">Twelve model-backed sine derivative estimates compared with the analytical cosine derivative. Blue circles show actual absolute error; orange squares show the Richardson correction indicator. Both axes are logarithmic. Zero correction indicators are displayed at a visual floor below the smallest positive value.</desc>
+<rect width="1160" height="720" fill="#ffffff"/>
+<text x="100" y="42" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#0f172a">Derivative step-size sweep</text>
+<text x="100" y="70" font-family="Arial,sans-serif" font-size="16" fill="#475569">f(x) = sin(x) at x=0.7 rad · reference: Math.Sin / Math.Cos analytical identity</text>
+<path d="M 100 610.00 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="615.00" text-anchor="end" font-size="14" fill="#475569">1e-16</text>
+<path d="M 100 573.57 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="578.57" text-anchor="end" font-size="14" fill="#475569">1e-15</text>
+<path d="M 100 537.14 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="542.14" text-anchor="end" font-size="14" fill="#475569">1e-14</text>
+<path d="M 100 500.71 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="505.71" text-anchor="end" font-size="14" fill="#475569">1e-13</text>
+<path d="M 100 464.29 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="469.29" text-anchor="end" font-size="14" fill="#475569">1e-12</text>
+<path d="M 100 427.86 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="432.86" text-anchor="end" font-size="14" fill="#475569">1e-11</text>
+<path d="M 100 391.43 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="396.43" text-anchor="end" font-size="14" fill="#475569">1e-10</text>
+<path d="M 100 355.00 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="360.00" text-anchor="end" font-size="14" fill="#475569">1e-9</text>
+<path d="M 100 318.57 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="323.57" text-anchor="end" font-size="14" fill="#475569">1e-8</text>
+<path d="M 100 282.14 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="287.14" text-anchor="end" font-size="14" fill="#475569">1e-7</text>
+<path d="M 100 245.71 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="250.71" text-anchor="end" font-size="14" fill="#475569">1e-6</text>
+<path d="M 100 209.29 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="214.29" text-anchor="end" font-size="14" fill="#475569">1e-5</text>
+<path d="M 100 172.86 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="177.86" text-anchor="end" font-size="14" fill="#475569">1e-4</text>
+<path d="M 100 136.43 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="141.43" text-anchor="end" font-size="14" fill="#475569">1e-3</text>
+<path d="M 100 100.00 H 1060" stroke="#cbd5e1" stroke-dasharray="3 5"/>
+<text x="88" y="105.00" text-anchor="end" font-size="14" fill="#475569">1e-2</text>
+<path d="M 100.00 100 V 610" stroke="#e2e8f0"/>
+<text x="100.00" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-12</text>
+<path d="M 187.27 100 V 610" stroke="#e2e8f0"/>
+<text x="187.27" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-11</text>
+<path d="M 274.55 100 V 610" stroke="#e2e8f0"/>
+<text x="274.55" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-10</text>
+<path d="M 361.82 100 V 610" stroke="#e2e8f0"/>
+<text x="361.82" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-9</text>
+<path d="M 449.09 100 V 610" stroke="#e2e8f0"/>
+<text x="449.09" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-8</text>
+<path d="M 536.36 100 V 610" stroke="#e2e8f0"/>
+<text x="536.36" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-7</text>
+<path d="M 623.64 100 V 610" stroke="#e2e8f0"/>
+<text x="623.64" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-6</text>
+<path d="M 710.91 100 V 610" stroke="#e2e8f0"/>
+<text x="710.91" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-5</text>
+<path d="M 798.18 100 V 610" stroke="#e2e8f0"/>
+<text x="798.18" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-4</text>
+<path d="M 885.45 100 V 610" stroke="#e2e8f0"/>
+<text x="885.45" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-3</text>
+<path d="M 972.73 100 V 610" stroke="#e2e8f0"/>
+<text x="972.73" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-2</text>
+<path d="M 1060.00 100 V 610" stroke="#e2e8f0"/>
+<text x="1060.00" y="640" text-anchor="middle" font-size="14" fill="#475569">1e-1</text>
+<path d="M 100 100 V 610 H 1060" fill="none" stroke="#334155" stroke-width="2"/>
+<path d="M 1060.00 274.78 L 972.73 420.49 L 885.45 529.29 L 798.18 480.10 L 710.91 438.25 L 623.64 401.72 L 536.36 395.49 L 449.09 341.84 L 361.82 341.84 L 274.55 245.19 L 187.27 204.84 L 100.00 167.71" fill="none" stroke="#1d4ed8" stroke-width="3"/>
+<path d="M 1060.00 154.53 L 972.73 227.38 L 885.45 300.23 L 798.18 373.09 L 710.91 437.17 L 623.64 418.12 L 536.36 565.71 L 449.09 565.71 L 361.82 565.71 L 274.55 261.44 L 187.27 225.01 L 100.00 188.58" fill="none" stroke="#c2410c" stroke-width="3" stroke-dasharray="8 5"/>
+<circle cx="1060.00" cy="274.78" r="5" fill="#1d4ed8"/>
+<circle cx="972.73" cy="420.49" r="5" fill="#1d4ed8"/>
+<circle cx="885.45" cy="529.29" r="5" fill="#1d4ed8"/>
+<circle cx="798.18" cy="480.10" r="5" fill="#1d4ed8"/>
+<circle cx="710.91" cy="438.25" r="5" fill="#1d4ed8"/>
+<circle cx="623.64" cy="401.72" r="5" fill="#1d4ed8"/>
+<circle cx="536.36" cy="395.49" r="5" fill="#1d4ed8"/>
+<circle cx="449.09" cy="341.84" r="5" fill="#1d4ed8"/>
+<circle cx="361.82" cy="341.84" r="5" fill="#1d4ed8"/>
+<circle cx="274.55" cy="245.19" r="5" fill="#1d4ed8"/>
+<circle cx="187.27" cy="204.84" r="5" fill="#1d4ed8"/>
+<circle cx="100.00" cy="167.71" r="5" fill="#1d4ed8"/>
+<rect x="1056.00" y="150.53" width="8" height="8" fill="#c2410c"/>
+<rect x="968.73" y="223.38" width="8" height="8" fill="#c2410c"/>
+<rect x="881.45" y="296.23" width="8" height="8" fill="#c2410c"/>
+<rect x="794.18" y="369.09" width="8" height="8" fill="#c2410c"/>
+<rect x="706.91" y="433.17" width="8" height="8" fill="#c2410c"/>
+<rect x="619.64" y="414.12" width="8" height="8" fill="#c2410c"/>
+<rect x="532.36" y="561.71" width="8" height="8" fill="#c2410c"/>
+<rect x="445.09" y="561.71" width="8" height="8" fill="#c2410c"/>
+<rect x="357.82" y="561.71" width="8" height="8" fill="#c2410c"/>
+<rect x="270.55" y="257.44" width="8" height="8" fill="#c2410c"/>
+<rect x="183.27" y="221.01" width="8" height="8" fill="#c2410c"/>
+<rect x="96.00" y="184.58" width="8" height="8" fill="#c2410c"/>
+<circle cx="150" cy="682" r="5" fill="#1d4ed8"/><text x="164" y="687" font-family="Arial,sans-serif" font-size="15" fill="#1e293b">Actual absolute error vs cos(x)</text>
+<rect x="445" y="678" width="8" height="8" fill="#c2410c"/><text x="463" y="687" font-family="Arial,sans-serif" font-size="15" fill="#1e293b">Richardson correction indicator</text>
+<text x="580" y="710" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#475569">Coarse step h (log scale)</text>
+<text x="24" y="355" transform="rotate(-90 24 355)" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" fill="#475569">Absolute magnitude (log scale)</text>
+<text x="100" y="125" font-family="Arial,sans-serif" font-size="14" fill="#64748b">Model-backed numerical experiment · correction is not a guaranteed error bound</text>
+</svg>
