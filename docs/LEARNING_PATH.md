@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # Physics Learning Path: Learn by Watching the World
 
 The Workshop should make learning feel like curiosity, not a prerequisite. A visitor notices something, changes one input, sees what changed, asks why, and can open the mathematics only when ready.
@@ -99,3 +102,7 @@ A topic moves from planned to implemented only when the repository contains:
 8. CI checks that keep the source, tests, explanation, and visual aligned.
 
 The [capability catalog](PHYSICS_CAPABILITY_CATALOG.md) remains the source for implementation status. This learning path determines how to teach and compose those capabilities; it must not promote roadmap ideas into claims of working physics.
+
+---
+
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="320" /></p>
