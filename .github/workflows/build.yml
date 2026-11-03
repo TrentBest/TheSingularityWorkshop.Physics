@@ -626,6 +626,47 @@ jobs:
       - name: Verify living derivative SVG renderer is reproducible
         run: python3 tools/render_derivative_derivation.py docs/experiments/derivative-derivation.run.json docs/experiments/derivative-derivation.svg --check
 
+      - name: Execute derivative step-size sweep from the Physics implementation
+        run: dotnet run --project tools/DerivativeStepSizeSweepGenerator/DerivativeStepSizeSweepGenerator.csproj --configuration Release -- /tmp/derivative-step-size-sweep.actual.json
+
+      - name: Compare derivative sweep with committed reference record
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          from pathlib import Path
+
+          actual = json.loads(Path('/tmp/derivative-step-size-sweep.actual.json').read_text(encoding='utf-8'))
+          committed = json.loads(Path('docs/experiments/derivative-step-size-sweep.run.json').read_text(encoding='utf-8'))
+          for key in ('schemaVersion', 'experimentId', 'functionExpression', 'coordinate', 'inputUnit', 'outputUnit', 'derivativeUnit', 'reference', 'evidenceClassification', 'errorIndicatorMeaning'):
+              assert actual[key] == committed[key], f'metadata mismatch: {key}'
+          assert len(actual['samples']) == len(committed['samples']) == 12
+          numeric = ('step', 'coarseStep', 'fineStep', 'derivativeEstimate', 'richardsonCorrectionIndicator', 'analyticalDerivative', 'actualAbsoluteError')
+          for index, (observed, expected) in enumerate(zip(actual['samples'], committed['samples'])):
+              for key in numeric:
+                  assert math.isclose(observed[key], expected[key], rel_tol=1e-5, abs_tol=1e-12), (index, key, observed[key], expected[key])
+          errors = [sample['actualAbsoluteError'] for sample in actual['samples']]
+          assert min(range(len(errors)), key=errors.__getitem__) not in (0, len(errors) - 1)
+          assert actual['samples'][0]['actualAbsoluteError'] > min(errors)
+          assert actual['samples'][-1]['actualAbsoluteError'] > min(errors)
+          assert all(actual['samples'][i]['step'] > actual['samples'][i+1]['step'] for i in range(11))
+          print('Verified twelve actual C# Richardson estimates against the analytical cosine reference and committed sweep within floating-point tolerances.')
+          PY
+
+      - name: Render generated derivative sweep and validate SVG structure
+        run: |
+          python3 tools/render_derivative_step_size_sweep.py /tmp/derivative-step-size-sweep.actual.json /tmp/derivative-step-size-sweep.actual.svg
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('/tmp/derivative-step-size-sweep.actual.svg').getroot()
+          assert root.tag.endswith('svg')
+          assert 'title' in ''.join(root.itertext())
+          print('Generated derivative error plot is well-formed SVG.')
+          PY
+
+      - name: Verify committed living derivative sweep against committed run record
+        run: python3 tools/render_derivative_step_size_sweep.py docs/experiments/derivative-step-size-sweep.run.json docs/experiments/derivative-step-size-sweep.svg --check
+
       - name: Restore
         run: dotnet restore TheSingularityWorkshop.Physics.sln
 
