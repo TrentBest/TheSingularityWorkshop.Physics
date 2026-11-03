@@ -25,6 +25,65 @@ Mathematics is not a separate product or package in this architecture; it lives 
 | Graph and tensor methods | sparse/dense graphs, tensors, tensor contractions, automatic differentiation | explicit shape/layout contracts and backend-neutral operations | Gap: no tensor or autodiff runtime claimed |
 | Number theory and exact arithmetic | integer domains, modular arithmetic, rational values, primality | exact rational/unit-conversion support where useful; overflow policy | Gap: not a general exact arithmetic package |
 
+## Mathematical structures and methods that physics depends on
+
+The domain rows above are a starting inventory, not an exhaustive boundary. The following subjects must remain visible in the atlas even when they are not yet represented by reusable code. They are distinct mathematical disciplines or method families; they should not be collapsed into a generic “advanced math” bucket.
+
+| Subject | Core mathematical territory | Physical consumers and why it matters | Repository status |
+|---|---|---|---|
+| Dimensional analysis and metrology | quantities, dimensions, unit systems, scale analysis, uncertainty budgets, significant precision, measurement models | Every measured or simulated physical quantity; model validation, similarity laws, experimental comparison | Partial: unit labels and SI conventions occur in models and records; shared quantity/dimension and uncertainty contracts remain gaps |
+| Complex analysis | complex variables, analytic functions, residues, contour integration, conformal maps | AC circuits, waves, oscillations, quantum mechanics, potential flow, Green-function methods | Gap: complex-number support is not yet a general complex-analysis toolkit |
+| Functional analysis | normed/inner-product spaces, Hilbert and Banach spaces, linear functionals, convergence of functions, weak formulations | Quantum state spaces, PDE existence/weak solutions, continuum mechanics, variational methods | Gap |
+| Operator theory and spectral theory | linear operators, adjoints, spectra, eigenfunctions, self-adjointness, resolvents, spectral decompositions | Quantum observables, normal modes, stability, wave equations, diffusion and field equations | Gap beyond small finite-dimensional matrix operations |
+| Differential geometry | manifolds, tangent/cotangent spaces, metrics, connections, geodesics, curvature, coordinate charts | General relativity, curved configuration spaces, continuum kinematics, robotics-like physical constraints | Gap beyond Euclidean 2D/3D primitives and explicit rigid transforms |
+| Tensor calculus | covariant/contravariant tensors, index notation, tensor products, contractions, metric raising/lowering, covariant derivatives | Stress/strain, inertia, constitutive laws, electromagnetism, relativity, anisotropic materials | Gap: vectors and matrices exist; no general tensor calculus is claimed |
+| Differential forms and exterior calculus | forms, wedge product, exterior derivative, pullback, Stokes' theorem, integration on manifolds | Coordinate-independent electromagnetism, flux/circulation, conservation laws, continuum field theory | Gap |
+| Topology | continuity, connectedness, compactness, homotopy, winding/linking, topological invariants | Defects, vortices, phase transitions, configuration spaces, field topology and robust geometric classification | Gap beyond limited polygon/segment classifications |
+| Calculus of variations | functionals, Euler–Lagrange equations, constraints, boundary terms, optimal paths, stationary action | Lagrangian mechanics, geodesics, elasticity, optics, field equations, optimal control | Gap |
+| Hamiltonian and symplectic mathematics | phase spaces, canonical coordinates, symplectic forms, Poisson brackets, Hamiltonian flows, canonical transforms | Classical mechanics, orbital dynamics, molecular dynamics, geometric integration and quantum foundations | Gap |
+| Dynamical systems and bifurcation theory | flows/maps, equilibria, linearization, stability, invariant manifolds, attractors, bifurcations, chaos | Nonlinear mechanics, fluid instabilities, climate, circuits, reaction systems and coupled physical models | Gap as a reusable analysis domain |
+| PDE theory and continuum mathematics | elliptic/parabolic/hyperbolic equations, weak solutions, conservation laws, characteristics, shocks, boundary layers | Heat, waves, elasticity, fluids, electromagnetism, diffusion, reaction-transport and fields | Gap as a general PDE framework; selected domain-specific solvers exist |
+| Numerical discretization and computational mathematics | finite difference/volume/element, spectral and meshless methods, weak forms, stability, consistency, convergence, preconditioning | Turning continuous physical laws into bounded, validated computation | Partial: finite differences and quadrature exist; broad solver families and error analysis remain gaps |
+| Harmonic and asymptotic methods | Fourier series/transforms, Laplace transforms, Green functions, distributions, perturbation, multiple scales, WKB and asymptotic expansions | Linear response, waves, acoustics, quantum mechanics, transport, boundary layers and approximate solutions | Gap beyond bounded interpolation and current calculus slices |
+| Probability, stochastic calculus and statistical mechanics | random variables/processes, Markov chains, Brownian motion, stochastic differential equations, ensembles, partition functions, entropy and fluctuations | Thermal physics, kinetic theory, diffusion, noise, uncertainty, particle events and molecular systems | Partial: deterministic random streams and online variance exist; distributions and stochastic-process models remain gaps |
+| Information and inference mathematics | information/entropy, Bayesian inference, likelihood, inverse problems, identifiability, regularization, model selection | Experimental physics, parameter estimation, tomography, detector reconstruction and uncertainty-aware model calibration | Gap as a general reusable toolkit |
+| Control and estimation theory | state-space systems, controllability, observability, feedback, Kalman/Bayesian filters, parameter/state estimation | Stabilization, physical instrumentation, navigation, robotics, experimental apparatus and coupled systems | Gap |
+| Discrete, combinatorial and computational structures | graph algorithms, networks, combinatorics, cellular/agent systems, automata, logic and algorithms | Lattice models, reaction networks, meshes, molecular graphs, causal/event networks and computational complexity | Partial: selected grid/timeline and seeded-sampling concepts exist; general graph and combinatoric methods remain gaps |
+| Relativistic and representation mathematics | Lorentz and Poincaré groups, Lie groups/algebras, representations, spinors, invariants and relativistic geometry | Special/general relativity, particle physics, quantum angular momentum and field symmetries | Gap beyond basic spatial/quaternion primitives |
+| Number theory and exact/symbolic methods | integers, rationals, modular arithmetic, exact algebra, symbolic manipulation, computer algebra and proof-oriented identities | Exact conservation identities, lattice/quantized models, reproducible derivations and verification of formula transformations | Gap: no general symbolic or computer-algebra engine is claimed |
+
+### Mathematical dependency map by physical discipline
+
+This is a cross-reference, not a requirement that every physical model depend on every mathematical subject.
+
+| Physical discipline | Mathematical foundations that must be represented |
+|---|---|
+| Classical mechanics and rigid bodies | Euclidean/analytic geometry, vectors and matrices, ODEs, linear algebra, variational calculus, Hamiltonian/symplectic methods, constrained optimization, numerical integration |
+| Gravitation, orbital mechanics and relativity | Differential geometry, tensor calculus, ODE/PDE, variational principles, Lie groups, Lorentz geometry, numerical integration and stability |
+| Thermodynamics and statistical mechanics | Multivariable calculus, differential equations, probability, statistics, optimization, convexity, information/entropy, asymptotics and dimensional analysis |
+| Fluids, waves and continuum mechanics | Vector/tensor calculus, PDEs, conservation laws, functional analysis, numerical discretization, stability, turbulence/statistical methods and geometry/topology |
+| Heat transfer, materials and reactions | PDEs, transport equations, constitutive tensors, thermodynamics, kinetics, nonlinear dynamics, numerical methods and uncertainty propagation |
+| Electromagnetism, circuits and optics | Vector calculus, differential forms, complex analysis, Fourier/Laplace methods, PDEs, Green functions, linear systems and spectral methods |
+| Acoustics and signal-bearing physical systems | Harmonic/Fourier analysis, complex analysis, convolution, stochastic processes, PDEs, spectral estimation and inverse problems |
+| Quantum, atomic and molecular physics | Complex linear algebra, Hilbert spaces, operator/spectral theory, differential equations, group representations, tensor products, probability and variational/perturbation methods |
+| Nuclear, particle and collider physics | Relativistic geometry, Lie groups/representations, four-vector algebra, probability/statistics, stochastic event models, numerical integration, inference and uncertainty analysis |
+| Geophysics, planetary science and astrophysics | Differential geometry, tensor calculus, PDEs, dynamical systems, continuum methods, inverse problems, statistics, numerical linear algebra and multiscale methods |
+| Experimental and computational physics | Metrology, dimensional analysis, statistics, Bayesian inference, signal processing, inverse problems, optimization, numerical error analysis and reproducibility |
+
+### Coverage and maturity rules
+
+Track each subject independently through these states:
+
+1. **Mapped** — its scope, neighboring subjects and physical consumers are identified.
+2. **Explained** — theory, notation, assumptions, derivations and references are documented.
+3. **Specified** — reusable contracts, units, conventions, failure modes and numerical expectations are defined.
+4. **Implemented** — source code exists for the declared scope.
+5. **Validated** — focused tests and independent analytical/reference evidence establish the declared behavior.
+6. **Applied** — at least one physical domain consumes the capability in a reproducible experiment.
+7. **Cross-validated** — independent methods, refinement studies or external reference data establish confidence across a declared range.
+
+A subject may be mapped and explained while remaining unimplemented. Never promote a whole discipline's status because one narrow primitive exists. Record the implemented slice and its limits.
+
 ## Cross-cutting rules
 
 1. **Name the domain and its assumptions.** “Solve this equation” must distinguish an algebraic solution from a numerical approximation, a physical model, or a fitted statistical relationship.
