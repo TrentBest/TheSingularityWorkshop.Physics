@@ -20,7 +20,7 @@ This is an inventory, not a maturity score. A larger number of files does not im
 
 | Physics / mathematics branch | Current evidence in this repository | Important unproven or missing territory |
 |---|---|---|
-| Spatial geometry and frames | 2D vectors, robust orientation and segment predicates, polygon validation/area/triangulation/point location, frame-aware 2D transforms, 3D vector/quaternion/pose types | Transform graphs, unit conversion, broader 3D geometry, mesh quality, uncertainty-aware tolerances |
+| Spatial geometry and frames | 2D vectors, robust orientation and segment predicates, unique-point intersection construction, signed polygon area, simple-boundary validation, O(n²) ear-clipping triangulation, point location, frame-aware 2D transforms, 3D vector/quaternion/pose types | Transform graphs, unit conversion, broader 3D geometry, constrained-Delaunay/quality meshing, caller-visible construction-accuracy policy, uncertainty-aware tolerances |
 | Kinematics | Constant-acceleration solver, projectile state and trajectory experiments, recorded samples | General force-driven motion, drag-coupled trajectories, broader analytic/numerical comparison |
 | Dynamics and rigid bodies | Bounded free rigid-body integrator and state contracts | General constraint solving, friction, angular impulse/contact coupling, articulated multibody systems |
 | Collision and impact | AABB broadphase, sphere contact, single frictionless normal impulse, position correction, impact diagnostics | Robust multi-contact response, friction, persistent contact, damage/topology consequences |
