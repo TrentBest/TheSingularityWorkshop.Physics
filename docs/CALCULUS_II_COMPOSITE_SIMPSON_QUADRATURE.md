@@ -72,7 +72,7 @@ Console.WriteLine(refined.EstimatedAbsoluteError);
 
 The focused tests cover a cubic polynomial with a closed-form integral, the sine integral on \([0,\pi]\), reversed bounds, zero-width intervals, invalid bounds and interval counts, non-finite samples, arithmetic overflow, refinement against the exact exponential integral, and the expected independent coarse/fine evaluation count.
 
-**Evidence classification:** implemented numerical primitive with focused automated tests and analytical reference identities. The tests establish these bounded cases; they do not prove convergence for arbitrary integrands or turn the correction indicator into a guaranteed error bound. There is not yet a generated integration run record or living area visualization.
+The deterministic experiment in [quadrature-area.run.json](experiments/quadrature-area.run.json) evaluates f(t) = exp(-t) over one second. Its seventeen recorded points include the function value and cumulative Simpson area at each coordinate. The analytical reference is 1 - exp(-1); the refined estimate and its actual error are stored separately from the Richardson correction indicator. CI regenerates the record from the C# implementation, validates all samples and units, renders the SVG, compares the committed record, and checks the living image for reproducibility.\n\n![Living area-accumulation visualization generated from actual quadrature samples](experiments/quadrature-area.svg)\n\n**Evidence classification:** implemented numerical primitive with focused automated tests, an analytical reference identity, a deterministic model-backed run record, and a living SVG rendered from actual C# output. The tests and experiment establish these bounded cases; they do not prove convergence for arbitrary integrands or turn the correction indicator into a guaranteed error bound.
 
 ## 05 — Choose your next step
 
@@ -82,7 +82,7 @@ The focused tests cover a cubic polynomial with a closed-form integral, the sine
 - Domain inventory: [Mathematics Domain Map](MATHEMATICS_DOMAIN_MAP.md)
 - Numerical evidence rules: [Numerical Validation](NUMERICAL_VALIDATION.md)
 
-Next, add a deterministic integration run record and a living area-accumulation visualization generated from actual model samples.
+Next, extend numerical integration with adaptive interval refinement and explicit convergence/failure policies, while preserving bounded work and honest error semantics.
 
 ---
 
