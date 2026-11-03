@@ -270,6 +270,42 @@ jobs:
           print('Lesson manifest matches the actual C# run and its visualization exists.')
           PY
 
+      - name: Validate Shapes and Space construction record and living SVG
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          record = json.loads(Path('docs/experiments/shapes-and-space.run.json').read_text(encoding='utf-8'))
+          definition = record['definition']
+          result = record['result']
+          vertices = definition['vertices']
+          assert record['modelId'] == 'geometry.polygon-construction-2d'
+          assert record['status'] == 'computed-from-geometry-primitives'
+          assert len(vertices) == result['vertexCount'] == result['edgeCount'] == 5
+          twice_area = sum(vertices[i]['x'] * vertices[(i + 1) % 5]['y'] - vertices[i]['y'] * vertices[(i + 1) % 5]['x'] for i in range(5))
+          assert math.isclose(twice_area / 2, result['signedArea'], rel_tol=0, abs_tol=1e-12)
+          assert result['winding'] == ('counter-clockwise' if twice_area > 0 else 'clockwise')
+          assert result['isSimple'] is True
+          assert {item['id']: item['relation'] for item in result['pointClassifications']} == {'inside':'inside','boundary':'boundary','outside':'outside'}
+          assert len(result['triangles']) == len(vertices) - 2
+          triangle_area = 0.0
+          for a, b, c in result['triangles']:
+              p, q, r = (vertices[index] for index in (a, b, c))
+              triangle_area += ((q['x']-p['x'])*(r['y']-p['y'])-(q['y']-p['y'])*(r['x']-p['x'])) / 2
+          assert math.isclose(triangle_area, result['signedArea'], rel_tol=0, abs_tol=1e-12)
+          svg_path = Path('docs/experiments/shapes-and-space.svg')
+          root = ET.parse(svg_path).getroot()
+          assert root.tag.endswith('svg')
+          svg_text = ''.join(root.itertext())
+          assert '+14' in svg_text and 'inside' in svg_text and 'boundary' in svg_text and 'outside' in svg_text
+          assert record['provenance']['physicalObservation'] is False
+          assert record['provenance']['simulation'] is False
+          print('Verified polygon area, winding, triangulation, classifications, and teaching SVG.')
+          PY
+
       - name: Render apple lesson from actual C# states
         run: python3 tools/render_free_fall.py /tmp/apple-free-fall.actual.json /tmp/apple-free-fall.actual.svg
 
