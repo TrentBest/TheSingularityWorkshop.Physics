@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "modelId": "mathematics.composite-simpson-quadrature",
+  "modelVersion": "1",
+  "functionExpression": "f(t) = exp(-t)",
+  "lowerBound": 0,
+  "upperBound": 1,
+  "inputUnit": "s",
+  "outputUnit": "1/s",
+  "integralUnit": "1",
+  "coarseIntervalCount": 16,
+  "fineIntervalCount": 32,
+  "integralEstimate": 0.6321205588298028,
+  "analyticalReference": 0.6321205588285577,
+  "actualAbsoluteError": 1.245115122117113e-12,
+  "estimatedAbsoluteErrorIndicator": 3.3474606124054656e-9,
+  "evidenceClassification": "model-backed numerical experiment with analytical reference",
+  "errorIndicatorMeaning": "Richardson correction magnitude for fourth-order Simpson refinement; not a guaranteed bound",
+  "samples": [
+    {
+      "index": 0,
+      "coordinate": 0,
+      "functionValue": 1,
+      "cumulativeIntegral": 0
+    },
+    {
+      "index": 1,
+      "coordinate": 0.0625,
+      "functionValue": 0.9394130628134758,
+      "cumulativeIntegral": 0.06058693750748804
+    },
+    {
+      "index": 2,
+      "coordinate": 0.125,
+      "functionValue": 0.8824969025845955,
+      "cumulativeIntegral": 0.11750309803788603
+    },
+    {
+      "index": 3,
+      "coordinate": 0.1875,
+      "functionValue": 0.8290291181804004,
+      "cumulativeIntegral": 0.17097088272533068
+    },
+    {
+      "index": 4,
+      "coordinate": 0.25,
+      "functionValue": 0.7788007830714049,
+      "cumulativeIntegral": 0.22119921810041449
+    },
+    {
+      "index": 5,
+      "coordinate": 0.3125,
+      "functionValue": 0.7316156289466418,
+      "cumulativeIntegral": 0.26838437247514446
+    },
+    {
+      "index": 6,
+      "coordinate": 0.375,
+      "functionValue": 0.6872892787909722,
+      "cumulativeIntegral": 0.3127107228656362
+    },
+    {
+      "index": 7,
+      "coordinate": 0.4375,
+      "functionValue": 0.645648526427892,
+      "cumulativeIntegral": 0.3543514754493114
+    },
+    {
+      "index": 8,
+      "coordinate": 0.5,
+      "functionValue": 0.6065306597126334,
+      "cumulativeIntegral": 0.39346934237179976
+    },
+    {
+      "index": 9,
+      "coordinate": 0.5625,
+      "functionValue": 0.569782824730923,
+      "cumulativeIntegral": 0.43021717754818456
+    },
+    {
+      "index": 10,
+      "coordinate": 0.625,
+      "functionValue": 0.5352614285189903,
+      "cumulativeIntegral": 0.46473857394299706
+    },
+    {
+      "index": 11,
+      "coordinate": 0.6875,
+      "functionValue": 0.5028315779709409,
+      "cumulativeIntegral": 0.4971684246628459
+    },
+    {
+      "index": 12,
+      "coordinate": 0.75,
+      "functionValue": 0.4723665527410147,
+      "cumulativeIntegral": 0.5276334500541628
+    },
+    {
+      "index": 13,
+      "coordinate": 0.8125,
+      "functionValue": 0.44374731008107987,
+      "cumulativeIntegral": 0.5562526928657102
+    },
+    {
+      "index": 14,
+      "coordinate": 0.875,
+      "functionValue": 0.4168620196785084,
+      "cumulativeIntegral": 0.5831379834107085
+    },
+    {
+      "index": 15,
+      "coordinate": 0.9375,
+      "functionValue": 0.391605626676799,
+      "cumulativeIntegral": 0.6083943765462155
+    },
+    {
+      "index": 16,
+      "coordinate": 1,
+      "functionValue": 0.36787944117144233,
+      "cumulativeIntegral": 0.6321205621772634
+    }
+  ]
+}
