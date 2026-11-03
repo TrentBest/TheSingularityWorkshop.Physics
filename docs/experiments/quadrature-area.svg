@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="760" viewBox="0 0 1160 760" role="img" aria-labelledby="title desc">
+<title id="title">Numerical quadrature: accumulated area under the curve</title>
+<desc id="desc">Model-backed area visualization from seventeen cumulative Simpson samples. The upper plot shows the exponential decay function and shaded area. The lower plot shows accumulated integral values. The refined integral is compared with an analytical reference.</desc>
+<rect width="1160" height="760" fill="#ffffff"/>
+<text x="100" y="42" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#0f172a">Accumulation by numerical quadrature</text>
+<text x="100" y="72" font-family="Arial,sans-serif" font-size="17" fill="#475569">f(t) = exp(-t) · t in s</text>
+<path d="M 100.00 440.00 L 100.00 125.19 L 160.00 144.26 L 220.00 162.18 L 280.00 179.01 L 340.00 194.82 L 400.00 209.68 L 460.00 223.63 L 520.00 236.74 L 580.00 249.06 L 640.00 260.62 L 700.00 271.49 L 760.00 281.70 L 820.00 291.29 L 880.00 300.30 L 940.00 308.77 L 1000.00 316.72 L 1060.00 324.19 L 1060.00 440.00 Z" fill="#bfdbfe" fill-opacity="0.72" stroke="none"/>
+<path d="M 100.0 440.0 H 1060.0" stroke="#334155" stroke-width="1.5"/>
+<path d="M 100.0 100.0 V 440.0" stroke="#334155" stroke-width="1.5"/>
+<path d="M 100.00 125.19 L 160.00 144.26 L 220.00 162.18 L 280.00 179.01 L 340.00 194.82 L 400.00 209.68 L 460.00 223.63 L 520.00 236.74 L 580.00 249.06 L 640.00 260.62 L 700.00 271.49 L 760.00 281.70 L 820.00 291.29 L 880.00 300.30 L 940.00 308.77 L 1000.00 316.72 L 1060.00 324.19" fill="none" stroke="#1d4ed8" stroke-width="3.5" stroke-linejoin="round"/>
+<circle cx="100.00" cy="125.19" r="4" fill="#1d4ed8"/>
+<circle cx="160.00" cy="144.26" r="4" fill="#1d4ed8"/>
+<circle cx="220.00" cy="162.18" r="4" fill="#1d4ed8"/>
+<circle cx="280.00" cy="179.01" r="4" fill="#1d4ed8"/>
+<circle cx="340.00" cy="194.82" r="4" fill="#1d4ed8"/>
+<circle cx="400.00" cy="209.68" r="4" fill="#1d4ed8"/>
+<circle cx="460.00" cy="223.63" r="4" fill="#1d4ed8"/>
+<circle cx="520.00" cy="236.74" r="4" fill="#1d4ed8"/>
+<circle cx="580.00" cy="249.06" r="4" fill="#1d4ed8"/>
+<circle cx="640.00" cy="260.62" r="4" fill="#1d4ed8"/>
+<circle cx="700.00" cy="271.49" r="4" fill="#1d4ed8"/>
+<circle cx="760.00" cy="281.70" r="4" fill="#1d4ed8"/>
+<circle cx="820.00" cy="291.29" r="4" fill="#1d4ed8"/>
+<circle cx="880.00" cy="300.30" r="4" fill="#1d4ed8"/>
+<circle cx="940.00" cy="308.77" r="4" fill="#1d4ed8"/>
+<circle cx="1000.00" cy="316.72" r="4" fill="#1d4ed8"/>
+<circle cx="1060.00" cy="324.19" r="4" fill="#1d4ed8"/>
+<text x="100" y="475" font-family="Arial,sans-serif" font-size="14" fill="#475569">Input coordinate (s)</text>
+<text x="580" y="510" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#0f172a">Accumulated integral</text>
+<path d="M 100.0 680.0 H 1060.0" stroke="#334155" stroke-width="1.5"/>
+<path d="M 100.00 680.00 L 160.00 667.13 L 220.00 655.04 L 280.00 643.69 L 340.00 633.02 L 400.00 623.00 L 460.00 613.58 L 520.00 604.74 L 580.00 596.43 L 640.00 588.62 L 700.00 581.29 L 760.00 574.40 L 820.00 567.93 L 880.00 561.85 L 940.00 556.14 L 1000.00 550.78 L 1060.00 545.74" fill="none" stroke="#0f766e" stroke-width="3.5" stroke-linejoin="round"/>
+<text x="100" y="720" font-family="Arial,sans-serif" font-size="15" fill="#0f766e">Final refined integral: 0.63212055883 1</text>
+<text x="610" y="720" font-family="Arial,sans-serif" font-size="15" fill="#475569">Richardson correction indicator: 3.347e-09 (not a bound)</text>
+</svg>
