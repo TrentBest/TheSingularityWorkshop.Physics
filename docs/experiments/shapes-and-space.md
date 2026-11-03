@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # Shapes & Space: a boundary made from points
 
 **Question:** How do a handful of locations become a shape, and how can we describe that shape without relying on its appearance?
