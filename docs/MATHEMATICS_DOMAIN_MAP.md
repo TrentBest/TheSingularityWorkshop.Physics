@@ -1,3 +1,6 @@
+<!-- The Singularity Workshop moniker -->
+<p align="center"><a href="https://github.com/TrentBest"><img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg" alt="The Singularity Workshop animated moniker" width="720" /></a></p>
+
 # Mathematics Domain Map
 
 **Status:** domain architecture and implementation inventory. The breadth below is the target vocabulary, not a claim that every branch has an implementation or solver.
@@ -45,3 +48,7 @@ Mathematics is not a separate product or package in this architecture; it lives 
 ## Evidence standard
 
 A row moves from gap to implemented only when it has source, focused tests, documented numerical/domain limits, and an observable reference example. A conceptual SVG may teach the idea, but it cannot be presented as output from an absent solver.
+
+---
+
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="320" /></p>
