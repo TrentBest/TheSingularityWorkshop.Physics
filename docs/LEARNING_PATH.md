@@ -24,11 +24,27 @@ This is an instructional map for the Physics domain, not a claim that every list
 
 The lesson is the entry point. The same model and measurements remain available to engineers and researchers who want to inspect every detail.
 
+## Start with shapes and space
+
+Before asking a learner to reason about motion, give them a way to notice and describe the space in which motion happens. Begin with constructions they can see and manipulate:
+
+1. **Points and paths:** distinguish a location from the line or segment connecting locations.
+2. **Lengths and angles:** compare distance, direction, and turning without requiring algebra first.
+3. **Shapes:** build and compare triangles, rectangles, circles, and polygons; notice perimeter, area, and boundaries.
+4. **Patterns and symmetry:** reflect, rotate, translate, repeat, and compare shapes; identify what changes and what stays invariant.
+5. **Coordinates and scale:** place points on a grid, change the scale, and see how coordinate descriptions relate to the same geometric scene.
+6. **Transformations:** move from visual actions to explicit translation, rotation, composition, and inverse operations.
+
+The progression should reveal the mathematics as a description of what the learner has already explored—not as vocabulary they must memorize before exploring. Later lessons can reuse these same ideas for trajectories, collision boundaries, forces, waves, and spatial fields.
+
+**Implementation truth:** the repository contains tested pieces of 2D geometry, frame-aware points and transforms, segment intersection, polygon location, and related constructions. That does not yet amount to a complete geometry curriculum or a dedicated interactive shape lesson. The planned teaching experience must be generated from those real capabilities, and every unsupported construction must remain clearly illustrative.
+
 ## Progressive route through the domain
 
 | Stop | Learner's question | Concept introduced | Evidence surface | Status |
 |---|---|---|---|---|
 | 00 · Observe | What am I looking at, and what is actually simulated? | Observation versus model versus authored illustration | Capability badge, model identity, assumptions | Contract defined; experience integration remains host work |
+| 00a · Shapes & space | What is a point, line, angle, or shape—and how can shapes be compared? | Points, segments, angles, polygons, length, area, symmetry, scale, coordinates, and transformations | Future learner-facing shape explorations built from the tested geometry capabilities; conceptual constructions must be labeled | Geometry primitives are partially implemented and tested; a dedicated lesson/visual experience is **planned**, not yet implemented |
 | 01 · Motion | How does position change over time? | Position, velocity, acceleration; slopes and derivatives | [Apple free-fall lesson](experiments/apple-free-fall.md), recorded SVG and run values | **First teaching slice implemented** |
 | 01a · Calculus I | How can a rate of change be estimated from nearby samples? | Limits, secant slopes, derivatives, truncation error and floating-point cancellation | [Calculus I — central finite differences](CALCULUS_I_CENTRAL_FINITE_DIFFERENCES.md), generated derivation and step-size sweep | Scalar central-difference and Richardson-refined derivative implemented; focused tests and model-backed living plots pass CI |
 | 01b · Calculus II | How can sampled values estimate accumulated area? | Definite integrals, composite Simpson quadrature, refinement and error indicators | [Calculus II — composite Simpson quadrature](CALCULUS_II_COMPOSITE_SIMPSON_QUADRATURE.md), source and focused tests | Bounded composite Simpson and Richardson-refined estimate implemented; analytical-reference tests, deterministic run record, and model-backed living area visualization pass CI |
