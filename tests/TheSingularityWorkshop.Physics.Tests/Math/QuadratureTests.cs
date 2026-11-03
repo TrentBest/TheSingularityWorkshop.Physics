@@ -9,7 +9,7 @@ public sealed class QuadratureTests
     [Test]
     public void CompositeSimpson_CubicPolynomialMatchesAnalyticalIntegral()
     {
-        // Integral from -1 to 2 of (x^3 - 2x + 4) is 15/4.
+        // Integral from -1 to 2 of (x^3 - 2x + 4) is 12.75.
         var result = Quadrature.CompositeSimpson(x => (x * x * x) - (2d * x) + 4d, -1d, 2d, 8);
 
         Assert.That(result, Is.EqualTo(12.75d).Within(1e-12));
@@ -62,6 +62,8 @@ public sealed class QuadratureTests
             Quadrature.CompositeSimpson(_ => double.MaxValue, 0d, 1d, 2));
         Assert.Throws<ArithmeticException>(() =>
             Quadrature.CompositeSimpson(x => x, -double.MaxValue, double.MaxValue, 2));
+        Assert.Throws<ArithmeticException>(() =>
+            Quadrature.CompositeSimpson(x => x, 1e16, 1e16 + 4d, 4));
     }
 
     [Test]
