@@ -12,7 +12,7 @@ public sealed class QuadratureTests
         // Integral from -1 to 2 of (x^3 - 2x + 4) is 15/4.
         var result = Quadrature.CompositeSimpson(x => (x * x * x) - (2d * x) + 4d, -1d, 2d, 8);
 
-        Assert.That(result, Is.EqualTo(3.75d).Within(1e-12));
+        Assert.That(result, Is.EqualTo(12.75d).Within(1e-12));
     }
 
     [Test]
