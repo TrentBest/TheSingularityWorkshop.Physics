@@ -14,13 +14,17 @@ def render(record):
     steps = [float(item["step"]) for item in samples]
     actual = [float(item["actualAbsoluteError"]) for item in samples]
     indicator = [float(item["richardsonCorrectionIndicator"]) for item in samples]
-    if any(not math.isfinite(v) or v <= 0 for v in steps + actual + indicator):
-        raise ValueError("Logarithmic plot values must be positive and finite.")
+    if any(not math.isfinite(v) or v < 0 for v in steps + actual + indicator) or any(v <= 0 for v in actual):
+        raise ValueError("Steps and actual errors must be positive and finite; indicators must be finite and non-negative.")
+    # A zero correction is valid. Plot it at a visual floor instead of taking log10(0).
+    positive = [v for v in actual + indicator if v > 0]
+    indicator_floor = min(positive) / 10
+    plotted_indicator = [max(v, indicator_floor) for v in indicator]
 
     left, right, top, bottom = 100, 1060, 100, 610
     x_min, x_max = math.log10(min(steps)), math.log10(max(steps))
-    y_min = math.floor(math.log10(min(actual + indicator))) - 1
-    y_max = math.ceil(math.log10(max(actual + indicator))) + 1
+    y_min = math.floor(math.log10(min(actual + plotted_indicator))) - 1
+    y_max = math.ceil(math.log10(max(actual + plotted_indicator))) + 1
 
     def sx(value):
         return left + (math.log10(value) - x_min) / (x_max - x_min) * (right - left)
@@ -32,7 +36,7 @@ def render(record):
         return " ".join(("M" if i == 0 else "L") + f" {sx(steps[i]):.2f} {sy(values[i]):.2f}" for i in range(len(values)))
 
     actual_points = "\n".join(f'<circle cx="{sx(steps[i]):.2f}" cy="{sy(actual[i]):.2f}" r="5" fill="#1d4ed8"/>' for i in range(len(samples)))
-    indicator_points = "\n".join(f'<rect x="{sx(steps[i])-4:.2f}" y="{sy(indicator[i])-4:.2f}" width="8" height="8" fill="#c2410c"/>' for i in range(len(samples)))
+    indicator_points = "\n".join(f'<rect x="{sx(steps[i])-4:.2f}" y="{sy(plotted_indicator[i])-4:.2f}" width="8" height="8" fill="#c2410c"/>' for i in range(len(samples)))
     grid = []
     for exponent in range(y_min, y_max + 1):
         y = sy(10 ** exponent)
@@ -47,7 +51,7 @@ def render(record):
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1160" height="720" viewBox="0 0 1160 720" role="img" aria-labelledby="title desc">
 <title id="title">Derivative step-size sweep: actual error and Richardson indicator</title>
-<desc id="desc">Twelve model-backed sine derivative estimates compared with the analytical cosine derivative. Blue circles show actual absolute error; orange squares show the Richardson correction indicator. Both axes are logarithmic.</desc>
+<desc id="desc">Twelve model-backed sine derivative estimates compared with the analytical cosine derivative. Blue circles show actual absolute error; orange squares show the Richardson correction indicator. Both axes are logarithmic. Zero correction indicators are displayed at a visual floor below the smallest positive value.</desc>
 <rect width="1160" height="720" fill="#ffffff"/>
 <text x="100" y="42" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="#0f172a">Derivative step-size sweep</text>
 <text x="100" y="70" font-family="Arial,sans-serif" font-size="16" fill="#475569">{escape(record["functionExpression"])} at x={record["coordinate"]} rad · reference: {escape(record["reference"])}</text>
