@@ -270,6 +270,9 @@ jobs:
           print('Lesson manifest matches the actual C# run and its visualization exists.')
           PY
 
+      - name: Generate Shapes and Space run record from Physics geometry APIs
+        run: dotnet run --project tools/ShapesAndSpaceRunRecordGenerator/ShapesAndSpaceRunRecordGenerator.csproj --configuration Release -- /tmp/shapes-and-space.actual.json
+
       - name: Validate Shapes and Space construction record and living SVG
         run: |
           python3 - <<'PY'
@@ -278,7 +281,9 @@ jobs:
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
-          record = json.loads(Path('docs/experiments/shapes-and-space.run.json').read_text(encoding='utf-8'))
+          record = json.loads(Path('/tmp/shapes-and-space.actual.json').read_text(encoding='utf-8'))
+          committed = json.loads(Path('docs/experiments/shapes-and-space.run.json').read_text(encoding='utf-8'))
+          assert record == committed, 'Committed Shapes and Space record differs from actual Physics geometry API output.'
           definition = record['definition']
           result = record['result']
           vertices = definition['vertices']
