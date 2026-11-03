@@ -4,6 +4,7 @@ import argparse
 import json
 import math
 from pathlib import Path
+from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
 
@@ -79,9 +80,16 @@ def main():
     args = parser.parse_args()
     expected = render(json.loads(args.record.read_text(encoding="utf-8")))
     if args.check:
-        if args.output.read_text(encoding="utf-8") != expected:
+        committed = args.output.read_text(encoding="utf-8")
+        # SVG formatting whitespace is not presentation data. Compare canonical XML
+        # so line wrapping/indentation cannot make an otherwise identical living
+        # illustration stale, while every element, attribute, and text value remains
+        # part of the reproducibility contract.
+        actual_xml = ElementTree.canonicalize(xml_data=expected, strip_text=True)
+        committed_xml = ElementTree.canonicalize(xml_data=committed, strip_text=True)
+        if committed_xml != actual_xml:
             raise SystemExit(f"{args.output} is stale; regenerate it from {args.record}.")
-        print(f"Verified {args.output} against actual derivative sweep data.")
+        print(f"Verified {args.output} against actual derivative sweep data (canonical SVG XML).")
     else:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(expected, encoding="utf-8")
