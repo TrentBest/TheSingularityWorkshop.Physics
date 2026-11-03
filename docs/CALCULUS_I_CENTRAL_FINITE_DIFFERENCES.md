@@ -86,7 +86,7 @@ dotnet run --project tools/DerivativeDerivationRunRecordGenerator/DerivativeDeri
 
 The generator compares the recorded estimate with the analytical derivative for this known quadratic. CI independently checks the schema, samples, rule sequence, unit labels, numerical result, and exact generated SVG. A separate Python renderer draws the sampled function, coarse and fine secants, and Richardson tangent from that JSON record. This is structured numerical evidence, not symbolic differentiation or a proof engine.
 
-![Living derivative visualization generated from the actual C# derivation record](experiments/derivative-derivation.svg)
+![Living derivative visualization generated from the actual C# derivation record](experiments/derivative-derivation.svg)\n\nThe step-size experiment is recorded in [derivative-step-size-sweep.run.json](experiments/derivative-step-size-sweep.run.json) and visualized in [the living error plot](experiments/derivative-step-size-sweep.svg). Blue circles show actual error against the analytical cosine derivative; orange squares show the Richardson correction indicator. The plotted indicator is not a guaranteed bound.
 
 **Evidence classification:** source-backed implementation with focused automated tests and a reproducibly generated, model-backed SVG tied to the actual C# sample record. The analytical derivative of the selected quadratic is an independent reference identity. A focused automated sweep over twelve decreasing steps compares Richardson estimates of \(\sin x\) with the independent \(\cos x\) reference and verifies the expected truncation-to-roundoff tradeoff. No measured physical data is involved. A generated sweep run record and its own living plot remain future work.
 
@@ -98,7 +98,7 @@ The generator compares the recorded estimate with the analytical derivative for 
 - Numerical evidence rules: [Numerical Validation](NUMERICAL_VALIDATION.md)
 - Learning route: [Physics Learning Path](LEARNING_PATH.md)
 
-Next, generate a living derivative plot and its step-size/error sweep from the actual function samples and estimate records, then add an independently referenced quadrature primitive.
+Next, add an independently referenced numerical-integration and quadrature primitive.
 
 ---
 
