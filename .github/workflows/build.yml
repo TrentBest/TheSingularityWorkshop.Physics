@@ -660,7 +660,7 @@ jobs:
           import xml.etree.ElementTree as ET
           root = ET.parse('/tmp/derivative-step-size-sweep.actual.svg').getroot()
           assert root.tag.endswith('svg')
-          assert 'title' in ''.join(root.itertext())
+          assert any(element.tag.endswith('title') and element.text and element.text.strip() for element in root.iter())
           print('Generated derivative error plot is well-formed SVG.')
           PY
 
