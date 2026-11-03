@@ -43,14 +43,14 @@ Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
 var options = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 File.WriteAllText(outputPath, JsonSerializer.Serialize(record, options) + Environment.NewLine);
 
-var minimum = samples.MinBy(sample => sample.actualAbsoluteError)!;
-if (minimum.step >= samples[0].step || minimum.step <= samples[^1].step)
+var minimum = samples.MinBy(sample => sample.ActualAbsoluteError)!;
+if (minimum.Step >= samples[0].step || minimum.Step <= samples[^1].step)
 {
     Console.Error.WriteLine("The sweep did not expose an interior minimum in actual error.");
     return 1;
 }
 
-Console.WriteLine($"Wrote {samples.Count} Richardson estimates to {outputPath}; minimum actual error {minimum.actualAbsoluteError:R} at h={minimum.step:R}.");
+Console.WriteLine($"Wrote {samples.Count} Richardson estimates to {outputPath}; minimum actual error {minimum.actualAbsoluteError:R} at h={minimum.Step:R}.");
 return 0;
 
 internal sealed record SweepRecord(
