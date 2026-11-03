@@ -10,13 +10,14 @@ namespace TheSingularityWorkshop.Physics.Numerics;
 /// </remarks>
 public static class Quadrature
 {
+    private const int MaximumRefinedIntervalCount = 1_000_000;
     /// <summary>
     /// Approximates a definite integral using composite Simpson's rule.
     /// </summary>
     /// <param name="function">A deterministic scalar function returning finite samples.</param>
     /// <param name="lowerBound">The finite lower integration bound.</param>
     /// <param name="upperBound">The finite upper integration bound.</param>
-    /// <param name="intervalCount">The positive, even number of equal-width subintervals.</param>
+    /// <param name="intervalCount">The positive, even number of equal-width subintervals (at most 500,000 when refinement is requested).</param>
     /// <returns>The signed integral estimate. Reversed bounds produce a negated result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="function"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A bound is non-finite, or the interval count is not positive, even, and safely refinable.</exception>
@@ -127,8 +128,8 @@ public static class Quadrature
             throw new ArgumentOutOfRangeException(nameof(lowerBound), "The lower bound must be finite.");
         if (!double.IsFinite(upperBound))
             throw new ArgumentOutOfRangeException(nameof(upperBound), "The upper bound must be finite.");
-        if (intervalCount <= 0 || intervalCount % 2 != 0 || intervalCount > int.MaxValue / 2)
-            throw new ArgumentOutOfRangeException(nameof(intervalCount), "The interval count must be positive, even, and safely refinable.");
+        if (intervalCount <= 0 || intervalCount % 2 != 0 || intervalCount > MaximumRefinedIntervalCount / 2)
+            throw new ArgumentOutOfRangeException(nameof(intervalCount), "The interval count must be positive, even, and no greater than half the one-million-interval work limit.");
     }
 }
 
