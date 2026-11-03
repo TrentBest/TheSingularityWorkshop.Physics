@@ -726,7 +726,13 @@ jobs:
           print('Generated quadrature area visualization is well-formed and accessible SVG.')
           PY
 
-      - name: Verify committed quadrature SVG against actual samples\n        run: cmp /tmp/quadrature.actual.svg docs/experiments/quadrature-area.svg\n\n      - name: Verify quadrature renderer reproduces committed SVG\n        run: python3 tools/render_quadrature.py docs/experiments/quadrature-area.run.json docs/experiments/quadrature-area.svg --check\n\n      - name: Upload quadrature run record and living SVG
+      - name: Verify committed quadrature SVG against actual samples
+        run: cmp /tmp/quadrature.actual.svg docs/experiments/quadrature-area.svg
+
+      - name: Verify quadrature renderer reproduces committed SVG
+        run: python3 tools/render_quadrature.py docs/experiments/quadrature-area.run.json docs/experiments/quadrature-area.svg --check
+
+      - name: Upload quadrature run record and living SVG
         uses: actions/upload-artifact@v7
         with:
           name: quadrature-area-experiment
