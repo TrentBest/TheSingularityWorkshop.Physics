@@ -19,7 +19,7 @@
 
 **Procedural data proof:** [seeded 2D point-set API](Physics/Spatial/SeededPointSet2d.cs) · [Mandelbrot escape-time sampler](Physics/Spatial/MandelbrotEscapeTime2d.cs) · [run-record exporter sample](samples/SeededPointSet2dExport/README.md) · [procedural geometry and fractal data contract](docs/PROCEDURAL_GEOMETRY_AND_FRACTAL_DATA.md)
 
-**Particle and nuclear physics:** [particle, nuclear, and collider physics domain map](docs/PARTICLE_NUCLEAR_AND_COLLIDER_PHYSICS.md) · [implementation roadmap #43](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/43) · [mathematics implementation roadmap #44](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/44)
+**Particle and nuclear physics:** [particle, nuclear, and collider physics domain map](docs/PARTICLE_NUCLEAR_AND_COLLIDER_PHYSICS.md) · [implementation roadmap #43](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/43) · [mathematics implementation roadmap #42](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/42)
 
 **Explore the knowledge graph:** [physics and mathematics branch atlas](docs/PHYSICS_BRANCH_ATLAS.md) ·  [equations, derivations, and scientific experiences](docs/EQUATIONS_DERIVATIONS_AND_SCIENTIFIC_EXPERIENCES.md) · [composable models, solvers, and experiences](docs/COMPOSABLE_PHYSICS_MODELS_SOLVERS_EXPERIENCES.md) · [mathematics domain map](docs/MATHEMATICS_DOMAIN_MAP.md) · [GPU computation readiness](docs/GPU_COMPUTATION_READINESS.md)
 
