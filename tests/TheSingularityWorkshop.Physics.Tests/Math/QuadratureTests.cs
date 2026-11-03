@@ -18,7 +18,7 @@ public sealed class QuadratureTests
     [Test]
     public void CompositeSimpson_SineMatchesAnalyticalIntegral()
     {
-        var result = Quadrature.CompositeSimpson(Math.Sin, 0d, Math.PI, 100);
+        var result = Quadrature.CompositeSimpson(Math.Sin, 0d, Math.PI, 200);
 
         Assert.That(result, Is.EqualTo(2d).Within(1e-8));
     }
@@ -69,14 +69,14 @@ public sealed class QuadratureTests
     [Test]
     public void RichardsonEstimate_RefinesExponentialIntegralAndReportsCorrection()
     {
-        var estimate = Quadrature.CompositeSimpsonWithErrorEstimate(Math.Exp, 0d, 1d, 4);
+        var estimate = Quadrature.CompositeSimpsonWithErrorEstimate(Math.Exp, 0d, 1d, 8);
         var actualError = Math.Abs(estimate.Value - (Math.E - 1d));
 
         Assert.That(estimate.Value, Is.EqualTo(Math.E - 1d).Within(1e-9));
         Assert.That(estimate.EstimatedAbsoluteError, Is.GreaterThan(0d));
         Assert.That(actualError, Is.LessThan(estimate.EstimatedAbsoluteError * 1.1d));
-        Assert.That(estimate.CoarseIntervalCount, Is.EqualTo(4));
-        Assert.That(estimate.FineIntervalCount, Is.EqualTo(8));
+        Assert.That(estimate.CoarseIntervalCount, Is.EqualTo(8));
+        Assert.That(estimate.FineIntervalCount, Is.EqualTo(16));
     }
 
     [Test]
