@@ -5,7 +5,7 @@
   "status": "computed-from-geometry-primitives",
   "units": {"coordinates":"coordinate-unit","edgeLength":"coordinate-unit","signedArea":"coordinate-unit^2"},
   "definition": {"coordinateFrame":"lesson-plane","vertices":[{"id":"A","x":0,"y":0},{"id":"B","x":4,"y":0},{"id":"C","x":4,"y":3},{"id":"D","x":2,"y":4},{"id":"E","x":0,"y":3}],"boundaryOrder":"A-B-C-D-E-A"},
-  "result": {"vertexCount":5,"edgeCount":5,"isSimple":true,"signedArea":14,"winding":"counter-clockwise","pointClassifications":[{"id":"inside","x":2,"y":2,"relation":"inside"},{"id":"boundary","x":2,"y":0,"relation":"boundary"},{"id":"outside","x":5,"y":2,"relation":"outside"}],"triangles":[[1,2,3],[0,1,3],[0,3,4]]},
+  "result": {"vertexCount":5,"edgeCount":5,"isSimple":true,"signedArea":14,"winding":"counter-clockwise","pointClassifications":[{"id":"inside","x":2,"y":2,"relation":"inside"},{"id":"boundary","x":2,"y":0,"relation":"boundary"},{"id":"outside","x":5,"y":2,"relation":"outside"}],"triangles":[[4,0,1],[4,1,2],[2,3,4]]},
   "provenance": {"sourceTypes":["tested-geometry-primitives","explicit-teaching-construction"],"physicalObservation":false,"simulation":false},
   "limitations":["Coordinates are abstract and have no declared physical unit.","This is a deterministic geometric construction, not a physical observation or simulation.","The polygon is intentionally simple and convex; this lesson does not teach all polygon degeneracies.","Lengths are Euclidean distances rounded for display; exact-predicate guarantees do not make measured coordinates exact."]
 }
