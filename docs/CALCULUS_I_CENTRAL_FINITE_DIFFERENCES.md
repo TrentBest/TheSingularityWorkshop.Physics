@@ -100,7 +100,7 @@ The step-size experiment is recorded in [derivative-step-size-sweep.run.json](ex
 - Numerical evidence rules: [Numerical Validation](NUMERICAL_VALIDATION.md)
 - Learning route: [Physics Learning Path](LEARNING_PATH.md)
 
-Next, add an independently referenced numerical-integration and quadrature primitive.
+Next: [Calculus II — Composite Simpson Quadrature](CALCULUS_II_COMPOSITE_SIMPSON_QUADRATURE.md) adds a bounded numerical-integration primitive with an explicit refinement indicator.
 
 ---
 
