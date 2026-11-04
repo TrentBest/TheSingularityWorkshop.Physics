@@ -198,7 +198,7 @@ public sealed class Geometry2dPolygonTests
     }
 
     [Test]
-    public void Triangulate_ProducesNMinusTwoTrianglesWithMatchingWinding()
+    public void Triangulate_ProducesNMinusTwoCounterClockwiseTriangles()
     {
         Vector2d[] square = { new(0, 0), new(4, 0), new(4, 4), new(0, 4) };
         Vector2d[] clockwise = { new(0, 0), new(0, 4), new(4, 4), new(4, 0) };
@@ -207,9 +207,9 @@ public sealed class Geometry2dPolygonTests
             new(0, 0), new(4, 0), new(4, 4), new(2, 2), new(0, 4)
         };
 
-        AssertTriangulation(square, expectedSignedArea: 16d);
-        AssertTriangulation(clockwise, expectedSignedArea: -16d);
-        AssertTriangulation(concave, expectedSignedArea: 12d);
+        AssertTriangulation(square, expectedArea: 16d);
+        AssertTriangulation(clockwise, expectedArea: 16d);
+        AssertTriangulation(concave, expectedArea: 12d);
     }
 
     [Test]
@@ -294,11 +294,11 @@ public sealed class Geometry2dPolygonTests
         };
         Vector2d[] clockwise = counterClockwise.Reverse().ToArray();
 
-        AssertTriangulationCoversInterior(counterClockwise, expectedWinding: 1);
-        AssertTriangulationCoversInterior(clockwise, expectedWinding: -1);
+        AssertTriangulationCoversInterior(counterClockwise);
+        AssertTriangulationCoversInterior(clockwise);
     }
 
-    private static void AssertTriangulationCoversInterior(Vector2d[] polygon, int expectedWinding)
+    private static void AssertTriangulationCoversInterior(Vector2d[] polygon)
     {
         var triangles = Geometry2dPolygon.Triangulate(polygon);
         Assert.That(triangles, Has.Count.EqualTo(polygon.Length - 2));
@@ -309,7 +309,7 @@ public sealed class Geometry2dPolygonTests
             Vector2d a = polygon[triangle.AIndex];
             Vector2d b = polygon[triangle.BIndex];
             Vector2d c = polygon[triangle.CIndex];
-            Assert.That((int)Geometry2d.Orient(a, b, c), Is.EqualTo(expectedWinding));
+            Assert.That((int)Geometry2d.Orient(a, b, c), Is.EqualTo(1));
 
             // A triangle's centroid must remain inside the polygon or on its boundary.
             var centroid = new Vector2d((a.X + b.X + c.X) / 3d, (a.Y + b.Y + c.Y) / 3d);
@@ -321,16 +321,16 @@ public sealed class Geometry2dPolygonTests
         }
 
         double polygonArea = Geometry2dPolygon.SignedArea(polygon);
-        Assert.That(signedTriangleAreaSum, Is.EqualTo(polygonArea).Within(1e-12));
+        Assert.That(signedTriangleAreaSum, Is.EqualTo(Math.Abs(polygonArea)).Within(1e-12));
     }
 
-    private static void AssertTriangulation(Vector2d[] polygon, double expectedSignedArea)
+    private static void AssertTriangulation(Vector2d[] polygon, double expectedArea)
     {
         var triangles = Geometry2dPolygon.Triangulate(polygon);
         Assert.That(triangles, Has.Count.EqualTo(polygon.Length - 2));
 
         double totalArea = 0d;
-        int expectedWinding = Math.Sign(expectedSignedArea);
+        int expectedWinding = 1;
         foreach (TriangleIndices2d triangle in triangles)
         {
             Vector2d a = polygon[triangle.AIndex];
@@ -342,7 +342,7 @@ public sealed class Geometry2dPolygonTests
             totalArea += ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) / 2d;
         }
 
-        Assert.That(totalArea, Is.EqualTo(expectedSignedArea).Within(1e-12));
+        Assert.That(totalArea, Is.EqualTo(expectedArea).Within(1e-12));
     }
 
     [Test]
