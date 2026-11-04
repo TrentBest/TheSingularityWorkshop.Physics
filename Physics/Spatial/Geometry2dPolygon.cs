@@ -171,7 +171,7 @@ public static class Geometry2dPolygon
 
     /// <summary>Triangulates a simple polygon into non-overlapping triangles using its original vertex indices.</summary>
     /// <param name="vertices">At least three effective vertices in boundary order; the first may optionally be repeated at the end.</param>
-    /// <returns>Exactly n - 2 triangles for the effective n-vertex boundary, preserving its winding direction.</returns>
+    /// <returns>Exactly n - 2 counter-clockwise triangles for the effective n-vertex boundary, regardless of input winding.</returns>
     /// <exception cref="ArgumentNullException">The vertex collection is null.</exception>
     /// <exception cref="ArgumentException">The boundary is not simple, has fewer than three effective vertices, has zero signed area, or contains a collinear consecutive triple.</exception>
     /// <remarks>
@@ -246,7 +246,9 @@ public static class Geometry2dPolygon
                 if (containsVertex)
                     continue;
 
-                triangles.Add(new TriangleIndices2d(previousIndex, currentIndex, nextIndex));
+                triangles.Add(winding > 0
+                    ? new TriangleIndices2d(previousIndex, currentIndex, nextIndex)
+                    : new TriangleIndices2d(previousIndex, nextIndex, currentIndex));
                 remaining.RemoveAt(i);
                 clippedEar = true;
                 break;
@@ -256,7 +258,9 @@ public static class Geometry2dPolygon
                 throw new InvalidOperationException("No valid ear was found for a boundary accepted as simple.");
         }
 
-        triangles.Add(new TriangleIndices2d(remaining[0], remaining[1], remaining[2]));
+        triangles.Add(winding > 0
+            ? new TriangleIndices2d(remaining[0], remaining[1], remaining[2])
+            : new TriangleIndices2d(remaining[0], remaining[2], remaining[1]));
         return Array.AsReadOnly(triangles.ToArray());
     }
 
