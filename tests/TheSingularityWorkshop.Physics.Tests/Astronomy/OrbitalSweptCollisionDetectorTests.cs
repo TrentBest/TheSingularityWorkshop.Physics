@@ -96,6 +96,36 @@ public sealed class OrbitalSweptCollisionDetectorTests
             () => OrbitalSweptCollisionDetector.TryDetect(a, b, intervalSeconds));
     }
 
+    [Test]
+    public void TryDetect_ContactExactlyAtIntervalEnd_IsIncluded()
+    {
+        var a = Body("a", new Vector3d(-5d, 0d, 0d), new Vector3d(1d, 0d, 0d));
+        var b = Body("b", new Vector3d(5d, 0d, 0d), new Vector3d(-1d, 0d, 0d));
+
+        var result = OrbitalSweptCollisionDetector.TryDetect(a, b, 4.5d);
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.TimeOfImpactSeconds, Is.EqualTo(4.5d).Within(1e-12));
+    }
+
+    [Test]
+    public void TryDetect_InitiallySeparatedBodiesMovingApart_ReturnsNull()
+    {
+        var a = Body("a", new Vector3d(-2d, 0d, 0d), new Vector3d(-1d, 0d, 0d));
+        var b = Body("b", new Vector3d(2d, 0d, 0d), new Vector3d(1d, 0d, 0d));
+
+        Assert.That(OrbitalSweptCollisionDetector.TryDetect(a, b, 10d), Is.Null);
+    }
+
+    [Test]
+    public void TryDetect_OffsetTrajectoriesWithNoIntersection_ReturnsNull()
+    {
+        var moving = Body("moving", new Vector3d(-5d, 2d, 0d), new Vector3d(1d, 0d, 0d));
+        var stationary = Body("stationary", Vector3d.Zero, Vector3d.Zero);
+
+        Assert.That(OrbitalSweptCollisionDetector.TryDetect(moving, stationary, 10d), Is.Null);
+    }
+
     private static OrbitalBodyState Body(string id, Vector3d position, Vector3d velocity) =>
         new OrbitalBodyState(id, 1d, 0.5d, position, velocity).EnsureValid();
 }
