@@ -63,7 +63,7 @@ public sealed class ConstantAccelerationSphereCollisionExperimentTests
         var result = Predict(a, Vector3d.Zero, b, Vector3d.Zero, 5d, budget: 2);
 
         Assert.That(result.Status, Is.EqualTo(AcceleratedSpherePredictionStatus.UnresolvedPossibleContact));
-        Assert.That(result.Evaluations, Is.Zero);
+        Assert.That(result.Evaluations, Is.EqualTo(2));
     }
 
     [Test]
