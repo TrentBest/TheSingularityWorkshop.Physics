@@ -73,6 +73,8 @@ A conservative broadphase can periodically identify possible contact pairs using
 
 The 10 × 10 × 10 grid with a deterministic check at linear index 42 is a useful test fixture, not a fixed universe topology or canonical special location. Generation must depend on stable coordinates, a recorded seed, and a versioned algorithm—not visitation order. Revisiting a cell must restore its evolved history rather than regenerate the initial state. The full proposal, including multiscale and microscopic-to-macroscopic boundaries, is in [Universe & observer resolution](UNIVERSE_AND_OBSERVER_RESOLUTION.md). These are architectural goals, not yet implemented functionality.
 
+The [motion-driven interaction pipeline](MOTION_DRIVEN_INTERACTION_PIPELINE.md) defines the proposed host-side Gestures handoff, bounded occupied-volume prediction, progressive collision refinement, and interaction evidence. It is a design/research contract; general trajectory-aware collision and response are not yet implemented.
+
 ## State and measurements
 
 Prefer explicit state over hidden global state. Events record transitions; they are not a second source of truth. Measurements identify quantity/unit, logical time or step, source model/state, method, and uncertainty or numerical residual where known.
