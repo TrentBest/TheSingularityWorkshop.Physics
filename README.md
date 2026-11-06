@@ -148,6 +148,7 @@ This is an ideal point-projectile experiment under constant acceleration. A sepa
 - [Thermodynamics: first bounded primitive](docs/THERMODYNAMICS_FIRST_PRIMITIVE.md) — lumped thermal state, sensible energy, assumptions, and limits
 - [Thermodynamics: equilibrium phase change](docs/THERMODYNAMICS_PHASE_CHANGE.md) — latent-heat accounting, melting/freezing, validation, and limits
 - [Physics capability catalog](docs/PHYSICS_CAPABILITY_CATALOG.md) — implemented source entry points, model scope, limits, and contribution checklist
+- [Oscillators, timing signals, and synchronization](docs/OSCILLATORS_AND_SYNCHRONIZATION.md) — ideal metronome implementation, physical pendulum reference contract, phase analysis, and validation gates
 - [Physics gap register](docs/PHYSICS_GAP_REGISTER.md) — evidence-based audit of missing cross-domain bridges, priorities, and acceptance gates; includes the [capability atlas SVG](docs/images/physics-capability-atlas.svg)
 - [Physics run-record contract](docs/PHYSICS_RUN_RECORD_CONTRACT.md) — proposed common metadata envelope for cross-domain experiments without flattening domain-specific observations; [CI validator](tools/validate_physics_run_records.py) checks the required envelope on representative acoustic, room-reflection, and electrical-thermal records
 - [Electrical-to-thermal coupling experiment](docs/experiments/electrical-thermal-coupling.md) — first bounded connection between resistive-load power and lumped thermal energy, with a reproducible JSON run record, model-generated SVG, focused tests, and CI checks
