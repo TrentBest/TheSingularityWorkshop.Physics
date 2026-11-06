@@ -91,6 +91,18 @@ public static class OscillatorPhaseComparison
         {
             wrapped -= 2d * Math.PI;
         }
+        else
+        {
+            // Modulo reduction of a large odd half-turn can land a few ULPs
+            // below +π. Preserve the documented [-π, π) boundary convention.
+            var boundaryTolerance = Math.Min(
+                1e-12,
+                8d * 2.2204460492503131e-16 * Math.Max(1d, Math.Abs(phaseRadians)));
+            if (Math.PI - wrapped <= boundaryTolerance)
+            {
+                wrapped = -Math.PI;
+            }
+        }
 
         return wrapped;
     }
