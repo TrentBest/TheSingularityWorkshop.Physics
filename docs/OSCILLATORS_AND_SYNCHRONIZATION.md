@@ -112,7 +112,21 @@ A configuration must not attach a mechanical coupling parameter to an ideal timi
 
 Every reported synchronization result must state the model, observation interval, sampling policy, tolerance, and criterion. A short visual coincidence is not sufficient evidence of locking.
 
-## 9. Ownership and non-goals
+## 10. Implemented first slice: ideal metronome
+
+The first timing-source implementation is available in `Physics/Timing/IdealMetronome.cs`:
+
+- `IdealMetronomeDefinition` validates a stable participant ID, positive finite BPM, initial phase in [0, 2π), positive subdivisions per beat, and non-negative finite logical start time.
+- `IdealMetronome.GetEvents` derives subdivision crossings analytically from the declared phase and angular frequency. It does not accumulate rounded tick intervals.
+- Queries use half-open intervals [start, end). Events exactly at the query start are excluded, so adjacent queries do not duplicate a boundary event. The oscillator's phase origin is represented by its definition; there is no implicit event emitted at construction.
+- Each event records its integer phase-grid index, zero-based beat index, subdivision index, exact model timestamp, and whether it is a beat boundary.
+- Queries require an explicit positive event budget (default 100,000) and fail when the requested interval exceeds it. Invalid inputs and index/time overflow fail explicitly.
+
+Focused tests cover tempo, subdivisions, initial phase/start time, adjacent interval boundaries, repeatability, invalid inputs, and event-budget enforcement in `IdealMetronomeTests.cs`.
+
+This is a deterministic ideal timing source only. It is not a physical oscillator, does not implement tempo changes or phase coupling, and does not establish acoustic harmony. The nonlinear pendulum reference and multi-oscillator analysis remain subsequent work.
+
+## 11. Ownership and non-goals
 
 Physics owns physical oscillator state, numerical integration, mechanical coupling, phase/frequency measurements, and authoritative observations. An ideal timing source may be modeled here as a clearly non-mechanical time-domain model. Gestures may later describe rhythmic intent or keyframe timing, but Physics must not depend on Gestures. Host adapters bridge domains. Visualize and Renderer may display phase plots and traces but do not decide physical outcomes.
 
