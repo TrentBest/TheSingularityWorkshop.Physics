@@ -190,7 +190,7 @@ public static class IdealMetronome
 
             // The interval is half-open. This also corrects a candidate rounded onto
             // the query boundary by floating-point division.
-            if (eventTime <= startTimeSeconds)
+            if (eventTime < startTimeSeconds)
             {
                 if (eventIndex == long.MaxValue)
                 {
