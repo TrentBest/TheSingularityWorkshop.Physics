@@ -118,7 +118,7 @@ The first timing-source implementation is available in `Physics/Timing/IdealMetr
 
 - `IdealMetronomeDefinition` validates a stable participant ID, positive finite BPM, initial phase in [0, 2π), positive subdivisions per beat, and non-negative finite logical start time.
 - `IdealMetronome.GetEvents` derives subdivision crossings analytically from the declared phase and angular frequency. It does not accumulate rounded tick intervals.
-- Queries use half-open intervals [start, end). Events exactly at the query start are excluded, so adjacent queries do not duplicate a boundary event. The oscillator's phase origin is represented by its definition; there is no implicit event emitted at construction.
+- Queries use half-open intervals [start, end): an event exactly at the query start is included, and an event exactly at the query end is excluded. Adjacent queries therefore assign each boundary event to exactly one interval. The oscillator's phase origin is represented by its definition; there is no implicit event emitted at construction.
 - Each event records its integer phase-grid index, zero-based beat index, subdivision index, exact model timestamp, and whether it is a beat boundary.
 - Queries require an explicit positive event budget (default 100,000) and fail when the requested interval exceeds it. Invalid inputs and index/time overflow fail explicitly.
 
