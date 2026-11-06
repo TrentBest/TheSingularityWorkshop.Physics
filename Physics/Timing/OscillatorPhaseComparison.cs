@@ -97,7 +97,7 @@ public static class OscillatorPhaseComparison
             // below +π. Preserve the documented [-π, π) boundary convention.
             var boundaryTolerance = Math.Min(
                 1e-12,
-                8d * 2.2204460492503131e-16 * Math.Max(1d, Math.Abs(phaseRadians)));
+                16d * 2.2204460492503131e-16 * Math.Max(1d, Math.Abs(phaseRadians)));
             if (Math.PI - wrapped <= boundaryTolerance)
             {
                 wrapped = -Math.PI;
