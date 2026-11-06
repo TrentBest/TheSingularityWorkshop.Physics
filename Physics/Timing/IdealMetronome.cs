@@ -146,7 +146,9 @@ public static class IdealMetronome
             throw new OverflowException("The queried phase exceeds finite double range.");
         }
 
-        var firstIndexValue = Math.Floor(phaseAtStart / phaseStep) + 1d;
+        // Find the first phase-grid crossing at or after the inclusive query start.
+        // Computing its timestamp below corrects quotient rounding at exact boundaries.
+        var firstIndexValue = Math.Floor(phaseAtStart / phaseStep);
         if (!double.IsFinite(firstIndexValue) || firstIndexValue < 0d ||
             firstIndexValue >= (double)long.MaxValue)
         {
@@ -154,6 +156,25 @@ public static class IdealMetronome
         }
 
         var eventIndex = (long)firstIndexValue;
+        var candidatePhase = eventIndex * phaseStep;
+        var candidateElapsed = (candidatePhase - definition.InitialPhaseRadians) / angularFrequency;
+        var candidateTime = definition.StartTimeSeconds + candidateElapsed;
+        if (!double.IsFinite(candidateTime))
+        {
+            throw new OverflowException("A timing event exceeds finite double time.");
+        }
+
+        if (candidateTime < startTimeSeconds ||
+            candidateTime == definition.StartTimeSeconds)
+        {
+            if (eventIndex == long.MaxValue)
+            {
+                throw new OverflowException("The timing event index exceeds Int64 range.");
+            }
+
+            eventIndex++;
+        }
+
         var events = new List<TimingEvent>(Math.Min(maxEvents, 256));
 
         while (true)
