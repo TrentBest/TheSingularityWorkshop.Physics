@@ -75,6 +75,8 @@ The 10 × 10 × 10 grid with a deterministic check at linear index 42 is a usefu
 
 The [motion-driven interaction pipeline](MOTION_DRIVEN_INTERACTION_PIPELINE.md) defines the proposed host-side Gestures handoff, bounded occupied-volume prediction, progressive collision refinement, and interaction evidence. It is a design/research contract; general trajectory-aware collision and response are not yet implemented.
 
+The [oscillators, timing signals, and synchronization contract](OSCILLATORS_AND_SYNCHRONIZATION.md) separates ideal phase-based timing sources from physical oscillators such as pendulums. It defines phase conventions, synchronization measurements, validation gates, and the distinction between rhythmic relationships and acoustic harmony. These are research/implementation contracts; the oscillator runtime is not yet implemented.
+
 ## State and measurements
 
 Prefer explicit state over hidden global state. Events record transitions; they are not a second source of truth. Measurements identify quantity/unit, logical time or step, source model/state, method, and uncertainty or numerical residual where known.
