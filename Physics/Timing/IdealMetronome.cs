@@ -6,6 +6,11 @@ namespace TheSingularityWorkshop.Physics.Timing;
 /// Configuration for a constant-tempo, non-mechanical timing oscillator.
 /// Phase is measured in radians and tempo in beats per minute.
 /// </summary>
+/// <param name="ParticipantId">Stable identity for this timing participant.</param>
+/// <param name="TempoBeatsPerMinute">Positive tempo in beats per minute.</param>
+/// <param name="InitialPhaseRadians">Initial phase in [0, 2π).</param>
+/// <param name="SubdivisionsPerBeat">Positive number of equal phase intervals per beat.</param>
+/// <param name="StartTimeSeconds">Non-negative logical time at which the phase is defined.</param>
 public sealed record IdealMetronomeDefinition(
     string ParticipantId,
     double TempoBeatsPerMinute,
@@ -68,6 +73,11 @@ public sealed record IdealMetronomeDefinition(
 /// One analytically timed subdivision crossing. EventIndex is the integer phase-grid
 /// crossing; BeatIndex is zero-based and SubdivisionIndex is zero for a beat boundary.
 /// </summary>
+/// <param name="EventIndex">Integer phase-grid crossing index.</param>
+/// <param name="BeatIndex">Zero-based beat index.</param>
+/// <param name="SubdivisionIndex">Subdivision within the beat; zero marks a beat boundary.</param>
+/// <param name="TimeSeconds">Analytical event time in seconds.</param>
+/// <param name="IsBeat">Whether this event is a beat boundary.</param>
 public readonly record struct TimingEvent(
     long EventIndex,
     long BeatIndex,
@@ -85,6 +95,10 @@ public static class IdealMetronome
     /// Returns all subdivision crossings in [startTimeSeconds, endTimeSeconds).
     /// The query is bounded by maxEvents and does not accumulate rounded tick intervals.
     /// </summary>
+    /// <param name="definition">Validated constant-tempo timing source.</param>
+    /// <param name="startTimeSeconds">Inclusive query start, not before the oscillator start.</param>
+    /// <param name="endTimeSeconds">Exclusive query end.</param>
+    /// <param name="maxEvents">Maximum number of events permitted in one query.</param>
     public static ReadOnlyCollection<TimingEvent> GetEvents(
         IdealMetronomeDefinition definition,
         double startTimeSeconds,
