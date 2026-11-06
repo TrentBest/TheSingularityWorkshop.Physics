@@ -134,7 +134,7 @@ public static class IdealMetronome
 
         var firstIndexValue = Math.Floor(phaseAtStart / phaseStep) + 1d;
         if (!double.IsFinite(firstIndexValue) || firstIndexValue < 0d ||
-            firstIndexValue > long.MaxValue)
+            firstIndexValue >= (double)long.MaxValue)
         {
             throw new OverflowException("The timing event index exceeds Int64 range.");
         }
