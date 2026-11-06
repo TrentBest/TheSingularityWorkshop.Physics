@@ -56,13 +56,15 @@ public sealed class IdealMetronomeTests
 
         var first = IdealMetronome.GetEvents(definition, 0d, 1d);
         var second = IdealMetronome.GetEvents(definition, 1d, 2d);
+        var third = IdealMetronome.GetEvents(definition, 2d, 3d);
 
-        Assert.That(first.Select(item => item.TimeSeconds),
+        Assert.That(first, Is.Empty);
+        Assert.That(second.Select(item => item.TimeSeconds).ToArray(),
             Is.EqualTo(new[] { 1d }).Within(1e-12));
-        Assert.That(second.Select(item => item.TimeSeconds),
+        Assert.That(third.Select(item => item.TimeSeconds).ToArray(),
             Is.EqualTo(new[] { 2d }).Within(1e-12));
-        Assert.That(first[0].EventIndex, Is.EqualTo(1));
-        Assert.That(second[0].EventIndex, Is.EqualTo(2));
+        Assert.That(second[0].EventIndex, Is.EqualTo(1));
+        Assert.That(third[0].EventIndex, Is.EqualTo(2));
     }
 
     [Test]
