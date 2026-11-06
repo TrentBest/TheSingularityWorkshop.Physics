@@ -87,7 +87,7 @@ public readonly record struct TimingEvent(
 
 /// <summary>
 /// Generates metronome events from an analytic phase function. Queries use half-open
-/// intervals [start, end); an event exactly at start is not repeated.
+/// intervals [start, end); an event at start is included and an event at end is excluded.
 /// </summary>
 public static class IdealMetronome
 {
