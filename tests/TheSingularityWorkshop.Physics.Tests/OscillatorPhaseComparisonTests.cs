@@ -77,7 +77,7 @@ public sealed class OscillatorPhaseComparisonTests
         Assert.That(result.FirstPhaseStartRadians, Is.EqualTo(9d * Math.PI / 2d).Within(1e-12));
         Assert.That(result.SecondPhaseStartRadians, Is.EqualTo(0d));
         Assert.That(result.UnwrappedDifferenceStartRadians,
-            Is.EqualTo(-5d * Math.PI / 2d).Within(1e-12));
+            Is.EqualTo(-9d * Math.PI / 2d).Within(1e-12));
     }
 
     [Test]
