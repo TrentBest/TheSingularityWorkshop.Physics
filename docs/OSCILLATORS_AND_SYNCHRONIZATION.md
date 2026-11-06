@@ -1,6 +1,6 @@
 # Oscillators, Timing Signals, and Synchronization
 
-**Status:** research contract. This document defines the first reference models and their validation boundaries; it does not claim that an oscillator runtime is already implemented.
+**Status:** research and implementation contract. The ideal metronome and analytical two-oscillator phase comparison are implemented; the physical pendulum, phase coupling, and entrainment models remain research targets.
 
 ## 1. Why oscillators belong in Physics
 
@@ -59,7 +59,7 @@ A numerical pendulum model must declare its integration method and timestep. Val
 
 ## 5. Synchronization and relationships
 
-For two oscillators, analyze the unwrapped phase difference and a documented wrapped representation.
+For two ideal oscillators, `OscillatorPhaseComparison.Compare` reports unwrapped phase at both observation endpoints, signed wrapped phase difference in [-π, π), frequency difference, and measured phase-drift rate. Positive relative phase means the second oscillator is ahead of the first. The calculation is analytic and does not apply coupling or alter either oscillator. Always retain the unwrapped difference when measuring accumulated drift; wrapped endpoints can coincide even after one or more complete relative cycles. The observation interval must be finite, positive, and begin no earlier than either oscillator's logical start.\n\nFor general physical or driven oscillators, analyze the unwrapped phase difference and a documented wrapped representation.
 
 - **In-phase:** wrapped phase difference is near zero within a declared tolerance.
 - **Anti-phase:** wrapped phase difference is near π (with the chosen wrap convention).
@@ -102,7 +102,7 @@ A configuration must not attach a mechanical coupling parameter to an ideal timi
 
 1. Validate phase/frequency/period dimensional consistency and wrap semantics.
 2. Test an ideal metronome at multiple tempos, offsets, and subdivisions; include exact-boundary and long-duration event-count tests.
-3. Compare two ideal oscillators in-phase, anti-phase, offset, drifting, and rational-ratio cases against analytical expectations.
+3. Compare two ideal oscillators in-phase, anti-phase, offset, drifting, and rational-ratio cases against analytical expectations; distinguish wrapped coincidence from accumulated unwrapped drift.
 4. Validate the small-angle pendulum against its analytical solution and period.
 5. Test large-angle period dependence and timestep convergence.
 6. Check energy behavior for undamped, damped, and driven pendula.
@@ -124,9 +124,9 @@ The first timing-source implementation is available in `Physics/Timing/IdealMetr
 
 Focused tests cover tempo, subdivisions, initial phase/start time, adjacent interval boundaries, repeatability, invalid inputs, and event-budget enforcement in `IdealMetronomeTests.cs`.
 
-This is a deterministic ideal timing source only. It is not a physical oscillator, does not implement tempo changes or phase coupling, and does not establish acoustic harmony. The nonlinear pendulum reference and multi-oscillator analysis remain subsequent work.
+This is a deterministic ideal timing source only. It is not a physical oscillator, does not implement tempo changes or phase coupling, and does not establish acoustic harmony.\n\n## 11. Implemented second slice: analytical phase comparison\n\n`Physics/Timing/OscillatorPhaseComparison.cs` compares two ideal metronome definitions over a finite observation interval. It reports both unwrapped phases at the interval endpoints, unwrapped and wrapped relative phase, frequency difference in Hz, and phase-drift rate in rad/s. The signed wrap convention is [-π, π), so the anti-phase boundary is represented as -π. The comparison is a measurement only: it does not couple, synchronize, entrain, or modify either oscillator.\n\nFocused tests cover in-phase and anti-phase cases, unequal-frequency drift, a rational 3:2 frequency ratio whose relative phase repeats without remaining fixed, distinct logical start times, wrap boundaries, and invalid intervals. The rational-ratio test deliberately checks accumulated unwrapped phase: a wrapped endpoint returning to zero is not evidence of phase locking.\n\nThe nonlinear pendulum reference, population order parameter, phase-coupled models, and entrainment measurements remain subsequent work.
 
-## 11. Ownership and non-goals
+## 12. Ownership and non-goals
 
 Physics owns physical oscillator state, numerical integration, mechanical coupling, phase/frequency measurements, and authoritative observations. An ideal timing source may be modeled here as a clearly non-mechanical time-domain model. Gestures may later describe rhythmic intent or keyframe timing, but Physics must not depend on Gestures. Host adapters bridge domains. Visualize and Renderer may display phase plots and traces but do not decide physical outcomes.
 
