@@ -20,7 +20,7 @@ The scale and capacity contract is defined in [Physics Across Scales](PHYSICS_AC
 - [ ] Establish a tested minimum vertical slice for thermodynamics, hydrodynamics, materials, reactions, fields, and waves before deepening only one domain.
 - [ ] Use a bounded fire/combustion experiment as a cross-domain integration test after its prerequisite models exist; it is not a substitute for broader domain coverage.
 
-The domain map is architecture, not implementation. A first bounded lumped thermal-state model is implemented on `development`; broader thermodynamics, heat transfer, hydrodynamics, material response, chemical reactions, and combustion still require their own models, tests, and scope.
+The domain map is architecture, not implementation. `development` now contains bounded, independently tested slices across thermodynamics (including temperature-dependent heat capacity, one equilibrium phase transition, and two-body conduction), hydrodynamics (including rainfall input), materials/property evidence, and selected reaction/combustion accounting. These slices do not yet form a validated, generally coupled physical world; shared quantity/provenance/observation contracts and broader models remain open.
 
 ## Stage 1 — First executable proof: mechanics
 
@@ -68,14 +68,16 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 - [ ] Add source/version/license provenance and valid property ranges.
 - [x] Add a bounded lumped thermal-state contract with mass, absolute temperature, constant specific heat, reference temperature, and sensible-energy accounting ([first thermodynamics primitive](THERMODYNAMICS_FIRST_PRIMITIVE.md)).
 - [x] Apply explicit net energy transfers for bounded heating/cooling while rejecting invalid properties, overflow, and states below absolute zero.
-- [ ] Add temperature-dependent heat capacity, spatial gradients, transfer-rate models, and phase-change behavior.
-- [ ] Add one supported phase-transition model and tests.
+- [x] Add bounded piecewise-linear temperature-dependent heat capacity with integrated enthalpy and deterministic energy-to-temperature inversion ([temperature-dependent heat capacity](THERMODYNAMICS_TEMPERATURE_DEPENDENT_HEAT_CAPACITY.md)).
+- [x] Add one equilibrium solid/liquid phase-transition model with latent-heat accounting and focused tests ([phase change](THERMODYNAMICS_PHASE_CHANGE.md)).
+- [ ] Add spatial temperature gradients, a spatial heat equation, pressure-dependent phase boundaries, and automatic conduction/phase-change coupling.
 
 ## Stage 3 — Coupled physical processes
 
 - [x] Implement a deterministic, volume-accounted volcanic deposition primitive for a terrain height field ([geology model](GEOLOGY_VOLCANIC_TERRAIN.md)); tectonics, magma dynamics, cooling, and erosion remain future work.
 
-- [ ] Add heat transfer with explicit boundary conditions.
+- [x] Add bounded two-body thermal conduction with explicit conductivity validity, area, path length, timestep, energy accounting, and an overshoot guard ([thermal conduction](experiments/thermal-conduction.md)).
+- [ ] Add spatial heat transfer with explicit boundary conditions and validate it against finer-grid/reference solutions.
 - [x] Add bounded hydrodynamics references with explicit stability and limitation notes: a 1D linear wave model and 2D shallow-water models over flat/fixed terrain beds, including wet-dry shorelines ([hydrodynamics demonstrator](HYDRODYNAMICS_WORLD_DEMONSTRATOR.md), [shallow-water scope](HYDRODYNAMICS_SHALLOW_WATER_2D.md)). Systematic grid-convergence studies, rainfall/runoff, obstacles, and boat coupling remain future work.
 - [ ] Connect mechanics, material response, and measurements.
 - [ ] Add deformation, fracture, and causal deconstruction in increments.
