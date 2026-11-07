@@ -1,0 +1,70 @@
+name: Physics Benchmarks
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [development]
+    paths:
+      - 'Physics/**/*.cs'
+      - 'Spatial/**/*.cs'
+      - 'benchmarks/**/*.cs'
+      - 'benchmarks/**/*.csproj'
+      - 'TheSingularityWorkshop.Physics.csproj'
+      - '.github/workflows/benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out Physics source and benchmark harness
+        uses: actions/checkout@v4
+        with:
+          ref: development
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Capture benchmark provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results/environment
+          {
+            echo "repository=TrentBest/TheSingularityWorkshop.Physics"
+            echo "source_commit=$(git rev-parse HEAD)"
+            echo "benchmark_commit=$(git rev-parse HEAD)"
+            echo "captured_at_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "runner_os=$(uname -a)"
+            echo
+            dotnet --info
+            echo
+            lscpu
+            echo
+            free -h
+          } > results/environment/manifest.txt
+
+      - name: Build source and tests
+        run: dotnet build TheSingularityWorkshop.Physics.sln --configuration Release
+
+      - name: Run correctness tests
+        run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-build
+
+      - name: Run benchmark suite
+        run: dotnet run --project benchmarks/TheSingularityWorkshop.Physics.Benchmarks/TheSingularityWorkshop.Physics.Benchmarks.csproj --configuration Release -- --filter '*' --exporters json markdown
+
+      - name: Upload raw benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: physics-benchmark-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            BenchmarkDotNet.Artifacts/**
+            results/environment/**
+          if-no-files-found: warn
+          retention-days: 30
