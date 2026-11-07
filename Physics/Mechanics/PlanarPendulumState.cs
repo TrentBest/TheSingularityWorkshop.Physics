@@ -1,15 +1,15 @@
 namespace TheSingularityWorkshop.Physics.Mechanics;
 
-/// <summary>An immutable planar pendulum state at one committed logical step.</summary>
-/// <remarks>
-/// Angle is measured in radians from the downward vertical, positive in the
-/// chosen direction of rotation. Angular velocity is radians per second.
-/// </remarks>
+// <summary>An immutable planar pendulum state at one committed logical step.</summary>
+// <remarks>
+// Angle is measured in radians from the downward vertical, positive in the
+// chosen direction of rotation. Angular velocity is radians per second.
+// </remarks>
 public readonly record struct PlanarPendulumState
 {
-    /// <summary>Gets the angular displacement from the downward vertical in radians.</summary>
     private readonly bool _isInitialized;
 
+    /// <summary>Gets the angular displacement from the downward vertical in radians.</summary>
     public double AngleRadians { get; }
 
     /// <summary>Gets angular velocity in radians per second.</summary>
