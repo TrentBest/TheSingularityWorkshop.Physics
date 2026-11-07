@@ -8,6 +8,8 @@ namespace TheSingularityWorkshop.Physics.Mechanics;
 public readonly record struct PlanarPendulumState
 {
     /// <summary>Gets the angular displacement from the downward vertical in radians.</summary>
+    private readonly bool _isInitialized;
+
     public double AngleRadians { get; }
 
     /// <summary>Gets angular velocity in radians per second.</summary>
@@ -21,6 +23,7 @@ public readonly record struct PlanarPendulumState
 
     /// <summary>Gets whether all state fields are finite and the step/time are non-negative.</summary>
     public bool IsValid =>
+        _isInitialized &&
         double.IsFinite(AngleRadians) &&
         double.IsFinite(AngularVelocityRadiansPerSecond) &&
         StepIndex >= 0 &&
@@ -47,5 +50,6 @@ public readonly record struct PlanarPendulumState
         AngularVelocityRadiansPerSecond = angularVelocityRadiansPerSecond;
         StepIndex = stepIndex;
         ElapsedTimeSeconds = elapsedTimeSeconds;
+        _isInitialized = true;
     }
 }
