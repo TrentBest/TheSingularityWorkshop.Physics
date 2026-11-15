@@ -86,9 +86,9 @@ public sealed class PrescribedKinematicMotionTests
     public void Evaluate_IsIndependentOfSamplingCadenceAndReplayIsDeterministic()
     {
         var definition = Definition(Vector3d.Zero, new Vector3d(8d, 2d, -4d), duration: 4d);
-        var coarse = PrescribedKinematicMotion.Evaluate(definition, 2d, 240);
+        var coarse = PrescribedKinematicMotion.Evaluate(definition, 12d, 240);
         var fine = PrescribedKinematicMotion.Evaluate(definition, 2d, 240);
-        var otherSample = PrescribedKinematicMotion.Evaluate(definition, 1d, 120);
+        var otherSample = PrescribedKinematicMotion.Evaluate(definition, 11d, 120);
 
         Assert.That(coarse, Is.EqualTo(fine));
         Assert.That(otherSample.State.Pose.Position, Is.EqualTo(new Vector3d(2d, 0.5d, -1d)));
