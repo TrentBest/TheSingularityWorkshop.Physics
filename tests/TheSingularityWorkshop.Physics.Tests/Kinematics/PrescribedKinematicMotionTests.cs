@@ -32,8 +32,8 @@ public sealed class PrescribedKinematicMotionTests
     {
         var definition = Definition(Vector3d.Zero, new Vector3d(1d, 0d, 0d), duration: 1d);
 
-        var before = PrescribedKinematicMotion.Evaluate(definition, 0.999d, 8);
-        var arrival = PrescribedKinematicMotion.Evaluate(definition, 1d, 9);
+        var before = PrescribedKinematicMotion.Evaluate(definition, 10.999d, 8);
+        var arrival = PrescribedKinematicMotion.Evaluate(definition, 11d, 9);
 
         Assert.That(before.IsComplete, Is.False);
         Assert.That(arrival.IsComplete, Is.True);
@@ -51,7 +51,7 @@ public sealed class PrescribedKinematicMotionTests
             duration: 2d,
             maxAngularSpeed: 1d);
 
-        var sample = PrescribedKinematicMotion.Evaluate(definition, 1d, 1);
+        var sample = PrescribedKinematicMotion.Evaluate(definition, 11d, 1);
         var rotated = sample.State.Pose.TransformDirectionToWorld(new Vector3d(1d, 0d, 0d));
 
         Assert.Multiple(() =>
@@ -76,9 +76,9 @@ public sealed class PrescribedKinematicMotionTests
 
         Assert.Multiple(() =>
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => PrescribedKinematicMotion.Evaluate(definition, -0.1d, 0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => PrescribedKinematicMotion.Evaluate(definition, 1.1d, 0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => PrescribedKinematicMotion.Evaluate(definition, 0d, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => PrescribedKinematicMotion.Evaluate(definition, 9.9d, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => PrescribedKinematicMotion.Evaluate(definition, 11.1d, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => PrescribedKinematicMotion.Evaluate(definition, 10d, -1));
         });
     }
 
@@ -100,7 +100,7 @@ public sealed class PrescribedKinematicMotionTests
         var pose = new Pose3d(new Vector3d(2d, 3d, 4d), Quaterniond.Identity);
         var definition = Definition(pose, pose, duration: 3d);
 
-        var sample = PrescribedKinematicMotion.Evaluate(definition, 23d, 3);
+        var sample = PrescribedKinematicMotion.Evaluate(definition, 13d, 3);
 
         Assert.That(sample.State.Pose, Is.EqualTo(pose));
         Assert.That(sample.State.LinearVelocity, Is.EqualTo(Vector3d.Zero));
