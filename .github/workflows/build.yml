@@ -36,7 +36,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Generate deterministic hydrodynamics rainfall run record from Physics
         run: dotnet run --project tools/HydrodynamicsRainfallRunRecordGenerator/HydrodynamicsRainfallRunRecordGenerator.csproj --configuration Release -- /tmp/hydrodynamics-rainfall.run.json
@@ -798,8 +798,8 @@ jobs:
 
       - name: Package contact MicroBundles for repository ingestion
         run: |
-          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
-          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net8.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
           python3 - <<'PY'
           import struct
           from pathlib import Path
