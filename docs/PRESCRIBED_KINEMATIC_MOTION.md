@@ -1,6 +1,6 @@
 # Prescribed Kinematic Motion
 
-**Status:** implemented constant-velocity and quintic smooth-step profiles, bounded peak-speed/acceleration validation, absolute-logical-time and fixed-step evaluation, achieved-state commit validation, and a typed MicroBundle provider adapter. A concrete host composition sample remains future work.
+**Status:** implemented constant-velocity and quintic smooth-step profiles, bounded peak-speed/acceleration validation, analytical per-sample acceleration observations, absolute-logical-time and fixed-step evaluation, achieved-state commit validation, and a typed MicroBundle provider adapter. An Experiences-owned C# host-composition sample demonstrates provider resolution and commit validation with a synthetic no-contact path.
 
 ## Ownership
 
@@ -35,7 +35,7 @@ Orientation uses normalized scalar-first quaternions \((W,X,Y,Z)\), active body-
 
 Inputs and outputs use metres, seconds, and radians. Position is in a right-handed world frame. The absolute-time evaluator is a pure function of the definition, logical time, and caller-supplied step index. The EvaluateFixedStep entry point derives logical time from an explicit fixed timestep and total step count; render cadence is not an input.
 
-The optional `QuinticSmoothStep` profile uses \(s(u)=10u^3-15u^4+6u^5\), with \(u=(t-t_0)/T\). Its first derivative is zero at both endpoints, and its second derivative is also zero there, so the prescribed root motion starts and stops with zero velocity and acceleration. Its peak normalized speed factor is 1.875 and its peak normalized acceleration factor is \(10/\sqrt{3}\). The definition validates the resulting peak linear/angular speed and acceleration against the declared ceilings. The default `ConstantVelocity` profile remains constant-speed in the open interval and has a velocity discontinuity at its boundaries; it does not claim a finite start/stop acceleration bound.
+The optional `QuinticSmoothStep` profile uses \(s(u)=10u^3-15u^4+6u^5\), with \(u=(t-t_0)/T\). Its first derivative is zero at both endpoints, and its second derivative is also zero there, so the prescribed root motion starts and stops with zero velocity and acceleration. Its peak normalized speed factor is 1.875 and its peak normalized acceleration factor is \(10/\sqrt{3}\). The definition validates the resulting peak linear/angular speed and acceleration against the declared ceilings. Each sample exposes analytical world-frame linear and angular acceleration plus an explicit availability flag. For `QuinticSmoothStep`, acceleration is defined throughout the interval, including zero-valued endpoints. For `ConstantVelocity`, acceleration is zero in the open interval but unavailable at either endpoint because velocity is discontinuous there; the API does not invent a finite endpoint acceleration.
 
 ## API sketch
 
@@ -76,13 +76,13 @@ Cancellation between steps is represented by not committing another requested sa
 
 - `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count. The host still owns scheduling, monotonic ordering, and authoritative world commits; there is no persistent world-step scheduler in this API.
 - The typed MicroBundle adapter is implemented and tested, but it does not provide a universal service locator or a host-specific runtime bridge. The host must resolve the loaded bundle instance and explicitly bind its provider contract.
-- The default `ConstantVelocity` profile has a boundary velocity discontinuity. Select `QuinticSmoothStep` for zero endpoint velocity/acceleration and bounded peak speed/acceleration; its analytical ceilings are validated at definition construction. Acceleration is not currently emitted as a separate sample field, so consumers receive pose and velocity observations, not an acceleration observation.
+- The default `ConstantVelocity` profile has a boundary velocity discontinuity. Select `QuinticSmoothStep` for zero endpoint velocity/acceleration and bounded peak speed/acceleration; its analytical ceilings are validated at definition construction. `PrescribedKinematicMotionSample.Derivatives` exposes world-frame linear/angular acceleration and states whether acceleration is mathematically defined at that sample.
 - The commit validator pairs a request with an achieved snapshot; it is not a collision solver or a world-step transaction coordinator.
 - The host must enforce commit ordering and retain the last committed state on interruption.
 - No articulated limb motion, gait, balance, contact, collision avoidance, friction, obstacle response, or environmental resistance is provided.
-- A concrete host integration sample is not yet implemented. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
+- The Experiences repository contains a C# host-composition sample that resolves the typed provider, evaluates fixed steps, supplies achieved state separately, and validates arrival. It uses a synthetic no-contact path; it is not a production world host or browser bridge. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
 
-Focused NUnit tests cover both motion profiles, translation and orientation-only samples, endpoint rest, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Acceleration is validated analytically at definition construction but is not yet exposed as a per-sample derivative observation. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
+Focused NUnit tests cover both motion profiles, translation and orientation-only samples, endpoint rest, analytical linear/angular acceleration, explicit acceleration unavailability at constant-velocity endpoints, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 ## Related contracts
 
