@@ -139,6 +139,36 @@ public sealed class PrescribedKinematicMotionTests
     }
 
     [Test]
+    public void Evaluate_ExactComputedEndTimeAlwaysProducesExactDestination()
+    {
+        const double startTime = 0.1d;
+        const double duration = 0.2d;
+        var destination = new Pose3d(new Vector3d(3d, 2d, 1d), Quaterniond.Identity);
+        var definition = new PrescribedKinematicMotionDefinition(
+            "motion:floating-endpoint",
+            "actor:floating-endpoint",
+            new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+            destination,
+            startTime,
+            duration,
+            maximumLinearSpeed: 100d,
+            maximumAngularSpeed: 1d,
+            profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+            maximumLinearAcceleration: 100d,
+            maximumAngularAcceleration: 1d);
+
+        var sample = PrescribedKinematicMotion.Evaluate(
+            definition, startTime + duration, stepIndex: 20);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(sample.IsComplete, Is.True);
+            Assert.That(sample.State.Pose, Is.EqualTo(destination));
+            Assert.That(sample.State.LinearVelocity, Is.EqualTo(Vector3d.Zero));
+        });
+    }
+
+    [Test]
     public void Evaluate_QuinticSmoothStepStartsAndEndsAtRest()
     {
         var definition = new PrescribedKinematicMotionDefinition(
