@@ -138,6 +138,59 @@ public sealed class PrescribedKinematicMotionTests
             PrescribedKinematicMotion.EvaluateFixedStep(definition, 1, 0.5d, 2));
     }
 
+    [Test]
+    public void Evaluate_QuinticSmoothStepStartsAndEndsAtRest()
+    {
+        var definition = new PrescribedKinematicMotionDefinition(
+            "motion:smooth",
+            "actor:smooth",
+            new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+            new Pose3d(new Vector3d(2d, 0d, 0d), Quaterniond.Identity),
+            10d,
+            2d,
+            maximumLinearSpeed: 2d,
+            maximumAngularSpeed: 1d,
+            profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+            maximumLinearAcceleration: 4d,
+            maximumAngularAcceleration: 2d);
+
+        var start = PrescribedKinematicMotion.Evaluate(definition, 10d, 0);
+        var middle = PrescribedKinematicMotion.Evaluate(definition, 11d, 1);
+        var end = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(start.State.Pose.Position, Is.EqualTo(Vector3d.Zero));
+            Assert.That(start.State.LinearVelocity, Is.EqualTo(Vector3d.Zero));
+            Assert.That(middle.State.Pose.Position.X, Is.EqualTo(1d).Within(1e-12));
+            Assert.That(middle.State.LinearVelocity.X, Is.EqualTo(1.875d).Within(1e-12));
+            Assert.That(end.State.Pose.Position.X, Is.EqualTo(2d).Within(1e-12));
+            Assert.That(end.State.LinearVelocity, Is.EqualTo(Vector3d.Zero));
+            Assert.That(end.IsComplete, Is.True);
+        });
+    }
+
+    [Test]
+    public void Definition_QuinticSmoothStepRejectsSpeedOrAccelerationLimitViolation()
+    {
+        var start = new Pose3d(Vector3d.Zero, Quaterniond.Identity);
+        var end = new Pose3d(new Vector3d(2d, 0d, 0d), Quaterniond.Identity);
+
+        Assert.Multiple(() =>
+        {
+            Assert.Throws<ArgumentException>(() => new PrescribedKinematicMotionDefinition(
+                "motion:smooth-speed", "actor:smooth", start, end, 10d, 2d,
+                maximumLinearSpeed: 1.5d, maximumAngularSpeed: 1d,
+                profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+                maximumLinearAcceleration: 4d, maximumAngularAcceleration: 2d));
+            Assert.Throws<ArgumentException>(() => new PrescribedKinematicMotionDefinition(
+                "motion:smooth-acceleration", "actor:smooth", start, end, 10d, 2d,
+                maximumLinearSpeed: 2d, maximumAngularSpeed: 1d,
+                profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+                maximumLinearAcceleration: 2d, maximumAngularAcceleration: 2d));
+        });
+    }
+
     private static PrescribedKinematicMotionDefinition Definition(
         Vector3d start,
         Vector3d end,
