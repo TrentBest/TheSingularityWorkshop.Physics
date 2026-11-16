@@ -1,6 +1,6 @@
 # Prescribed Kinematic Motion
 
-**Status:** implemented bounded absolute-logical-time evaluation; commit validation is available. Fixed-step scheduling and a MicroBundle/host adapter remain integration work.
+**Status:** implemented bounded absolute-logical-time evaluation; commit validation is available. A fixed-step evaluation entry point is available; a MicroBundle/host adapter remains integration work.
 
 ## Ownership
 
@@ -32,7 +32,7 @@ Orientation uses normalized scalar-first quaternions \((W,X,Y,Z)\), active body-
 \lVert\boldsymbol\omega\rVert=\frac{\theta}{T}
 \]
 
-Inputs and outputs use metres, seconds, and radians. Position is in a right-handed world frame. The evaluator is a pure function of the definition, absolute logical time, and caller-supplied step index; render cadence is not an input.
+Inputs and outputs use metres, seconds, and radians. Position is in a right-handed world frame. The absolute-time evaluator is a pure function of the definition, logical time, and caller-supplied step index. The EvaluateFixedStep entry point derives logical time from an explicit fixed timestep and total step count; render cadence is not an input.
 
 The profile has constant velocity inside the interval and a derivative discontinuity at its boundaries. It therefore does **not** claim a finite start/stop acceleration bound. A trajectory requiring bounded acceleration or continuous start/stop velocity needs a separately declared profile and must not be represented by this profile.
 
@@ -70,7 +70,7 @@ Cancellation between steps is represented by not committing another requested sa
 
 ## Explicit limitations and remaining acceptance work
 
-- The evaluator accepts absolute logical time and a caller-supplied step index. A fixed-step scheduler/step-count contract that derives time from step identity is not yet included.
+- EvaluateFixedStep derives logical time from the step index, fixed timestep, and total step count. The host still owns scheduling and commit ordering; there is no persistent world-step scheduler in this API.
 - The current profile has a boundary derivative discontinuity and no finite acceleration bound. Do not use it for motion requiring bounded acceleration.
 - The commit validator pairs a request with an achieved snapshot; it is not a collision solver or a world-step transaction coordinator.
 - The host must enforce commit ordering and retain the last committed state on interruption.
