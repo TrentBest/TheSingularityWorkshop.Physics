@@ -16,13 +16,28 @@ namespace TheSingularityWorkshop.Physics.Kinematics;
 /// </remarks>
 public sealed record PrescribedKinematicMotionDefinition
 {
+    /// <summary>Gets the stable identity of this motion definition.</summary>
     public string DefinitionId { get; }
+
+    /// <summary>Gets the stable actor/body identity.</summary>
     public string ActorId { get; }
+
+    /// <summary>Gets the initial achieved pose used as the trajectory origin.</summary>
     public Pose3d StartPose { get; }
+
+    /// <summary>Gets the requested destination pose.</summary>
     public Pose3d DestinationPose { get; }
+
+    /// <summary>Gets the absolute logical start time in seconds.</summary>
     public double StartTimeSeconds { get; }
+
+    /// <summary>Gets the positive trajectory duration in seconds.</summary>
     public double DurationSeconds { get; }
+
+    /// <summary>Gets the declared maximum linear speed in metres per second.</summary>
     public double MaximumLinearSpeed { get; }
+
+    /// <summary>Gets the declared maximum angular speed in radians per second.</summary>
     public double MaximumAngularSpeed { get; }
 
     internal Vector3d Translation => DestinationPose.Position - StartPose.Position;
@@ -30,6 +45,7 @@ public sealed record PrescribedKinematicMotionDefinition
     internal Vector3d RotationAxis { get; }
 
     /// <summary>Creates a validated, immutable motion definition.</summary>
+
     public PrescribedKinematicMotionDefinition(
         string definitionId,
         string actorId,
@@ -102,6 +118,7 @@ public sealed record PrescribedKinematicMotionDefinition
 }
 
 /// <summary>Evaluates immutable prescribed motion definitions at explicit logical times.</summary>
+/// <summary>Evaluates prescribed kinematic motion and validates separately supplied committed observations.</summary>
 public static class PrescribedKinematicMotion
 {
     /// <summary>
