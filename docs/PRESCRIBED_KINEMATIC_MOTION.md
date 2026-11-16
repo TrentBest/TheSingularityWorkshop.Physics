@@ -1,6 +1,6 @@
 # Prescribed Kinematic Motion
 
-**Status:** implemented bounded absolute-logical-time and fixed-step evaluation, achieved-state commit validation, and a typed MicroBundle provider adapter. A concrete host composition sample and acceleration-limited profile remain future work.
+**Status:** implemented constant-velocity and quintic smooth-step profiles, bounded peak-speed/acceleration validation, absolute-logical-time and fixed-step evaluation, achieved-state commit validation, and a typed MicroBundle provider adapter. A concrete host composition sample remains future work.
 
 ## Ownership
 
@@ -48,7 +48,10 @@ var definition = new PrescribedKinematicMotionDefinition(
     startTimeSeconds: 12d,
     durationSeconds: 2d,
     maximumLinearSpeed: 2d,
-    maximumAngularSpeed: 1d);
+    maximumAngularSpeed: 1d,
+    profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+    maximumLinearAcceleration: 4d,
+    maximumAngularAcceleration: 2d);
 
 var requested = PrescribedKinematicMotion.Evaluate(
     definition,
@@ -73,13 +76,13 @@ Cancellation between steps is represented by not committing another requested sa
 
 - `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count. The host still owns scheduling, monotonic ordering, and authoritative world commits; there is no persistent world-step scheduler in this API.
 - The typed MicroBundle adapter is implemented and tested, but it does not provide a universal service locator or a host-specific runtime bridge. The host must resolve the loaded bundle instance and explicitly bind its provider contract.
-- The default `ConstantVelocity` profile has a boundary velocity discontinuity. Select `QuinticSmoothStep` when finite start/stop acceleration is required; its speed and acceleration ceilings are validated at definition construction.
+- The default `ConstantVelocity` profile has a boundary velocity discontinuity. Select `QuinticSmoothStep` for zero endpoint velocity/acceleration and bounded peak speed/acceleration; its analytical ceilings are validated at definition construction. Acceleration is not currently emitted as a separate sample field, so consumers receive pose and velocity observations, not an acceleration observation.
 - The commit validator pairs a request with an achieved snapshot; it is not a collision solver or a world-step transaction coordinator.
 - The host must enforce commit ordering and retain the last committed state on interruption.
 - No articulated limb motion, gait, balance, contact, collision avoidance, friction, obstacle response, or environmental resistance is provided.
 - A concrete host integration sample is not yet implemented. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
 
-Focused NUnit tests cover both motion profiles, analytical translation/orientation samples, stationary motion, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
+Focused NUnit tests cover both motion profiles, translation samples, endpoint rest, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. The current test suite still needs stronger independent angular-profile and derivative-boundary checks. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 ## Related contracts
 
