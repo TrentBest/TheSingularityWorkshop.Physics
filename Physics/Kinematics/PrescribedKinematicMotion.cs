@@ -48,7 +48,6 @@ public sealed record PrescribedKinematicMotionDefinition
     internal Vector3d RotationAxis { get; }
 
     /// <summary>Creates a validated, immutable motion definition.</summary>
-
     public PrescribedKinematicMotionDefinition(
         string definitionId,
         string actorId,
@@ -124,7 +123,6 @@ public sealed record PrescribedKinematicMotionDefinition
     }
 }
 
-/// <summary>Evaluates immutable prescribed motion definitions at explicit logical times.</summary>
 /// <summary>Evaluates prescribed kinematic motion and validates separately supplied committed observations.</summary>
 public static class PrescribedKinematicMotion
 {
@@ -162,13 +160,6 @@ public static class PrescribedKinematicMotion
             definition.DestinationPose.Orientation,
             fraction);
         var angularVelocity = definition.RotationAxis * (definition.RotationAngle / definition.DurationSeconds);
-
-        if (fraction == 0d || fraction == 1d)
-        {
-            // The prescribed path is defined on a closed interval. Endpoint
-            // velocity is the one-sided trajectory derivative, not a claim
-            // about pre-start or post-arrival motion.
-        }
 
         var state = new RigidBodyState(
             definition.ActorId,
@@ -213,6 +204,10 @@ public static class PrescribedKinematicMotion
             requested.State.ElapsedTime != achieved.ElapsedTime ||
             achieved.BodyId != definition.ActorId)
             throw new ArgumentException("Requested and achieved observations must identify the same actor, step, and logical time.", nameof(achieved));
+
+        var expected = Evaluate(definition, achieved.ElapsedTime, achieved.StepIndex);
+        if (requested != expected)
+            throw new ArgumentException("The requested sample does not match the supplied definition, step, and time.", nameof(requested));
 
         var positionError = Vector3d.Distance(requested.State.Pose.Position, achieved.Pose.Position);
         var a = requested.State.Pose.Orientation.Normalized();
