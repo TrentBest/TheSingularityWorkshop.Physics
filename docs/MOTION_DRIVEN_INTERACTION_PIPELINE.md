@@ -24,9 +24,9 @@ A requested path is not automatically an achieved path. Keep these motion modes 
 
 The Physics core now exposes a versioned immutable motion definition, a pure evaluator over absolute logical time, and a commit validator that accepts a separately supplied achieved rigid-body snapshot. The current profile is constant-velocity translation plus shortest-arc quaternion rotation. It rejects trajectories exceeding declared linear/angular speed limits.
 
-The evaluator does not mutate a body or assert that a requested pose was achieved. Arrival is reported by the commit result only when the destination sample is paired with an achieved snapshot inside caller-supplied position and orientation tolerances. Interruption preserves the previous immutable committed snapshot when the host declines to commit a later sample.
+The evaluator does not mutate a body or assert that a requested pose was achieved. Both absolute-time evaluation and an EvaluateFixedStep entry point are available; the latter derives logical time from the supplied step index, fixed timestep, and total step count. Arrival is reported by the commit result only when a verified destination sample is paired with an achieved snapshot inside caller-supplied position and orientation tolerances. Interruption preserves the previous immutable committed snapshot when the host declines to commit a later sample.
 
-This slice does not yet provide a fixed-step scheduler that derives logical time from step identity, bounded-acceleration start/stop profiles, collision/contact response, or a MicroBundle/host adapter. The current constant-velocity profile has derivative discontinuities at its interval boundaries; it must not be treated as a finite-acceleration gait or controller.
+This slice does not yet provide bounded-acceleration start/stop profiles, collision/contact response, or a MicroBundle/host adapter. The current constant-velocity profile has derivative discontinuities at its interval boundaries; it must not be treated as a finite-acceleration gait or controller.
 
 ## 2. Motion handoff data
 
