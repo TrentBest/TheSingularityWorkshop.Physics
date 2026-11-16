@@ -14,14 +14,14 @@ public enum PrescribedKinematicMotionProfile
 }
 
 /// <summary>
-/// Immutable definition of one bounded, constant-twist prescribed kinematic trajectory.
+/// Immutable definition of one bounded prescribed kinematic trajectory.
 /// </summary>
 /// <remarks>
 /// Position is in metres in a right-handed world frame. Orientation is a normalized
 /// active body-local-to-world rotation stored as scalar-first (W, X, Y, Z).
-/// Time is seconds and angular quantities are radians. Translation is linear in time;
-/// orientation follows the shortest quaternion arc at constant angular speed. The
-/// model is prescribed kinematics, not force-driven dynamics, and does not provide
+/// Time is seconds and angular quantities are radians. The selected profile shapes both
+/// translation and shortest-arc orientation progress. The model is prescribed
+/// kinematics, not force-driven dynamics, and does not provide
 /// collision, contact, balance, gait, or obstacle response.
 /// </remarks>
 public sealed record PrescribedKinematicMotionDefinition
