@@ -216,7 +216,7 @@ public sealed class PrescribedKinematicMotionTests
             maximumAngularSpeed: 2d,
             profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
             maximumLinearAcceleration: 0d,
-            maximumAngularAcceleration: 2d);
+            maximumAngularAcceleration: 2.5d);
 
         var start = PrescribedKinematicMotion.Evaluate(definition, 10d, 0);
         var middle = PrescribedKinematicMotion.Evaluate(definition, 11d, 1);
