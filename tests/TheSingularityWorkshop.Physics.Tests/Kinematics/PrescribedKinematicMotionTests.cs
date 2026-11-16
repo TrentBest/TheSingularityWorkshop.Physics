@@ -107,6 +107,37 @@ public sealed class PrescribedKinematicMotionTests
         Assert.That(sample.IsComplete, Is.True);
     }
 
+    [Test]
+    public void EvaluateFixedStep_DerivesLogicalTimeFromStepIdentity()
+    {
+        var definition = Definition(
+            new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+            new Pose3d(new Vector3d(4d, 0d, 0d), Quaterniond.Identity),
+            duration: 2d);
+
+        var sample = PrescribedKinematicMotion.EvaluateFixedStep(
+            definition, stepIndex: 1, fixedTimeStepSeconds: 1d, totalStepCount: 2);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(sample.State.StepIndex, Is.EqualTo(1));
+            Assert.That(sample.State.ElapsedTime, Is.EqualTo(11d));
+            Assert.That(sample.State.Pose.Position.X, Is.EqualTo(2d).Within(1e-12));
+        });
+    }
+
+    [Test]
+    public void EvaluateFixedStep_RejectsScheduleThatDoesNotSpanDefinition()
+    {
+        var definition = Definition(
+            new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+            new Pose3d(new Vector3d(4d, 0d, 0d), Quaterniond.Identity),
+            duration: 2d);
+
+        Assert.Throws<ArgumentException>(() =>
+            PrescribedKinematicMotion.EvaluateFixedStep(definition, 1, 0.5d, 2));
+    }
+
     private static PrescribedKinematicMotionDefinition Definition(
         Vector3d start,
         Vector3d end,
