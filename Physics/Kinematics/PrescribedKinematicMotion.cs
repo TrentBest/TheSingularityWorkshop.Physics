@@ -3,6 +3,16 @@ using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.Kinematics;
 
+/// <summary>Supported prescribed-trajectory time profiles.</summary>
+public enum PrescribedKinematicMotionProfile
+{
+    /// <summary>Constant velocity over the open motion interval; endpoint velocity is discontinuous.</summary>
+    ConstantVelocity = 0,
+
+    /// <summary>Quintic smooth-step with zero velocity and acceleration at both endpoints.</summary>
+    QuinticSmoothStep = 1
+}
+
 /// <summary>
 /// Immutable definition of one bounded, constant-twist prescribed kinematic trajectory.
 /// </summary>
@@ -43,6 +53,15 @@ public sealed record PrescribedKinematicMotionDefinition
     /// <summary>Gets the declared maximum angular speed in radians per second.</summary>
     public double MaximumAngularSpeed { get; }
 
+    /// <summary>Gets the selected time profile.</summary>
+    public PrescribedKinematicMotionProfile Profile { get; }
+
+    /// <summary>Gets the declared maximum linear acceleration in metres per second squared.</summary>
+    public double MaximumLinearAcceleration { get; }
+
+    /// <summary>Gets the declared maximum angular acceleration in radians per second squared.</summary>
+    public double MaximumAngularAcceleration { get; }
+
     internal Vector3d Translation => DestinationPose.Position - StartPose.Position;
     internal double RotationAngle { get; }
     internal Vector3d RotationAxis { get; }
@@ -57,7 +76,10 @@ public sealed record PrescribedKinematicMotionDefinition
         double durationSeconds,
         double maximumLinearSpeed,
         double maximumAngularSpeed,
-        int version = 1)
+        int version = 1,
+        PrescribedKinematicMotionProfile profile = PrescribedKinematicMotionProfile.ConstantVelocity,
+        double maximumLinearAcceleration = double.MaxValue,
+        double maximumAngularAcceleration = double.MaxValue)
     {
         if (string.IsNullOrWhiteSpace(definitionId))
             throw new ArgumentException("A stable motion definition identity is required.", nameof(definitionId));
@@ -74,6 +96,10 @@ public sealed record PrescribedKinematicMotionDefinition
             throw new ArgumentOutOfRangeException(nameof(durationSeconds));
         ValidateLimit(maximumLinearSpeed, nameof(maximumLinearSpeed));
         ValidateLimit(maximumAngularSpeed, nameof(maximumAngularSpeed));
+        ValidateLimit(maximumLinearAcceleration, nameof(maximumLinearAcceleration));
+        ValidateLimit(maximumAngularAcceleration, nameof(maximumAngularAcceleration));
+        if (!Enum.IsDefined(profile))
+            throw new ArgumentOutOfRangeException(nameof(profile));
 
         DefinitionId = definitionId;
         ActorId = actorId;
@@ -84,6 +110,9 @@ public sealed record PrescribedKinematicMotionDefinition
         DurationSeconds = durationSeconds;
         MaximumLinearSpeed = maximumLinearSpeed;
         MaximumAngularSpeed = maximumAngularSpeed;
+        Profile = profile;
+        MaximumLinearAcceleration = maximumLinearAcceleration;
+        MaximumAngularAcceleration = maximumAngularAcceleration;
 
         var start = startPose.Orientation.Normalized();
         var end = destinationPose.Orientation.Normalized();
@@ -102,12 +131,24 @@ public sealed record PrescribedKinematicMotionDefinition
             ? Vector3d.Zero
             : new Vector3d(relative.X, relative.Y, relative.Z).Normalized();
 
-        var requiredLinearSpeed = Translation.Magnitude / durationSeconds;
-        var requiredAngularSpeed = RotationAngle / durationSeconds;
+        var peakSpeedFactor = profile == PrescribedKinematicMotionProfile.QuinticSmoothStep ? 1.875d : 1d;
+        var requiredLinearSpeed = (Translation.Magnitude / durationSeconds) * peakSpeedFactor;
+        var requiredAngularSpeed = (RotationAngle / durationSeconds) * peakSpeedFactor;
         if (!double.IsFinite(requiredLinearSpeed) || requiredLinearSpeed > maximumLinearSpeed)
             throw new ArgumentException("The trajectory exceeds the declared linear-speed limit.", nameof(maximumLinearSpeed));
         if (!double.IsFinite(requiredAngularSpeed) || requiredAngularSpeed > maximumAngularSpeed)
             throw new ArgumentException("The trajectory exceeds the declared angular-speed limit.", nameof(maximumAngularSpeed));
+
+        if (profile == PrescribedKinematicMotionProfile.QuinticSmoothStep)
+        {
+            var peakAccelerationFactor = 10d / Math.Sqrt(3d);
+            var requiredLinearAcceleration = (Translation.Magnitude / (durationSeconds * durationSeconds)) * peakAccelerationFactor;
+            var requiredAngularAcceleration = (RotationAngle / (durationSeconds * durationSeconds)) * peakAccelerationFactor;
+            if (!double.IsFinite(requiredLinearAcceleration) || requiredLinearAcceleration > maximumLinearAcceleration)
+                throw new ArgumentException("The trajectory exceeds the declared linear-acceleration limit.", nameof(maximumLinearAcceleration));
+            if (!double.IsFinite(requiredAngularAcceleration) || requiredAngularAcceleration > maximumAngularAcceleration)
+                throw new ArgumentException("The trajectory exceeds the declared angular-acceleration limit.", nameof(maximumAngularAcceleration));
+        }
     }
 
     private static double Dot(Quaterniond a, Quaterniond b) =>
@@ -153,13 +194,19 @@ public static class PrescribedKinematicMotion
 
         var elapsed = logicalTimeSeconds - definition.StartTimeSeconds;
         var fraction = elapsed / definition.DurationSeconds;
-        var position = definition.StartPose.Position + (definition.Translation * fraction);
-        var linearVelocity = definition.Translation / definition.DurationSeconds;
+        var progress = definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep
+            ? (10d * Math.Pow(fraction, 3d)) - (15d * Math.Pow(fraction, 4d)) + (6d * Math.Pow(fraction, 5d))
+            : fraction;
+        var progressRate = definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep
+            ? 30d * fraction * fraction * (1d - fraction) * (1d - fraction)
+            : 1d;
+        var position = definition.StartPose.Position + (definition.Translation * progress);
+        var linearVelocity = definition.Translation * (progressRate / definition.DurationSeconds);
         var orientation = InterpolateOrientation(
             definition.StartPose.Orientation,
             definition.DestinationPose.Orientation,
-            fraction);
-        var angularVelocity = definition.RotationAxis * (definition.RotationAngle / definition.DurationSeconds);
+            progress);
+        var angularVelocity = definition.RotationAxis * (definition.RotationAngle * progressRate / definition.DurationSeconds);
 
         var state = new RigidBodyState(
             definition.ActorId,
