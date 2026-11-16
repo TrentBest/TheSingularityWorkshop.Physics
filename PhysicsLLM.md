@@ -238,3 +238,17 @@ Ownership boundary:
 Added the separate project `TheSingularityWorkshop.Physics.MicroBundles.csproj` with two thin, typed adapters around existing tested core capabilities: sphere-sphere contact observation (bundle 5201) and translational normal impulse response (bundle 5202). Focused tests verify stable provider IDs, geometric evidence without invented force/impulse values, and wrapper behavior against the core resolver.
 
 This is intentionally not a complete marble/domino engine. It does not add box/domino contact, rigid-body integration, friction, angular impulse, resting contacts, or a provider registry. Provider IDs are declarations; the host must resolve typed instances explicitly. Next implement and test the CPU rigid-body vertical slice in core Physics before building higher-level bundles or claiming the experiences run physically. The companion consumer contracts are in [Experiences](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/blob/development/docs/MARBLE_RUN_AND_DOMINO_MICROBUNDLE_BOUNDARY.md). No publication or release is authorized.
+
+
+## Package-aware release branch semantics — mandatory
+
+Branch meaning depends on whether this package has actually been published, not merely on the existence or name of a branch.
+
+- **Never published:** `development` is the authoritative source of truth. `master` is pre-release scaffolding, not a released-package baseline, and may be identical to `development`. Before the first release, the owner may replace/reset the pre-release `master` tree to the verified, approved `development` candidate. Do not preserve artificial pre-release history as though it represented a NuGet release.
+- **Previously published:** `master` must represent the exact source commit corresponding to the latest successfully published NuGet package. `development` remains the active forward-moving source. Do not move `master` merely to make it match newer development work.
+- **First release transition:** after the exact candidate has passed its release gates and the owner explicitly authorizes publication, publish that approved candidate. Establish `master` at the exact released source commit. Afterward, development may advance independently.
+- **Classification evidence:** verify publication history from the authoritative NuGet feed and release/publish evidence. Do not infer that a package was published from a project file, version string, tag, successful pack job, skipped publish job, or branch name.
+- **Branch count:** the permanent target remains exactly `master` and `development`. For an unreleased package, equality is normal and desirable; for a released package, divergence is normal after subsequent development.
+- **Authorization boundary:** this policy describes the intended release model; it is not blanket permission to publish, force-push, replace a branch, merge, delete branches, or deploy. Obtain explicit owner authorization for the specific operation. Never publish NuGet packages without explicit authorization.
+
+When auditing, record the package's verified publication state as `never-published` or `published`, the latest published version and source SHA when applicable, both branch SHAs, and the evidence used to classify it. If publication state cannot be verified, mark it `unknown` and preserve both refs until clarified.
