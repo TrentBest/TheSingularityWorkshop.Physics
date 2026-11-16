@@ -11,7 +11,7 @@
   ],
   "branch_count": 2,
   "status": "COMPLIANT",
-  "evaluated_at": "2026-11-16T03:03:17Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/43795761716",
-  "triggering_commit": "c35ea0bf79e3771bbaa93ad6fddb6e8c772f01d1"
+  "evaluated_at": "2026-11-16T03:03:29Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/43795789405",
+  "triggering_commit": "79c348dad1e96bff1dfd589010d62f71605d0deb"
 }
