@@ -202,13 +202,26 @@ public static class PrescribedKinematicMotion
         var progressRate = definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep
             ? 30d * fraction * fraction * (1d - fraction) * (1d - fraction)
             : 1d;
+        var progressAccelerationRate = definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep
+            ? (60d * fraction * (1d - fraction) * (1d - (2d * fraction)) /
+               definition.DurationSeconds / definition.DurationSeconds)
+            : 0d;
         var position = definition.StartPose.Position + (definition.Translation * progress);
         var linearVelocity = definition.Translation * (progressRate / definition.DurationSeconds);
+        var linearAcceleration = definition.Translation.Magnitude == 0d
+            ? Vector3d.Zero
+            : definition.Translation * progressAccelerationRate;
         var orientation = InterpolateOrientation(
             definition.StartPose.Orientation,
             definition.DestinationPose.Orientation,
             progress);
         var angularVelocity = definition.RotationAxis * (definition.RotationAngle * progressRate / definition.DurationSeconds);
+        var angularAcceleration = definition.RotationAngle == 0d
+            ? Vector3d.Zero
+            : definition.RotationAxis * (definition.RotationAngle * progressAccelerationRate);
+        var accelerationIsDefined =
+            definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep ||
+            (fraction > 0d && fraction < 1d);
 
         var state = new RigidBodyState(
             definition.ActorId,
@@ -219,7 +232,13 @@ public static class PrescribedKinematicMotion
             logicalTimeSeconds);
 
         return new PrescribedKinematicMotionSample(
-            definition.DefinitionId, definition.Version, state, fraction == 1d);
+            definition.DefinitionId, definition.Version, state, fraction == 1d)
+        {
+            Derivatives = new PrescribedKinematicMotionDerivatives(
+                linearAcceleration,
+                angularAcceleration,
+                accelerationIsDefined)
+        };
     }
 
     /// <summary>
@@ -352,7 +371,23 @@ public readonly record struct PrescribedKinematicMotionSample(
     string DefinitionId,
     int DefinitionVersion,
     RigidBodyState State,
-    bool IsComplete);
+    bool IsComplete)
+{
+    /// <summary>
+    /// Gets the analytical trajectory derivatives. Acceleration is explicitly
+    /// unavailable at the discontinuous endpoints of a constant-velocity profile.
+    /// </summary>
+    public PrescribedKinematicMotionDerivatives Derivatives { get; init; }
+}
+
+/// <summary>Analytical derivatives of one prescribed trajectory sample.</summary>
+/// <param name="LinearAcceleration">World-frame linear acceleration in metres per second squared.</param>
+/// <param name="AngularAcceleration">World-frame angular acceleration in radians per second squared.</param>
+/// <param name="IsAccelerationDefined">Whether acceleration is mathematically defined at this sample.</param>
+public readonly record struct PrescribedKinematicMotionDerivatives(
+    Vector3d LinearAcceleration,
+    Vector3d AngularAcceleration,
+    bool IsAccelerationDefined);
 
 
 /// <summary>Pairs a requested trajectory sample with the separately supplied achieved state.</summary>
