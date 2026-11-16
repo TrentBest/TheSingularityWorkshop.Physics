@@ -18,7 +18,7 @@ Physics core has no dependency on Experiences, Gestures, Renderer, Visualization
 
 ## Current mathematical contract
 
-The current bounded profile is linear translation and shortest-arc quaternion interpolation:
+The bounded profiles are constant-velocity motion and quintic smooth-step motion. Both use shortest-arc quaternion interpolation for orientation. The default constant-velocity profile uses:
 
 \[
 \mathbf{x}(t)=\mathbf{x}_0+u(\mathbf{x}_1-\mathbf{x}_0),\qquad
@@ -35,7 +35,7 @@ Orientation uses normalized scalar-first quaternions \((W,X,Y,Z)\), active body-
 
 Inputs and outputs use metres, seconds, and radians. Position is in a right-handed world frame. The absolute-time evaluator is a pure function of the definition, logical time, and caller-supplied step index. The EvaluateFixedStep entry point derives logical time from an explicit fixed timestep and total step count; render cadence is not an input.
 
-The profile has constant velocity inside the interval and a derivative discontinuity at its boundaries. It therefore does **not** claim a finite start/stop acceleration bound. A trajectory requiring bounded acceleration or continuous start/stop velocity needs a separately declared profile and must not be represented by this profile.
+The optional `QuinticSmoothStep` profile uses \(s(u)=10u^3-15u^4+6u^5\), with \(u=(t-t_0)/T\). Its first derivative is zero at both endpoints, and its second derivative is also zero there, so the prescribed root motion starts and stops with zero velocity and acceleration. Its peak normalized speed factor is 1.875 and its peak normalized acceleration factor is \(10/\sqrt{3}\). The definition validates the resulting peak linear/angular speed and acceleration against the declared ceilings. The default `ConstantVelocity` profile remains constant-speed in the open interval and has a velocity discontinuity at its boundaries; it does not claim a finite start/stop acceleration bound.
 
 ## API sketch
 
@@ -73,13 +73,13 @@ Cancellation between steps is represented by not committing another requested sa
 
 - `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count. The host still owns scheduling, monotonic ordering, and authoritative world commits; there is no persistent world-step scheduler in this API.
 - The typed MicroBundle adapter is implemented and tested, but it does not provide a universal service locator or a host-specific runtime bridge. The host must resolve the loaded bundle instance and explicitly bind its provider contract.
-- The current profile has a boundary derivative discontinuity and no finite acceleration bound. Do not use it for motion requiring bounded acceleration.
+- The default `ConstantVelocity` profile has a boundary velocity discontinuity. Select `QuinticSmoothStep` when finite start/stop acceleration is required; its speed and acceleration ceilings are validated at definition construction.
 - The commit validator pairs a request with an achieved snapshot; it is not a collision solver or a world-step transaction coordinator.
 - The host must enforce commit ordering and retain the last committed state on interruption.
 - No articulated limb motion, gait, balance, contact, collision avoidance, friction, obstacle response, or environmental resistance is provided.
 - A concrete host integration sample is not yet implemented. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
 
-Focused NUnit tests cover analytical translation/orientation samples, stationary motion, speed-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
+Focused NUnit tests cover both motion profiles, analytical translation/orientation samples, stationary motion, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 ## Related contracts
 
