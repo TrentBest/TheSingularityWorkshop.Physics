@@ -169,6 +169,34 @@ public sealed class PrescribedKinematicMotionTests
     }
 
     [Test]
+    public void Definition_QuinticStationaryMotionAllowsVerySmallFiniteDuration()
+    {
+        var pose = new Pose3d(Vector3d.Zero, Quaterniond.Identity);
+        var definition = new PrescribedKinematicMotionDefinition(
+            "motion:stationary-small-duration",
+            "actor:stationary-small-duration",
+            pose,
+            pose,
+            0d,
+            1e-200d,
+            maximumLinearSpeed: 0d,
+            maximumAngularSpeed: 0d,
+            profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+            maximumLinearAcceleration: 0d,
+            maximumAngularAcceleration: 0d);
+
+        var end = PrescribedKinematicMotion.Evaluate(definition, 1e-200d, 1);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(end.State.Pose, Is.EqualTo(pose));
+            Assert.That(end.State.LinearVelocity, Is.EqualTo(Vector3d.Zero));
+            Assert.That(end.State.AngularVelocity, Is.EqualTo(Vector3d.Zero));
+            Assert.That(end.IsComplete, Is.True);
+        });
+    }
+
+    [Test]
     public void Evaluate_QuinticSmoothStepStartsAndEndsAtRest()
     {
         var definition = new PrescribedKinematicMotionDefinition(
