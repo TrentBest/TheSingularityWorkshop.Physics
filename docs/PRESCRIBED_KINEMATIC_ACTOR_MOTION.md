@@ -8,7 +8,7 @@
 
 `PrescribedKinematicMotion.Evaluate` is a pure absolute-time function. It linearly interpolates position and uses shortest-arc quaternion interpolation for orientation. `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count; render-frame cadence is not an input. Both return immutable `PrescribedKinematicMotionSample` values with the definition identity/version and a `RigidBodyState` sample.
 
-The current trajectory has constant linear and angular velocity over its open interval. It has a velocity discontinuity at the endpoints if the actor is stationary before or after the motion. It does not claim a finite continuous start/stop acceleration bound. A smooth, acceleration-limited profile remains future work.
+The default `ConstantVelocity` profile has constant linear and angular velocity over its open interval and a velocity discontinuity at the endpoints. The optional `QuinticSmoothStep` profile uses `s(u)=10u³−15u⁴+6u⁵`; its velocity and acceleration are zero at both endpoints. Definition construction validates the profile's analytical peak speed and acceleration against declared linear/angular ceilings.
 
 ## Commit and cancellation boundary
 
@@ -25,11 +25,11 @@ The adapter has no dependency on Experiences, Gestures, Renderer, Visualization,
 ## Explicit limits
 
 - No collision detection, contact resolution, friction, obstacle avoidance, balance, gait, limb articulation, force response, or environmental-medium interaction.
-- No acceleration-limited easing, continuous start/stop velocity profile, multi-segment path, path curvature, or route planning.
+- No multi-segment path, path curvature, or route planning.
 - No hidden clamping: time outside the declared interval and motion exceeding declared speed bounds are rejected.
 - No persistent world-step scheduler or host transaction coordinator; the host owns scheduling, commit ordering, and cancellation.
 - No host-specific browser/runtime bridge. Static HTML cannot directly invoke this C# assembly without an explicit runtime bridge.
 
-Focused Physics tests cover translation/orientation, stationary motion, speed limits, deterministic replay, fixed-step scheduling, achieved-state tolerances, forged-sample rejection, and interruption semantics. MicroBundle tests cover descriptor/provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
+Focused Physics tests cover both profiles, translation/orientation, stationary motion, speed and acceleration limits, deterministic replay, fixed-step scheduling, achieved-state tolerances, forged-sample rejection, and interruption semantics. MicroBundle tests cover descriptor/provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 For Lenny, this capability can supply deterministic root-pose samples for approach, pickup staging, carrying, and travel to a receptacle. Experiences still owns the story, actor intent, cleanup lifecycle, and deposit counter; the counter must change only after the Experience confirms a completed deposit.
