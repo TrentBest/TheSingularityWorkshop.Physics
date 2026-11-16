@@ -796,7 +796,7 @@ jobs:
       - name: Test Physics MicroBundles
         run: dotnet test tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj --configuration Release --no-restore -p:UseLocalMicroBundleDomain=true
 
-      - name: Package contact MicroBundles for repository ingestion
+      - name: Package Physics MicroBundles for repository ingestion
         run: |
           dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
           dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
