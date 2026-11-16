@@ -6,7 +6,7 @@
 
 `PrescribedKinematicMotionDefinition` is an immutable, versioned request identifying a motion and actor. It contains start and destination poses, absolute logical start time, positive duration, and declared maximum linear/angular speeds. Position uses right-handed world-frame metres. Orientation is a normalized active body-local-to-world quaternion, stored scalar-first (W, X, Y, Z). Time is seconds and angular values are radians.
 
-`PrescribedKinematicMotion.Evaluate` is a pure absolute-time function. It linearly interpolates position and uses shortest-arc quaternion interpolation for orientation. `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count; render-frame cadence is not an input. Both return immutable `PrescribedKinematicMotionSample` values with the definition identity/version and a `RigidBodyState` sample.
+`PrescribedKinematicMotion.Evaluate` is a pure absolute-time function. The selected profile shapes translation and shortest-arc quaternion orientation progress: `ConstantVelocity` uses linear progress, while `QuinticSmoothStep` uses a quintic easing curve with zero endpoint velocity and acceleration. `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count; render-frame cadence is not an input. Both return immutable `PrescribedKinematicMotionSample` values with the definition identity/version and a `RigidBodyState` sample.
 
 The default `ConstantVelocity` profile has constant linear and angular velocity over its open interval and a velocity discontinuity at the endpoints. The optional `QuinticSmoothStep` profile uses `s(u)=10u³−15u⁴+6u⁵`; its velocity and acceleration are zero at both endpoints. Definition construction validates the profile's analytical peak speed and acceleration against declared linear/angular ceilings.
 
@@ -30,6 +30,6 @@ The adapter has no dependency on Experiences, Gestures, Renderer, Visualization,
 - No persistent world-step scheduler or host transaction coordinator; the host owns scheduling, commit ordering, and cancellation.
 - No host-specific browser/runtime bridge. Static HTML cannot directly invoke this C# assembly without an explicit runtime bridge.
 
-Focused Physics tests cover both profiles, translation/orientation, stationary motion, speed and acceleration limits, deterministic replay, fixed-step scheduling, achieved-state tolerances, forged-sample rejection, and interruption semantics. MicroBundle tests cover descriptor/provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
+Focused Physics tests cover both profiles, exact floating-point endpoint handling, translation/orientation, stationary motion, speed and acceleration limits, deterministic replay, fixed-step scheduling, achieved-state tolerances, forged-sample rejection, and interruption semantics. MicroBundle tests cover descriptor/provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 For Lenny, this capability can supply deterministic root-pose samples for approach, pickup staging, carrying, and travel to a receptacle. Experiences still owns the story, actor intent, cleanup lifecycle, and deposit counter; the counter must change only after the Experience confirms a completed deposit.
