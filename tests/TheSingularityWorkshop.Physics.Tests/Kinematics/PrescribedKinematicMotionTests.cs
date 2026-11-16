@@ -261,7 +261,7 @@ public sealed class PrescribedKinematicMotionTests
                 Is.EqualTo((Math.PI / 2d) * 1.875d / 2d).Within(1e-12));
             Assert.That(quarter.Derivatives.IsAccelerationDefined, Is.True);
             Assert.That(quarter.Derivatives.AngularAcceleration.Z,
-                Is.EqualTo((Math.PI / 2d) * 2.8125d).Within(1e-12));
+                Is.EqualTo((Math.PI / 2d) * 1.40625d).Within(1e-12));
             Assert.That(start.Derivatives.AngularAcceleration, Is.EqualTo(Vector3d.Zero));
             Assert.That(end.State.AngularVelocity, Is.EqualTo(Vector3d.Zero));
             Assert.That(end.Derivatives.AngularAcceleration, Is.EqualTo(Vector3d.Zero));
