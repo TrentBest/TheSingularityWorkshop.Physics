@@ -1,6 +1,6 @@
 # Motion-driven interaction pipeline
 
-**Status:** proposed cross-package integration contract and research plan. This document does not claim that arbitrary-trajectory collision prediction, deformable contact, or the Gestures handoff is implemented.
+**Status:** the bounded prescribed-kinematic trajectory evaluator and requested-versus-achieved commit validator are implemented; the broader cross-package integration and arbitrary-trajectory collision prediction remain proposed. See [Prescribed Kinematic Motion](PRESCRIBED_KINEMATIC_MOTION.md) for the implemented profile and its explicit limits.
 
 ## 1. Ownership and dependency direction
 
@@ -19,6 +19,14 @@ A requested path is not automatically an achieved path. Keep these motion modes 
 | Controller target | A desired path or pose that the physical system attempts to track | Physics may deviate because of contact, force limits, constraints, or other dynamics |
 | Force / torque contribution | A physical input with units, frame, application point, and activation semantics | Physics integrates it with the other declared physical contributions |
 | Constraint / impulse / state transition | A typed non-force contribution | Physics applies its own corresponding solver or transition contract; it is not summed as an ordinary force |
+
+## 1.1 Implemented prescribed-motion slice
+
+The Physics core now exposes a versioned immutable motion definition, a pure evaluator over absolute logical time, and a commit validator that accepts a separately supplied achieved rigid-body snapshot. The current profile is constant-velocity translation plus shortest-arc quaternion rotation. It rejects trajectories exceeding declared linear/angular speed limits.
+
+The evaluator does not mutate a body or assert that a requested pose was achieved. Arrival is reported by the commit result only when the destination sample is paired with an achieved snapshot inside caller-supplied position and orientation tolerances. Interruption preserves the previous immutable committed snapshot when the host declines to commit a later sample.
+
+This slice does not yet provide a fixed-step scheduler that derives logical time from step identity, bounded-acceleration start/stop profiles, collision/contact response, or a MicroBundle/host adapter. The current constant-velocity profile has derivative discontinuities at its interval boundaries; it must not be treated as a finite-acceleration gait or controller.
 
 ## 2. Motion handoff data
 
