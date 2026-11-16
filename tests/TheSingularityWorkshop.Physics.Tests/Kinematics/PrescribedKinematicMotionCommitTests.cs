@@ -84,6 +84,27 @@ public sealed class PrescribedKinematicMotionCommitTests
         });
     }
 
+    [Test]
+    public void Commit_RejectsForgedOrMismatchedRequestedSample()
+    {
+        var definition = Definition();
+        var legitimate = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+        var forged = new PrescribedKinematicMotionSample(
+            definition.DefinitionId,
+            definition.Version,
+            new RigidBodyState(
+                definition.ActorId,
+                new Pose3d(new Vector3d(99d, 0d, 0d), Quaterniond.Identity),
+                Vector3d.Zero,
+                Vector3d.Zero,
+                2,
+                12d),
+            true);
+
+        Assert.Throws<ArgumentException>(() =>
+            PrescribedKinematicMotion.Commit(definition, forged, legitimate.State, 0d, 0d));
+    }
+
     private static PrescribedKinematicMotionDefinition Definition() =>
         new(
             "motion:commit-test",
