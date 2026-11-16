@@ -17,6 +17,27 @@ This is a demand map, not a claim that the listed capabilities exist. Status is 
 
 Physics must remain independent of Experiences, raWWar, Gestures, Renderer, Visualization, Foundry, FSM_COS, and host frameworks. Consumer-specific adapters translate intent and consume observations.
 
+## Shared solvers, consumer-selected fidelity
+
+Lenny and raWWar should consume the same Physics model and solver contracts. They select different compatible model compositions, resolution, update cadence, population scope, and error budgets; they do not receive separate game-specific physics engines. A lower-cost profile is valid only when its assumptions and limitations are explicit and its results remain coherent within that scope. Moving from a coarse to a fine profile must preserve declared state and account for any approximation error; it must not silently reset or rewrite physical history.
+
+- **Lenny's profile** prioritizes responsive story interaction and bounded environmental scenes: simple but consistent actor/object mechanics, particles, sand/ground support, water-surface waves and ripples, buoyancy/drag where supported, and lightweight wildlife/beachgoer agents. Cartoon style belongs to the artwork and presentation layer. Physics can supply simple motion and environmental observations without forcing Lenny to simulate every grain of sand or every distant bird at high fidelity.
+- **raWWar's profile** requests more of the same shared substrate: detailed articulated and rigid-body mechanics, multi-contact/friction, material interaction, structural loads, vehicles and spacecraft, and persistent multi-rate regions. The world can allocate finer solver work near relevant actors and events, with declared coarse models elsewhere. Resolution changes are explicit and validated.
+
+### Energy-beam and armor interaction boundary
+
+A laser/beam encounter is not a special “soldier damage” solver. A declared beam model supplies energy, flux, direction, footprint, duration, and propagation assumptions. The target supplies geometry and material composition, thickness, thermal/mechanical properties, and state. Compatible Physics models may calculate absorbed, reflected, transmitted, or otherwise coupled energy and the resulting thermal or mechanical loads; a penetration or ablation result is valid only when a selected material-interaction model supports that regime and has adequate evidence.
+
+If a squad member has ordinary clothing or insufficient plating, the selected model may predict substantial transmission, heating, material failure, or a through-path. Physics reports the supported physical outcome and its uncertainty/limits. raWWar decides whether the result means equipment failure, injury, incapacitation, death, squad loss, or a gameplay event. “Advanced plating” is represented by explicit material and construction properties, not a binary immunity flag. Unsupported beam/material regimes must fail visibly rather than produce a dramatic but ungrounded answer.
+
+### Workshop creation and representation
+
+The Workshop is where creators assemble and author these capabilities. Physics provides model and solver contracts; domain MicroBundles contribute capabilities and their own representation providers; FSM_COS composes and arbitrates the requested bundle set; the host owns lifecycle and authorized actions; Renderer/Visualization present the result. Tool authors can contribute representations without forcing every tool into one universal visual metaphor.
+
+One possible Workshop representation is an immersive farmhouse: a doorway and a small wall section are initially visible; approaching fades the farmhouse surroundings in and the Workshop environment out. The door becomes interactable within reach and opens only after the user requests the interaction. Beyond it, bundle packages are arranged as field rows, with a new position appearing as a bundle is updated. Arbitration relationships are vines routed between bundles; recurring colored flowers provide a readable key in dense regions, and selecting a vine highlights and inspects that exact relationship.
+
+That is only one skin. A node graph, table, conventional dashboard, or another immersive scene is equally valid if it exposes the same semantic operations: discover and inspect bundles, see versioned dependencies and arbitration routes, select a relationship, understand accepted/rejected composition and why, and perform the same authorized actions. Selection/highlighting is presentation; the authoritative arbitration result remains the same regardless of view. No visual transition or animation is proof of a bundle update, successful arbitration, solver execution, or committed world interaction.
+
 ## Consumer demand: Little Lenny and the Big Ocean Problem
 
 Lenny's existing living-world model describes optional cleanup interactions: approach a story-grounded litter item, pick it up, carry it to the receptacle, and deposit it. The Experience-owned reducer protects the held/deposited transaction and increments the count only after a matching deposit-completion event.
@@ -37,7 +58,7 @@ These do **not** yet constitute a Physics-driven beach scene. The sample accepts
 3. **Contact and support:** distinguish touching litter from supporting it, grasping it, or carrying it. Contact alone must never imply a successful pickup.
 4. **Grasp/attachment:** a declared hand-to-item constraint or equivalent host-owned attachment with explicit release and interruption semantics. A visual parent-child transform is not physical proof.
 5. **Obstacle-aware movement:** beachgoers, towels, sandcastles, receptacles, and other obstacles must be represented by physical geometry before avoidance or clearance can be claimed.
-6. **Environmental coupling:** sand/ground support and, for the ocean sequence, water-relative motion, buoyancy, drag, waves/currents, and safe human/dolphin interaction models. Existing shallow-water demonstrators are bounded models over flat/fixed beds; they are not coupled actor locomotion or general surf simulation.
+6. **Environmental coupling:** sand/ground support and, for the ocean sequence, water-relative motion, buoyancy, drag, waves/currents, and safe human/dolphin interaction models. Lightweight particles and ripple effects may be presentation-only or model-backed; their evidence level must be clear. Existing shallow-water demonstrators are bounded models over flat/fixed beds; they are not coupled actor locomotion or general surf simulation.
 7. **Evidence:** fixed-step replay, different render-cadence equivalence, contact transition tests, interruption during approach/carry/deposit, and exactly-once Experience deposit commits.
 
 Do not add visible litter hit regions until the author approves the relevant artwork and placements. Do not change the canonical manuscript to store runtime interaction state.
