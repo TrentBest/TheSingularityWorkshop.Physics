@@ -44,6 +44,18 @@ The domain map is architecture, not implementation. `development` now contains b
 
 The scheduling contract is documented in [Process-group scheduling](PROCESS_GROUP_SCHEDULING.md). The ledger accounts for requested versus committed ticks but does not execute physics or schedule groups; those integration tasks remain incomplete until code and tests exist.
 
+## Stage 1.6 — Prescribed kinematic actor motion
+
+- [x] Define immutable, versioned prescribed root-motion trajectories with absolute logical-time and fixed-step evaluation.
+- [x] Support constant-velocity and quintic smooth-step profiles with analytical speed/acceleration ceiling validation.
+- [x] Expose analytical linear/angular velocity and acceleration observations, including explicit endpoint acceleration availability semantics.
+- [x] Preserve requested-versus-achieved state, host-owned commits, deterministic arrival tolerances, and cancellation by retaining the last committed snapshot.
+- [x] Provide a typed MicroBundle provider and a host-composition sample in Experiences using a synthetic no-contact path.
+- [ ] Connect a production host/runtime bridge and authoritative world commit policy.
+- [ ] Add collision-aware trajectory execution only after the deterministic world stepper and supported contact models are available.
+
+See [Prescribed Kinematic Motion](PRESCRIBED_KINEMATIC_MOTION.md) and [Consumer-Driven Physics Roadmap](CONSUMER_DRIVEN_PHYSICS_ROADMAP.md). This capability prescribes root motion; it is not force-driven dynamics, gait, balance, contact, collision avoidance, or obstacle response.
+
 ## Stage 1.75 — Articulated mechanics integration
 
 - [x] Define the proposed Physics-to-controller contract for achieved state, contact observations, constraint loads, structural failure, and topology ownership ([articulated mechanics contract](ARTICULATED_MECHANICS_CONTRACT.md)).
