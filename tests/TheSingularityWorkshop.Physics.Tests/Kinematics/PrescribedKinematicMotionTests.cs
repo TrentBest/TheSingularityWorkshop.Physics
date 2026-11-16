@@ -154,7 +154,7 @@ public sealed class PrescribedKinematicMotionTests
             maximumLinearSpeed: 100d,
             maximumAngularSpeed: 1d,
             profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
-            maximumLinearAcceleration: 100d,
+            maximumLinearAcceleration: 1000d,
             maximumAngularAcceleration: 1d);
 
         var sample = PrescribedKinematicMotion.Evaluate(
