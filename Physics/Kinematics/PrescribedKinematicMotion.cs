@@ -193,9 +193,11 @@ public static class PrescribedKinematicMotion
                 "Evaluation time must lie within the declared trajectory interval.");
 
         var elapsed = logicalTimeSeconds - definition.StartTimeSeconds;
-        var fraction = elapsed / definition.DurationSeconds;
+        var fraction = logicalTimeSeconds == endTime ? 1d : elapsed / definition.DurationSeconds;
+        var fractionSquared = fraction * fraction;
+        var fractionCubed = fractionSquared * fraction;
         var progress = definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep
-            ? (10d * Math.Pow(fraction, 3d)) - (15d * Math.Pow(fraction, 4d)) + (6d * Math.Pow(fraction, 5d))
+            ? (10d * fractionCubed) - (15d * fractionCubed * fraction) + (6d * fractionCubed * fractionSquared)
             : fraction;
         var progressRate = definition.Profile == PrescribedKinematicMotionProfile.QuinticSmoothStep
             ? 30d * fraction * fraction * (1d - fraction) * (1d - fraction)
