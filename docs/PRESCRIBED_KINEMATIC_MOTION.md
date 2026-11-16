@@ -82,7 +82,7 @@ Cancellation between steps is represented by not committing another requested sa
 - No articulated limb motion, gait, balance, contact, collision avoidance, friction, obstacle response, or environmental resistance is provided.
 - A concrete host integration sample is not yet implemented. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
 
-Focused NUnit tests cover both motion profiles, translation samples, endpoint rest, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. The current test suite still needs stronger independent angular-profile and derivative-boundary checks. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
+Focused NUnit tests cover both motion profiles, translation and orientation-only samples, endpoint rest, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Acceleration is validated analytically at definition construction but is not yet exposed as a per-sample derivative observation. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 ## Related contracts
 
