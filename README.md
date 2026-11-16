@@ -14,7 +14,7 @@
 
 **Contributor onboarding:** [Hydrodynamics implementation guide for AI contributors](HydrodynamicsLLM.md) · [Numerical validation playbook](docs/NUMERICAL_VALIDATION.md)
 
-**Explore:** [Evidence-led Gallery](docs/GALLERY.md) · [Operation Sith branch reconciliation](docs/OPERATION_SITH_BRANCH_RECONCILIATION.md)
+**Explore:** [Evidence-led Gallery](docs/GALLERY.md) · [Lenny and raWWar consumer-driven Physics roadmap](docs/CONSUMER_DRIVEN_PHYSICS_ROADMAP.md) · [Operation Sith branch reconciliation](docs/OPERATION_SITH_BRANCH_RECONCILIATION.md)
 
 **Celestial mechanics:** [Newtonian gravity field and first fixed-step N-body integrator, units, limits, and validation gates](docs/CELESTIAL_MECHANICS_FOUNDATION.md) · [gravity-field evaluator](Physics/Astronomy/NewtonianGravityField.cs) · [orbital state](Physics/Astronomy/OrbitalBodyState.cs) · [velocity-Verlet stepper](Physics/Astronomy/NewtonianNBodyStepper.cs)
 
