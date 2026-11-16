@@ -22,6 +22,9 @@ public sealed record PrescribedKinematicMotionDefinition
     /// <summary>Gets the stable actor/body identity.</summary>
     public string ActorId { get; }
 
+    /// <summary>Gets the positive immutable definition version.</summary>
+    public int Version { get; }
+
     /// <summary>Gets the initial achieved pose used as the trajectory origin.</summary>
     public Pose3d StartPose { get; }
 
@@ -54,12 +57,15 @@ public sealed record PrescribedKinematicMotionDefinition
         double startTimeSeconds,
         double durationSeconds,
         double maximumLinearSpeed,
-        double maximumAngularSpeed)
+        double maximumAngularSpeed,
+        int version = 1)
     {
         if (string.IsNullOrWhiteSpace(definitionId))
             throw new ArgumentException("A stable motion definition identity is required.", nameof(definitionId));
         if (string.IsNullOrWhiteSpace(actorId))
             throw new ArgumentException("A stable actor identity is required.", nameof(actorId));
+        if (version <= 0)
+            throw new ArgumentOutOfRangeException(nameof(version), "The definition version must be positive.");
         if (!startPose.IsValid || !destinationPose.IsValid)
             throw new ArgumentException("Start and destination poses must be valid.");
         if (!double.IsFinite(startTimeSeconds) || startTimeSeconds < 0d)
@@ -72,6 +78,7 @@ public sealed record PrescribedKinematicMotionDefinition
 
         DefinitionId = definitionId;
         ActorId = actorId;
+        Version = version;
         StartPose = startPose;
         DestinationPose = destinationPose;
         StartTimeSeconds = startTimeSeconds;
@@ -171,7 +178,8 @@ public static class PrescribedKinematicMotion
             stepIndex,
             logicalTimeSeconds);
 
-        return new PrescribedKinematicMotionSample(state, fraction == 1d);
+        return new PrescribedKinematicMotionSample(
+            definition.DefinitionId, definition.Version, state, fraction == 1d);
     }
 
     /// <summary>
@@ -198,7 +206,9 @@ public static class PrescribedKinematicMotion
             throw new ArgumentOutOfRangeException(nameof(positionToleranceMeters));
         if (!double.IsFinite(angularToleranceRadians) || angularToleranceRadians < 0d)
             throw new ArgumentOutOfRangeException(nameof(angularToleranceRadians));
-        if (requested.State.BodyId != definition.ActorId ||
+        if (requested.DefinitionId != definition.DefinitionId ||
+            requested.DefinitionVersion != definition.Version ||
+            requested.State.BodyId != definition.ActorId ||
             requested.State.StepIndex != achieved.StepIndex ||
             requested.State.ElapsedTime != achieved.ElapsedTime ||
             achieved.BodyId != definition.ActorId)
@@ -255,14 +265,23 @@ public static class PrescribedKinematicMotion
 }
 
 /// <summary>One immutable prescribed state sample and its destination-boundary flag.</summary>
+/// <param name="DefinitionId">Stable identity of the motion definition.</param>
+/// <param name="DefinitionVersion">Version of the motion definition.</param>
 /// <param name="State">The state calculated by the prescribed trajectory.</param>
 /// <param name="IsComplete">True only when the sample is exactly at the destination time.</param>
 public readonly record struct PrescribedKinematicMotionSample(
+    string DefinitionId,
+    int DefinitionVersion,
     RigidBodyState State,
     bool IsComplete);
 
 
 /// <summary>Pairs a requested trajectory sample with the separately supplied achieved state.</summary>
+/// <param name="Requested">The immutable requested trajectory sample.</param>
+/// <param name="Achieved">The independently supplied committed state.</param>
+/// <param name="PositionErrorMeters">Position error between requested and achieved states.</param>
+/// <param name="AngularErrorRadians">Shortest orientation error in radians.</param>
+/// <param name="IsArrived">Whether the committed state is within destination tolerances.</param>
 public readonly record struct PrescribedKinematicMotionCommit(
     PrescribedKinematicMotionSample Requested,
     RigidBodyState Achieved,
