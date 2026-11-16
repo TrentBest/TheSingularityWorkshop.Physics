@@ -157,6 +157,53 @@ public static class PrescribedKinematicMotion
         return new PrescribedKinematicMotionSample(state, fraction == 1d);
     }
 
+    /// <summary>
+    /// Validates a host/world-committed state against the prescribed sample.
+    /// </summary>
+    /// <remarks>
+    /// The achieved snapshot is supplied by the caller; this method never writes
+    /// or fabricates achieved state. Completion is reported only when the
+    /// committed snapshot is at the destination sample and lies within both
+    /// declared tolerances. To cancel between steps, do not commit another
+    /// sample: retain the last immutable committed RigidBodyState.
+    /// </remarks>
+    public static PrescribedKinematicMotionCommit Commit(
+        PrescribedKinematicMotionDefinition definition,
+        PrescribedKinematicMotionSample requested,
+        RigidBodyState achieved,
+        double positionToleranceMeters,
+        double angularToleranceRadians)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        if (!achieved.IsValid)
+            throw new ArgumentException("A valid achieved state is required.", nameof(achieved));
+        if (!double.IsFinite(positionToleranceMeters) || positionToleranceMeters < 0d)
+            throw new ArgumentOutOfRangeException(nameof(positionToleranceMeters));
+        if (!double.IsFinite(angularToleranceRadians) || angularToleranceRadians < 0d)
+            throw new ArgumentOutOfRangeException(nameof(angularToleranceRadians));
+        if (requested.State.BodyId != definition.ActorId ||
+            requested.State.StepIndex != achieved.StepIndex ||
+            requested.State.ElapsedTime != achieved.ElapsedTime ||
+            achieved.BodyId != definition.ActorId)
+            throw new ArgumentException("Requested and achieved observations must identify the same actor, step, and logical time.", nameof(achieved));
+
+        var positionError = Vector3d.Distance(requested.State.Pose.Position, achieved.Pose.Position);
+        var a = requested.State.Pose.Orientation.Normalized();
+        var b = achieved.Pose.Orientation.Normalized();
+        var dot = Math.Abs((a.W * b.W) + (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z));
+        var angularError = 2d * Math.Acos(Math.Clamp(dot, -1d, 1d));
+        var arrived = requested.IsComplete &&
+            positionError <= positionToleranceMeters &&
+            angularError <= angularToleranceRadians;
+
+        return new PrescribedKinematicMotionCommit(
+            requested,
+            achieved,
+            positionError,
+            angularError,
+            arrived);
+    }
+
     private static Quaterniond InterpolateOrientation(Quaterniond start, Quaterniond end, double amount)
     {
         start = start.Normalized();
@@ -196,3 +243,12 @@ public static class PrescribedKinematicMotion
 public readonly record struct PrescribedKinematicMotionSample(
     RigidBodyState State,
     bool IsComplete);
+
+
+/// <summary>Pairs a requested trajectory sample with the separately supplied achieved state.</summary>
+public readonly record struct PrescribedKinematicMotionCommit(
+    PrescribedKinematicMotionSample Requested,
+    RigidBodyState Achieved,
+    double PositionErrorMeters,
+    double AngularErrorRadians,
+    bool IsArrived);
