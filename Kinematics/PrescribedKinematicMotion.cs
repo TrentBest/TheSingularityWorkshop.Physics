@@ -1,3 +1,4 @@
+using TheSingularityWorkshop.Physics.Dynamics;
 using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.Kinematics;
