@@ -142,8 +142,8 @@ public sealed record PrescribedKinematicMotionDefinition
         if (profile == PrescribedKinematicMotionProfile.QuinticSmoothStep)
         {
             var peakAccelerationFactor = 10d / Math.Sqrt(3d);
-            var requiredLinearAcceleration = (Translation.Magnitude / (durationSeconds * durationSeconds)) * peakAccelerationFactor;
-            var requiredAngularAcceleration = (RotationAngle / (durationSeconds * durationSeconds)) * peakAccelerationFactor;
+            var requiredLinearAcceleration = (Translation.Magnitude / durationSeconds / durationSeconds) * peakAccelerationFactor;
+            var requiredAngularAcceleration = (RotationAngle / durationSeconds / durationSeconds) * peakAccelerationFactor;
             if (!double.IsFinite(requiredLinearAcceleration) || requiredLinearAcceleration > maximumLinearAcceleration)
                 throw new ArgumentException("The trajectory exceeds the declared linear-acceleration limit.", nameof(maximumLinearAcceleration));
             if (!double.IsFinite(requiredAngularAcceleration) || requiredAngularAcceleration > maximumAngularAcceleration)
