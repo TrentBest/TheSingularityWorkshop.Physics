@@ -201,6 +201,40 @@ public sealed class PrescribedKinematicMotionTests
     }
 
     [Test]
+    public void Evaluate_QuinticSmoothStepAppliesSmoothProgressToOrientationOnlyMotion()
+    {
+        var quarterTurn = Math.PI / 4d;
+        var destination = new Quaterniond(Math.Cos(quarterTurn), 0d, 0d, Math.Sin(quarterTurn));
+        var definition = new PrescribedKinematicMotionDefinition(
+            "motion:smooth-rotation",
+            "actor:smooth-rotation",
+            new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+            new Pose3d(Vector3d.Zero, destination),
+            10d,
+            2d,
+            maximumLinearSpeed: 0d,
+            maximumAngularSpeed: 2d,
+            profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+            maximumLinearAcceleration: 0d,
+            maximumAngularAcceleration: 2d);
+
+        var start = PrescribedKinematicMotion.Evaluate(definition, 10d, 0);
+        var middle = PrescribedKinematicMotion.Evaluate(definition, 11d, 1);
+        var end = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+        var rotated = middle.State.Pose.TransformDirectionToWorld(new Vector3d(1d, 0d, 0d));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(start.State.AngularVelocity, Is.EqualTo(Vector3d.Zero));
+            Assert.That(rotated.X, Is.EqualTo(Math.Sqrt(0.5d)).Within(1e-12));
+            Assert.That(rotated.Y, Is.EqualTo(Math.Sqrt(0.5d)).Within(1e-12));
+            Assert.That(middle.State.AngularVelocity.Z,
+                Is.EqualTo((Math.PI / 2d) * 1.875d / 2d).Within(1e-12));
+            Assert.That(end.State.AngularVelocity, Is.EqualTo(Vector3d.Zero));
+        });
+    }
+
+    [Test]
     public void Definition_QuinticSmoothStepRejectsSpeedOrAccelerationLimitViolation()
     {
         var start = new Pose3d(Vector3d.Zero, Quaterniond.Identity);
