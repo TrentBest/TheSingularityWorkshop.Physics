@@ -263,6 +263,56 @@ public sealed class PrescribedKinematicMotionTests
     }
 
     [Test]
+    public void Evaluate_QuinticSmoothStepExposesAnalyticalLinearAcceleration()
+    {
+        var definition = new PrescribedKinematicMotionDefinition(
+            "motion:linear-acceleration",
+            "actor:linear-acceleration",
+            new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+            new Pose3d(new Vector3d(2d, 0d, 0d), Quaterniond.Identity),
+            10d,
+            2d,
+            maximumLinearSpeed: 2d,
+            maximumAngularSpeed: 1d,
+            profile: PrescribedKinematicMotionProfile.QuinticSmoothStep,
+            maximumLinearAcceleration: 4d,
+            maximumAngularAcceleration: 1d);
+
+        var quarter = PrescribedKinematicMotion.Evaluate(definition, 10.5d, 1);
+        var start = PrescribedKinematicMotion.Evaluate(definition, 10d, 0);
+        var end = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(quarter.Derivatives.IsAccelerationDefined, Is.True);
+            Assert.That(quarter.Derivatives.LinearAcceleration.X, Is.EqualTo(2.8125d).Within(1e-12));
+            Assert.That(quarter.Derivatives.AngularAcceleration, Is.EqualTo(Vector3d.Zero));
+            Assert.That(start.Derivatives.IsAccelerationDefined, Is.True);
+            Assert.That(start.Derivatives.LinearAcceleration, Is.EqualTo(Vector3d.Zero));
+            Assert.That(end.Derivatives.IsAccelerationDefined, Is.True);
+            Assert.That(end.Derivatives.LinearAcceleration, Is.EqualTo(Vector3d.Zero));
+        });
+    }
+
+    [Test]
+    public void Evaluate_ConstantVelocityMarksEndpointAccelerationUnavailable()
+    {
+        var definition = Definition(Vector3d.Zero, new Vector3d(2d, 0d, 0d), duration: 2d);
+
+        var start = PrescribedKinematicMotion.Evaluate(definition, 10d, 0);
+        var middle = PrescribedKinematicMotion.Evaluate(definition, 11d, 1);
+        var end = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(start.Derivatives.IsAccelerationDefined, Is.False);
+            Assert.That(middle.Derivatives.IsAccelerationDefined, Is.True);
+            Assert.That(middle.Derivatives.LinearAcceleration, Is.EqualTo(Vector3d.Zero));
+            Assert.That(end.Derivatives.IsAccelerationDefined, Is.False);
+        });
+    }
+
+    [Test]
     public void Definition_QuinticSmoothStepRejectsSpeedOrAccelerationLimitViolation()
     {
         var start = new Pose3d(Vector3d.Zero, Quaterniond.Identity);
