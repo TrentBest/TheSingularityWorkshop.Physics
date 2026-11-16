@@ -1,6 +1,6 @@
 # Prescribed Kinematic Motion
 
-**Status:** implemented bounded absolute-logical-time evaluation; commit validation is available. A fixed-step evaluation entry point is available; a MicroBundle/host adapter remains integration work.
+**Status:** implemented bounded absolute-logical-time and fixed-step evaluation, achieved-state commit validation, and a typed MicroBundle provider adapter. A concrete host composition sample and acceleration-limited profile remain future work.
 
 ## Ownership
 
@@ -8,7 +8,8 @@ A prescribed trajectory is a kinematic request, not a force-driven physical resp
 
 - The Experience/controller owns intent, destination, and cancellation.
 - A host adapter creates a versioned PrescribedKinematicMotionDefinition.
-- Physics evaluates the trajectory at an explicit logical time and step.
+- Physics evaluates the trajectory at an explicit logical time and step, or derives time from a declared fixed-step schedule.
+- The Physics MicroBundle exposes the evaluator and commit validator through `IPrescribedKinematicMotionProvider`; the composition host must explicitly resolve the loaded bundle instance and bind the typed provider.
 - The host/world supplies the separately achieved RigidBodyState.
 - PrescribedKinematicMotion.Commit pairs the request with that achieved snapshot and reports arrival only when the committed snapshot is within the supplied destination tolerances.
 - Renderer and Visualization consume achieved observations; they do not calculate root motion.
@@ -70,14 +71,15 @@ Cancellation between steps is represented by not committing another requested sa
 
 ## Explicit limitations and remaining acceptance work
 
-- EvaluateFixedStep derives logical time from the step index, fixed timestep, and total step count. The host still owns scheduling and commit ordering; there is no persistent world-step scheduler in this API.
+- `EvaluateFixedStep` derives logical time from the step index, fixed timestep, and total step count. The host still owns scheduling, monotonic ordering, and authoritative world commits; there is no persistent world-step scheduler in this API.
+- The typed MicroBundle adapter is implemented and tested, but it does not provide a universal service locator or a host-specific runtime bridge. The host must resolve the loaded bundle instance and explicitly bind its provider contract.
 - The current profile has a boundary derivative discontinuity and no finite acceleration bound. Do not use it for motion requiring bounded acceleration.
 - The commit validator pairs a request with an achieved snapshot; it is not a collision solver or a world-step transaction coordinator.
 - The host must enforce commit ordering and retain the last committed state on interruption.
 - No articulated limb motion, gait, balance, contact, collision avoidance, friction, obstacle response, or environmental resistance is provided.
-- A MicroBundle-facing adapter and executable host sample are not yet implemented. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
+- A concrete host integration sample is not yet implemented. A static HTML page cannot directly invoke this C# assembly without an explicit runtime/host bridge.
 
-Focused tests cover analytical translation/orientation samples, stationary motion, speed-limit rejection, deterministic replay, render-sampling independence, requested-versus-achieved separation, arrival tolerances, and immutable interruption state.
+Focused NUnit tests cover analytical translation/orientation samples, stationary motion, speed-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
 ## Related contracts
 
