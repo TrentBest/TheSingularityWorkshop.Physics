@@ -1,131 +1,67 @@
+using TheSingularityWorkshop.Physics.Dynamics;
 using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.Kinematics;
 
 /// <summary>
-/// Immutable definition of a bounded, prescribed root-pose trajectory.
+/// Immutable definition of one bounded, constant-twist prescribed kinematic trajectory.
 /// </summary>
 /// <remarks>
-/// This is kinematic path evaluation, not force-driven dynamics. The path uses
-/// cubic smoothstep interpolation in translation and shortest-arc quaternion
-/// interpolation in orientation. It is evaluated at integer logical steps;
-/// render cadence is not an input. Position is in right-handed world-frame
-/// metres, orientation maps body-local directions into world directions, time
-/// is in seconds, and angular quantities are in radians.
-/// The trajectory has zero endpoint velocity and continuous velocity, but
-/// acceleration may jump at its endpoints. No collision, contact, balance,
-/// gait, or obstacle response is implied. A host must commit an evaluated
-/// sample explicitly; evaluating a target does not mutate a RigidBodyState.
+/// Position is in metres in a right-handed world frame. Orientation is a normalized
+/// active body-local-to-world rotation stored as scalar-first (W, X, Y, Z).
+/// Time is seconds and angular quantities are radians. Translation is linear in time;
+/// orientation follows the shortest quaternion arc at constant angular speed. The
+/// model is prescribed kinematics, not force-driven dynamics, and does not provide
+/// collision, contact, balance, gait, or obstacle response.
 /// </remarks>
-public sealed class PrescribedKinematicMotion
+public sealed record PrescribedKinematicMotionDefinition
 {
-    private readonly Vector3d _translation;
-    private readonly Quaterniond _endOrientation;
-    private readonly Vector3d _rotationAxis;
-    private readonly double _rotationAngle;
-    private readonly double _duration;
-
-    /// <summary>Gets the stable actor/body identity.</summary>
-    public string ActorId { get; }
-
-    /// <summary>Gets the stable identity of this motion definition.</summary>
     public string DefinitionId { get; }
-
-    /// <summary>Gets the positive definition version.</summary>
-    public int Version { get; }
-
-    /// <summary>Gets the prescribed start pose.</summary>
+    public string ActorId { get; }
     public Pose3d StartPose { get; }
-
-    /// <summary>Gets the prescribed destination pose.</summary>
     public Pose3d DestinationPose { get; }
-
-    /// <summary>Gets the first logical time in seconds.</summary>
     public double StartTimeSeconds { get; }
-
-    /// <summary>Gets the fixed logical timestep in seconds.</summary>
-    public double FixedTimeStepSeconds { get; }
-
-    /// <summary>Gets the number of fixed steps in the trajectory.</summary>
-    public long StepCount { get; }
-
-    /// <summary>Gets the declared maximum permitted linear speed in metres per second.</summary>
+    public double DurationSeconds { get; }
     public double MaximumLinearSpeed { get; }
-
-    /// <summary>Gets the declared maximum permitted angular speed in radians per second.</summary>
     public double MaximumAngularSpeed { get; }
 
-    /// <summary>Gets the declared maximum permitted linear acceleration in metres per second squared.</summary>
-    public double MaximumLinearAcceleration { get; }
+    internal Vector3d Translation => DestinationPose.Position - StartPose.Position;
+    internal double RotationAngle { get; }
+    internal Vector3d RotationAxis { get; }
 
-    /// <summary>Gets the declared maximum permitted angular acceleration in radians per second squared.</summary>
-    public double MaximumAngularAcceleration { get; }
-
-    /// <summary>Gets the maximum speed required by this trajectory.</summary>
-    public double RequiredMaximumLinearSpeed { get; }
-
-    /// <summary>Gets the maximum angular speed required by this trajectory.</summary>
-    public double RequiredMaximumAngularSpeed { get; }
-
-    /// <summary>Gets the maximum acceleration magnitude required by this trajectory.</summary>
-    public double RequiredMaximumLinearAcceleration { get; }
-
-    /// <summary>Gets the maximum angular acceleration magnitude required by this trajectory.</summary>
-    public double RequiredMaximumAngularAcceleration { get; }
-
-    /// <summary>Creates and validates a fixed-step prescribed trajectory.</summary>
-    public PrescribedKinematicMotion(
-        string actorId,
+    /// <summary>Creates a validated, immutable motion definition.</summary>
+    public PrescribedKinematicMotionDefinition(
         string definitionId,
-        int version,
+        string actorId,
         Pose3d startPose,
         Pose3d destinationPose,
         double startTimeSeconds,
-        double fixedTimeStepSeconds,
-        long stepCount,
+        double durationSeconds,
         double maximumLinearSpeed,
-        double maximumAngularSpeed,
-        double maximumLinearAcceleration,
-        double maximumAngularAcceleration)
+        double maximumAngularSpeed)
     {
-        if (string.IsNullOrWhiteSpace(actorId))
-            throw new ArgumentException("A stable actor identity is required.", nameof(actorId));
         if (string.IsNullOrWhiteSpace(definitionId))
             throw new ArgumentException("A stable motion definition identity is required.", nameof(definitionId));
-        if (version <= 0)
-            throw new ArgumentOutOfRangeException(nameof(version), "The definition version must be positive.");
+        if (string.IsNullOrWhiteSpace(actorId))
+            throw new ArgumentException("A stable actor identity is required.", nameof(actorId));
         if (!startPose.IsValid || !destinationPose.IsValid)
             throw new ArgumentException("Start and destination poses must be valid.");
         if (!double.IsFinite(startTimeSeconds) || startTimeSeconds < 0d)
             throw new ArgumentOutOfRangeException(nameof(startTimeSeconds));
-        if (!double.IsFinite(fixedTimeStepSeconds) || fixedTimeStepSeconds <= 0d)
-            throw new ArgumentOutOfRangeException(nameof(fixedTimeStepSeconds));
-        if (stepCount <= 0)
-            throw new ArgumentOutOfRangeException(nameof(stepCount), "At least one logical step is required.");
-
+        if (!double.IsFinite(durationSeconds) || durationSeconds <= 0d ||
+            !double.IsFinite(startTimeSeconds + durationSeconds))
+            throw new ArgumentOutOfRangeException(nameof(durationSeconds));
         ValidateLimit(maximumLinearSpeed, nameof(maximumLinearSpeed));
         ValidateLimit(maximumAngularSpeed, nameof(maximumAngularSpeed));
-        ValidateLimit(maximumLinearAcceleration, nameof(maximumLinearAcceleration));
-        ValidateLimit(maximumAngularAcceleration, nameof(maximumAngularAcceleration));
 
-        _duration = stepCount * fixedTimeStepSeconds;
-        if (!double.IsFinite(_duration) || !double.IsFinite(startTimeSeconds + _duration))
-            throw new ArgumentOutOfRangeException(nameof(stepCount), "The trajectory end time must be finite.");
-
-        ActorId = actorId;
         DefinitionId = definitionId;
-        Version = version;
+        ActorId = actorId;
         StartPose = startPose;
         DestinationPose = destinationPose;
         StartTimeSeconds = startTimeSeconds;
-        FixedTimeStepSeconds = fixedTimeStepSeconds;
-        StepCount = stepCount;
+        DurationSeconds = durationSeconds;
         MaximumLinearSpeed = maximumLinearSpeed;
         MaximumAngularSpeed = maximumAngularSpeed;
-        MaximumLinearAcceleration = maximumLinearAcceleration;
-        MaximumAngularAcceleration = maximumAngularAcceleration;
-
-        _translation = destinationPose.Position - startPose.Position;
 
         var start = startPose.Orientation.Normalized();
         var end = destinationPose.Orientation.Normalized();
@@ -137,82 +73,19 @@ public sealed class PrescribedKinematicMotion
         }
 
         dot = Math.Clamp(dot, -1d, 1d);
-        _endOrientation = end;
-        _rotationAngle = 2d * Math.Acos(dot);
-
+        RotationAngle = 2d * Math.Acos(dot);
         var relative = end * start.Conjugate();
         var sineHalfAngle = Math.Sqrt(Math.Max(0d, 1d - (dot * dot)));
-        _rotationAxis = sineHalfAngle <= 1e-15
+        RotationAxis = sineHalfAngle <= 1e-15
             ? Vector3d.Zero
             : new Vector3d(relative.X, relative.Y, relative.Z).Normalized();
 
-        RequiredMaximumLinearSpeed = 1.5d * _translation.Magnitude / _duration;
-        RequiredMaximumLinearAcceleration = 6d * _translation.Magnitude / (_duration * _duration);
-        RequiredMaximumAngularSpeed = 1.5d * _rotationAngle / _duration;
-        RequiredMaximumAngularAcceleration = 6d * _rotationAngle / (_duration * _duration);
-
-        EnsureWithinLimit(RequiredMaximumLinearSpeed, maximumLinearSpeed, nameof(maximumLinearSpeed));
-        EnsureWithinLimit(RequiredMaximumLinearAcceleration, maximumLinearAcceleration, nameof(maximumLinearAcceleration));
-        EnsureWithinLimit(RequiredMaximumAngularSpeed, maximumAngularSpeed, nameof(maximumAngularSpeed));
-        EnsureWithinLimit(RequiredMaximumAngularAcceleration, maximumAngularAcceleration, nameof(maximumAngularAcceleration));
-    }
-
-    /// <summary>Evaluates the prescribed pose and its analytic derivatives at one logical step.</summary>
-    /// <param name="stepIndex">Zero-based step index in the inclusive range [0, StepCount].</param>
-    public PrescribedKinematicMotionSample Evaluate(long stepIndex)
-    {
-        if (stepIndex < 0 || stepIndex > StepCount)
-            throw new ArgumentOutOfRangeException(nameof(stepIndex));
-
-        var elapsed = stepIndex * FixedTimeStepSeconds;
-        var normalizedTime = elapsed / _duration;
-        var blend = normalizedTime * normalizedTime * (3d - (2d * normalizedTime));
-        var blendRate = 6d * normalizedTime * (1d - normalizedTime) / _duration;
-        var blendAcceleration = 6d * (1d - (2d * normalizedTime)) / (_duration * _duration);
-
-        var position = StartPose.Position + (_translation * blend);
-        var linearVelocity = _translation * blendRate;
-        var linearAcceleration = _translation * blendAcceleration;
-
-        var orientation = InterpolateOrientation(StartPose.Orientation, _endOrientation, blend);
-        var angularVelocity = _rotationAxis * (_rotationAngle * blendRate);
-        var angularAcceleration = _rotationAxis * (_rotationAngle * blendAcceleration);
-
-        return new PrescribedKinematicMotionSample(
-            ActorId,
-            DefinitionId,
-            Version,
-            stepIndex,
-            StartTimeSeconds + elapsed,
-            new Pose3d(position, orientation),
-            linearVelocity,
-            angularVelocity,
-            linearAcceleration,
-            angularAcceleration,
-            stepIndex == StepCount);
-    }
-
-    private static Quaterniond InterpolateOrientation(Quaterniond start, Quaterniond end, double amount)
-    {
-        var dot = Dot(start, end);
-        if (dot > 0.9999995d)
-        {
-            return new Quaterniond(
-                start.W + ((end.W - start.W) * amount),
-                start.X + ((end.X - start.X) * amount),
-                start.Y + ((end.Y - start.Y) * amount),
-                start.Z + ((end.Z - start.Z) * amount)).Normalized();
-        }
-
-        var angle = Math.Acos(Math.Clamp(dot, -1d, 1d));
-        var denominator = Math.Sin(angle);
-        var a = Math.Sin((1d - amount) * angle) / denominator;
-        var b = Math.Sin(amount * angle) / denominator;
-        return new Quaterniond(
-            (a * start.W) + (b * end.W),
-            (a * start.X) + (b * end.X),
-            (a * start.Y) + (b * end.Y),
-            (a * start.Z) + (b * end.Z)).Normalized();
+        var requiredLinearSpeed = Translation.Magnitude / durationSeconds;
+        var requiredAngularSpeed = RotationAngle / durationSeconds;
+        if (!double.IsFinite(requiredLinearSpeed) || requiredLinearSpeed > maximumLinearSpeed)
+            throw new ArgumentException("The trajectory exceeds the declared linear-speed limit.", nameof(maximumLinearSpeed));
+        if (!double.IsFinite(requiredAngularSpeed) || requiredAngularSpeed > maximumAngularSpeed)
+            throw new ArgumentException("The trajectory exceeds the declared angular-speed limit.", nameof(maximumAngularSpeed));
     }
 
     private static double Dot(Quaterniond a, Quaterniond b) =>
@@ -226,35 +99,100 @@ public sealed class PrescribedKinematicMotion
         if (!double.IsFinite(value) || value < 0d)
             throw new ArgumentOutOfRangeException(parameterName, "Motion limits must be finite and non-negative.");
     }
+}
 
-    private static void EnsureWithinLimit(double required, double declared, string parameterName)
+/// <summary>Evaluates immutable prescribed motion definitions at explicit logical times.</summary>
+public static class PrescribedKinematicMotion
+{
+    /// <summary>
+    /// Evaluates a definition at one absolute logical time and step.
+    /// </summary>
+    /// <remarks>
+    /// The returned rigid-body snapshot is the prescribed kinematic sample. It is
+    /// not automatically committed to a world or substituted for a dynamically
+    /// achieved state. The caller owns the commit decision and must retain the
+    /// previous committed snapshot if a motion is interrupted.
+    /// </remarks>
+    public static PrescribedKinematicMotionSample Evaluate(
+        PrescribedKinematicMotionDefinition definition,
+        double logicalTimeSeconds,
+        long stepIndex)
     {
-        if (!double.IsFinite(required) || required > declared)
-            throw new ArgumentException(
-                $"The prescribed trajectory requires {required:R}, exceeding the declared limit {declared:R}.",
-                parameterName);
+        ArgumentNullException.ThrowIfNull(definition);
+        if (!double.IsFinite(logicalTimeSeconds))
+            throw new ArgumentOutOfRangeException(nameof(logicalTimeSeconds));
+        if (stepIndex < 0)
+            throw new ArgumentOutOfRangeException(nameof(stepIndex));
+
+        var endTime = definition.StartTimeSeconds + definition.DurationSeconds;
+        if (logicalTimeSeconds < definition.StartTimeSeconds || logicalTimeSeconds > endTime)
+            throw new ArgumentOutOfRangeException(nameof(logicalTimeSeconds),
+                "Evaluation time must lie within the declared trajectory interval.");
+
+        var elapsed = logicalTimeSeconds - definition.StartTimeSeconds;
+        var fraction = elapsed / definition.DurationSeconds;
+        var position = definition.StartPose.Position + (definition.Translation * fraction);
+        var linearVelocity = definition.Translation / definition.DurationSeconds;
+        var orientation = InterpolateOrientation(
+            definition.StartPose.Orientation,
+            definition.DestinationPose.Orientation,
+            fraction);
+        var angularVelocity = definition.RotationAxis * (definition.RotationAngle / definition.DurationSeconds);
+
+        if (fraction == 0d || fraction == 1d)
+        {
+            // The prescribed path is defined on a closed interval. Endpoint
+            // velocity is the one-sided trajectory derivative, not a claim
+            // about pre-start or post-arrival motion.
+        }
+
+        var state = new RigidBodyState(
+            definition.ActorId,
+            new Pose3d(position, orientation),
+            linearVelocity,
+            angularVelocity,
+            stepIndex,
+            logicalTimeSeconds);
+
+        return new PrescribedKinematicMotionSample(state, fraction == 1d);
+    }
+
+    private static Quaterniond InterpolateOrientation(Quaterniond start, Quaterniond end, double amount)
+    {
+        start = start.Normalized();
+        end = end.Normalized();
+        var dot = (start.W * end.W) + (start.X * end.X) + (start.Y * end.Y) + (start.Z * end.Z);
+        if (dot < 0d)
+        {
+            end = new Quaterniond(-end.W, -end.X, -end.Y, -end.Z);
+            dot = -dot;
+        }
+
+        dot = Math.Clamp(dot, -1d, 1d);
+        if (dot > 0.9999995d)
+        {
+            return new Quaterniond(
+                start.W + ((end.W - start.W) * amount),
+                start.X + ((end.X - start.X) * amount),
+                start.Y + ((end.Y - start.Y) * amount),
+                start.Z + ((end.Z - start.Z) * amount)).Normalized();
+        }
+
+        var angle = Math.Acos(dot);
+        var denominator = Math.Sin(angle);
+        var a = Math.Sin((1d - amount) * angle) / denominator;
+        var b = Math.Sin(amount * angle) / denominator;
+        return new Quaterniond(
+            (a * start.W) + (b * end.W),
+            (a * start.X) + (b * end.X),
+            (a * start.Y) + (b * end.Y),
+            (a * start.Z) + (b * end.Z)).Normalized();
     }
 }
 
-/// <summary>
-/// Immutable analytic sample from a prescribed trajectory.
-/// </summary>
-/// <remarks>
-/// This sample is a requested kinematic observation, not proof that a world
-/// solver committed or achieved the pose. A host must keep this separate from
-/// <see cref="Dynamics.RigidBodyState"/> until it explicitly commits the result.
-/// Acceleration is analytically evaluated from the declared trajectory, never
-/// inferred from render-frame samples.
-/// </remarks>
+/// <summary>One immutable prescribed state sample and its destination-boundary flag.</summary>
+/// <param name="State">The state calculated by the prescribed trajectory.</param>
+/// <param name="IsComplete">True only when the sample is exactly at the destination time.</param>
 public readonly record struct PrescribedKinematicMotionSample(
-    string ActorId,
-    string DefinitionId,
-    int DefinitionVersion,
-    long StepIndex,
-    double LogicalTimeSeconds,
-    Pose3d PrescribedPose,
-    Vector3d PrescribedLinearVelocity,
-    Vector3d PrescribedAngularVelocity,
-    Vector3d PrescribedLinearAcceleration,
-    Vector3d PrescribedAngularAcceleration,
-    bool IsDestinationStep);
+    RigidBodyState State,
+    bool IsComplete);
