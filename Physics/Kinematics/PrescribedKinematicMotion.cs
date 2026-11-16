@@ -174,6 +174,41 @@ public static class PrescribedKinematicMotion
     }
 
     /// <summary>
+    /// Evaluates one step in a declared fixed-step schedule.
+    /// </summary>
+    /// <param name="definition">The immutable prescribed trajectory.</param>
+    /// <param name="stepIndex">Zero-based logical step, including the destination step.</param>
+    /// <param name="fixedTimeStepSeconds">Positive fixed logical timestep in seconds.</param>
+    /// <param name="totalStepCount">Number of steps spanning the trajectory duration.</param>
+    /// <remarks>
+    /// The schedule must span the definition duration. The evaluator derives
+    /// logical time from the step identity; callers cannot supply render-frame time.
+    /// </remarks>
+    public static PrescribedKinematicMotionSample EvaluateFixedStep(
+        PrescribedKinematicMotionDefinition definition,
+        long stepIndex,
+        double fixedTimeStepSeconds,
+        long totalStepCount)
+    {
+        ArgumentNullException.ThrowIfNull(definition);
+        if (!double.IsFinite(fixedTimeStepSeconds) || fixedTimeStepSeconds <= 0d)
+            throw new ArgumentOutOfRangeException(nameof(fixedTimeStepSeconds));
+        if (totalStepCount <= 0 || stepIndex < 0 || stepIndex > totalStepCount)
+            throw new ArgumentOutOfRangeException(nameof(stepIndex));
+
+        var scheduledDuration = fixedTimeStepSeconds * totalStepCount;
+        var tolerance = 1e-12d * Math.Max(1d, definition.DurationSeconds);
+        if (!double.IsFinite(scheduledDuration) ||
+            Math.Abs(scheduledDuration - definition.DurationSeconds) > tolerance)
+            throw new ArgumentException("The fixed-step schedule must span the motion definition duration.", nameof(totalStepCount));
+
+        var time = stepIndex == totalStepCount
+            ? definition.StartTimeSeconds + definition.DurationSeconds
+            : definition.StartTimeSeconds + (stepIndex * fixedTimeStepSeconds);
+        return Evaluate(definition, time, stepIndex);
+    }
+
+    /// <summary>
     /// Validates a host/world-committed state against the prescribed sample.
     /// </summary>
     /// <remarks>
