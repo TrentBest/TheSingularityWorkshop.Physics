@@ -247,8 +247,9 @@ public sealed class PrescribedKinematicMotionTests
             maximumAngularAcceleration: 2.5d);
 
         var start = PrescribedKinematicMotion.Evaluate(definition, 10d, 0);
-        var middle = PrescribedKinematicMotion.Evaluate(definition, 11d, 1);
-        var end = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+        var quarter = PrescribedKinematicMotion.Evaluate(definition, 10.5d, 1);
+        var middle = PrescribedKinematicMotion.Evaluate(definition, 11d, 2);
+        var end = PrescribedKinematicMotion.Evaluate(definition, 12d, 3);
         var rotated = middle.State.Pose.TransformDirectionToWorld(new Vector3d(1d, 0d, 0d));
 
         Assert.Multiple(() =>
@@ -258,7 +259,12 @@ public sealed class PrescribedKinematicMotionTests
             Assert.That(rotated.Y, Is.EqualTo(Math.Sqrt(0.5d)).Within(1e-12));
             Assert.That(middle.State.AngularVelocity.Z,
                 Is.EqualTo((Math.PI / 2d) * 1.875d / 2d).Within(1e-12));
+            Assert.That(quarter.Derivatives.IsAccelerationDefined, Is.True);
+            Assert.That(quarter.Derivatives.AngularAcceleration.Z,
+                Is.EqualTo((Math.PI / 2d) * 2.8125d).Within(1e-12));
+            Assert.That(start.Derivatives.AngularAcceleration, Is.EqualTo(Vector3d.Zero));
             Assert.That(end.State.AngularVelocity, Is.EqualTo(Vector3d.Zero));
+            Assert.That(end.Derivatives.AngularAcceleration, Is.EqualTo(Vector3d.Zero));
         });
     }
 
