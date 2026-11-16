@@ -800,12 +800,14 @@ jobs:
         run: |
           dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
           dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
+          dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5203 1.0.0 ./artifacts/physics-prescribed-kinematic-motion.mbundle
           python3 - <<'PY'
           import struct
           from pathlib import Path
           expected = {
               'artifacts/physics-sphere-sphere-contact.mbundle': 5201,
               'artifacts/physics-normal-impulse-response.mbundle': 5202,
+              'artifacts/physics-prescribed-kinematic-motion.mbundle': 5203,
           }
           for filename, bundle_id in expected.items():
               payload = Path(filename).read_bytes()
