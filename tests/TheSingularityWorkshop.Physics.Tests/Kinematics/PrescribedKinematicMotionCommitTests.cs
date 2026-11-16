@@ -54,6 +54,36 @@ public sealed class PrescribedKinematicMotionCommitTests
     }
 
     [Test]
+    public void Commit_UsesDeclaredDestinationPositionTolerance()
+    {
+        var definition = Definition();
+        var requested = PrescribedKinematicMotion.Evaluate(definition, 12d, 2);
+        var inside = new RigidBodyState(
+            definition.ActorId,
+            new Pose3d(new Vector3d(2.0005d, 0d, 0d), Quaterniond.Identity),
+            requested.State.LinearVelocity,
+            requested.State.AngularVelocity,
+            2,
+            12d);
+        var outside = new RigidBodyState(
+            definition.ActorId,
+            new Pose3d(new Vector3d(2.01d, 0d, 0d), Quaterniond.Identity),
+            requested.State.LinearVelocity,
+            requested.State.AngularVelocity,
+            2,
+            12d);
+
+        var insideCommit = PrescribedKinematicMotion.Commit(definition, requested, inside, 0.001d, 0d);
+        var outsideCommit = PrescribedKinematicMotion.Commit(definition, requested, outside, 0.001d, 0d);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(insideCommit.IsArrived, Is.True);
+            Assert.That(outsideCommit.IsArrived, Is.False);
+        });
+    }
+
+    [Test]
     public void Commit_RejectsMismatchedActorStepOrTime()
     {
         var definition = Definition();
