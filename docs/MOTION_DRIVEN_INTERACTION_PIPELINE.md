@@ -22,11 +22,20 @@ A requested path is not automatically an achieved path. Keep these motion modes 
 
 ## 1.1 Implemented prescribed-motion slice
 
-The Physics core now exposes a versioned immutable motion definition, a pure evaluator over absolute logical time, and a commit validator that accepts a separately supplied achieved rigid-body snapshot. The current profile is constant-velocity translation plus shortest-arc quaternion rotation. It rejects trajectories exceeding declared linear/angular speed limits.
+The Physics core exposes an immutable, versioned motion definition and a pure evaluator over absolute logical time. Two profiles are implemented:
 
-The evaluator does not mutate a body or assert that a requested pose was achieved. Both absolute-time evaluation and an EvaluateFixedStep entry point are available; the latter derives logical time from the supplied step index, fixed timestep, and total step count. Arrival is reported by the commit result only when a verified destination sample is paired with an achieved snapshot inside caller-supplied position and orientation tolerances. Interruption preserves the previous immutable committed snapshot when the host declines to commit a later sample.
+- `ConstantVelocity`: linear translation progress and shortest-arc quaternion orientation progress. Velocity is constant over the open interval and discontinuous at the endpoints; acceleration is therefore explicitly unavailable at those endpoints.
+- `QuinticSmoothStep`: `s(u)=10u^3-15u^4+6u^5`, applied to translation and shortest-arc orientation progress. It has zero endpoint velocity and acceleration. Definition construction analytically validates peak linear/angular speed and acceleration against the declared ceilings.
 
-This slice does not yet provide bounded-acceleration start/stop profiles, collision/contact response, or a MicroBundle/host adapter. The current constant-velocity profile has derivative discontinuities at its interval boundaries; it must not be treated as a finite-acceleration gait or controller.
+Each sample carries the requested rigid-body state and analytical derivative observations, including whether acceleration is defined at that sample. Absolute-time evaluation and `EvaluateFixedStep` are both available; the latter derives logical time from the step index, fixed timestep, and total step count. Render cadence is not an input.
+
+The evaluator does not mutate a body or assert that a requested pose was achieved. The commit validator accepts a separately supplied achieved `RigidBodyState`, verifies actor, definition identity/version, step, logical time, and requested-sample integrity, then reports arrival only when the destination sample is committed within caller-supplied position and orientation tolerances. Interruption remains host-owned: decline to commit later samples and retain the last immutable committed snapshot.
+
+A typed `IPrescribedKinematicMotionProvider` and `PrescribedKinematicMotionMicroBundle` are implemented and covered by Physics MicroBundle tests. The provider ID is declaration metadata, not a global service locator; a host must resolve the loaded bundle instance and explicitly bind its typed interface.
+
+The Experiences repository contains a C# host-composition sample that loads the bundle, resolves the provider, evaluates a fixed-step quintic path, supplies achieved state separately, and validates arrival. Its dedicated `lenny-physics-host` CI job passed in workflow run [43813984726](https://github.com/TrentBest/TheSingularityWorkshop.Experiences/actions/runs/43813984726). The sample is deliberately synthetic and no-contact; it proves composition and contract use, not a production world host or browser/runtime bridge.
+
+This implementation does not provide collision/contact response, friction, obstacle avoidance, balance, gait, articulated limb dynamics, environmental resistance, multi-segment paths, route planning, or a persistent world scheduler/transaction coordinator. The host owns scheduling, monotonic commit ordering, authoritative world state, and cancellation policy.
 
 ## 2. Motion handoff data
 
