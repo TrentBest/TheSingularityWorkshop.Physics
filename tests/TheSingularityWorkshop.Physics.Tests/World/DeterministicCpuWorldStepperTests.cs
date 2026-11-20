@@ -180,6 +180,27 @@ public sealed class DeterministicCpuWorldStepperTests
     }
 
     [Test]
+    public void Step_ContactToleranceExpandsBroadphaseAndReportsNearGapWithoutImpulse()
+    {
+        var result = DeterministicCpuWorldStepper.Step(
+            new CpuWorldConfiguration("contact-tolerance-v1", 0.01d, contactToleranceMetres: 0.1d),
+            [
+                Body("a", Vector3d.Zero, Vector3d.Zero),
+                Body("b", new Vector3d(1.1d, 0d, 0d), Vector3d.Zero)
+            ]);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Diagnostics.BroadphaseCandidateCount, Is.EqualTo(1));
+            Assert.That(result.Contacts, Has.Count.EqualTo(1));
+            Assert.That(result.Contacts[0].SignedSeparation, Is.EqualTo(0.1d).Within(1e-12));
+            Assert.That(result.Contacts[0].NormalImpulseNewtonSeconds, Is.EqualTo(0d));
+            Assert.That(result.Bodies[0].Pose.Position, Is.EqualTo(Vector3d.Zero));
+            Assert.That(result.Bodies[1].Pose.Position.X, Is.EqualTo(1.1d));
+        });
+    }
+
+    [Test]
     public void Step_SeparatedSweptCandidateDoesNotInventEndpointContact()
     {
         var result = DeterministicCpuWorldStepper.Step(
