@@ -48,6 +48,7 @@ public sealed class CpuWorldReferenceRecordTests
         var expectedOutputs = root.GetProperty("outputs").EnumerateArray().ToArray();
         var expectedContacts = root.GetProperty("contacts").EnumerateArray().ToArray();
         var expectedDiagnostics = root.GetProperty("diagnostics");
+        var expectedOrdering = root.GetProperty("ordering");
 
         Assert.Multiple(() =>
         {
@@ -56,6 +57,8 @@ public sealed class CpuWorldReferenceRecordTests
             Assert.That(result.ElapsedTimeSeconds,
                 Is.EqualTo(expectedOutputs[0].GetProperty("elapsed_time_s").GetDouble()).Within(1e-12));
             Assert.That(result.Bodies, Has.Count.EqualTo(expectedOutputs.Length));
+            Assert.That(result.Bodies.Select(body => body.BodyId), Is.EqualTo(
+                expectedOrdering.GetProperty("body_ids").EnumerateArray().Select(id => id.GetString())));
             Assert.That(result.Contacts, Has.Count.EqualTo(expectedContacts.Length));
             Assert.That(result.Diagnostics.BroadphaseCandidateCount,
                 Is.EqualTo(expectedDiagnostics.GetProperty("broadphase_candidate_count").GetInt32()));
@@ -87,6 +90,8 @@ public sealed class CpuWorldReferenceRecordTests
                 AssertVector(actual.Pose.Position, expected, "position_m");
                 AssertVector(actual.LinearVelocity, expected, "linear_velocity_m_per_s");
                 AssertVector(actual.AngularVelocity, expected, "angular_velocity_rad_per_s");
+                AssertQuaternion(actual.Pose.Orientation, expected, "orientation_wxyz");
+                Assert.That(expectedOrdering.GetProperty("proxy_ids").GetProperty(actual.BodyId).GetInt64(), Is.EqualTo(i + 1));
             });
         }
 
@@ -123,6 +128,15 @@ public sealed class CpuWorldReferenceRecordTests
     {
         var values = parent.GetProperty(property).EnumerateArray().Select(value => value.GetDouble()).ToArray();
         return new Vector3d(values[0], values[1], values[2]);
+    }
+
+    private static void AssertQuaternion(Quaterniond actual, JsonElement expected, string property)
+    {
+        var values = expected.GetProperty(property).EnumerateArray().Select(value => value.GetDouble()).ToArray();
+        Assert.That(actual.W, Is.EqualTo(values[0]).Within(1e-12), property + " W");
+        Assert.That(actual.X, Is.EqualTo(values[1]).Within(1e-12), property + " X");
+        Assert.That(actual.Y, Is.EqualTo(values[2]).Within(1e-12), property + " Y");
+        Assert.That(actual.Z, Is.EqualTo(values[3]).Within(1e-12), property + " Z");
     }
 
     private static void AssertVector(Vector3d actual, JsonElement expected, string property)
