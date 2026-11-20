@@ -12,7 +12,7 @@ For one call to `Step(configuration, bodies)`, the implementation performs:
 
 1. **Validate and canonicalize input.** Require at least one body; unique ordinal string IDs; matching definition/state identities; positive finite mass and sphere radius; finite velocities; and exactly matching input logical step/time across all bodies.
 2. **Advance free motion.** Integrate every body in ordinal body-ID order with `RigidBodyIntegrator.Advance`, using its declared constant acceleration and the one configured fixed timestep.
-3. **Build conservative swept bounds.** Create a sphere AABB at each input pose and linearly sweep it to the integrated endpoint. The sweep encloses the segment between endpoints; it does not model curved trajectories or rotation.
+3. **Build conservative swept bounds.** Create a sphere AABB at each input pose, expand each side by half the configured contact tolerance, and linearly sweep it to the integrated endpoint. The sweep encloses the segment between endpoints; it does not model curved trajectories or rotation.
 4. **Generate broadphase candidates.** Assign numeric proxy IDs from the sorted body order (never runtime hash codes), then use `SweepAndPruneBroadphase`. Candidate pairs are stable and sorted.
 5. **Confirm endpoint contacts.** Run `SphereSphereContactDetector` on integrated endpoint states only. A swept candidate that is separated at the endpoint is not a contact.
 6. **Fail closed on unsupported contact graphs.** If any body participates in more than one active endpoint contact, reject the entire step before response. This prevents order-dependent sequential resolution from being misrepresented as a coupled solver.
