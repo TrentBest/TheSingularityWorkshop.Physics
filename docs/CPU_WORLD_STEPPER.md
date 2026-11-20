@@ -47,9 +47,9 @@ The companion record [cpu-world-two-sphere-reference.json](records/cpu-world-two
 - broadphase candidate generation;
 - one sphere-sphere narrowphase observation;
 - one isolated normal contact response;
-- the complete world-step call.
+- the complete no-contact world-step call.
 
-BenchmarkDotNet's memory diagnoser reports allocations alongside wall time. The benchmark suite is a baseline, not an optimization claim. Record the CI artifact's runner/runtime provenance and body count when comparing results. The current whole-world benchmark uses separated spheres, while the contact-stage microbenchmarks exercise a single supported pair; it does not claim dense-contact throughput.
+`DeterministicCpuWorldContactScalingBenchmarks` adds complete-world cases with 1, 4, 16, and 64 independent contact pairs (2, 8, 32, and 128 bodies). Pairs are spatially isolated so no body participates in more than one contact. Its global setup executes a correctness gate before timing: endpoint and resolved contact counts must equal the declared pair count, and the momentum residual must remain within the stated tolerance. BenchmarkDotNet's memory diagnoser reports allocations alongside wall time for both classes. These are sparse, disjoint-contact measurements only; they do not represent dense-contact throughput, contact islands, piles, chains, or simultaneous multi-contact response. Record the CI artifact's runner/runtime provenance, body count, and contact-pair count when comparing results. The initial no-contact measurements remain a separate baseline.
 
 ## Explicit limitations
 
