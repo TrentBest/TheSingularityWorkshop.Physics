@@ -219,28 +219,25 @@ public sealed class DeterministicCpuWorldStepperTests
     }
 
     [Test]
-    public void Step_RejectsNonFiniteVelocityPositionAndAcceleration()
+    public void Step_RejectsDefaultInvalidStateAndStateTypesRejectNonFiniteValues()
     {
-        var nonFiniteVelocity = new CpuWorldBody(
-            Definition("bad-velocity", 1d, 0.5d, Vector3d.Zero),
-            new RigidBodyState("bad-velocity",
-                new Pose3d(Vector3d.Zero, Quaterniond.Identity),
-                new Vector3d(double.NaN, 0d, 0d), Vector3d.Zero, 0, 0d));
-        var nonFinitePosition = Body(
-            "bad-position", new Vector3d(double.PositiveInfinity, 0d, 0d), Vector3d.Zero);
-        var nonFiniteAcceleration = Body(
-            "bad-acceleration", Vector3d.Zero, Vector3d.Zero,
-            acceleration: new Vector3d(0d, double.NaN, 0d));
-        var configuration = new CpuWorldConfiguration("non-finite-state", 0.01d);
+        var invalidState = new CpuWorldBody(
+            Definition("invalid-state", 1d, 0.5d, Vector3d.Zero),
+            default);
+        var configuration = new CpuWorldConfiguration("invalid-state", 0.01d);
 
         Assert.Multiple(() =>
         {
             Assert.Throws<ArgumentException>(() =>
-                DeterministicCpuWorldStepper.Step(configuration, [nonFiniteVelocity]));
+                DeterministicCpuWorldStepper.Step(configuration, [invalidState]));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DeterministicCpuWorldStepper.Step(configuration, [nonFinitePosition]));
+                new Vector3d(double.NaN, 0d, 0d));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                DeterministicCpuWorldStepper.Step(configuration, [nonFiniteAcceleration]));
+                new Vector3d(0d, double.PositiveInfinity, 0d));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new RigidBodyState("bad-time",
+                    new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+                    Vector3d.Zero, Vector3d.Zero, 0, double.NaN));
         });
     }
 
