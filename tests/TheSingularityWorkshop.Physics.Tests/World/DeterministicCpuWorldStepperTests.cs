@@ -141,6 +141,20 @@ public sealed class DeterministicCpuWorldStepperTests
     }
 
     [Test]
+    public void Step_RejectsNewContactIntroducedByPositionCorrection()
+    {
+        var bodies = new[]
+        {
+            Body("a", new Vector3d(-0.4d, 0d, 0d), Vector3d.Zero),
+            Body("b", new Vector3d(0.4d, 0d, 0d), Vector3d.Zero),
+            Body("c", new Vector3d(1.45d, 0d, 0d), Vector3d.Zero)
+        };
+
+        Assert.Throws<NotSupportedException>(() =>
+            DeterministicCpuWorldStepper.Step(new CpuWorldConfiguration("correction-cascade", 0.01d), bodies));
+    }
+
+    [Test]
     public void Step_RejectsMultiContactGraphInsteadOfApplyingOrderDependentImpulses()
     {
         var bodies = new[]
