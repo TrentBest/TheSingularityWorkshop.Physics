@@ -150,7 +150,7 @@ public static class DeterministicCpuWorldStepper
         for (var i = 0; i < ordered.Length; i++)
         {
             var body = ordered[i] ?? throw new ArgumentException("World body entries cannot be null.", nameof(bodies));
-            if (body.Definition is null || body.State is null)
+            if (body.Definition is null)
                 throw new ArgumentException("Every world body requires a definition and state.", nameof(bodies));
             if (!ids.Add(body.Definition.BodyId))
                 throw new ArgumentException($"Duplicate body identity: {body.Definition.BodyId}.", nameof(bodies));
@@ -286,7 +286,7 @@ public static class DeterministicCpuWorldStepper
                 .ThenBy(contact => contact.BodyBId, StringComparer.Ordinal));
     }
 
-    private static string ContactId(string bodyA, string bodyB) => $"{bodyA}|{bodyB}";
+    private static string ContactId(string bodyA, string bodyB) => $"{bodyA.Length}:{bodyA}{bodyB.Length}:{bodyB}";
 
     private static bool IsFinite(Vector3d value) =>
         double.IsFinite(value.X) && double.IsFinite(value.Y) && double.IsFinite(value.Z);
