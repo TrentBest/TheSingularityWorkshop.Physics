@@ -105,7 +105,7 @@ public sealed class CpuWorldReferenceRecordTests
                     Is.EqualTo(expected.GetProperty("normal_impulse_ns").GetDouble()).Within(1e-12));
                 Assert.That(actual.NormalForceNewtons, Is.Null);
                 AssertVector(actual.Point, expected, "point_m");
-                AssertVector(actual.NormalAtoB, expected, "normal_a_to_b");
+                AssertVector(actual.NormalFromAToB, expected, "normal_a_to_b");
                 AssertVector(actual.RelativeVelocity, expected, "relative_velocity_m_per_s");
             });
         }
