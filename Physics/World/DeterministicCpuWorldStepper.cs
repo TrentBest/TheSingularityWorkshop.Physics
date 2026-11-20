@@ -286,7 +286,9 @@ public static class DeterministicCpuWorldStepper
             var startBounds = new AxisAlignedBounds(
                 start.X - radius, start.Y - radius, start.Z - radius,
                 start.X + radius, start.Y + radius, start.Z + radius);
-            var swept = startBounds.SweptBy(end.X - start.X, end.Y - start.Y, end.Z - start.Z);
+            var toleranceMargin = configuration.ContactToleranceMetres * 0.5d;
+            var swept = startBounds.SweptBy(end.X - start.X, end.Y - start.Y, end.Z - start.Z)
+                .Expanded(toleranceMargin, toleranceMargin, toleranceMargin);
             // IDs are deterministic within this sorted snapshot; no runtime hash is used.
             proxies.Add(new BroadphaseProxy(i + 1L, swept));
         }
@@ -367,9 +369,12 @@ public static class DeterministicCpuWorldStepper
             var definition = ordered[i].Definition;
             var position = finalStates[definition.BodyId].Pose.Position;
             var radius = definition.SphereRadiusMetres;
-            finalProxies.Add(new BroadphaseProxy(i + 1L, new AxisAlignedBounds(
+            var toleranceMargin = configuration.ContactToleranceMetres * 0.5d;
+            var finalBounds = new AxisAlignedBounds(
                 position.X - radius, position.Y - radius, position.Z - radius,
-                position.X + radius, position.Y + radius, position.Z + radius)));
+                position.X + radius, position.Y + radius, position.Z + radius)
+                .Expanded(toleranceMargin, toleranceMargin, toleranceMargin);
+            finalProxies.Add(new BroadphaseProxy(i + 1L, finalBounds));
         }
 
         var finalCandidates = SweepAndPruneBroadphase.FindCandidates(finalProxies);
