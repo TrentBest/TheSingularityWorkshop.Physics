@@ -329,7 +329,7 @@ public static class DeterministicCpuWorldStepper
                 $"Simultaneous multi-contact response is unsupported; affected bodies: {string.Join(", ", multiplyContacting)}.");
 
         var finalStates = new Dictionary<string, RigidBodyState>(integrated, StringComparer.Ordinal);
-        var finalContacts = new List<ContactObservation>(activeContacts.Count);
+        var resolvedImpulses = new Dictionary<string, ContactObservation>(StringComparer.Ordinal);
         var totalCorrection = 0d;
         foreach (var contact in activeContacts)
         {
@@ -355,21 +355,50 @@ public static class DeterministicCpuWorldStepper
             if (!double.IsFinite(totalCorrection))
                 throw new ArithmeticException("Total positional correction exceeded the finite numeric range.");
 
+            resolvedImpulses.Add(contact.ContactId, response.Contact);
+        }
+
+        // Positional stabilization can move a body into a previously separated
+        // neighbour. Rebuild final-pose bounds and reject any newly introduced
+        // contact rather than silently returning a world with unresolved overlap.
+        var finalProxies = new List<BroadphaseProxy>(ordered.Length);
+        for (var i = 0; i < ordered.Length; i++)
+        {
+            var definition = ordered[i].Definition;
+            var position = finalStates[definition.BodyId].Pose.Position;
+            var radius = definition.SphereRadiusMetres;
+            finalProxies.Add(new BroadphaseProxy(i + 1L, new AxisAlignedBounds(
+                position.X - radius, position.Y - radius, position.Z - radius,
+                position.X + radius, position.Y + radius, position.Z + radius)));
+        }
+
+        var finalCandidates = SweepAndPruneBroadphase.FindCandidates(finalProxies);
+        var finalContacts = new List<ContactObservation>(activeContacts.Count);
+        foreach (var pair in finalCandidates)
+        {
+            var bodyA = ordered[checked((int)pair.FirstId - 1)];
+            var bodyB = ordered[checked((int)pair.SecondId - 1)];
+            var definitionA = bodyA.Definition;
+            var definitionB = bodyB.Definition;
             var finalContact = SphereSphereContactDetector.Detect(
-                contact.ContactId,
-                corrected.BodyA, definitionA.SphereRadiusMetres,
-                corrected.BodyB, definitionB.SphereRadiusMetres,
+                ContactId(definitionA.BodyId, definitionB.BodyId),
+                finalStates[definitionA.BodyId], definitionA.SphereRadiusMetres,
+                finalStates[definitionB.BodyId], definitionB.SphereRadiusMetres,
                 nextStep, nextTime, configuration.ContactToleranceMetres);
-            if (finalContact is not null)
-            {
-                var observation = finalContact.Value;
-                finalContacts.Add(new ContactObservation(
-                    observation.ContactId, observation.BodyAId, observation.BodyBId,
-                    observation.Point, observation.NormalFromAToB, observation.RelativeVelocity,
-                    observation.SignedSeparation, observation.IsActive, observation.StepIndex,
-                    observation.ElapsedTime, response.Contact.NormalForceNewtons,
-                    response.Contact.NormalImpulseNewtonSeconds));
-            }
+            if (finalContact is null)
+                continue;
+
+            if (!resolvedImpulses.TryGetValue(finalContact.Value.ContactId, out var resolved))
+                throw new NotSupportedException(
+                    $"Positional correction introduced a new contact ({definitionA.BodyId}, {definitionB.BodyId}); cascading response is unsupported.");
+
+            var observation = finalContact.Value;
+            finalContacts.Add(new ContactObservation(
+                observation.ContactId, observation.BodyAId, observation.BodyBId,
+                observation.Point, observation.NormalFromAToB, observation.RelativeVelocity,
+                observation.SignedSeparation, observation.IsActive, observation.StepIndex,
+                observation.ElapsedTime, resolved.NormalForceNewtons,
+                resolved.NormalImpulseNewtonSeconds));
         }
 
         var momentumBefore = Vector3d.Zero;
