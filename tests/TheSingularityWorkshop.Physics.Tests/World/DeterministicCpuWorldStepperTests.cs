@@ -49,6 +49,33 @@ public sealed class DeterministicCpuWorldStepperTests
             Assert.That(result.Contacts[0].SignedSeparation, Is.EqualTo(0d).Within(1e-12));
             Assert.That(result.Contacts[0].NormalImpulseNewtonSeconds, Is.EqualTo(1d).Within(1e-12));
             Assert.That(result.Contacts[0].NormalForceNewtons, Is.Null);
+            Assert.That(result.Diagnostics.BroadphaseCandidateCount, Is.EqualTo(1));
+            Assert.That(result.Diagnostics.EndpointContactCount, Is.EqualTo(1));
+            Assert.That(result.Diagnostics.ResolvedContactCount, Is.EqualTo(1));
+            Assert.That(result.Diagnostics.MomentumResidualKilogramMetresPerSecond.Magnitude, Is.EqualTo(0d).Within(1e-12));
+            Assert.That(result.Diagnostics.KineticEnergyBeforeJoules, Is.EqualTo(1d).Within(1e-12));
+            Assert.That(result.Diagnostics.KineticEnergyAfterJoules, Is.EqualTo(0d).Within(1e-12));
+            Assert.That(result.Diagnostics.KineticEnergyChangeJoules, Is.EqualTo(-1d).Within(1e-12));
+        });
+    }
+
+    [Test]
+    public void Step_UnequalMassImpact_PreservesLinearMomentumAndReportsDissipation()
+    {
+        var result = DeterministicCpuWorldStepper.Step(
+            new CpuWorldConfiguration("unequal-mass-impact-v1", 0.5d, restitution: 0d),
+            [
+                Body("a", new Vector3d(-1d, 0d, 0d), new Vector3d(2d, 0d, 0d), mass: 1d, radius: 0.25d),
+                Body("b", new Vector3d(1d, 0d, 0d), new Vector3d(-1d, 0d, 0d), mass: 3d, radius: 0.25d)
+            ]);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Bodies[0].LinearVelocity.X, Is.EqualTo(-0.25d).Within(1e-12));
+            Assert.That(result.Bodies[1].LinearVelocity.X, Is.EqualTo(-0.25d).Within(1e-12));
+            Assert.That(result.Diagnostics.MomentumResidualKilogramMetresPerSecond.Magnitude, Is.EqualTo(0d).Within(1e-12));
+            Assert.That(result.Diagnostics.KineticEnergyBeforeJoules, Is.EqualTo(3.5d).Within(1e-12));
+            Assert.That(result.Diagnostics.KineticEnergyAfterJoules, Is.EqualTo(0.125d).Within(1e-12));
         });
     }
 
