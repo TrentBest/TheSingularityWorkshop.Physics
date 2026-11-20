@@ -20,6 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../TheSingularityWorkshop.Physics.csproj" />
-    <ProjectReference Include="../../_dependencies/Gestures/src/TheSingularityWorkshop.Gestures/TheSingularityWorkshop.Gestures.csproj" />
+    <ProjectReference Include="_dependencies/Gestures/src/TheSingularityWorkshop.Gestures/TheSingularityWorkshop.Gestures.csproj" />
   </ItemGroup>
 </Project>
