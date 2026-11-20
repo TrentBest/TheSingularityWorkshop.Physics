@@ -8,11 +8,16 @@ namespace TheSingularityWorkshop.Physics.World;
 /// <summary>Immutable sphere-only body model consumed by the deterministic CPU reference stepper.</summary>
 public sealed record CpuWorldBodyDefinition
 {
+    /// <summary>Gets the stable identity shared with the paired body state.</summary>
     public string BodyId { get; }
+    /// <summary>Gets the positive translational mass in kilograms.</summary>
     public double MassKilograms { get; }
+    /// <summary>Gets the positive spherical collision radius in metres.</summary>
     public double SphereRadiusMetres { get; }
+    /// <summary>Gets the constant world-frame acceleration used for this step.</summary>
     public Vector3d ConstantAccelerationMetresPerSecondSquared { get; }
 
+    /// <summary>Creates a validated sphere body definition.</summary>
     public CpuWorldBodyDefinition(
         string bodyId,
         double massKilograms,
@@ -34,19 +39,41 @@ public sealed record CpuWorldBodyDefinition
 }
 
 /// <summary>A body definition paired with its immutable achieved input state.</summary>
-public sealed record CpuWorldBody(CpuWorldBodyDefinition Definition, RigidBodyState State);
+public sealed class CpuWorldBody
+{
+    /// <summary>Gets the immutable sphere model definition.</summary>
+    public CpuWorldBodyDefinition Definition { get; }
+
+    /// <summary>Gets the achieved body state at the beginning of the step.</summary>
+    public RigidBodyState State { get; }
+
+    /// <summary>Pairs a sphere definition with its achieved input state.</summary>
+    public CpuWorldBody(CpuWorldBodyDefinition definition, RigidBodyState state)
+    {
+        Definition = definition ?? throw new ArgumentNullException(nameof(definition));
+        State = state;
+    }
+}
 
 /// <summary>Fixed model identity and numerical tolerances for one CPU world-step configuration.</summary>
 public sealed record CpuWorldConfiguration
 {
+    /// <summary>Gets the stable identity of the physical model/configuration.</summary>
     public string ModelId { get; }
+    /// <summary>Gets the fixed positive logical timestep in seconds.</summary>
     public double DeltaTimeSeconds { get; }
+    /// <summary>Gets the frictionless normal coefficient of restitution.</summary>
     public double Restitution { get; }
+    /// <summary>Gets the endpoint narrowphase contact tolerance in metres.</summary>
     public double ContactToleranceMetres { get; }
+    /// <summary>Gets the penetration depth tolerated by positional stabilization.</summary>
     public double PenetrationSlopMetres { get; }
+    /// <summary>Gets the fraction of penetration beyond slop requested for correction.</summary>
     public double CorrectionFraction { get; }
+    /// <summary>Gets the maximum total separation correction in metres.</summary>
     public double MaximumCorrectionMetres { get; }
 
+    /// <summary>Creates a validated immutable CPU world-step configuration.</summary>
     public CpuWorldConfiguration(
         string modelId,
         double deltaTimeSeconds,
@@ -84,22 +111,34 @@ public sealed record CpuWorldConfiguration
 /// <summary>Explicit limitations reported by the first deterministic CPU world-step slice.</summary>
 public enum CpuWorldStepLimitation
 {
+    /// <summary>Only endpoint sphere poses are tested by narrowphase.</summary>
     DiscreteEndpointNarrowphase,
+    /// <summary>Broadphase bounds enclose only linear start-to-end translation.</summary>
     LinearSweptBoundsOnly,
+    /// <summary>Contact response applies only frictionless linear normal impulses.</summary>
     FrictionlessTranslationalResponse,
+    /// <summary>Contact response does not apply angular impulses or rotational correction.</summary>
     NoAngularContactResponse,
+    /// <summary>Contacts are recomputed per step and are not persisted between steps.</summary>
     NoPersistentContacts,
+    /// <summary>Any body with multiple active contacts causes the step to be rejected.</summary>
     NoSimultaneousMultiContactSolver
 }
 
 /// <summary>Immutable result of one successfully completed deterministic CPU world step.</summary>
 public sealed class CpuWorldStepResult
 {
+    /// <summary>Gets the physical model/configuration identity.</summary>
     public string ModelId { get; }
+    /// <summary>Gets the committed zero-based logical step index.</summary>
     public long StepIndex { get; }
+    /// <summary>Gets the committed elapsed logical time in seconds.</summary>
     public double ElapsedTimeSeconds { get; }
+    /// <summary>Gets the immutable body snapshots in ordinal body-ID order.</summary>
     public IReadOnlyList<RigidBodyState> Bodies { get; }
+    /// <summary>Gets the immutable final contact observations in stable identity order.</summary>
     public IReadOnlyList<ContactObservation> Contacts { get; }
+    /// <summary>Gets the explicit limitations that apply to this stepper slice.</summary>
     public IReadOnlyList<CpuWorldStepLimitation> Limitations { get; }
 
     internal CpuWorldStepResult(
