@@ -38,7 +38,7 @@ The output tick is the common input tick plus one; elapsed time is the common in
 
 ## Reproducible reference run
 
-The companion record [cpu-world-two-sphere-reference.json](records/cpu-world-two-sphere-reference.json) specifies the complete model identity, timestep, body definitions, initial states, stable ordering, output states, contact observation, diagnostics, and limitations for a two-sphere inelastic impact. The test fixture `Step_EqualMassSphereImpact_ResolvesNormalVelocityAndReportsFinalGeometry` independently checks its numerical values against the executable implementation.
+The companion record [cpu-world-two-sphere-reference.json](records/cpu-world-two-sphere-reference.json) specifies the complete model identity, timestep, body definitions, initial states, stable ordering, output states, contact observation, diagnostics, and limitations for a two-sphere inelastic impact. `CpuWorldReferenceRecordTests.TwoSphereReferenceRecord_MatchesExecutableStepperOutput` loads this checked-in JSON at test runtime, constructs the input world from its model and input fields, executes the production stepper, and compares the resulting body states, contact geometry/impulse, and diagnostics against the recorded outputs. The test project copies the source record into its output directory, so changing the fixture without matching executable behavior fails CI.
 
 ## Benchmark baseline
 
@@ -49,7 +49,31 @@ The companion record [cpu-world-two-sphere-reference.json](records/cpu-world-two
 - one isolated normal contact response;
 - the complete no-contact world-step call.
 
-`DeterministicCpuWorldContactScalingBenchmarks` adds complete-world cases with 1, 4, 16, and 64 independent contact pairs (2, 8, 32, and 128 bodies). Pairs are spatially isolated so no body participates in more than one contact. Its global setup executes a correctness gate before timing: endpoint and resolved contact counts must equal the declared pair count, and the momentum residual must remain within the stated tolerance. BenchmarkDotNet's memory diagnoser reports allocations alongside wall time for both classes. These are sparse, disjoint-contact measurements only; they do not represent dense-contact throughput, contact islands, piles, chains, or simultaneous multi-contact response. Record the CI artifact's runner/runtime provenance, body count, and contact-pair count when comparing results. The initial no-contact measurements remain a separate baseline.
+`DeterministicCpuWorldContactScalingBenchmarks` adds complete-world cases with 1, 4, 16, and 64 independent contact pairs (2, 8, 32, and 128 bodies). Pairs are spatially isolated so no body participates in more than one contact. Its global setup executes a correctness gate before timing: endpoint and resolved contact counts must equal the declared pair count, and the momentum residual must remain within the stated tolerance. BenchmarkDotNet's memory diagnoser reports allocations alongside wall time for both classes. These are sparse, disjoint-contact measurements only; they do not represent dense-contact throughput, contact islands, piles, chains, or simultaneous multi-contact response.
+
+### Initial CI measurements
+
+The first complete benchmark run is [workflow run 44672475782](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/44672475782), source commit `7bae5e2d8803a5fc675f29e0c347b5a97ef74e27`. Its uploaded artifact contains the full BenchmarkDotNet reports and environment manifest. The runner reported AMD EPYC 7763 (4 logical / 2 physical cores), Ubuntu 24.04.5, BenchmarkDotNet 0.15.2, .NET SDK 10.0.404, and .NET runtime 10.0.15 (x64 RyuJIT AVX2). These are measurements from that hosted runner/runtime, not portable performance guarantees.
+
+No-contact full-world baseline:
+
+| Bodies | Mean | Allocated |
+| ---: | ---: | ---: |
+| 2 | 1.885 μs | 5,960 B |
+| 8 | 5.911 μs | 16,392 B |
+| 32 | 18.417 μs | 41,937 B |
+| 128 | 66.937 μs | 174,939 B |
+
+Independent-contact complete-world scaling:
+
+| Independent pairs | Bodies | Mean | Allocated |
+| ---: | ---: | ---: | ---: |
+| 1 | 2 | 3.810 μs | 8.81 KB |
+| 4 | 8 | 12.785 μs | 25.97 KB |
+| 16 | 32 | 45.255 μs | 77.67 KB |
+| 64 | 128 | 181.717 μs | 327.68 KB |
+
+The stage-separated no-contact results and full confidence/error statistics are retained in the same CI artifact. Compare like-for-like runner/runtime provenance, and retain body count and contact-pair count with every future result.
 
 ## Explicit limitations
 
