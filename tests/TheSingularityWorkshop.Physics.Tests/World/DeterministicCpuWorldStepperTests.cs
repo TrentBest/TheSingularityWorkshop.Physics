@@ -20,7 +20,7 @@ public sealed class DeterministicCpuWorldStepperTests
         {
             Assert.That(result.ModelId, Is.EqualTo("gravity-v1"));
             Assert.That(result.StepIndex, Is.EqualTo(1));
-            Assert.That(result.ElapsedTimeSeconds, Is.EqualTo(0.09d).Within(1e-12));
+            Assert.That(result.ElapsedTimeSeconds, Is.EqualTo(0.1d).Within(1e-12));
             Assert.That(result.Bodies, Has.Count.EqualTo(1));
             Assert.That(result.Bodies[0].LinearVelocity.Y, Is.EqualTo(-0.981d).Within(1e-12));
             Assert.That(result.Bodies[0].Pose.Position.Y, Is.EqualTo(-0.0981d).Within(1e-12));
@@ -193,7 +193,7 @@ public sealed class DeterministicCpuWorldStepperTests
         {
             Assert.That(result.Diagnostics.BroadphaseCandidateCount, Is.EqualTo(1));
             Assert.That(result.Contacts, Has.Count.EqualTo(1));
-            Assert.That(result.Contacts[0].SignedSeparation, Is.EqualTo(0.1d).Within(1e-12));
+            Assert.That(result.Contacts[0].SignedSeparation, Is.EqualTo(0.09d).Within(1e-12));
             Assert.That(result.Contacts[0].NormalImpulseNewtonSeconds, Is.EqualTo(0d));
             Assert.That(result.Bodies[0].Pose.Position, Is.EqualTo(Vector3d.Zero));
             Assert.That(result.Bodies[1].Pose.Position.X, Is.EqualTo(1.09d));
