@@ -85,7 +85,7 @@ public sealed class CpuWorldReferenceRecordTests
             {
                 Assert.That(actual.BodyId, Is.EqualTo(expected.GetProperty("body_id").GetString()));
                 Assert.That(actual.StepIndex, Is.EqualTo(expected.GetProperty("step_index").GetInt32()));
-                Assert.That(actual.ElapsedTimeSeconds,
+                Assert.That(actual.ElapsedTime,
                     Is.EqualTo(expected.GetProperty("elapsed_time_s").GetDouble()).Within(1e-12));
                 AssertVector(actual.Pose.Position, expected, "position_m");
                 AssertVector(actual.LinearVelocity, expected, "linear_velocity_m_per_s");
