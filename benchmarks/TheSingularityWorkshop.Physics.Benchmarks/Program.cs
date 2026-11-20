@@ -119,3 +119,94 @@ public class NewtonianNBodyStepperBenchmarks
         return result[^1].PositionMeters.X;
     }
 }
+
+
+[MemoryDiagnoser]
+[BenchmarkCategory("PHY-CPU-WORLD-STEPPER")]
+public class DeterministicCpuWorldStepperBenchmarks
+{
+    private TheSingularityWorkshop.Physics.Dynamics.RigidBodyState[] _states = null!;
+    private TheSingularityWorkshop.Physics.World.CpuWorldBody[] _worldBodies = null!;
+    private BroadphaseProxy[] _proxies = null!;
+    private TheSingularityWorkshop.Physics.Collision.ContactObservation _contact;
+    private TheSingularityWorkshop.Physics.Dynamics.RigidBodyState _contactA, _contactB;
+    private TheSingularityWorkshop.Physics.World.CpuWorldConfiguration _configuration = null!;
+
+    [Params(2, 8, 32, 128)]
+    public int BodyCount { get; set; }
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        _configuration = new TheSingularityWorkshop.Physics.World.CpuWorldConfiguration(
+            "benchmark-cpu-world-v1", 1d / 120d);
+        _states = new TheSingularityWorkshop.Physics.Dynamics.RigidBodyState[BodyCount];
+        _worldBodies = new TheSingularityWorkshop.Physics.World.CpuWorldBody[BodyCount];
+        _proxies = new BroadphaseProxy[BodyCount];
+
+        for (var i = 0; i < BodyCount; i++)
+        {
+            var position = new Vector3d(i * 4d, 0d, 0d);
+            var state = new TheSingularityWorkshop.Physics.Dynamics.RigidBodyState(
+                $"body-{i:D4}", new Pose3d(position, Quaterniond.Identity),
+                Vector3d.Zero, Vector3d.Zero, 0, 0d);
+            var definition = new TheSingularityWorkshop.Physics.World.CpuWorldBodyDefinition(
+                state.BodyId, 1d, 0.5d, new Vector3d(0d, -9.81d, 0d));
+            _states[i] = state;
+            _worldBodies[i] = new TheSingularityWorkshop.Physics.World.CpuWorldBody(definition, state);
+            _proxies[i] = new BroadphaseProxy(i + 1L, new AxisAlignedBounds(
+                position.X - 0.5d, -0.5d, -0.5d,
+                position.X + 0.5d, 0.5d, 0.5d));
+        }
+
+        _contactA = new TheSingularityWorkshop.Physics.Dynamics.RigidBodyState(
+            "contact-a", new Pose3d(new Vector3d(-0.45d, 0d, 0d), Quaterniond.Identity),
+            new Vector3d(1d, 0d, 0d), Vector3d.Zero, 1, 1d / 120d);
+        _contactB = new TheSingularityWorkshop.Physics.Dynamics.RigidBodyState(
+            "contact-b", new Pose3d(new Vector3d(0.45d, 0d, 0d), Quaterniond.Identity),
+            new Vector3d(-1d, 0d, 0d), Vector3d.Zero, 1, 1d / 120d);
+        _contact = TheSingularityWorkshop.Physics.Collision.SphereSphereContactDetector.Detect(
+            "contact-a-b", _contactA, 0.5d, _contactB, 0.5d, 1, 1d / 120d)!.Value;
+    }
+
+    [Benchmark]
+    public double IntegrationStage()
+    {
+        var checksum = 0d;
+        foreach (var state in _states)
+        {
+            var advanced = TheSingularityWorkshop.Physics.Dynamics.RigidBodyIntegrator.Advance(
+                state, new Vector3d(0d, -9.81d, 0d), 1d / 120d);
+            checksum += advanced.Pose.Position.Y + advanced.LinearVelocity.Y;
+        }
+        return checksum;
+    }
+
+    [Benchmark]
+    public int BroadphaseStage() =>
+        SweepAndPruneBroadphase.FindCandidates(_proxies).Count;
+
+    [Benchmark]
+    public double NarrowphaseStage()
+    {
+        var contact = TheSingularityWorkshop.Physics.Collision.SphereSphereContactDetector.Detect(
+            "contact-a-b", _contactA, 0.5d, _contactB, 0.5d, 1, 1d / 120d);
+        return contact?.SignedSeparation ?? double.NaN;
+    }
+
+    [Benchmark]
+    public double SingleContactResponseStage()
+    {
+        var result = TheSingularityWorkshop.Physics.Collision.ContactImpulseResolver.Resolve(
+            _contact, _contactA, 1d, _contactB, 1d);
+        return result.BodyA.LinearVelocity.X + result.BodyB.LinearVelocity.X;
+    }
+
+    [Benchmark]
+    public double FullWorldStep()
+    {
+        var result = TheSingularityWorkshop.Physics.World.DeterministicCpuWorldStepper.Step(
+            _configuration, _worldBodies);
+        return result.Bodies[^1].Pose.Position.Y;
+    }
+}
