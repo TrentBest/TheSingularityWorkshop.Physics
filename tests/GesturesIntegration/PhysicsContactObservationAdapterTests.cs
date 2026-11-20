@@ -1,6 +1,7 @@
 using NUnit.Framework;
+using GestureContactObservation = TheSingularityWorkshop.Gestures.ContactObservation;
+using PhysicsContactObservation = TheSingularityWorkshop.Physics.Collision.ContactObservation;
 using TheSingularityWorkshop.Gestures;
-using TheSingularityWorkshop.Physics.Collision;
 using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.GesturesIntegration.Tests;
@@ -82,7 +83,7 @@ public sealed class PhysicsContactObservationAdapterTests
             () => PhysicsContactObservationAdapter.ToGesturesObservation(default));
     }
 
-    private static ContactObservation CreateObservation(
+    private static PhysicsContactObservation CreateObservation(
         bool isActive,
         double? normalForceNewtons = null,
         double? normalImpulseNewtonSeconds = null) =>
