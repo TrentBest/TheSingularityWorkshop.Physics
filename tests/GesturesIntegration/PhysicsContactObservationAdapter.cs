@@ -1,5 +1,6 @@
+using GestureContactObservation = TheSingularityWorkshop.Gestures.ContactObservation;
+using PhysicsContactObservation = TheSingularityWorkshop.Physics.Collision.ContactObservation;
 using TheSingularityWorkshop.Gestures;
-using TheSingularityWorkshop.Physics.Collision;
 
 namespace TheSingularityWorkshop.Physics.GesturesIntegration.Tests;
 
@@ -9,8 +10,8 @@ namespace TheSingularityWorkshop.Physics.GesturesIntegration.Tests;
 /// </summary>
 internal static class PhysicsContactObservationAdapter
 {
-    public static ContactObservation ToGesturesObservation(
-        Physics.Collision.ContactObservation physicsObservation)
+    public static GestureContactObservation ToGesturesObservation(
+        PhysicsContactObservation physicsObservation)
     {
         if (!physicsObservation.IsValid)
         {
@@ -32,7 +33,7 @@ internal static class PhysicsContactObservationAdapter
             normalForce = (float)measuredForce;
         }
 
-        return new ContactObservation(
+        return new GestureContactObservation(
             physicsObservation.IsActive ? ContactPresence.Contact : ContactPresence.NoContact,
             ContactLoadOutcome.NotEvaluated,
             physicsObservation.ContactId,
