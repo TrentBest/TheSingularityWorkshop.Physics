@@ -17,7 +17,7 @@ For one call to `Step(configuration, bodies)`, the implementation performs:
 5. **Confirm endpoint contacts.** Run `SphereSphereContactDetector` on integrated endpoint states only. A swept candidate that is separated at the endpoint is not a contact.
 6. **Fail closed on unsupported contact graphs.** If any body participates in more than one active endpoint contact, reject the entire step before response. This prevents order-dependent sequential resolution from being misrepresented as a coupled solver.
 7. **Resolve each isolated contact.** Apply the existing frictionless translational normal impulse, then bounded inverse-mass-weighted positional correction.
-8. **Recompute final contact geometry.** Do not return stale pre-correction contact point, normal, separation, or relative velocity.
+8. **Rebuild final broadphase and recompute contact geometry.** Do not return stale pre-correction contact point, normal, separation, or relative velocity. If positional correction introduces a new contact with a previously separated body, reject the step; cascading response is not supported.
 9. **Account and publish.** Compute momentum residual and translational kinetic-energy accounting, then return immutable, ordinally ordered body states and final contact observations. No partial result is returned if a stage fails.
 
 The output tick is the common input tick plus one; elapsed time is the common input time plus exactly one configured timestep. Rendering cadence is not consulted.
