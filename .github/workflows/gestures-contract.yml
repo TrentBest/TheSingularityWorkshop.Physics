@@ -24,7 +24,7 @@ jobs:
         with:
           repository: TrentBest/TheSingularityWorkshop.Gestures
           ref: development
-          path: _dependencies/Gestures
+          path: tests/GesturesIntegration/_dependencies/Gestures
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
