@@ -189,7 +189,12 @@ public sealed class DeterministicCpuWorldStepperTests
                 Body("b", new Vector3d(2d, 0d, 0d), new Vector3d(-4d, 0d, 0d))
             ]);
 
-        Assert.That(result.Contacts, Is.Empty);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Contacts, Is.Empty);
+            Assert.That(result.Diagnostics.BroadphaseCandidateCount, Is.EqualTo(1));
+            Assert.That(result.Diagnostics.EndpointContactCount, Is.Zero);
+        });
     }
 
     private static CpuWorldBody Body(
