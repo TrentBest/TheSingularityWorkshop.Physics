@@ -1,0 +1,38 @@
+name: Physics to Gestures Contract Tests
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gestures-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Physics
+        uses: actions/checkout@v7
+
+      - name: Checkout Gestures source
+        uses: actions/checkout@v7
+        with:
+          repository: TrentBest/TheSingularityWorkshop.Gestures
+          ref: development
+          path: _dependencies/Gestures
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore cross-package contract tests
+        run: dotnet restore tests/GesturesIntegration/TheSingularityWorkshop.Physics.GesturesIntegration.Tests.csproj
+
+      - name: Run cross-package contract tests
+        run: dotnet test tests/GesturesIntegration/TheSingularityWorkshop.Physics.GesturesIntegration.Tests.csproj --configuration Release --no-restore --verbosity normal
