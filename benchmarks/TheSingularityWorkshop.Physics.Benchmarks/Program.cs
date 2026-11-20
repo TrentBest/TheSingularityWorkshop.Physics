@@ -210,3 +210,78 @@ public class DeterministicCpuWorldStepperBenchmarks
         return result.Bodies[^1].Pose.Position.Y;
     }
 }
+
+
+/// <summary>
+/// Measures complete world steps across increasing counts of independent contact pairs.
+/// Each pair is isolated from every other pair so the benchmark stays inside the
+/// stepper's explicitly supported single-contact-per-body response model.
+/// </summary>
+[MemoryDiagnoser]
+[BenchmarkCategory("PHY-CPU-WORLD-CONTACT-SCALING")]
+public class DeterministicCpuWorldContactScalingBenchmarks
+{
+    private TheSingularityWorkshop.Physics.World.CpuWorldConfiguration _configuration = null!;
+    private TheSingularityWorkshop.Physics.World.CpuWorldBody[] _bodies = null!;
+    private int _expectedContactCount;
+
+    [Params(1, 4, 16, 64)]
+    public int ContactPairCount { get; set; }
+
+    public int BodyCount => ContactPairCount * 2;
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        const double deltaTime = 1d / 120d;
+        _configuration = new TheSingularityWorkshop.Physics.World.CpuWorldConfiguration(
+            "benchmark-independent-contact-pairs-v1", deltaTime);
+        _expectedContactCount = ContactPairCount;
+        _bodies = new TheSingularityWorkshop.Physics.World.CpuWorldBody[BodyCount];
+
+        for (var pair = 0; pair < ContactPairCount; pair++)
+        {
+            var centre = pair * 4d;
+            var leftId = $"body-{pair:D3}-a";
+            var rightId = $"body-{pair:D3}-b";
+            var leftState = new TheSingularityWorkshop.Physics.Dynamics.RigidBodyState(
+                leftId, new Pose3d(new Vector3d(centre - 0.45d, 0d, 0d), Quaterniond.Identity),
+                new Vector3d(1d, 0d, 0d), Vector3d.Zero, 0, 0d);
+            var rightState = new TheSingularityWorkshop.Physics.Dynamics.RigidBodyState(
+                rightId, new Pose3d(new Vector3d(centre + 0.45d, 0d, 0d), Quaterniond.Identity),
+                new Vector3d(-1d, 0d, 0d), Vector3d.Zero, 0, 0d);
+            var leftDefinition = new TheSingularityWorkshop.Physics.World.CpuWorldBodyDefinition(
+                leftId, 1d, 0.5d, Vector3d.Zero);
+            var rightDefinition = new TheSingularityWorkshop.Physics.World.CpuWorldBodyDefinition(
+                rightId, 1d, 0.5d, Vector3d.Zero);
+            _bodies[pair * 2] = new TheSingularityWorkshop.Physics.World.CpuWorldBody(leftDefinition, leftState);
+            _bodies[pair * 2 + 1] = new TheSingularityWorkshop.Physics.World.CpuWorldBody(rightDefinition, rightState);
+        }
+
+        // Correctness gate for the measured fixture: the benchmark must exercise
+        // exactly the declared number of isolated contacts and conserve momentum.
+        var reference = TheSingularityWorkshop.Physics.World.DeterministicCpuWorldStepper.Step(
+            _configuration, _bodies);
+        if (reference.Diagnostics.EndpointContactCount != _expectedContactCount ||
+            reference.Diagnostics.ResolvedContactCount != _expectedContactCount ||
+            reference.Contacts.Count != _expectedContactCount ||
+            reference.Diagnostics.MomentumResidualKilogramMetresPerSecond.Magnitude > 1e-10d)
+        {
+            throw new InvalidOperationException(
+                $"Invalid contact benchmark fixture: expected {_expectedContactCount} resolved contacts; " +
+                $"observed {reference.Diagnostics.EndpointContactCount} endpoint and " +
+                $"{reference.Diagnostics.ResolvedContactCount} resolved contacts; " +
+                $"momentum residual {reference.Diagnostics.MomentumResidualKilogramMetresPerSecond.Magnitude:R} kg m/s.");
+        }
+    }
+
+    [Benchmark]
+    public double FullWorldStepWithIndependentContacts()
+    {
+        var result = TheSingularityWorkshop.Physics.World.DeterministicCpuWorldStepper.Step(
+            _configuration, _bodies);
+        return result.Diagnostics.KineticEnergyAfterJoules +
+            result.Diagnostics.TotalPositionCorrectionMetres +
+            result.Diagnostics.MomentumResidualKilogramMetresPerSecond.Magnitude;
+    }
+}
