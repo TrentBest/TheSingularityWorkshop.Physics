@@ -125,6 +125,52 @@ public enum CpuWorldStepLimitation
     NoSimultaneousMultiContactSolver
 }
 
+
+/// <summary>Numerical accounting emitted for one completed CPU world step.</summary>
+/// <remarks>
+/// Momentum residual compares achieved total linear momentum with input momentum plus
+/// the declared constant-acceleration impulse. Kinetic-energy change is reported, not
+/// treated as a conservation residual: external acceleration work and restitution
+/// dissipation are model-dependent, and potential energy is outside this slice.
+/// </remarks>
+public sealed class CpuWorldStepDiagnostics
+{
+    /// <summary>Gets the number of swept-AABB broadphase candidate pairs.</summary>
+    public int BroadphaseCandidateCount { get; }
+    /// <summary>Gets the number of endpoint sphere contacts detected before response.</summary>
+    public int EndpointContactCount { get; }
+    /// <summary>Gets the number of isolated contacts passed through response and correction.</summary>
+    public int ResolvedContactCount { get; }
+    /// <summary>Gets the sum of bounded positional separation corrections in metres.</summary>
+    public double TotalPositionCorrectionMetres { get; }
+    /// <summary>Gets achieved momentum minus input momentum and declared acceleration impulse.</summary>
+    public Vector3d MomentumResidualKilogramMetresPerSecond { get; }
+    /// <summary>Gets total translational kinetic energy before the step in joules.</summary>
+    public double KineticEnergyBeforeJoules { get; }
+    /// <summary>Gets total translational kinetic energy after the step in joules.</summary>
+    public double KineticEnergyAfterJoules { get; }
+    /// <summary>Gets after-step minus before-step translational kinetic energy in joules.</summary>
+    public double KineticEnergyChangeJoules => KineticEnergyAfterJoules - KineticEnergyBeforeJoules;
+
+    internal CpuWorldStepDiagnostics(
+        int broadphaseCandidateCount,
+        int endpointContactCount,
+        int resolvedContactCount,
+        double totalPositionCorrectionMetres,
+        Vector3d momentumResidualKilogramMetresPerSecond,
+        double kineticEnergyBeforeJoules,
+        double kineticEnergyAfterJoules)
+    {
+        BroadphaseCandidateCount = broadphaseCandidateCount;
+        EndpointContactCount = endpointContactCount;
+        ResolvedContactCount = resolvedContactCount;
+        TotalPositionCorrectionMetres = totalPositionCorrectionMetres;
+        MomentumResidualKilogramMetresPerSecond = momentumResidualKilogramMetresPerSecond;
+        KineticEnergyBeforeJoules = kineticEnergyBeforeJoules;
+        KineticEnergyAfterJoules = kineticEnergyAfterJoules;
+    }
+}
+
 /// <summary>Immutable result of one successfully completed deterministic CPU world step.</summary>
 public sealed class CpuWorldStepResult
 {
@@ -140,13 +186,16 @@ public sealed class CpuWorldStepResult
     public IReadOnlyList<ContactObservation> Contacts { get; }
     /// <summary>Gets the explicit limitations that apply to this stepper slice.</summary>
     public IReadOnlyList<CpuWorldStepLimitation> Limitations { get; }
+    /// <summary>Gets per-step broadphase, contact, momentum, energy, and correction accounting.</summary>
+    public CpuWorldStepDiagnostics Diagnostics { get; }
 
     internal CpuWorldStepResult(
         string modelId,
         long stepIndex,
         double elapsedTimeSeconds,
         IEnumerable<RigidBodyState> bodies,
-        IEnumerable<ContactObservation> contacts)
+        IEnumerable<ContactObservation> contacts,
+        CpuWorldStepDiagnostics diagnostics)
     {
         ModelId = modelId;
         StepIndex = stepIndex;
@@ -154,6 +203,7 @@ public sealed class CpuWorldStepResult
         Bodies = new ReadOnlyCollection<RigidBodyState>(bodies.ToArray());
         Contacts = new ReadOnlyCollection<ContactObservation>(contacts.ToArray());
         Limitations = Array.AsReadOnly(Enum.GetValues<CpuWorldStepLimitation>());
+        Diagnostics = diagnostics;
     }
 }
 
@@ -280,6 +330,7 @@ public static class DeterministicCpuWorldStepper
 
         var finalStates = new Dictionary<string, RigidBodyState>(integrated, StringComparer.Ordinal);
         var finalContacts = new List<ContactObservation>(activeContacts.Count);
+        var totalCorrection = 0d;
         foreach (var contact in activeContacts)
         {
             var definitionA = definitions[contact.BodyAId];
@@ -300,6 +351,9 @@ public static class DeterministicCpuWorldStepper
 
             finalStates[contact.BodyAId] = corrected.BodyA;
             finalStates[contact.BodyBId] = corrected.BodyB;
+            totalCorrection += corrected.AppliedCorrectionMetres;
+            if (!double.IsFinite(totalCorrection))
+                throw new ArithmeticException("Total positional correction exceeded the finite numeric range.");
 
             var finalContact = SphereSphereContactDetector.Detect(
                 contact.ContactId,
@@ -318,11 +372,40 @@ public static class DeterministicCpuWorldStepper
             }
         }
 
+        var momentumBefore = Vector3d.Zero;
+        var declaredExternalImpulse = Vector3d.Zero;
+        var kineticEnergyBefore = 0d;
+        var kineticEnergyAfter = 0d;
+        var momentumAfter = Vector3d.Zero;
+        foreach (var body in ordered)
+        {
+            var definition = body.Definition;
+            var initial = body.State;
+            var final = finalStates[definition.BodyId];
+            momentumBefore += initial.LinearVelocity * definition.MassKilograms;
+            declaredExternalImpulse +=
+                (definition.ConstantAccelerationMetresPerSecondSquared * configuration.DeltaTimeSeconds)
+                * definition.MassKilograms;
+            kineticEnergyBefore += 0.5d * definition.MassKilograms
+                * initial.LinearVelocity.MagnitudeSquared;
+            momentumAfter += final.LinearVelocity * definition.MassKilograms;
+            kineticEnergyAfter += 0.5d * definition.MassKilograms
+                * final.LinearVelocity.MagnitudeSquared;
+        }
+
+        if (!double.IsFinite(kineticEnergyBefore) || !double.IsFinite(kineticEnergyAfter))
+            throw new ArithmeticException("Kinetic-energy accounting exceeded the finite numeric range.");
+        var diagnostics = new CpuWorldStepDiagnostics(
+            candidates.Count, activeContacts.Count, activeContacts.Count, totalCorrection,
+            momentumAfter - (momentumBefore + declaredExternalImpulse),
+            kineticEnergyBefore, kineticEnergyAfter);
+
         return new CpuWorldStepResult(
             configuration.ModelId, nextStep, nextTime,
             ordered.Select(body => finalStates[body.Definition.BodyId]),
             finalContacts.OrderBy(contact => contact.BodyAId, StringComparer.Ordinal)
-                .ThenBy(contact => contact.BodyBId, StringComparer.Ordinal));
+                .ThenBy(contact => contact.BodyBId, StringComparer.Ordinal),
+            diagnostics);
     }
 
     private static string ContactId(string bodyA, string bodyB) => $"{bodyA.Length}:{bodyA}{bodyB.Length}:{bodyB}";
