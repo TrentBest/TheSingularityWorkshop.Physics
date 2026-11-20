@@ -1,0 +1,98 @@
+{
+  "schema": "the-singularity-workshop.physics.cpu-world-step.v1",
+  "model": {
+    "model_id": "two-sphere-inelastic-impact-v1",
+    "integrator": "semi-implicit-euler",
+    "timestep_seconds": 0.5,
+    "restitution": 0.0,
+    "contact_tolerance_metres": 0.0,
+    "penetration_slop_metres": 0.001,
+    "correction_fraction": 0.8,
+    "maximum_correction_metres": 0.2
+  },
+  "ordering": {
+    "body_id_comparer": "StringComparer.Ordinal",
+    "body_ids": ["a", "b"],
+    "proxy_ids": { "a": 1, "b": 2 },
+    "candidate_pairs": [["a", "b"]]
+  },
+  "inputs": [
+    {
+      "body_id": "a",
+      "mass_kg": 1.0,
+      "sphere_radius_m": 0.5,
+      "constant_acceleration_m_per_s2": [0.0, 0.0, 0.0],
+      "step_index": 0,
+      "elapsed_time_s": 0.0,
+      "position_m": [-1.0, 0.0, 0.0],
+      "linear_velocity_m_per_s": [1.0, 0.0, 0.0],
+      "angular_velocity_rad_per_s": [0.0, 0.0, 0.0],
+      "orientation_wxyz": [1.0, 0.0, 0.0, 0.0]
+    },
+    {
+      "body_id": "b",
+      "mass_kg": 1.0,
+      "sphere_radius_m": 0.5,
+      "constant_acceleration_m_per_s2": [0.0, 0.0, 0.0],
+      "step_index": 0,
+      "elapsed_time_s": 0.0,
+      "position_m": [1.0, 0.0, 0.0],
+      "linear_velocity_m_per_s": [-1.0, 0.0, 0.0],
+      "angular_velocity_rad_per_s": [0.0, 0.0, 0.0],
+      "orientation_wxyz": [1.0, 0.0, 0.0, 0.0]
+    }
+  ],
+  "outputs": [
+    {
+      "body_id": "a",
+      "step_index": 1,
+      "elapsed_time_s": 0.5,
+      "position_m": [-0.5, 0.0, 0.0],
+      "linear_velocity_m_per_s": [0.0, 0.0, 0.0],
+      "angular_velocity_rad_per_s": [0.0, 0.0, 0.0],
+      "orientation_wxyz": [1.0, 0.0, 0.0, 0.0]
+    },
+    {
+      "body_id": "b",
+      "step_index": 1,
+      "elapsed_time_s": 0.5,
+      "position_m": [0.5, 0.0, 0.0],
+      "linear_velocity_m_per_s": [0.0, 0.0, 0.0],
+      "angular_velocity_rad_per_s": [0.0, 0.0, 0.0],
+      "orientation_wxyz": [1.0, 0.0, 0.0, 0.0]
+    }
+  ],
+  "contacts": [
+    {
+      "contact_id": "1:a1:b",
+      "body_a_id": "a",
+      "body_b_id": "b",
+      "point_m": [0.0, 0.0, 0.0],
+      "normal_a_to_b": [1.0, 0.0, 0.0],
+      "relative_velocity_m_per_s": [0.0, 0.0, 0.0],
+      "signed_separation_m": 0.0,
+      "normal_force_n": null,
+      "normal_impulse_ns": 1.0,
+      "step_index": 1,
+      "elapsed_time_s": 0.5
+    }
+  ],
+  "diagnostics": {
+    "broadphase_candidate_count": 1,
+    "endpoint_contact_count": 1,
+    "resolved_contact_count": 1,
+    "total_position_correction_m": 0.0,
+    "momentum_residual_kg_m_per_s": [0.0, 0.0, 0.0],
+    "kinetic_energy_before_j": 1.0,
+    "kinetic_energy_after_j": 0.0,
+    "kinetic_energy_change_j": -1.0
+  },
+  "limitations": [
+    "discrete-endpoint-narrowphase",
+    "linear-swept-bounds-only",
+    "frictionless-translational-response",
+    "no-angular-contact-response",
+    "no-persistent-contacts",
+    "no-simultaneous-multi-contact-solver"
+  ]
+}
