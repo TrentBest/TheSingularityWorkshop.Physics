@@ -57,7 +57,7 @@ public sealed class DeterministicCpuWorldStepperTests
     {
         var result = DeterministicCpuWorldStepper.Step(
             new CpuWorldConfiguration("penetration-v1", 0.2d, penetrationSlopMetres: 0d,
-                correctionFraction: 1d, maximumCorrectionMetres: 1d),
+                correctionFraction: 0.8d, maximumCorrectionMetres: 1d),
             [
                 Body("a", new Vector3d(-0.6d, 0d, 0d), new Vector3d(1d, 0d, 0d)),
                 Body("b", new Vector3d(0.6d, 0d, 0d), new Vector3d(-1d, 0d, 0d))
