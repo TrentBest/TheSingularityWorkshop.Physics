@@ -218,6 +218,32 @@ public sealed class DeterministicCpuWorldStepperTests
         });
     }
 
+    [Test]
+    public void Step_RejectsNonFiniteVelocityPositionAndAcceleration()
+    {
+        var nonFiniteVelocity = new CpuWorldBody(
+            Definition("bad-velocity", 1d, 0.5d, Vector3d.Zero),
+            new RigidBodyState("bad-velocity",
+                new Pose3d(Vector3d.Zero, Quaterniond.Identity),
+                new Vector3d(double.NaN, 0d, 0d), Vector3d.Zero, 0, 0d));
+        var nonFinitePosition = Body(
+            "bad-position", new Vector3d(double.PositiveInfinity, 0d, 0d), Vector3d.Zero);
+        var nonFiniteAcceleration = Body(
+            "bad-acceleration", Vector3d.Zero, Vector3d.Zero,
+            acceleration: new Vector3d(0d, double.NaN, 0d));
+        var configuration = new CpuWorldConfiguration("non-finite-state", 0.01d);
+
+        Assert.Multiple(() =>
+        {
+            Assert.Throws<ArgumentException>(() =>
+                DeterministicCpuWorldStepper.Step(configuration, [nonFiniteVelocity]));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                DeterministicCpuWorldStepper.Step(configuration, [nonFinitePosition]));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                DeterministicCpuWorldStepper.Step(configuration, [nonFiniteAcceleration]));
+        });
+    }
+
     private static CpuWorldBody Body(
         string id,
         Vector3d position,
