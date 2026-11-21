@@ -78,7 +78,7 @@
     "status": "implemented",
     "sourceFiles": [
       "Physics/MicroBundles/ContactCapabilityMicroBundles.cs",
-      "Physics/Dynamics/ContactImpulseResolver.cs"
+      "Physics/Collision/ContactImpulseResolver.cs"
     ],
     "testFiles": [
       "tests/MicroBundles/PhysicsMicroBundleTests.cs"
