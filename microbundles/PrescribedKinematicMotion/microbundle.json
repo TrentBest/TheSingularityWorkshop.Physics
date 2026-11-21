@@ -1,4 +1,113 @@
 {
-  "bundleId": 5203,
-  "version": "0.1.0-alpha.1"
+  "schemaVersion": "1.0",
+  "bundle": {
+    "id": 5203,
+    "version": "0.1.0-alpha.1",
+    "name": "Prescribed Kinematic Motion",
+    "providerIds": [
+      "physics.kinematics.prescribed-motion.v1"
+    ]
+  },
+  "ontology": {
+    "domain": "physics",
+    "branch": "mechanics",
+    "subdomain": "kinematics",
+    "concepts": [
+      "prescribed trajectory",
+      "constant velocity",
+      "quintic smooth-step",
+      "fixed logical step",
+      "achieved-state validation"
+    ]
+  },
+  "capability": {
+    "id": "physics.kinematics.prescribed-motion.v1",
+    "summary": "Evaluates constant-velocity and quintic smooth-step prescribed trajectories, validates analytical speed/acceleration ceilings, and checks a separately supplied achieved state against a requested sample.",
+    "kind": "model",
+    "inputs": [
+      "prescribed motion definition",
+      "absolute logical time (s) or fixed-step index and timestep",
+      "total step count for fixed-step evaluation",
+      "achieved rigid-body snapshot and commit tolerances"
+    ],
+    "outputs": [
+      "requested kinematic sample",
+      "achieved-state commit result"
+    ]
+  },
+  "model": {
+    "name": "Constant-velocity and quintic smooth-step prescribed motion",
+    "formulation": "Evaluates the declared trajectory at absolute logical time or a fixed logical step. The quintic smooth-step profile has zero endpoint velocity and acceleration; constant-velocity mode has endpoint velocity discontinuities.",
+    "equations": [
+      "Quintic smooth-step position profile: s(u)=10u^3−15u^4+6u^5, for normalized u in [0,1].",
+      "Trajectory position is interpolated between declared endpoints using the selected profile."
+    ],
+    "assumptions": [
+      "Motion is prescribed by a trajectory definition rather than derived from applied forces.",
+      "The caller owns actual body advancement and supplies the achieved state for commit validation.",
+      "Fixed-step evaluation uses caller-declared timestep and total step count."
+    ],
+    "exclusions": [
+      "Force-driven motion",
+      "Collision detection or response",
+      "Rigid-body integration",
+      "Constraint solving",
+      "World-step orchestration"
+    ],
+    "units": [
+      "position: metre (m)",
+      "time: second (s)",
+      "speed: metre per second (m/s)",
+      "acceleration: metre per second squared (m/s²)",
+      "angle tolerance: radian (rad)"
+    ],
+    "timeModel": "Supports absolute logical-time evaluation and deterministic fixed-step indexing; no clock or scheduler is owned by the provider.",
+    "validity": [
+      "Declared peak speed and acceleration ceilings are analytically validated by the underlying definition.",
+      "Achieved-state tolerances are supplied by the caller."
+    ]
+  },
+  "execution": {
+    "mode": "fixed-step",
+    "deterministic": true,
+    "ownsSimulationLoop": false,
+    "hostResponsibilities": [
+      "Choose logical time or fixed-step schedule.",
+      "Apply the requested state to the host body.",
+      "Supply achieved state for commit validation.",
+      "Own collisions, forces, and physical response.",
+      "Resolve the typed provider interface from the loaded bundle instance."
+    ]
+  },
+  "evidence": {
+    "status": "implemented",
+    "sourceFiles": [
+      "Physics/MicroBundles/Kinematics/PrescribedKinematicMotionMicroBundle.cs",
+      "Physics/Kinematics/PrescribedKinematicMotion.cs"
+    ],
+    "testFiles": [
+      "tests/MicroBundles/Kinematics/PrescribedKinematicMotionMicroBundleTests.cs"
+    ],
+    "validation": [
+      "Adapter delegates absolute-time and fixed-step evaluation to PrescribedKinematicMotion.",
+      "Adapter delegates achieved-state commit validation to PrescribedKinematicMotion.",
+      "Underlying model validates analytical peak speed and acceleration ceilings."
+    ],
+    "knownGaps": [
+      "This is kinematic prescription, not a force-driven dynamics solver.",
+      "Constant-velocity mode has endpoint velocity discontinuities by design."
+    ]
+  },
+  "education": {
+    "theoryFiles": [
+      "docs/PRESCRIBED_KINEMATIC_MOTION.md",
+      "docs/PHYSICS_AND_MATHEMATICS_MICROBUNDLE_ARCHITECTURE.md"
+    ],
+    "experimentFiles": [],
+    "learningObjectives": [
+      "Distinguish prescribed kinematics from force-driven dynamics.",
+      "Compare constant-velocity and quintic smooth-step boundary behavior.",
+      "Explain requested-versus-achieved state validation."
+    ]
+  }
 }
