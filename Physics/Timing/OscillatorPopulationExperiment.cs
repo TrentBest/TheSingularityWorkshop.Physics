@@ -182,7 +182,17 @@ public static class OscillatorPopulationExperiment
         if (!double.IsFinite(phaseRadians))
             throw new ArgumentOutOfRangeException(nameof(phaseRadians), "Phase must be finite.");
 
-        var wrapped = phaseRadians % (2d * Math.PI);
-        return wrapped < 0d ? wrapped + (2d * Math.PI) : wrapped;
+        var twoPi = 2d * Math.PI;
+        var wrapped = phaseRadians % twoPi;
+        if (wrapped < 0d)
+            wrapped += twoPi;
+
+        // A mathematically exact whole-cycle phase can land a few ULPs below
+        // 2π after modulo reduction. Canonicalize that boundary to zero so
+        // equivalent phases produce the same population measurement.
+        var boundaryTolerance = Math.Min(
+            1e-12,
+            16d * 2.2204460492503131e-16 * Math.Max(1d, Math.Abs(phaseRadians)));
+        return twoPi - wrapped <= boundaryTolerance ? 0d : wrapped;
     }
 }
