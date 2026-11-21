@@ -3,6 +3,7 @@
 # ✳️ 00 The Singularity Workshop — Physics
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/TrentBest/TheSingularityWorkshop.Physics/build.yml?branch=development&style=flat-square&logo=github)](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/workflows/build.yml)
+[![Physics Pages build](https://img.shields.io/github/actions/workflow/status/TrentBest/TheSingularityWorkshop.Physics/physics-pages.yml?branch=development&style=flat-square&logo=github&label=Pages%20build)](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/workflows/physics-pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 [![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/workflows/sith-policy.yml)
