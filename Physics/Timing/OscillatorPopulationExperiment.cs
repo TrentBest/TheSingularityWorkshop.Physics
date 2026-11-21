@@ -82,10 +82,6 @@ public sealed record OscillatorPopulationExperimentDefinition(
                 throw new ArgumentOutOfRangeException(nameof(StartTimeSeconds), $"Observation starts before participant '{participant.ParticipantId}' exists.");
         }
 
-        var estimatedSamples = Math.Ceiling((EndTimeSeconds - StartTimeSeconds) / SampleIntervalSeconds);
-        if (!double.IsFinite(estimatedSamples) || estimatedSamples > MaximumSamples)
-            throw new InvalidOperationException($"The experiment exceeds its configured sample budget of {MaximumSamples}.");
-
         return Array.AsReadOnly(ordered);
     }
 }
