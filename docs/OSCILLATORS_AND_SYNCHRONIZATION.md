@@ -1,6 +1,6 @@
 # Oscillators, Timing Signals, and Synchronization
 
-**Status:** research and implementation contract. The ideal metronome, analytical two-oscillator phase comparison, nonlinear planar pendulum integrator, and small-angle analytical pendulum reference are implemented; phase coupling and entrainment models remain research targets.
+**Status:** research and implementation contract. The ideal metronome, analytical two-oscillator phase comparison, nonlinear planar pendulum integrator, small-angle analytical pendulum reference, and deterministic ideal-timing population experiment are implemented; physical population integration, phase coupling, and entrainment models remain research targets.
 
 ## 1. Why oscillators belong in Physics
 
@@ -166,3 +166,16 @@ For initial angle \(\theta_0\), initial angular velocity \(\dot{\theta}_0\), and
 The API exposes natural angular frequency, small-angle period, and analytical evaluation. Its result is an analytical observation, deliberately not a `PlanarPendulumState`: no numerical step was committed and no integration step index is implied.
 
 `PlanarPendulumAnalyticalTests.cs` checks the equations, initial-condition recovery, quarter-period behavior, equilibrium, invalid and overflowing inputs, RK4 timestep convergence, and convergence of the nonlinear model toward the linear reference as amplitude decreases. The analytical model is only the small-angle limit; it does not replace the nonlinear equation or claim exact finite-amplitude behavior.
+
+
+## 15. Implemented fifth slice: deterministic timing-oscillator populations
+
+`Physics/Timing/OscillatorPopulationExperiment.cs` introduces a bounded data-driven experiment over multiple independent ideal timing participants.
+
+- Each participant has a stable ordinal ID and an explicit `OscillatorModelKind`. This first population runner accepts `IdealTiming` only; the physical pendulum remains an independent mechanical model and is not silently coerced into a timing signal.
+- Definitions declare the participant set, logical observation start/end, sample interval, and maximum sample count. Duplicate IDs, unsupported model kinds, invalid windows, participants that start after the observation window, and sample-budget overruns are rejected.
+- Results are sorted by participant ID using ordinal comparison, independent of input collection order. Sample times are calculated as `start + index * interval` and cover the half-open interval [start, end).
+- Each sample retains both unwrapped and wrapped phase for every participant. The population order parameter is calculated from the mean sine and cosine of wrapped phases; its magnitude reports phase concentration and its argument reports mean phase. This is a measurement, not a coupling force or evidence that the oscillators have physically synchronized.
+- Evaluation is analytic and deterministic. It does not mutate participant definitions, integrate mechanical bodies, generate beat events, apply coupling, or claim entrainment.
+
+Focused tests cover deterministic ordering/replay, half-open sampling, in-phase concentration, evenly distributed phases, rational-ratio wrapped coincidence versus unwrapped drift, invalid/duplicate identities, unsupported model kinds, and bounded sample counts. The next step is to define a separate explicit phase-coupled model if experiments require interaction; mechanical coupling must continue to use a physical equation and energy accounting.
