@@ -1,0 +1,100 @@
+name: Physics Pages
+
+on:
+  push:
+    branches:
+      - development
+    paths:
+      - "site/**"
+      - "docs/experiments/projectile-trajectory.run.json"
+      - "tools/ProjectileRunRecordGenerator/**"
+      - "Physics/Experiments/ProjectileTrajectoryExperiment.cs"
+      - ".github/workflows/physics-pages.yml"
+  pull_request:
+    branches:
+      - development
+    paths:
+      - "site/**"
+      - "docs/experiments/projectile-trajectory.run.json"
+      - "tools/ProjectileRunRecordGenerator/**"
+      - "Physics/Experiments/ProjectileTrajectoryExperiment.cs"
+      - ".github/workflows/physics-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Reproduce projectile run from Physics
+        run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
+
+      - name: Validate source, published, and generated run records agree
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          paths = [
+              Path("docs/experiments/projectile-trajectory.run.json"),
+              Path("site/data/projectile-trajectory.run.json"),
+              Path("/tmp/projectile-trajectory.actual.json"),
+          ]
+          records = [json.loads(path.read_text(encoding="utf-8")) for path in paths]
+          assert records[0] == records[1], "The Pages copy differs from the canonical experiment fixture."
+          assert records[0] == records[2], "The canonical fixture differs from the current Physics generator output."
+          record = records[0]
+          assert record["modelId"] == "kinematics.constant-acceleration-projectile"
+          assert record["definition"]["coordinateFrame"] == "world, Z-up"
+          assert len(record["samples"]) == record["definition"]["stepCount"] + 1
+          assert record["samples"][0]["elapsedTime"] == 0
+          assert record["samples"][-1]["elapsedTime"] == 2
+          print("PASS: Pages data is byte-independent JSON-equivalent to the canonical and freshly generated Physics run.")
+          PY
+
+      - name: Check browser application JavaScript syntax
+        run: node --check site/app.js
+
+      - name: Verify static site entry points and data
+        run: |
+          test -s site/index.html
+          test -s site/styles.css
+          test -s site/app.js
+          test -s site/data/projectile-trajectory.run.json
+          grep -q 'type="module" src="./app.js"' site/index.html
+          echo "PASS: Physics Pages static entry points are present."
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/development'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
