@@ -76,7 +76,7 @@
     "status": "implemented",
     "sourceFiles": [
       "Physics/MicroBundles/ContactCapabilityMicroBundles.cs",
-      "Physics/Collision"
+      "Physics/Collision/SphereSphereContactDetector.cs"
     ],
     "testFiles": [
       "tests/MicroBundles/PhysicsMicroBundleTests.cs"
