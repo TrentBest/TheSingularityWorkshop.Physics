@@ -6,12 +6,13 @@ This project is a separate adapter assembly. The Physics core stays independent 
 
 ## Implemented adapters
 
-| Bundle ID | Provider ID | Actual behavior exposed |
-|---:|---|---|
-| 5201 | physics.contact.sphere-sphere.v1 | Calls the tested sphere-sphere narrowphase detector and returns contact evidence. |
-| 5202 | physics.contact.normal-impulse.v1 | Calls the tested frictionless translational normal-impulse resolver. |\n| 5203 | physics.kinematics.prescribed-motion.v1 | Exposes constant-velocity and quintic smooth-step prescribed motion, analytical speed/acceleration ceiling validation, fixed-step/absolute-time evaluation, and achieved-state commit validation through a typed provider contract. |
+| Bundle ID | Provider ID | Actual behavior exposed | Manifest |
+|---:|---|---|---|
+| 5201 | physics.contact.sphere-sphere.v1 | Calls the tested sphere-sphere narrowphase detector and returns contact evidence. | [SphereSphereContact](microbundles/SphereSphereContact/microbundle.json) |
+| 5202 | physics.contact.normal-impulse.v1 | Calls the tested frictionless translational normal-impulse resolver. | [NormalImpulseResponse](microbundles/NormalImpulseResponse/microbundle.json) |
+| 5203 | physics.kinematics.prescribed-motion.v1 | Exposes constant-velocity and quintic smooth-step prescribed motion, analytical speed/acceleration ceiling validation, fixed-step/absolute-time evaluation, and achieved-state commit validation through a typed provider contract. | [PrescribedKinematicMotion](microbundles/PrescribedKinematicMotion/microbundle.json) |
 
-The matching manifest files are under microbundles/. These adapters expose typed interfaces so a composition host can resolve a loaded bundle instance to a contract. Provider IDs in MicroBundleDescriptor are declarations, not a universal registry. The prescribed-motion adapter implements IMicroBundle and IPrescribedKinematicMotionProvider; the host must explicitly discover and cast the loaded bundle instance. MicroBundleDomain does not perform typed provider resolution.
+These adapters expose typed interfaces so a composition host can resolve a loaded bundle instance to a contract. Provider IDs in MicroBundleDescriptor are declarations, not a universal registry. The prescribed-motion adapter implements IMicroBundle and IPrescribedKinematicMotionProvider; the host must explicitly discover and cast the loaded bundle instance. MicroBundleDomain does not perform typed provider resolution.
 
 ## Explicit limits
 
