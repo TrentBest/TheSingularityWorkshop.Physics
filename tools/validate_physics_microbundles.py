@@ -14,11 +14,11 @@ SCHEMA_PATH = ROOT / "schemas" / "physics-microbundle.schema.json"
 MANIFESTS = sorted((ROOT / "microbundles").glob("*/microbundle.json"))
 ADAPTER_SOURCES = sorted((ROOT / "Physics" / "MicroBundles").rglob("*.cs"))
 ADAPTER_CLASS_PATTERN = re.compile(
-    r"public\\s+sealed\\s+class\\s+(\\w+)([^{}]*)\\{([\\s\\S]*?)(?=\\npublic\\s+sealed\\s+class|\\Z)"
+    r"public\s+sealed\s+class\s+(\w+)([^{}]*)\{([\s\S]*?)(?=\npublic\s+sealed\s+class|\Z)"
 )
-BUNDLE_ID_PATTERN = re.compile(r"public\\s+const\\s+ulong\\s+BundleId\\s*=\\s*(\\d+)\\s*;")
-PROVIDER_ID_PATTERN = re.compile(r'public\\s+const\\s+string\\s+ProviderId\\s*=\\s*"([^"]+)"\\s*;')
-DESCRIPTOR_VERSION_PATTERN = re.compile(r'new\\s*\\(\\s*BundleId\\s*,\\s*"([^"]+)"')
+BUNDLE_ID_PATTERN = re.compile(r"public\s+const\s+ulong\s+BundleId\s*=\s*(\d+)\s*;")
+PROVIDER_ID_PATTERN = re.compile(r'public\s+const\s+string\s+ProviderId\s*=\s*"([^"]+)"\s*;')
+DESCRIPTOR_VERSION_PATTERN = re.compile(r'new\s*\(\s*BundleId\s*,\s*"([^"]+)"')
 REFERENCE_FIELDS = (
     ("evidence", "sourceFiles"),
     ("evidence", "testFiles"),
