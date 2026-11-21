@@ -25,7 +25,7 @@ window.addEventListener("hashchange", () => {
   const parsed = parseRoute(location.hash);
   if (parsed.screen !== state.screen) { state = parsed; render(); }
 });
-const fmt = (n, digits=3) => Number(n).toFixed(digits).replace(/\.0+$|(?<=\.[0-9]*?)0+$/g,"");
+const fmt = (n, digits=3) => Number(n).toFixed(digits).replace(/(\.\d*?)0+$/,"$1").replace(/\.$/,"");
 const vec = (v, unit) => `(${fmt(v.x)}, ${fmt(v.y)}, ${fmt(v.z)}) ${unit}`;
 function trajectorySvg() {
   const samples=record.samples, W=900,H=360,L=58,R=28,T=24,B=46;
