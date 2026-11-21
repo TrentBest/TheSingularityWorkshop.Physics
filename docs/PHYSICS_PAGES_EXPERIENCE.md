@@ -134,3 +134,17 @@ The animation and every graph must be driven by the same selected logical time a
 The experience should mark launch, apex, and return events; support play/pause/step/replay/scrubbing; and expose the exact selected state in the evidence inspector. The ideal model must remain distinct from any later air-resistance model. A future drag comparison should explicitly expose its drag assumptions and parameters rather than quietly changing the ideal result.
 
 **Scientific boundary:** this is an idealized vertical point-projectile experiment, not a model of cannon combustion, recoil, barrel mechanics, wind, aerodynamic stability, or real-world artillery. The return-to-launch-speed result follows from the ideal model's assumptions and must not be presented as an unconditional real-world prediction.
+
+## Planned experience: train-mounted cannon, air resistance, and curved track
+
+Track this as [issue #55](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/55). This is a proposed experiment, not an implemented simulation.
+
+The straight-track experiment makes the idealization visible. A train travels at constant horizontal velocity and launches a cannonball vertically relative to itself. With air resistance excluded, the horizontal drag term is visibly crossed out/zeroed in the displayed equation. The ball retains the train's horizontal velocity while gravity governs its vertical motion, so it returns to the tube when the train remains on a straight path at constant velocity and the launch/landing geometry is compatible.
+
+Air resistance is a user-controlled model term, not a hidden caveat. Enabling it restores an explicitly parameterized drag force based on the ball's velocity relative to ambient air. For a moving train in stationary air, the ball loses horizontal speed relative to the air and falls behind the continuing train. Disabling drag again restores the ideal result. The UI must regenerate/recompute a validated Physics run; it must never fake the miss by applying a presentation-only offset.
+
+Bounded controls should include train speed, vertical launch speed, launch height, gravity, and the air-resistance toggle. Drag parameters should be exposed when relevant. Animation, world/train-relative positions and velocities, graphs, events, and evidence inspection all derive from one run and one selected logical time.
+
+A curved-track mode then changes the lesson: the train is constrained to turn and therefore accelerates, while the airborne ball initially carries the train's instantaneous velocity and follows its declared free-flight model. The train can move away from the ball's inertial path even with drag disabled. Begin with a bounded planar curve; a globe-wrapping track requires an explicit geometry, reference frame, gravity field, and train constraint model before it can be described as physically validated.
+
+**Scientific boundary:** the ideal straight-track alignment assumes constant train velocity, no horizontal forces on the ball, compatible launch/landing geometry, and a declared ambient-air state. Curved-track behavior must be calculated from specified train constraints and projectile dynamics, not inferred from visual curvature alone.
