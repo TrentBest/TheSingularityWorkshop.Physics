@@ -1,4 +1,109 @@
 {
-  "bundleId": 5202,
-  "version": "1.0.0"
+  "schemaVersion": "1.0",
+  "bundle": {
+    "id": 5202,
+    "version": "1.0.0",
+    "name": "Normal Impulse Response",
+    "providerIds": [
+      "physics.contact.normal-impulse.v1"
+    ]
+  },
+  "ontology": {
+    "domain": "physics",
+    "branch": "mechanics",
+    "subdomain": "collision dynamics",
+    "concepts": [
+      "linear momentum",
+      "coefficient of restitution",
+      "normal impulse",
+      "contact response"
+    ]
+  },
+  "capability": {
+    "id": "physics.contact.normal-impulse.v1",
+    "summary": "Resolves one supplied active contact using a frictionless translational normal impulse and returns achieved body snapshots.",
+    "kind": "transform",
+    "inputs": [
+      "active contact observation",
+      "body A state and mass (kg)",
+      "body B state and mass (kg)",
+      "coefficient of restitution"
+    ],
+    "outputs": [
+      "impulse resolution result",
+      "achieved body snapshots"
+    ]
+  },
+  "model": {
+    "name": "Frictionless translational normal impulse",
+    "formulation": "Applies a contact-normal impulse to the supplied pair of body snapshots using their masses and declared restitution.",
+    "assumptions": [
+      "One active contact is supplied by the caller.",
+      "Bodies are treated as translational snapshots for this response.",
+      "Contact normal and contact validity are supplied by the contact observation."
+    ],
+    "exclusions": [
+      "Friction and tangential impulses",
+      "Angular impulse and rotational inertia",
+      "Multiple simultaneous contacts",
+      "Persistent resting-contact solver",
+      "Position correction policy",
+      "Force integration",
+      "World stepping"
+    ],
+    "units": [
+      "mass: kilogram (kg)",
+      "velocity: metre per second (m/s)",
+      "linear momentum: kilogram metre per second (kg·m/s)",
+      "impulse: newton second (N·s)"
+    ],
+    "validity": [
+      "Masses and restitution must satisfy ContactImpulseResolver input constraints.",
+      "The caller must supply a valid active contact."
+    ]
+  },
+  "execution": {
+    "mode": "stateless-call",
+    "deterministic": true,
+    "ownsSimulationLoop": false,
+    "hostResponsibilities": [
+      "Detect and validate contacts.",
+      "Supply body snapshots and masses.",
+      "Choose contact ordering and multi-contact policy.",
+      "Integrate forces and own world stepping.",
+      "Resolve the typed provider interface from the loaded bundle instance."
+    ]
+  },
+  "evidence": {
+    "status": "implemented",
+    "sourceFiles": [
+      "Physics/MicroBundles/ContactCapabilityMicroBundles.cs",
+      "Physics/Dynamics/ContactImpulseResolver.cs"
+    ],
+    "testFiles": [
+      "tests/MicroBundles/PhysicsMicroBundleTests.cs"
+    ],
+    "validation": [
+      "Adapter delegates to ContactImpulseResolver.Resolve.",
+      "Focused tests cover provider declaration and response delegation."
+    ],
+    "knownGaps": [
+      "No friction, angular impulse, resting contacts, or coupled multi-contact solve.",
+      "The provider does not integrate body state over time."
+    ]
+  },
+  "education": {
+    "theoryFiles": [
+      "docs/experiments/contact-impulse.md",
+      "docs/PHYSICS_AND_MATHEMATICS_MICROBUNDLE_ARCHITECTURE.md"
+    ],
+    "experimentFiles": [
+      "docs/experiments/contact-impulse.md"
+    ],
+    "learningObjectives": [
+      "Relate impulse to change in linear momentum.",
+      "Explain the role of restitution and the contact normal.",
+      "Distinguish a single-contact response from a complete collision solver."
+    ]
+  }
 }
