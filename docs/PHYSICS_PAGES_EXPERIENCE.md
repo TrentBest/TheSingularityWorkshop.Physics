@@ -1,6 +1,6 @@
 # Physics Pages Experience
 
-**Status:** product and architecture direction; implementation tracked by [issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53).
+**Status:** first static client implemented on `development`; browser validation and publication remain outstanding. Work is tracked by [issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53).
 
 ## The visitor experience
 
