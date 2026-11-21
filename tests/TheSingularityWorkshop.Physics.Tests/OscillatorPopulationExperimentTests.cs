@@ -93,7 +93,15 @@ public sealed class OscillatorPopulationExperimentTests
         var secondResult = OscillatorPopulationExperiment.Evaluate(second);
 
         Assert.That(secondResult.OrderedParticipantIds, Is.EqualTo(firstResult.OrderedParticipantIds));
-        Assert.That(secondResult.Samples, Is.EqualTo(firstResult.Samples));
+        Assert.That(secondResult.Samples.Select(sample => sample.TimeSeconds),
+            Is.EqualTo(firstResult.Samples.Select(sample => sample.TimeSeconds)));
+        Assert.That(secondResult.Samples.Select(sample => sample.OrderParameterMagnitude),
+            Is.EqualTo(firstResult.Samples.Select(sample => sample.OrderParameterMagnitude)));
+        for (var i = 0; i < firstResult.Samples.Count; i++)
+        {
+            Assert.That(secondResult.Samples[i].Participants,
+                Is.EqualTo(firstResult.Samples[i].Participants));
+        }
     }
 
     [Test]
