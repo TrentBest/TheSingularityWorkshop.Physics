@@ -208,6 +208,7 @@ Timeline history contracts (checkpoint envelopes, ordered event records, and val
 ## Mathematical foundations
 
 - [Physics and Mathematics MicroBundle Architecture](docs/PHYSICS_AND_MATHEMATICS_MICROBUNDLE_ARCHITECTURE.md) — two peer knowledge domains inside one owning package, capability-level MicroBundles, professor-ready theory chapters, and the future Singularity Laboratories experience; [program issue #56](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/56).
+- [Physics and Mathematics repository inventory](docs/PHYSICS_MATHEMATICS_REPOSITORY_INVENTORY.md) — factual starting inventory of source domains, projects, tests, experiments, existing adapters, and the immediate schema/textbook gaps.
 
 - [Mathematics Domain Map](docs/MATHEMATICS_DOMAIN_MAP.md) — broad coverage, implementation status, and gaps.
 - [2D Geometry Foundation](docs/GEOMETRY_FOUNDATION_2D.md) — vector conventions, numerical limits, and the next geometry slices.
