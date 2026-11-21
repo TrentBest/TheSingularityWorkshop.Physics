@@ -4,6 +4,8 @@
 
 This project is a separate adapter assembly. The Physics core stays independent of MicroBundleDomain and host composition.
 
+**Manifest contract:** [versioned JSON Schema](schemas/physics-microbundle.schema.json) · [contract, runtime mapping, scientific declaration rules, and textbook/laboratory traceability](docs/PHYSICS_MICROBUNDLE_MANIFEST_CONTRACT.md). Manifests are descriptive metadata; they do not load providers or prove scientific validity.
+
 ## Implemented adapters
 
 | Bundle ID | Provider ID | Actual behavior exposed | Manifest |
