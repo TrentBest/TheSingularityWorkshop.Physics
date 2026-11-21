@@ -15,6 +15,7 @@ public sealed class PrescribedKinematicMotionMicroBundleTests
         IMicroBundle bundle = new PrescribedKinematicMotionMicroBundle();
 
         Assert.Equal(5203UL, bundle.Descriptor.Id);
+        Assert.Equal("0.1.0-alpha.1", bundle.Descriptor.Version);
         Assert.Contains(
             bundle.Descriptor.Providers,
             provider => provider.Id == PrescribedKinematicMotionMicroBundle.ProviderId);
