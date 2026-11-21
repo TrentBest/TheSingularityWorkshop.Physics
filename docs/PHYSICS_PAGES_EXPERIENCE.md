@@ -104,3 +104,15 @@ Use the Learning Center Pages workflow as a reference: check out exact source re
 - A claim that every domain in the Physics atlas is implemented.
 - A general rigid-body/articulated mechanics engine before its bounded model and validation gates are met.
 - A visual-only simulation that invents results independently of Physics.
+
+## First implementation slice
+
+The initial static client now lives in `site/`:
+
+- `site/index.html` and `site/styles.css` provide the Pages-hosted shell and responsive presentation.
+- `site/app.js` owns an explicit navigation state machine (`HOME → PROJECTILE → INSPECTOR`) and semantic actions. Browser hash/history navigation is reconciled through the same route parser.
+- `site/data/projectile-trajectory.run.json` is the checked-in copy of the canonical projectile fixture. The browser reads and visualizes recorded samples; it does not recalculate the trajectory.
+- The sample selector changes the inspected record index, and the evidence inspector exposes position, velocity, units, model/schema identity, timestep, frame, and all recorded samples.
+- `.github/workflows/physics-pages.yml` reproduces the run with the actual .NET generator, compares the generated output with both canonical and site fixtures, checks JavaScript syntax, and packages the static site. Deployment is restricted to an explicit `workflow_dispatch` on `development`.
+
+**Current boundary:** this is a first working implementation slice, not yet a published Pages deployment or a complete Physics atlas. The checked-in projectile record does not currently contain a unique run ID or source revision, so the site deliberately does not invent either. Provenance enrichment belongs in a future versioned run-record contract. Browser/device validation and the actual Pages deployment remain outstanding.
