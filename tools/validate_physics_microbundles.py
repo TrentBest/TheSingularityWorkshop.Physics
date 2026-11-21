@@ -13,8 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas" / "physics-microbundle.schema.json"
 MANIFESTS = sorted((ROOT / "microbundles").glob("*/microbundle.json"))
 ADAPTER_SOURCES = sorted((ROOT / "Physics" / "MicroBundles").rglob("*.cs"))
-BUNDLE_ID_PATTERN = re.compile(r"public\s+const\s+ulong\s+BundleId\s*=\s*(\d+)\s*;")
-PROVIDER_ID_PATTERN = re.compile(r'public\s+const\s+string\s+ProviderId\s*=\s*"([^"]+)"\s*;')
+ADAPTER_CLASS_PATTERN = re.compile(
+    r"public\\s+sealed\\s+class\\s+(\\w+)([^{}]*)\\{([\\s\\S]*?)(?=\\npublic\\s+sealed\\s+class|\\Z)"
+)
+BUNDLE_ID_PATTERN = re.compile(r"public\\s+const\\s+ulong\\s+BundleId\\s*=\\s*(\\d+)\\s*;")
+PROVIDER_ID_PATTERN = re.compile(r'public\\s+const\\s+string\\s+ProviderId\\s*=\\s*"([^"]+)"\\s*;')
+DESCRIPTOR_VERSION_PATTERN = re.compile(r'new\\s*\\(\\s*BundleId\\s*,\\s*"([^"]+)"')
 REFERENCE_FIELDS = (
     ("evidence", "sourceFiles"),
     ("evidence", "testFiles"),
@@ -37,29 +41,37 @@ def main() -> None:
     if not MANIFESTS:
         fail("No microbundles/*/microbundle.json manifests found")
 
-    bundle_ids: dict[int, Path] = {}
-    provider_ids: dict[str, Path] = {}
+    manifest_bundle_ids: dict[int, Path] = {}
+    manifest_provider_ids: dict[str, Path] = {}
     checked_references = 0
     runtime_adapters: dict[int, tuple[str, set[str], str]] = {}
+
     for source_path in ADAPTER_SOURCES:
         source = source_path.read_text(encoding="utf-8")
         for match in ADAPTER_CLASS_PATTERN.finditer(source):
             class_name, declaration, body = match.groups()
             if "IMicroBundle" not in declaration:
                 continue
-            bundle_ids = BUNDLE_ID_PATTERN.findall(body)
-            provider_ids = PROVIDER_ID_PATTERN.findall(body)
+            bundle_values = BUNDLE_ID_PATTERN.findall(body)
+            provider_values = PROVIDER_ID_PATTERN.findall(body)
             versions = DESCRIPTOR_VERSION_PATTERN.findall(body)
-            if len(bundle_ids) != 1 or not provider_ids or len(versions) != 1:
+            if len(bundle_values) != 1 or not provider_values or len(versions) != 1:
                 fail(
                     f"{source_path.relative_to(ROOT)}:{class_name}: "
                     "IMicroBundle adapter must declare exactly one BundleId, "
                     "at least one ProviderId, and one descriptor version"
                 )
-            bundle_id = int(bundle_ids[0])
+            bundle_id = int(bundle_values[0])
             if bundle_id in runtime_adapters:
-                fail(f"Duplicate runtime bundle ID {bundle_id}: {runtime_adapters[bundle_id][2]} and {source_path}")
-            runtime_adapters[bundle_id] = (versions[0], set(provider_ids), str(source_path.relative_to(ROOT)))
+                fail(
+                    f"Duplicate runtime bundle ID {bundle_id}: "
+                    f"{runtime_adapters[bundle_id][2]} and {source_path.relative_to(ROOT)}"
+                )
+            runtime_adapters[bundle_id] = (
+                versions[0],
+                set(provider_values),
+                str(source_path.relative_to(ROOT)),
+            )
 
     for manifest_path in MANIFESTS:
         relative_manifest = manifest_path.relative_to(ROOT)
@@ -76,12 +88,19 @@ def main() -> None:
             raise SystemExit(1)
 
         bundle_id = manifest["bundle"]["id"]
-        if bundle_id in bundle_ids:
-            fail(f"Duplicate bundle ID {bundle_id}: {bundle_ids[bundle_id]} and {relative_manifest}")
-        bundle_ids[bundle_id] = relative_manifest
+        if bundle_id in manifest_bundle_ids:
+            fail(
+                f"Duplicate bundle ID {bundle_id}: "
+                f"{manifest_bundle_ids[bundle_id]} and {relative_manifest}"
+            )
+        manifest_bundle_ids[bundle_id] = relative_manifest
+
         runtime_identity = runtime_adapters.get(bundle_id)
         if runtime_identity is None:
-            fail(f"{relative_manifest}: bundle ID {bundle_id} has no matching IMicroBundle adapter under Physics/MicroBundles")
+            fail(
+                f"{relative_manifest}: bundle ID {bundle_id} has no matching "
+                "IMicroBundle adapter under Physics/MicroBundles"
+            )
         runtime_version, runtime_providers, runtime_source = runtime_identity
         if manifest["bundle"]["version"] != runtime_version:
             fail(
@@ -95,13 +114,18 @@ def main() -> None:
                 f"{relative_manifest}: provider IDs {sorted(declared_providers)} "
                 f"do not match {runtime_source} provider constants {sorted(runtime_providers)}"
             )
+
         capability_id = manifest["capability"]["id"]
         if capability_id not in declared_providers:
             fail(f"{relative_manifest}: capability.id is not declared in bundle.providerIds")
         for provider_id in declared_providers:
-            if provider_id in provider_ids:
-                fail(f"Duplicate provider ID {provider_id}: {provider_ids[provider_id]} and {relative_manifest}")
-            provider_ids[provider_id] = relative_manifest
+            if provider_id in manifest_provider_ids:
+                fail(
+                    f"Duplicate provider ID {provider_id}: "
+                    f"{manifest_provider_ids[provider_id]} and {relative_manifest}"
+                )
+            manifest_provider_ids[provider_id] = relative_manifest
+
         for section, field in REFERENCE_FIELDS:
             for reference in manifest[section][field]:
                 candidate = ROOT / reference
@@ -111,8 +135,8 @@ def main() -> None:
 
     print(
         f"Validated {len(MANIFESTS)} Physics MicroBundle manifests against "
-        f"JSON Schema; {len(bundle_ids)} unique bundle IDs, "
-        f"{len(provider_ids)} unique provider IDs matched to their runtime adapters and versions, and "
+        f"JSON Schema; {len(manifest_bundle_ids)} unique bundle IDs, "
+        f"{len(manifest_provider_ids)} unique provider IDs matched to their runtime adapters and versions, and "
         f"{checked_references} existing file references."
     )
 
