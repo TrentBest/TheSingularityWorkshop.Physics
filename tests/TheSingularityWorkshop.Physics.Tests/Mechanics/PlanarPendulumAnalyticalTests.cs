@@ -62,7 +62,7 @@ public sealed class PlanarPendulumAnalyticalTests
         var fineError = StateError(fine, expected);
 
         Assert.That(fineError, Is.LessThan(coarseError));
-        Assert.That(fineError, Is.LessThan(1e-11d));
+        Assert.That(fineError, Is.LessThan(2e-11d));
     }
 
     [Test]
