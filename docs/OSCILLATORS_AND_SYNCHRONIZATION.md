@@ -1,6 +1,6 @@
 # Oscillators, Timing Signals, and Synchronization
 
-**Status:** research and implementation contract. The ideal metronome, analytical two-oscillator phase comparison, and nonlinear planar pendulum reference are implemented; phase coupling and entrainment models remain research targets.
+**Status:** research and implementation contract. The ideal metronome, analytical two-oscillator phase comparison, nonlinear planar pendulum integrator, and small-angle analytical pendulum reference are implemented; phase coupling and entrainment models remain research targets.
 
 ## 1. Why oscillators belong in Physics
 
@@ -144,3 +144,25 @@ Focused tests cover rest equilibrium, the small-angle acceleration limit, nonlin
 Physics owns physical oscillator state, numerical integration, mechanical coupling, phase/frequency measurements, and authoritative observations. An ideal timing source may be modeled here as a clearly non-mechanical time-domain model. Gestures may later describe rhythmic intent or keyframe timing, but Physics must not depend on Gestures. Host adapters bridge domains. Visualize and Renderer may display phase plots and traces but do not decide physical outcomes.
 
 The first implementation excludes audio playback, audio-device dependencies, and claims of acoustic harmony. It also excludes a universal oscillator abstraction before the ideal timing and physical reference models are independently validated.
+
+
+## 14. Implemented fourth slice: small-angle analytical pendulum
+
+`Physics/Mechanics/PlanarPendulumAnalytical.cs` provides an independent closed-form reference for the linearized equation:
+
+\[
+\omega_0=\sqrt{g/L}, \qquad T_0=2\pi/\omega_0
+\]
+
+For initial angle \(\theta_0\), initial angular velocity \(\dot{\theta}_0\), and elapsed time \(t\) measured from those initial conditions:
+
+\[
+\theta(t)=\theta_0\cos(\omega_0t)+\frac{\dot{\theta}_0}{\omega_0}\sin(\omega_0t)
+\]
+\[
+\dot{\theta}(t)=-\theta_0\omega_0\sin(\omega_0t)+\dot{\theta}_0\cos(\omega_0t)
+\]
+
+The API exposes natural angular frequency, small-angle period, and analytical evaluation. Its result is an analytical observation, deliberately not a `PlanarPendulumState`: no numerical step was committed and no integration step index is implied.
+
+`PlanarPendulumAnalyticalTests.cs` checks the equations, initial-condition recovery, quarter-period behavior, equilibrium, invalid and overflowing inputs, RK4 timestep convergence, and convergence of the nonlinear model toward the linear reference as amplitude decreases. The analytical model is only the small-angle limit; it does not replace the nonlinear equation or claim exact finite-amplitude behavior.
