@@ -33,6 +33,11 @@ jobs:
           ref: development
           path: Experiences
 
+      - name: Validate Physics MicroBundle manifests
+        run: |
+          python3 -m pip install --disable-pip-version-check jsonschema==4.23.0
+          python3 tools/validate_physics_microbundles.py
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
         with:
