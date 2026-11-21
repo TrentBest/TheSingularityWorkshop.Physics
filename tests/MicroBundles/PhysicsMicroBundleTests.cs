@@ -9,11 +9,13 @@ namespace TheSingularityWorkshop.Physics.MicroBundles.Tests;
 public sealed class PhysicsMicroBundleTests
 {
     [Fact]
-    public void BundlesExposeStableDistinctProviderIdentities()
+    public void BundlesExposeStableDistinctProviderIdentitiesAndVersions()
     {
         var detector = new SphereSphereContactMicroBundle();
         var response = new NormalImpulseResponseMicroBundle();
         Assert.NotEqual(detector.Id, response.Id);
+        Assert.Equal("1.0.0", detector.Descriptor.Version);
+        Assert.Equal("1.0.0", response.Descriptor.Version);
         Assert.Equal("physics.contact.sphere-sphere.v1", detector.Descriptor.Providers.Single().Id);
         Assert.Equal("physics.contact.normal-impulse.v1", response.Descriptor.Providers.Single().Id);
         Assert.Empty(detector.Dependencies);
