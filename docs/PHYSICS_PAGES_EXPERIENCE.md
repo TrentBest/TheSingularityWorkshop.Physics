@@ -116,3 +116,21 @@ The initial static client now lives in `site/`:
 - `.github/workflows/physics-pages.yml` reproduces the run with the actual .NET generator, compares the generated output with both canonical and site fixtures, checks JavaScript syntax, and packages the static site. Deployment is restricted to an explicit `workflow_dispatch` on `development`.
 
 **Current boundary:** this is a first working implementation slice, not yet a published Pages deployment or a complete Physics atlas. The checked-in projectile record does not currently contain a unique run ID or source revision, so the site deliberately does not invent either. Provenance enrichment belongs in a future versioned run-record contract. Browser/device validation and the actual Pages deployment remain outstanding.
+
+
+## Planned experience: vertical cannon and synchronized graphs
+
+Track this as [issue #54](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/54). This is a planned experience, not an implemented model yet.
+
+A cannon fires a projectile vertically from a fixed launch point. In the first ideal model, gravity is constant and air resistance is absent. The visitor watches the projectile rise, momentarily reach zero vertical velocity at the apex, and return to its launch height. At that return, the speed magnitude matches the launch speed while the velocity direction is reversed.
+
+The animation and every graph must be driven by the same selected logical time and source-generated run record:
+
+- Height versus time: a symmetric parabola for the ideal constant-gravity model.
+- Vertical velocity versus time: a straight line with constant negative slope, crossing zero at the apex.
+- Vertical acceleration versus time: constant negative gravity.
+- Optional energy graphs: kinetic, gravitational potential, and total mechanical energy, only after the quantities and conservation checks are implemented and tested.
+
+The experience should mark launch, apex, and return events; support play/pause/step/replay/scrubbing; and expose the exact selected state in the evidence inspector. The ideal model must remain distinct from any later air-resistance model. A future drag comparison should explicitly expose its drag assumptions and parameters rather than quietly changing the ideal result.
+
+**Scientific boundary:** this is an idealized vertical point-projectile experiment, not a model of cannon combustion, recoil, barrel mechanics, wind, aerodynamic stability, or real-world artillery. The return-to-launch-speed result follows from the ideal model's assumptions and must not be presented as an unconditional real-world prediction.
