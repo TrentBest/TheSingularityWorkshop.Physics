@@ -40,12 +40,26 @@ def main() -> None:
     bundle_ids: dict[int, Path] = {}
     provider_ids: dict[str, Path] = {}
     checked_references = 0
-    runtime_bundle_ids: set[int] = set()
-    runtime_provider_ids: set[str] = set()
+    runtime_adapters: dict[int, tuple[str, set[str], str]] = {}
     for source_path in ADAPTER_SOURCES:
         source = source_path.read_text(encoding="utf-8")
-        runtime_bundle_ids.update(int(value) for value in BUNDLE_ID_PATTERN.findall(source))
-        runtime_provider_ids.update(PROVIDER_ID_PATTERN.findall(source))
+        for match in ADAPTER_CLASS_PATTERN.finditer(source):
+            class_name, declaration, body = match.groups()
+            if "IMicroBundle" not in declaration:
+                continue
+            bundle_ids = BUNDLE_ID_PATTERN.findall(body)
+            provider_ids = PROVIDER_ID_PATTERN.findall(body)
+            versions = DESCRIPTOR_VERSION_PATTERN.findall(body)
+            if len(bundle_ids) != 1 or not provider_ids or len(versions) != 1:
+                fail(
+                    f"{source_path.relative_to(ROOT)}:{class_name}: "
+                    "IMicroBundle adapter must declare exactly one BundleId, "
+                    "at least one ProviderId, and one descriptor version"
+                )
+            bundle_id = int(bundle_ids[0])
+            if bundle_id in runtime_adapters:
+                fail(f"Duplicate runtime bundle ID {bundle_id}: {runtime_adapters[bundle_id][2]} and {source_path}")
+            runtime_adapters[bundle_id] = (versions[0], set(provider_ids), str(source_path.relative_to(ROOT)))
 
     for manifest_path in MANIFESTS:
         relative_manifest = manifest_path.relative_to(ROOT)
@@ -65,10 +79,22 @@ def main() -> None:
         if bundle_id in bundle_ids:
             fail(f"Duplicate bundle ID {bundle_id}: {bundle_ids[bundle_id]} and {relative_manifest}")
         bundle_ids[bundle_id] = relative_manifest
-        if bundle_id not in runtime_bundle_ids:
-            fail(f"{relative_manifest}: bundle ID {bundle_id} has no matching runtime BundleId constant under Physics/MicroBundles")
+        runtime_identity = runtime_adapters.get(bundle_id)
+        if runtime_identity is None:
+            fail(f"{relative_manifest}: bundle ID {bundle_id} has no matching IMicroBundle adapter under Physics/MicroBundles")
+        runtime_version, runtime_providers, runtime_source = runtime_identity
+        if manifest["bundle"]["version"] != runtime_version:
+            fail(
+                f"{relative_manifest}: bundle version {manifest['bundle']['version']} "
+                f"does not match {runtime_source} descriptor version {runtime_version}"
+            )
 
         declared_providers = manifest["bundle"]["providerIds"]
+        if set(declared_providers) != runtime_providers:
+            fail(
+                f"{relative_manifest}: provider IDs {sorted(declared_providers)} "
+                f"do not match {runtime_source} provider constants {sorted(runtime_providers)}"
+            )
         capability_id = manifest["capability"]["id"]
         if capability_id not in declared_providers:
             fail(f"{relative_manifest}: capability.id is not declared in bundle.providerIds")
@@ -76,9 +102,6 @@ def main() -> None:
             if provider_id in provider_ids:
                 fail(f"Duplicate provider ID {provider_id}: {provider_ids[provider_id]} and {relative_manifest}")
             provider_ids[provider_id] = relative_manifest
-            if provider_id not in runtime_provider_ids:
-                fail(f"{relative_manifest}: provider ID {provider_id} has no matching runtime ProviderId constant under Physics/MicroBundles")
-
         for section, field in REFERENCE_FIELDS:
             for reference in manifest[section][field]:
                 candidate = ROOT / reference
@@ -89,7 +112,7 @@ def main() -> None:
     print(
         f"Validated {len(MANIFESTS)} Physics MicroBundle manifests against "
         f"JSON Schema; {len(bundle_ids)} unique bundle IDs, "
-        f"{len(provider_ids)} unique provider IDs matched to runtime constants, and "
+        f"{len(provider_ids)} unique provider IDs matched to their runtime adapters and versions, and "
         f"{checked_references} existing file references."
     )
 
