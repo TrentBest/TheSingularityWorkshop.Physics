@@ -15,9 +15,17 @@ let record;
 function send(type, payload={}) {
   const next = transitions[state.screen]?.[type];
   if (!next) return;
+  if (type === "BACK") {
+    if (history.state?.previous) { history.back(); return; }
+    state = {...state, ...payload, screen:next};
+    history.replaceState({screen:state.screen,sample:state.sample}, "", routeFor(state));
+    render();
+    return;
+  }
+  const previous = state.screen;
   state = {...state, ...payload, screen:next};
   const route = routeFor(state);
-  if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample}, "", route);
+  if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample,previous}, "", route);
   render();
 }
 window.addEventListener("popstate", () => { state = parseRoute(location.hash); render(); });
