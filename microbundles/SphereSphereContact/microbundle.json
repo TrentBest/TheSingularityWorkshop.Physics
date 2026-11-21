@@ -1,4 +1,106 @@
 {
-  "bundleId": 5201,
-  "version": "1.0.0"
+  "schemaVersion": "1.0",
+  "bundle": {
+    "id": 5201,
+    "version": "1.0.0",
+    "name": "Sphere–Sphere Contact Observation",
+    "providerIds": [
+      "physics.contact.sphere-sphere.v1"
+    ]
+  },
+  "ontology": {
+    "domain": "physics",
+    "branch": "mechanics",
+    "subdomain": "contact mechanics",
+    "concepts": [
+      "rigid-body state",
+      "sphere geometry",
+      "narrowphase contact detection"
+    ]
+  },
+  "capability": {
+    "id": "physics.contact.sphere-sphere.v1",
+    "summary": "Detects geometric contact between two supplied spherical rigid-body snapshots and returns contact observation evidence.",
+    "kind": "observation",
+    "inputs": [
+      "contact identifier",
+      "body A state and radius (m)",
+      "body B state and radius (m)",
+      "step index",
+      "elapsed time (s)",
+      "contact tolerance (m)"
+    ],
+    "outputs": [
+      "optional contact observation"
+    ]
+  },
+  "model": {
+    "name": "Sphere–sphere geometric narrowphase",
+    "formulation": "Compares center separation with the sum of the two radii and produces a contact observation when the declared tolerance criterion is met.",
+    "assumptions": [
+      "Bodies are represented by spheres for this query.",
+      "Rigid-body snapshots and radii are supplied by the caller.",
+      "The detector evaluates one pair per call."
+    ],
+    "exclusions": [
+      "Broadphase candidate generation",
+      "Force integration",
+      "Impulse response",
+      "Friction",
+      "Angular contact response",
+      "Persistent contact manifolds",
+      "World stepping"
+    ],
+    "units": [
+      "length: metre (m)",
+      "time: second (s)"
+    ],
+    "timeModel": "Caller-supplied step index and elapsed time are recorded as observation context; this provider does not advance time.",
+    "validity": [
+      "Input radii and body states must satisfy the underlying detector's validation contract."
+    ]
+  },
+  "execution": {
+    "mode": "stateless-call",
+    "deterministic": true,
+    "ownsSimulationLoop": false,
+    "hostResponsibilities": [
+      "Supply current body snapshots and radii.",
+      "Generate candidate pairs / broadphase.",
+      "Resolve contact response separately.",
+      "Own logical time and world-step ordering.",
+      "Resolve the typed provider interface from the loaded bundle instance."
+    ]
+  },
+  "evidence": {
+    "status": "implemented",
+    "sourceFiles": [
+      "Physics/MicroBundles/ContactCapabilityMicroBundles.cs",
+      "Physics/Collision"
+    ],
+    "testFiles": [
+      "tests/MicroBundles/PhysicsMicroBundleTests.cs"
+    ],
+    "validation": [
+      "Adapter delegates to SphereSphereContactDetector.",
+      "Focused tests cover bundle identity/provider declaration and detector delegation."
+    ],
+    "knownGaps": [
+      "No broadphase implementation is provided by this adapter.",
+      "A detected contact is geometric evidence, not a resolved collision."
+    ]
+  },
+  "education": {
+    "theoryFiles": [
+      "docs/SPHERE_SPHERE_CONTACT.md",
+      "docs/PHYSICS_AND_MATHEMATICS_MICROBUNDLE_ARCHITECTURE.md"
+    ],
+    "experimentFiles": [
+      "docs/experiments/contact-impulse.md"
+    ],
+    "learningObjectives": [
+      "Distinguish broadphase candidate generation from narrowphase geometric contact detection.",
+      "Explain why contact evidence and collision response are separate operations."
+    ]
+  }
 }
