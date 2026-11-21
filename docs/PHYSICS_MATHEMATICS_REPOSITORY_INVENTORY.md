@@ -75,7 +75,7 @@ Three adapter implementations are present in the current source:
 
 The manifest for bundle 5203 was missing from the manifest tree even though its adapter and README entry existed. It has now been added. The MicroBundles README now links all three manifests.
 
-**Important schema gap:** the current manifests are minimal identity/version JSON documents. They are not yet a comprehensive declarative capability schema containing ontology placement, typed contracts, dependencies, units, frames, model assumptions, validation, theory links, or provenance. Defining and validating that richer schema is a Phase 1 architecture task; do not pretend the current manifests already express it.
+The three manifests have since been expanded under the versioned Physics MicroBundle manifest schema. They now declare ontology placement, capability inputs/outputs, model assumptions and exclusions, units/frame/time semantics where known, execution responsibilities, evidence status, and educational references. The schema and contract are documented in [the manifest contract](PHYSICS_MICROBUNDLE_MANIFEST_CONTRACT.md). A CI validator checks schema validity, unique bundle/provider IDs, capability-provider inclusion, and referenced-file existence. This remains descriptive metadata: it does not prove scientific validity or that a runtime provider was loaded. Runtime descriptor parity is a remaining validation gap.
 
 The current adapters do not constitute a general physics simulation loop. Existing documentation correctly distinguishes contact evidence, a supplied-contact impulse response, and prescribed motion from a full collision/rigid-body/world solver.
 
@@ -87,7 +87,7 @@ The source tree already contains mathematical implementations in:
 - Physics/Spatial: 2D vectors, coordinate frames, points, rigid transforms, geometric predicates, segment intersections, polygon operations, seeded point sets, and bounded Mandelbrot escape-time generation.
 - Root Spatial: 3D vectors, poses, quaternions, bounds, and sparse voxel volume.
 
-The Mathematics Domain Map describes a much wider target than these current implementations. The next audit must map every listed mathematical subdomain to concrete source, tests, theory, numerical limits, and gaps rather than equating the map with completed coverage.
+The Mathematics Domain Map describes a much wider target than these current implementations. The first source-to-capability audit is recorded in [the coverage matrix](PHYSICS_MATHEMATICS_SOURCE_CAPABILITY_MATRIX.md). It identifies candidate capability families and the current evidence chain without equating file presence with validated coverage.
 
 ## Existing physical-domain foundations
 
@@ -123,7 +123,7 @@ A README or experiment description is not automatically a textbook chapter. A ru
 1. **Manifest schema:** design a versioned, machine-validated schema and compatibility rules before multiplying manifests.
 2. **Identity and ontology:** map bundle IDs, provider IDs, ontology concepts, model IDs, experiment IDs, and chapter IDs without conflating them.
 3. **Complete capability matrix:** source → contract → adapter → manifest → tests → theory → experiments → validation evidence.
-4. **Project boundary audit:** clarify root Spatial versus Physics/Spatial and the intended ownership of shared mathematical primitives.
+4. **Project boundary audit:** clarify root Spatial versus Physics/Spatial and the intended ownership of shared mathematical primitives. The first audit found both folders currently contribute to the same `TheSingularityWorkshop.Physics.Spatial` namespace; no files have been moved.
 5. **Mathematics gap audit:** map each Mathematics subdomain and numerical method to implemented source, tests, error bounds, and theory.
 6. **Physics gap audit:** do the same for every physical subdomain, including supported scales and coupling limits.
 7. **Textbook adoption system:** establish chapter metadata, citation/provenance, instructor notes, exercises, accessibility, and generated index.
@@ -132,6 +132,6 @@ A README or experiment description is not automatically a textbook chapter. A ru
 
 ## Current status
 
-The architecture chapter and umbrella issue are established. The adapter manifest catalog is now internally complete for the three currently documented adapter implementations. The comprehensive bundle schema, full capability inventory, textbook metadata system, and ontology-driven laboratory catalog remain future work.
+The architecture chapter and umbrella issue are established. The three existing adapters have corresponding expanded manifests, a versioned schema, and a CI validation gate. The first source-to-capability matrix now records the three current vertical slices, candidate Mathematics/Mechanics/Spatial families, and the unresolved shared Spatial ownership question. Full domain coverage, runtime descriptor parity, textbook metadata, and ontology-driven laboratory catalog remain future work.
 
 No master promotion, NuGet publication, Pages deployment, or branch deletion was performed.
