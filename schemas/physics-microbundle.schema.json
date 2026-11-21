@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Physics/development/schemas/physics-microbundle.schema.json",
+  "title": "Physics MicroBundle Manifest",
+  "description": "Descriptive, host-neutral metadata for a Physics capability. A valid manifest does not prove that an executable provider is loaded or that its model is validated.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "bundle",
+    "ontology",
+    "capability",
+    "model",
+    "execution",
+    "evidence",
+    "education"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "name",
+        "providerIds"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providerIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "ontology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "branch"
+      ],
+      "properties": {
+        "domain": {
+          "enum": [
+            "mathematics",
+            "physics"
+          ]
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subdomain": {
+          "type": "string"
+        },
+        "concepts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "summary",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+([.-][a-z0-9]+)*$"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "observation",
+            "transform",
+            "solver",
+            "integrator",
+            "model",
+            "analysis",
+            "data"
+          ]
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "formulation",
+        "assumptions",
+        "exclusions",
+        "units"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "formulation": {
+          "type": "string"
+        },
+        "equations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "coordinateFrame": {
+          "type": "string"
+        },
+        "timeModel": {
+          "type": "string"
+        },
+        "validity": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "deterministic",
+        "ownsSimulationLoop"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "stateless-call",
+            "stateful-provider",
+            "fixed-step",
+            "event-driven",
+            "offline-analysis"
+          ]
+        },
+        "deterministic": {
+          "type": "boolean"
+        },
+        "ownsSimulationLoop": {
+          "type": "boolean"
+        },
+        "hostResponsibilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "sourceFiles",
+        "testFiles",
+        "validation"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "implemented",
+            "partial",
+            "experimental",
+            "specified",
+            "planned"
+          ]
+        },
+        "sourceFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "testFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "validation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "knownGaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "theoryFiles",
+        "experimentFiles"
+      ],
+      "properties": {
+        "theoryFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "experimentFiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "learningObjectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
