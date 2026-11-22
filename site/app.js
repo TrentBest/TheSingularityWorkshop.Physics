@@ -20,7 +20,7 @@ function send(type, payload={}) {
     return;
   }
   const previous = state.screen;
-  state = {...state, ...payload, screen:next, ...(type === "INSPECT_FSM" ? {returnScreen:previous} : {})};
+  state = {...state, ...payload, screen:next, ...(type === "INSPECT_FSM" ? {returnScreen:previous} : {}), ...(type === "OPEN_TERRAIN" ? {terrainMode:"edited",terrainCell:144} : {})};
   const route = routeFor(state);
   if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample,terrainMode:state.terrainMode,terrainCell:state.terrainCell,previous}, "", route);
   render();
@@ -91,7 +91,7 @@ function terrainSvg() {
   const cy=originY+(x+y)*halfHeight-(value-min)*heightScale;
   const t=(value-min)/span, hue=190-(t*145), light=32+(t*17);
   const selected=index===state.terrainCell;
-  return `<polygon data-cell="${index}" points="${cx},${cy-8} ${cx+17},${cy} ${cx},${cy+8} ${cx-17},${cy}" fill="hsl(${hue},58%,${light}%)" stroke="${selected?"#f0c77a":"#0d1825"}" stroke-width="${selected?2.5:0.8}"><title>Cell (${x}, ${y}): ${value.toFixed(4)} m</title></polygon>`;
+  return `<polygon data-cell="${index}" tabindex="0" role="button" aria-label="Select terrain cell ${x}, ${y}" points="${cx},${cy-8} ${cx+17},${cy} ${cx},${cy+8} ${cx-17},${cy}" fill="hsl(${hue},58%,${light}%)" stroke="${selected?"#f0c77a":"#0d1825"}" stroke-width="${selected?2.5:0.8}"><title>Cell (${x}, ${y}): ${value.toFixed(4)} m</title></polygon>`;
  }).join("");
  return `<svg viewBox="0 0 700 390" role="img" aria-label="Isometric projection of the Physics-generated terrain height samples">${cells}<text x="350" y="378" fill="#91a9b9" text-anchor="middle" font-size="11">17 × 17 recorded elevation samples · X varies fastest</text></svg>`;
 }
@@ -125,13 +125,13 @@ function terrain() {
  <div class="toolbar"><button class="button ${state.terrainMode==="base"?"primary":""}" id="terrain-base">Original bowl</button><button class="button ${state.terrainMode==="edited"?"primary":""}" id="terrain-edited">Brush-edited surface</button><a class="button" href="./data/terrain-height-field.run.json" download>Download run record ↓</a></div>
  <div class="plot-wrap">${terrainSvg()}</div>
  <div class="plot-legend"><span><i class="dot"></i>Lower elevation</span><span style="color:var(--gold)">● Selected sample</span><span>Colour and height are mapped from recorded elevations</span></div></div>
- <div class="inspector"><div class="panel"><div class="kicker">Selected grid sample</div><h3>Cell (${x}, ${y})</h3><div class="stats"><div class="stat"><span>Elevation</span><strong>${elevation.toFixed(3)} m</strong></div><div class="stat"><span>Brush change</span><strong>${(elevation-original>=0?"+":"")+(elevation-original).toFixed(3)} m</strong></div><div class="stat"><span>World X</span><strong>${worldX.toFixed(1)} m</strong></div><div class="stat"><span>World Y</span><strong>${worldY.toFixed(1)} m</strong></div></div><p class="muted">Record range: ${min.toFixed(3)}–${max.toFixed(3)} m. Click a diamond in the surface to inspect another sample.</p></div>
+ <div class="inspector"><div class="panel"><div class="kicker">Selected grid sample</div><h3>Cell (${x}, ${y})</h3><div class="stats"><div class="stat"><span>Elevation</span><strong>${elevation.toFixed(3)} m</strong></div><div class="stat"><span>Brush change</span><strong>${(brushDelta>=0?"+":"")+brushDelta.toFixed(3)} m</strong></div><div class="stat"><span>World X</span><strong>${worldX.toFixed(1)} m</strong></div><div class="stat"><span>World Y</span><strong>${worldY.toFixed(1)} m</strong></div></div><p class="muted">Record range: ${min.toFixed(3)}–${max.toFixed(3)} m. Click a diamond in the surface to inspect another sample.</p></div>
  <div class="panel"><div class="kicker">Model and conventions</div><h3>Immutable 2D height field</h3><table class="data-table"><tr><td>Model</td><td>${terrainRecord.modelId}</td></tr><tr><td>Frame</td><td>${d.coordinateFrameId}</td></tr><tr><td>Vertical datum</td><td>${d.verticalDatum}</td></tr><tr><td>Positive vertical</td><td>${d.positiveVerticalDirection}</td></tr><tr><td>Storage</td><td>Row-major · X fastest</td></tr><tr><td>Base</td><td>Parabolic bowl</td></tr><tr><td>Edit</td><td>+2 m smooth radial brush</td></tr></table></div></div>
  <div class="panel"><div class="kicker">Centre-row profile</div><h3>Elevation across the middle of the field</h3><div class="plot-wrap">${terrainProfileSvg()}</div></div>
  <div class="panel"><div class="kicker">Scientific boundary</div><p class="muted">${terrainRecord.limitations.join(" ")}</p><p class="notice">This page visualizes recorded samples from TerrainHeightField2D. It does not run a terrain solver in the browser, infer geological history, or represent caves and overhangs.</p><div class="toolbar"><a class="button" href="https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/TERRAIN_HEIGHT_FIELD_2D.md">Read the model contract ↗</a><a class="button" href="https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs">Inspect tests ↗</a></div></div>`;
  document.querySelector("#terrain-base").addEventListener("click",()=>{state={...state,terrainMode:"base"};render();});
  document.querySelector("#terrain-edited").addEventListener("click",()=>{state={...state,terrainMode:"edited"};render();});
- document.querySelectorAll("[data-cell]").forEach(cell=>cell.addEventListener("click",()=>{state={...state,terrainCell:Number(cell.dataset.cell)};render();}));
+ document.querySelectorAll("[data-cell]").forEach(cell=>{const selectCell=()=>{state={...state,terrainCell:Number(cell.dataset.cell)};render();};cell.addEventListener("click",selectCell);cell.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();selectCell();}});});
 }
 function fsmInspector() {
  const rows=Object.entries(transitions).flatMap(([from,actions])=>Object.entries(actions).map(([action,to])=>`<tr><td>${from}</td><td>${action}</td><td>${to==="RETURN"?"Previous screen":to}</td><td><span class="status">${to==="RETURN"?"HISTORY / FALLBACK": "DEFINED TRANSITION"}</span></td></tr>`)).join("");
