@@ -42,9 +42,9 @@ public sealed class SurpsRulebookPhysics : ISurpsRulebook
 
     public IReadOnlyList<MicroBundleDependencyRequest> Dependencies { get; } =
     [
-        MicroBundleDependencyRequest.Unconfigured(PhysicsCapabilityDependencies.SphereSphereContactBundleId),
-        MicroBundleDependencyRequest.Unconfigured(PhysicsCapabilityDependencies.NormalImpulseResponseBundleId),
-        MicroBundleDependencyRequest.Unconfigured(PhysicsCapabilityDependencies.PrescribedKinematicMotionBundleId)
+        MicroBundleDependencyRequest.Pinned(PhysicsCapabilityDependencies.SphereSphereContactBundleId, "1.0.0"),
+        MicroBundleDependencyRequest.Pinned(PhysicsCapabilityDependencies.NormalImpulseResponseBundleId, "1.0.0"),
+        MicroBundleDependencyRequest.Pinned(PhysicsCapabilityDependencies.PrescribedKinematicMotionBundleId, "0.1.0-alpha.1")
     ];
 
     public void Load(IMicroBundleLoadContext context)
