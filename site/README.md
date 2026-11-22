@@ -13,6 +13,7 @@ Serve this directory over HTTP (for example, `python3 -m http.server 8000 --dire
 - **Evidence inspector:** selected sample state and the complete recorded sample table.
 - **Navigation FSM:** `HOME`, `PROJECTILE`, `INSPECTOR`, and `FSM`, with semantic transitions and hash-based browser navigation.
 - **FSM inspector:** the System navigation entry exposes the live transition table, current route, allowed actions, and history fallback behavior. It inspects the actual presentation state machine; it is not a Physics simulation.
+- **Navigation tests:** Node tests cover route parsing, deep-link mapping, valid transitions, and rejected actions; the Pages build runs them before producing the artifact.
 - **No browser-side solver:** the chart and inspector read the checked-in JSON record. They do not independently calculate physical outcomes.
 
 ## Evidence contract
