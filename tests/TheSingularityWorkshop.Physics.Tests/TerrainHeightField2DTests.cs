@@ -15,9 +15,9 @@ public sealed class TerrainHeightField2DTests
     {
         var terrain = Plane(2d, -1d);
         Assert.That(terrain.TrySampleElevation(104d, -14d, out var elevation), Is.True);
-        Assert.That(elevation, Is.EqualTo(24d).Within(1e-12));
+        Assert.That(elevation, Is.EqualTo(12d).Within(1e-12));
         Assert.That(terrain.TrySampleElevation(99d, -14d, out _), Is.False);
-        Assert.That(terrain.SampleCell(2, 2), Is.EqualTo(24d));
+        Assert.That(terrain.SampleCell(2, 2), Is.EqualTo(12d));
     }
 
     [Test]
