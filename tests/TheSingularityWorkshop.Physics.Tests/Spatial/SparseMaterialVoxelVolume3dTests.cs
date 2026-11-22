@@ -307,6 +307,17 @@ public sealed class SparseMaterialVoxelVolume3dTests
         Assert.That(first.Vertices, Is.EqualTo(second.Vertices));
         Assert.That(first.TriangleIndices, Is.EqualTo(second.TriangleIndices));
         Assert.That(first.TriangleMaterialIds, Is.EqualTo(second.TriangleMaterialIds));
+
+        for (var triangle = 0; triangle < first.TriangleCount; triangle++)
+        {
+            var offset = triangle * 3;
+            var a = first.Vertices[first.TriangleIndices[offset]];
+            var b = first.Vertices[first.TriangleIndices[offset + 1]];
+            var c = first.Vertices[first.TriangleIndices[offset + 2]];
+            var windingNormal = (b - a).Cross(c - a).Normalized();
+
+            Assert.That(windingNormal.Dot(first.TriangleNormals[triangle]), Is.GreaterThan(0.999999d));
+        }
     }
 
     [Test]
