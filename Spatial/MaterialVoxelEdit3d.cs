@@ -9,13 +9,23 @@ public sealed class SparseMaterialVoxelEditResult3d
     /// <summary>Gets the number of voxels whose material state changed.</summary>
     public int ChangedVoxelCount { get; }
 
-    /// <summary>Gets the distinct affected chunk coordinates in lexicographical order.</summary>
+    /// <summary>Gets the distinct chunks containing changed voxels, in lexicographical order.</summary>
     public IReadOnlyList<GridCoordinate3i> DirtyChunks { get; }
 
-    internal SparseMaterialVoxelEditResult3d(int changedVoxelCount, IReadOnlyList<GridCoordinate3i> dirtyChunks)
+    /// <summary>
+    /// Gets chunks whose extracted boundary surfaces may have changed, including face-adjacent
+    /// chunks when an edited voxel lies on a chunk boundary.
+    /// </summary>
+    public IReadOnlyList<GridCoordinate3i> AffectedSurfaceChunks { get; }
+
+    internal SparseMaterialVoxelEditResult3d(
+        int changedVoxelCount,
+        IReadOnlyList<GridCoordinate3i> dirtyChunks,
+        IReadOnlyList<GridCoordinate3i> affectedSurfaceChunks)
     {
         ChangedVoxelCount = changedVoxelCount;
         DirtyChunks = dirtyChunks;
+        AffectedSurfaceChunks = affectedSurfaceChunks;
     }
 }
 
