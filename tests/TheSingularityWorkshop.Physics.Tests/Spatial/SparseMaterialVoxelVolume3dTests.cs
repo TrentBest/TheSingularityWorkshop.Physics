@@ -113,6 +113,86 @@ public sealed class SparseMaterialVoxelVolume3dTests
     }
 
     [Test]
+    public void ApplyEdits_UpdatesMaterialsAndReturnsSortedDirtyChunks()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 4);
+        var edits = new[]
+        {
+            new MaterialVoxelEdit3d(new GridCoordinate3i(8, 0, 0), 2),
+            new MaterialVoxelEdit3d(new GridCoordinate3i(-1, 0, 0), 3),
+            new MaterialVoxelEdit3d(new GridCoordinate3i(0, 0, 0), 0),
+            new MaterialVoxelEdit3d(new GridCoordinate3i(1, 0, 0), 4)
+        };
+
+        var result = volume.ApplyEdits(edits);
+
+        Assert.That(result.ChangedVoxelCount, Is.EqualTo(3));
+        Assert.That(result.DirtyChunks, Is.EqualTo(new[]
+        {
+            new GridCoordinate3i(-1, 0, 0),
+            new GridCoordinate3i(0, 0, 0),
+            new GridCoordinate3i(2, 0, 0)
+        }));
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(3));
+        Assert.That(volume.GetMaterialVoxelCount(2), Is.EqualTo(1));
+        Assert.That(volume.GetMaterialVoxelCount(3), Is.EqualTo(1));
+        Assert.That(volume.GetMaterialVoxelCount(4), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ApplyEdits_RejectsInvalidBatchBeforeChangingVolume()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 4);
+        var existing = new GridCoordinate3i(0, 0, 0);
+        volume.SetMaterial(existing, 7);
+
+        var invalid = new[]
+        {
+            new MaterialVoxelEdit3d(new GridCoordinate3i(1, 0, 0), 8),
+            new MaterialVoxelEdit3d(new GridCoordinate3i(2, 0, 0), -1)
+        };
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => volume.ApplyEdits(invalid));
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(1));
+        Assert.That(volume.GetMaterialId(existing), Is.EqualTo(7));
+        Assert.That(volume.GetMaterialId(new GridCoordinate3i(1, 0, 0)), Is.Zero);
+    }
+
+    [Test]
+    public void ApplyEdits_RejectsDuplicateVoxelCoordinatesBeforeChangingVolume()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+        var voxel = new GridCoordinate3i(0, 0, 0);
+        var edits = new[]
+        {
+            new MaterialVoxelEdit3d(voxel, 1),
+            new MaterialVoxelEdit3d(voxel, 2)
+        };
+
+        Assert.Throws<ArgumentException>(() => volume.ApplyEdits(edits));
+        Assert.That(volume.ChunkCount, Is.Zero);
+        Assert.That(volume.SolidVoxelCount, Is.Zero);
+    }
+
+    [Test]
+    public void ApplyEdits_ReportsOnlyActualChanges()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 4);
+        var voxel = new GridCoordinate3i(0, 0, 0);
+        volume.SetMaterial(voxel, 5);
+
+        var result = volume.ApplyEdits(new[]
+        {
+            new MaterialVoxelEdit3d(voxel, 5),
+            new MaterialVoxelEdit3d(new GridCoordinate3i(1, 0, 0), 0)
+        });
+
+        Assert.That(result.ChangedVoxelCount, Is.Zero);
+        Assert.That(result.DirtyChunks, Is.Empty);
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(1));
+    }
+
+    [Test]
     public void Clear_ResetsOccupancyChunksAndMaterialCounts()
     {
         var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
