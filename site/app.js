@@ -23,7 +23,7 @@ function send(type, payload={}) {
   if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample,previous}, "", route);
   render();
 }
-window.addEventListener("popstate", () => { state = parseRoute(location.hash); render(); });
+window.addEventListener("popstate", () => { state = {...parseRoute(location.hash), sample:history.state?.sample ?? 0}; render(); });
 window.addEventListener("hashchange", () => {
   const parsed = parseRoute(location.hash);
   if (parsed.screen !== state.screen) { state = parsed; render(); }
@@ -95,6 +95,7 @@ function render(){
 document.addEventListener("click",e=>{
  const action=e.target.closest("[data-action]")?.dataset.action;
  if(action==="OPEN_PROJECTILE"){e.preventDefault();send(action);}
+ if(action==="INSPECT_FSM"){e.preventDefault();send(action);}
  if(action==="BACK"){e.preventDefault();send(action);}
 });
 async function start(){
