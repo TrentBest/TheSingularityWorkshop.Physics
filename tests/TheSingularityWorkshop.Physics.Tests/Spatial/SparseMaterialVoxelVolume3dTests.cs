@@ -260,7 +260,15 @@ public sealed class SparseMaterialVoxelVolume3dTests
         Assert.That(mesh.TriangleMaterialIds, Has.All.EqualTo(17));
         Assert.That(mesh.TriangleNormals, Has.All.Matches<Vector3d>(n =>
             Math.Abs(n.Magnitude - 1d) < 1e-12));
-        Assert.That(mesh.TriangleNormals.Select(n => (int)(n.X + n.Y + n.Z)).Distinct().Count(), Is.EqualTo(6));
+        Assert.That(mesh.TriangleNormals.Distinct(), Is.EquivalentTo(new[]
+        {
+            new Vector3d(1d, 0d, 0d),
+            new Vector3d(-1d, 0d, 0d),
+            new Vector3d(0d, 1d, 0d),
+            new Vector3d(0d, -1d, 0d),
+            new Vector3d(0d, 0d, 1d),
+            new Vector3d(0d, 0d, -1d)
+        }));
 
         for (var triangle = 0; triangle < mesh.TriangleCount; triangle++)
         {
