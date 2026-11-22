@@ -1,3 +1,5 @@
+using TheSingularityWorkshop.Physics.Spatial;
+
 namespace TheSingularityWorkshop.Physics.Geology;
 
 /// <summary>
@@ -158,7 +160,7 @@ public sealed class TerrainHeightField2D
     }
 
     /// <summary>Returns the upward-facing unit normal using one-sided boundary and centred interior differences.</summary>
-    public System.Numerics.Vector3 GetSurfaceNormal(int x, int y)
+    public Vector3d GetSurfaceNormal(int x, int y)
     {
         _ = GetIndex(x, y);
         var left = x == 0 ? x : x - 1; var right = x == Width - 1 ? x : x + 1;
@@ -168,7 +170,7 @@ public sealed class TerrainHeightField2D
         var dy = (_elevations[up * Width + x] - _elevations[down * Width + x]) /
                  ((up - down) * CellHeight);
         var length = Math.Sqrt((dx * dx) + (dy * dy) + 1d);
-        return new System.Numerics.Vector3((float)(-dx / length), (float)(-dy / length), (float)(1d / length));
+        return new Vector3d(-dx / length, -dy / length, 1d / length);
     }
 
     /// <summary>
