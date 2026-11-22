@@ -54,6 +54,26 @@ public sealed class Vector3dBatchTests
     }
 
     [Test]
+    public void Operations_PreserveRawIeeeNonFiniteArithmetic()
+    {
+        double[] ax = [double.NaN], ay = [double.PositiveInfinity], az = [1d];
+        double[] bx = [1d], by = [1d], bz = [double.MaxValue];
+        double[] ox = new double[1], oy = new double[1], oz = new double[1];
+
+        Vector3dBatch.Add(ax, ay, az, bx, by, bz, ox, oy, oz);
+        Assert.That(double.IsNaN(ox[0]), Is.True);
+        Assert.That(double.IsPositiveInfinity(oy[0]), Is.True);
+        Assert.That(double.IsFinite(oz[0]), Is.True);
+
+        Vector3dBatch.Scale(ay, ay, az, 2d, ox, oy, oz);
+        Assert.That(double.IsPositiveInfinity(ox[0]), Is.True);
+        Assert.That(double.IsPositiveInfinity(oy[0]), Is.True);
+
+        Vector3dBatch.Dot(az, az, az, bz, bz, bz, ox);
+        Assert.That(double.IsPositiveInfinity(ox[0]), Is.True);
+    }
+
+    [Test]
     public void Scale_RejectsNonFiniteScalar()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
