@@ -8,10 +8,12 @@ namespace TheSingularityWorkshop.SingularityUniversalRolePlayingSystem.Rulebooks
 /// </summary>
 public static class SurpsRulebookPhysicsIdentity
 {
+    /// <summary>Canonical textual identity for this SURPS rulebook container.</summary>
     public const string CanonicalId =
         "TheSingularityWorkshop.SingularityUniversalRolePlayingSystem.SurpsRulebookPhysics";
 
     // FNV-1a 64-bit hash of CanonicalId.
+    /// <summary>Stable numeric identity derived from <see cref="CanonicalId"/>.</summary>
     public const ulong Id = 0x0B5175163AE21E02UL;
 }
 
@@ -26,6 +28,7 @@ public static class SurpsRulebookPhysicsIdentity
 /// </remarks>
 public sealed class SurpsRulebookPhysics : ISurpsRulebook
 {
+    /// <summary>Gets the bundle identity, exact dependency versions, and provider declaration.</summary>
     public MicroBundleDescriptor Descriptor { get; } = new(
         SurpsRulebookPhysicsIdentity.Id,
         "0.1.0-alpha.1",
@@ -40,6 +43,7 @@ public sealed class SurpsRulebookPhysics : ISurpsRulebook
             new MicroBundleProvider("surps.rulebook.physics")
         ]);
 
+    /// <summary>Gets the exact version-pinned dependencies required by this rulebook.</summary>
     public IReadOnlyList<MicroBundleDependencyRequest> Dependencies { get; } =
     [
         MicroBundleDependencyRequest.Pinned(PhysicsCapabilityDependencies.SphereSphereContactBundleId, "1.0.0"),
@@ -47,11 +51,13 @@ public sealed class SurpsRulebookPhysics : ISurpsRulebook
         MicroBundleDependencyRequest.Pinned(PhysicsCapabilityDependencies.PrescribedKinematicMotionBundleId, "0.1.0-alpha.1")
     ];
 
+    /// <summary>Validates the host load context; this wrapper requires no load-time resources.</summary>
     public void Load(IMicroBundleLoadContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
     }
 
+    /// <summary>Participates in arbitration without changing the static composition.</summary>
     public bool Arbitrate(IMicroBundleArbitrationContext context, int roundIndex)
     {
         ArgumentNullException.ThrowIfNull(context);
