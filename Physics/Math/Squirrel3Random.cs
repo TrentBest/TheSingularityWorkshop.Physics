@@ -72,7 +72,11 @@ public sealed class Squirrel3Random
                 "Bounds must be finite, increasing, and have a finite difference.");
         }
 
-        return minimumInclusive + (maximumExclusive - minimumInclusive) * NextDouble();
+        var value = minimumInclusive + (maximumExclusive - minimumInclusive) * NextDouble();
+
+        // Floating-point rounding can otherwise produce maximumExclusive even when
+        // the unit sample is strictly below one (especially at large magnitudes).
+        return value < maximumExclusive ? value : Math.BitDecrement(maximumExclusive);
     }
 
     /// <summary>Returns an integer in [minimumInclusive, maximumExclusive).</summary>
