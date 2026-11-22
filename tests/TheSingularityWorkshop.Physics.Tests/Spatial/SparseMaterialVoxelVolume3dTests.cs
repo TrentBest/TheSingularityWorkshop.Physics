@@ -130,6 +130,15 @@ public sealed class SparseMaterialVoxelVolume3dTests
         var result = volume.ApplyEdits(edits);
 
         Assert.That(result.ChangedVoxelCount, Is.EqualTo(3));
+        Assert.That(result.AffectedSurfaceChunks, Is.EqualTo(new[]
+        {
+            new GridCoordinate3i(-2, 0, 0),
+            new GridCoordinate3i(-1, 0, 0),
+            new GridCoordinate3i(0, 0, 0),
+            new GridCoordinate3i(1, 0, 0),
+            new GridCoordinate3i(2, 0, 0),
+            new GridCoordinate3i(3, 0, 0)
+        }));
         Assert.That(result.DirtyChunks, Is.EqualTo(new[]
         {
             new GridCoordinate3i(-1, 0, 0),
