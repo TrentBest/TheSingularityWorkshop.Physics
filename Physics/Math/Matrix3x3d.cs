@@ -72,7 +72,6 @@ public readonly struct Matrix3x3d : IEquatable<Matrix3x3d>
         M12, M22, M32,
         M13, M23, M33);
 
-    /// <summary>Returns the matrix product this × other.</summary>
     /// <summary>Returns the matrix product this multiplied by other.</summary>
     public Matrix3x3d Multiply(Matrix3x3d other) => new(
         DotRowColumn(M11, M12, M13, other.M11, other.M21, other.M31),
