@@ -431,12 +431,31 @@ public sealed class SparseMaterialVoxelVolume3dTests
 
     private static void AssertMeshesEquivalent(VoxelSurfaceMesh3d actual, VoxelSurfaceMesh3d expected)
     {
-        Assert.That(actual.TriangleCount, Is.EqualTo(expected.TriangleCount));
-        Assert.That(actual.TriangleMaterialIds.OrderBy(id => id), Is.EqualTo(expected.TriangleMaterialIds.OrderBy(id => id)));
-        Assert.That(actual.TriangleNormals.OrderBy(n => n.X).ThenBy(n => n.Y).ThenBy(n => n.Z),
-            Is.EqualTo(expected.TriangleNormals.OrderBy(n => n.X).ThenBy(n => n.Y).ThenBy(n => n.Z)));
-        Assert.That(actual.Vertices.OrderBy(v => v.X).ThenBy(v => v.Y).ThenBy(v => v.Z),
-            Is.EqualTo(expected.Vertices.OrderBy(v => v.X).ThenBy(v => v.Y).ThenBy(v => v.Z)));
+        Assert.That(GetTriangleSignatures(actual), Is.EqualTo(GetTriangleSignatures(expected)));
+    }
+
+    private static string[] GetTriangleSignatures(VoxelSurfaceMesh3d mesh)
+    {
+        var signatures = new string[mesh.TriangleCount];
+        for (var triangle = 0; triangle < mesh.TriangleCount; triangle++)
+        {
+            var offset = triangle * 3;
+            var points = new[]
+            {
+                mesh.Vertices[mesh.TriangleIndices[offset]],
+                mesh.Vertices[mesh.TriangleIndices[offset + 1]],
+                mesh.Vertices[mesh.TriangleIndices[offset + 2]]
+            };
+            var pointKeys = points
+                .Select(point => FormattableString.Invariant($"{point.X:R},{point.Y:R},{point.Z:R}"))
+                .OrderBy(key => key, StringComparer.Ordinal);
+            var normal = mesh.TriangleNormals[triangle];
+            signatures[triangle] = FormattableString.Invariant(
+                $"{mesh.TriangleMaterialIds[triangle]}|{normal.X:R},{normal.Y:R},{normal.Z:R}|{string.Join(";", pointKeys)}");
+        }
+
+        Array.Sort(signatures, StringComparer.Ordinal);
+        return signatures;
     }
 
     [Test]
