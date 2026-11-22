@@ -135,6 +135,64 @@ public sealed class SparseMaterialVoxelVolume3d
         return true;
     }
 
+    /// <summary>Applies a validated set of non-overlapping voxel material edits as one logical operation.</summary>
+    /// <remarks>
+    /// Material ID zero means empty space. Duplicate voxel coordinates and negative material IDs
+    /// are rejected before volume state changes. Missing destination chunks are allocated before
+    /// edits are applied. The returned dirty chunk coordinates are sorted lexicographically.
+    /// </remarks>
+    public SparseMaterialVoxelEditResult3d ApplyEdits(IReadOnlyList<MaterialVoxelEdit3d> edits)
+    {
+        ArgumentNullException.ThrowIfNull(edits);
+
+        var seenVoxels = new HashSet<GridCoordinate3i>();
+        var requiredChunks = new HashSet<GridCoordinate3i>();
+
+        for (var i = 0; i < edits.Count; i++)
+        {
+            var edit = edits[i];
+            if (edit.MaterialId < 0)
+                throw new ArgumentOutOfRangeException(nameof(edits), "Material IDs cannot be negative.");
+            if (!seenVoxels.Add(edit.Voxel))
+                throw new ArgumentException("An edit batch cannot address the same voxel more than once.", nameof(edits));
+
+            if (edit.MaterialId != 0)
+            {
+                var chunk = GetChunkCoordinate(edit.Voxel);
+                if (!_chunks.ContainsKey(chunk))
+                    requiredChunks.Add(chunk);
+            }
+        }
+
+        // Allocate all new chunks before changing existing voxel contents.
+        var stagedChunks = new Dictionary<GridCoordinate3i, int[]>(requiredChunks.Count);
+        foreach (var chunk in requiredChunks)
+            stagedChunks.Add(chunk, new int[GetVoxelCountPerChunk()]);
+
+        foreach (var pair in stagedChunks)
+            _chunks.Add(pair.Key, pair.Value);
+
+        var changedCount = 0;
+        var dirtyChunks = new HashSet<GridCoordinate3i>();
+        for (var i = 0; i < edits.Count; i++)
+        {
+            var edit = edits[i];
+            var changed = edit.MaterialId == 0
+                ? SetEmpty(edit.Voxel)
+                : SetMaterial(edit.Voxel, edit.MaterialId);
+
+            if (!changed)
+                continue;
+
+            changedCount++;
+            dirtyChunks.Add(GetChunkCoordinate(edit.Voxel));
+        }
+
+        var orderedDirtyChunks = dirtyChunks.ToArray();
+        Array.Sort(orderedDirtyChunks, GridCoordinate3iComparer.Instance);
+        return new SparseMaterialVoxelEditResult3d(changedCount, Array.AsReadOnly(orderedDirtyChunks));
+    }
+
     /// <summary>Sets the voxel containing a world-space point to the specified material.</summary>
     public bool SetMaterialAt(Vector3d point, int materialId) =>
         SetMaterial(WorldToVoxel(point), materialId);
