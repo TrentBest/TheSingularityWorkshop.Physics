@@ -1,6 +1,6 @@
 # Physics Pages Experience
 
-**Status:** first static client implemented on `development`; browser validation and publication remain outstanding. Work is tracked by [issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53).
+**Status:** static client, projectile evidence inspector, terrain height-field experience, and navigation FSM inspector implemented on `development`; automated checks are being expanded, while browser validation and publication remain outstanding. Work is tracked by [issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53).
 
 ## The visitor experience
 
@@ -36,7 +36,7 @@ Do not couple the first slice to ServerApp. Add ServerApp only when a demonstrat
 
 ## State model
 
-The initial navigation state should be small and explicit. Candidate conceptual states:
+The initial navigation state should be small and explicit. The implemented client currently includes `HOME`, `PROJECTILE`, `INSPECTOR`, `TERRAIN`, and `FSM`; the broader experience lifecycle below remains a candidate model. Candidate conceptual states:
 
 - PhysicsHome
 - DomainOverview(domainId)
@@ -110,12 +110,13 @@ Use the Learning Center Pages workflow as a reference: check out exact source re
 The initial static client now lives in `site/`:
 
 - `site/index.html` and `site/styles.css` provide the Pages-hosted shell and responsive presentation.
-- `site/app.js` owns an explicit navigation state machine (`HOME → PROJECTILE → INSPECTOR`) and semantic actions. Browser hash/history navigation is reconciled through the same route parser.
+- `site/app.js` consumes the pure navigation machine in `site/navigation-fsm.js`; implemented states are `HOME`, `PROJECTILE`, `INSPECTOR`, `TERRAIN`, and `FSM`. Browser hash/history navigation uses the same route parser, and `site/tests/navigation-fsm.test.mjs` checks deep links, route mappings, valid transitions, and rejected actions.
+- `site/data/terrain-height-field.run.json` is generated from `TerrainHeightField2D`; the terrain experience compares the original bowl and a smooth radial brush edit, renders the recorded grid as an isometric SVG, and exposes per-cell values and a centre-row profile. The browser does not regenerate terrain.
 - `site/data/projectile-trajectory.run.json` is the checked-in copy of the canonical projectile fixture. The browser reads and visualizes recorded samples; it does not recalculate the trajectory.
 - The sample selector changes the inspected record index, and the evidence inspector exposes position, velocity, units, model/schema identity, timestep, frame, and all recorded samples.
 - `.github/workflows/physics-pages.yml` reproduces the run with the actual .NET generator, compares the generated output with both canonical and site fixtures, checks JavaScript syntax, and packages the static site. Deployment is restricted to an explicit `workflow_dispatch` on `development`.
 
-**Current boundary:** this is a first working implementation slice, not yet a published Pages deployment or a complete Physics atlas. The checked-in projectile record does not currently contain a unique run ID or source revision, so the site deliberately does not invent either. Provenance enrichment belongs in a future versioned run-record contract. Browser/device validation and the actual Pages deployment remain outstanding.
+**Current boundary:** this is a first working implementation slice, not yet a published Pages deployment or a complete Physics atlas. The checked-in projectile record does not currently contain a unique run ID or source revision, so the site deliberately does not invent either. Provenance enrichment belongs in a future versioned run-record contract. The terrain record identifies its Physics source, focused test, and generator path; neither record claims an unrecorded source commit. Browser/device validation and the actual Pages deployment remain outstanding.
 
 
 ## Planned experience: vertical cannon and synchronized graphs
