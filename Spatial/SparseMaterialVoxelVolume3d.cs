@@ -31,11 +31,13 @@ public sealed class SparseMaterialVoxelVolume3d
     public long SolidVoxelCount { get; private set; }
 
     /// <summary>Creates an empty sparse material volume.</summary>
-    /// <param name="origin">World-space minimum corner of voxel (0,0,0).</param>
+    /// <param name="origin">Finite world-space minimum corner of voxel (0,0,0).</param>
     /// <param name="voxelSize">Finite positive edge length in the volume's world units.</param>
     /// <param name="chunkSize">Voxels per chunk edge; must be between 1 and 64.</param>
     public SparseMaterialVoxelVolume3d(Vector3d origin, double voxelSize, int chunkSize = 16)
     {
+        if (!double.IsFinite(origin.X) || !double.IsFinite(origin.Y) || !double.IsFinite(origin.Z))
+            throw new ArgumentOutOfRangeException(nameof(origin), "Origin coordinates must be finite.");
         if (!double.IsFinite(voxelSize) || voxelSize <= 0d)
             throw new ArgumentOutOfRangeException(nameof(voxelSize), "Voxel size must be finite and positive.");
         if (chunkSize is < 1 or > 64)
