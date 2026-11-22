@@ -193,6 +193,57 @@ public sealed class SparseMaterialVoxelVolume3dTests
     }
 
     [Test]
+    public void RemoveSphere_RemovesVoxelCentersInsideBrushAndReportsDirtyChunks()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 2);
+        var nearA = new GridCoordinate3i(0, 0, 0);
+        var nearB = new GridCoordinate3i(1, 0, 0);
+        var far = new GridCoordinate3i(3, 0, 0);
+        volume.SetMaterial(nearA, 1);
+        volume.SetMaterial(nearB, 2);
+        volume.SetMaterial(far, 1);
+
+        var result = volume.RemoveSphere(new Vector3d(0.5d, 0.5d, 0.5d), 1d);
+
+        Assert.That(result.ChangedVoxelCount, Is.EqualTo(2));
+        Assert.That(result.DirtyChunks, Is.EqualTo(new[]
+        {
+            new GridCoordinate3i(0, 0, 0)
+        }));
+        Assert.That(volume.GetMaterialId(nearA), Is.Zero);
+        Assert.That(volume.GetMaterialId(nearB), Is.Zero);
+        Assert.That(volume.GetMaterialId(far), Is.EqualTo(1));
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(1));
+        Assert.That(volume.GetMaterialVoxelCount(1), Is.EqualTo(1));
+        Assert.That(volume.GetMaterialVoxelCount(2), Is.Zero);
+    }
+
+    [Test]
+    public void RemoveSphere_RejectsInvalidBrushWithoutChangingVolume()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+        var voxel = new GridCoordinate3i(0, 0, 0);
+        volume.SetMaterial(voxel, 3);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            volume.RemoveSphere(new Vector3d(0d, 0d, 0d), double.NaN));
+        Assert.That(volume.GetMaterialId(voxel), Is.EqualTo(3));
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void RemoveSphere_EmptyVolumeDoesNotAllocateChunks()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+
+        var result = volume.RemoveSphere(Vector3d.Zero, 10d);
+
+        Assert.That(result.ChangedVoxelCount, Is.Zero);
+        Assert.That(result.DirtyChunks, Is.Empty);
+        Assert.That(volume.ChunkCount, Is.Zero);
+    }
+
+    [Test]
     public void Clear_ResetsOccupancyChunksAndMaterialCounts()
     {
         var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
