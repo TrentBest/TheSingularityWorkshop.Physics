@@ -275,8 +275,8 @@ public sealed class SparseMaterialVoxelVolume3dTests
         Assert.That(volume.ChunkCount, Is.EqualTo(2));
         Assert.That(mesh.TriangleCount, Is.EqualTo(20));
         Assert.That(mesh.Vertices, Has.Count.EqualTo(12));
-        Assert.That(mesh.TriangleMaterialIds.Count(id => id == 1), Is.EqualTo(20));
-        Assert.That(mesh.TriangleMaterialIds.Count(id => id == 2), Is.EqualTo(20));
+        Assert.That(mesh.TriangleMaterialIds.Count(id => id == 1), Is.EqualTo(10));
+        Assert.That(mesh.TriangleMaterialIds.Count(id => id == 2), Is.EqualTo(10));
     }
 
     [Test]
