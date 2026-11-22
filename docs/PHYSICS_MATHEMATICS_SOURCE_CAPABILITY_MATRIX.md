@@ -89,7 +89,7 @@ Before creating adapters, close the identified contract gaps, inspect the remain
 3. Review units, coordinate frames, time semantics, numerical stability, boundary conditions and invalid-input behavior per model.
 4. Add dedicated experiments where they materially validate a model; avoid using a neighboring experiment as evidence for a different capability.
 5. Define capability IDs and ontology mappings before assigning bundle IDs at scale.
-6. Add adapter/manifest parity checks against runtime descriptors; the current validator checks schema, uniqueness, provider inclusion and referenced-file existence, but not source-code descriptor parity.
+6. Adapter/manifest descriptor parity is now checked in CI: the validator maps each manifest bundle ID to an IMicroBundle adapter class and compares descriptor version and provider-ID set. The implementation uses a constrained C# source regex rather than a full parser; keep adapter declaration conventions stable and consider parser-backed validation if those declarations become more complex.
 7. Add validation evidence levels that distinguish unit tests, analytical identities, convergence, conservation, reference comparisons and empirical calibration.
 
 ## Immediate sequencing
