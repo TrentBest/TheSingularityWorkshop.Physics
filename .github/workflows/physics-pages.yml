@@ -7,7 +7,9 @@ on:
     paths:
       - "site/**"
       - "docs/experiments/projectile-trajectory.run.json"
+      - "docs/experiments/terrain-height-field.run.json"
       - "tools/ProjectileRunRecordGenerator/**"
+      - "tools/TerrainHeightFieldRunRecordGenerator/**"
       - "Physics/Experiments/ProjectileTrajectoryExperiment.cs"
       - ".github/workflows/physics-pages.yml"
   pull_request:
@@ -67,6 +69,11 @@ jobs:
           print("PASS: Pages data is byte-independent JSON-equivalent to the canonical and freshly generated Physics run.")
           PY
 
+      - name: Validate terrain record against TerrainHeightField2D generator
+        run: |
+          dotnet run --project tools/TerrainHeightFieldRunRecordGenerator/TerrainHeightFieldRunRecordGenerator.csproj --configuration Release -- docs/experiments/terrain-height-field.run.json --check
+          dotnet run --project tools/TerrainHeightFieldRunRecordGenerator/TerrainHeightFieldRunRecordGenerator.csproj --configuration Release -- site/data/terrain-height-field.run.json --check
+
       - name: Check browser application JavaScript syntax
         run: |
           node --check site/navigation-fsm.js
@@ -81,6 +88,7 @@ jobs:
           test -s site/styles.css
           test -s site/app.js
           test -s site/data/projectile-trajectory.run.json
+          test -s site/data/terrain-height-field.run.json
           grep -q 'type="module" src="./app.js"' site/index.html
           echo "PASS: Physics Pages static entry points are present."
 
