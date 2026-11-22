@@ -132,12 +132,16 @@ public sealed class SparseMaterialVoxelVolume3dTests
         Assert.That(result.ChangedVoxelCount, Is.EqualTo(3));
         Assert.That(result.AffectedSurfaceChunks, Is.EqualTo(new[]
         {
-            new GridCoordinate3i(-2, 0, 0),
+            new GridCoordinate3i(-1, -1, 0),
+            new GridCoordinate3i(-1, 0, -1),
             new GridCoordinate3i(-1, 0, 0),
+            new GridCoordinate3i(0, -1, 0),
+            new GridCoordinate3i(0, 0, -1),
             new GridCoordinate3i(0, 0, 0),
             new GridCoordinate3i(1, 0, 0),
-            new GridCoordinate3i(2, 0, 0),
-            new GridCoordinate3i(3, 0, 0)
+            new GridCoordinate3i(2, -1, 0),
+            new GridCoordinate3i(2, 0, -1),
+            new GridCoordinate3i(2, 0, 0)
         }));
         Assert.That(result.DirtyChunks, Is.EqualTo(new[]
         {
