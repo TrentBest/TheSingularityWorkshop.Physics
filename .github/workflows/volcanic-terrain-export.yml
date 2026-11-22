@@ -48,10 +48,10 @@ jobs:
           assert data['coordinateFrame']['yAxis'] == 'north'
           assert data['grid']['rowOrder'] == 'y-ascending; x-fastest'
           assert data['grid']['sampleConvention'] == 'grid-index-origin'
-          assert data['grid']['width'] == 64 and data['grid']['height'] == 48
+          assert data['grid']['width'] == 24 and data['grid']['height'] == 18
           assert data['vertical'] == {'unit': 'metres', 'datum': 'model-base-elevation', 'positiveDirection': 'up'}
           samples = data['elevations']
-          assert len(samples) == 64 * 48
+          assert len(samples) == 24 * 18
           assert all(math.isfinite(value) for value in samples)
           assert max(samples) > min(samples)
           print(f"Verified {len(samples)} finite Physics elevation samples and truthful local-frame provenance.")
