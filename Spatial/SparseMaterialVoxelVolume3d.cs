@@ -198,17 +198,27 @@ public sealed class SparseMaterialVoxelVolume3d
             var localY = PositiveRemainder(edit.Voxel.Y, ChunkSize);
             var localZ = PositiveRemainder(edit.Voxel.Z, ChunkSize);
             if (localX == 0)
-                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X - 1, chunk.Y, chunk.Z));
+                AddSurfaceChunk((long)chunk.X - 1, chunk.Y, chunk.Z);
             if (localX == ChunkSize - 1)
-                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X + 1, chunk.Y, chunk.Z));
+                AddSurfaceChunk((long)chunk.X + 1, chunk.Y, chunk.Z);
             if (localY == 0)
-                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y - 1, chunk.Z));
+                AddSurfaceChunk(chunk.X, (long)chunk.Y - 1, chunk.Z);
             if (localY == ChunkSize - 1)
-                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y + 1, chunk.Z));
+                AddSurfaceChunk(chunk.X, (long)chunk.Y + 1, chunk.Z);
             if (localZ == 0)
-                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y, chunk.Z - 1));
+                AddSurfaceChunk(chunk.X, chunk.Y, (long)chunk.Z - 1);
             if (localZ == ChunkSize - 1)
-                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y, chunk.Z + 1));
+                AddSurfaceChunk(chunk.X, chunk.Y, (long)chunk.Z + 1);
+
+            void AddSurfaceChunk(long x, long y, long z)
+            {
+                if (x is < int.MinValue or > int.MaxValue ||
+                    y is < int.MinValue or > int.MaxValue ||
+                    z is < int.MinValue or > int.MaxValue)
+                    return;
+
+                affectedSurfaceChunks.Add(new GridCoordinate3i((int)x, (int)y, (int)z));
+            }
         }
 
         var orderedDirtyChunks = dirtyChunks.ToArray();
