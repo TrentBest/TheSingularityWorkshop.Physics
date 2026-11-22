@@ -193,6 +193,62 @@ public sealed class SparseMaterialVoxelVolume3d
         return new SparseMaterialVoxelEditResult3d(changedCount, Array.AsReadOnly(orderedDirtyChunks));
     }
 
+    /// <summary>Removes occupied voxels whose centers lie inside or on a spherical brush.</summary>
+    /// <param name="center">World-space center of the spherical brush.</param>
+    /// <param name="radius">Finite, non-negative brush radius in the volume's world units.</param>
+    /// <returns>The changed voxel count and sorted dirty chunks.</returns>
+    /// <remarks>
+    /// The brush is evaluated against voxel centers. It scans allocated chunks only and does not
+    /// allocate empty space. This is a deterministic voxel-center approximation of a sphere, not
+    /// an exact continuous sphere/voxel intersection.
+    /// </remarks>
+    public SparseMaterialVoxelEditResult3d RemoveSphere(Vector3d center, double radius)
+    {
+        if (!double.IsFinite(center.X) || !double.IsFinite(center.Y) || !double.IsFinite(center.Z))
+            throw new ArgumentOutOfRangeException(nameof(center), "Brush center must be finite.");
+        if (!double.IsFinite(radius) || radius < 0d)
+            throw new ArgumentOutOfRangeException(nameof(radius), "Brush radius must be finite and non-negative.");
+
+        var radiusSquared = radius * radius;
+        var edits = new List<MaterialVoxelEdit3d>();
+        foreach (var chunk in _chunks)
+        {
+            var chunkOriginX = (long)chunk.Key.X * ChunkSize;
+            var chunkOriginY = (long)chunk.Key.Y * ChunkSize;
+            var chunkOriginZ = (long)chunk.Key.Z * ChunkSize;
+            var materials = chunk.Value;
+
+            for (var z = 0; z < ChunkSize; z++)
+            for (var y = 0; y < ChunkSize; y++)
+            for (var x = 0; x < ChunkSize; x++)
+            {
+                var index = (z * ChunkSize * ChunkSize) + (y * ChunkSize) + x;
+                if (materials[index] == 0)
+                    continue;
+
+                var voxelX = chunkOriginX + x;
+                var voxelY = chunkOriginY + y;
+                var voxelZ = chunkOriginZ + z;
+                if (voxelX is < int.MinValue or > int.MaxValue ||
+                    voxelY is < int.MinValue or > int.MaxValue ||
+                    voxelZ is < int.MinValue or > int.MaxValue)
+                    continue;
+
+                var voxel = new GridCoordinate3i((int)voxelX, (int)voxelY, (int)voxelZ);
+                var voxelCenter = GetVoxelCenter(voxel);
+                var dx = voxelCenter.X - center.X;
+                var dy = voxelCenter.Y - center.Y;
+                var dz = voxelCenter.Z - center.Z;
+                var distanceSquared = (dx * dx) + (dy * dy) + (dz * dz);
+
+                if (distanceSquared <= radiusSquared)
+                    edits.Add(new MaterialVoxelEdit3d(voxel, 0));
+            }
+        }
+
+        return ApplyEdits(edits);
+    }
+
     /// <summary>Sets the voxel containing a world-space point to the specified material.</summary>
     public bool SetMaterialAt(Vector3d point, int materialId) =>
         SetMaterial(WorldToVoxel(point), materialId);
