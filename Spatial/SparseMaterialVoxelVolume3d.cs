@@ -16,6 +16,7 @@ public sealed class SparseMaterialVoxelVolume3d
     private readonly Dictionary<int, long> _materialCounts = new();
     private VoxelSurfaceMesh3d? _cachedBoundarySurface;
     private readonly Dictionary<GridCoordinate3i, VoxelSurfaceMesh3d> _cachedChunkSurfaces = new();
+    private VoxelSurfaceMesh3d? _cachedIncrementalSurface;
 
     /// <summary>Gets the world-space minimum corner of voxel (0,0,0).</summary>
     public Vector3d Origin { get; }
@@ -317,6 +318,9 @@ public sealed class SparseMaterialVoxelVolume3d
     /// </remarks>
     public VoxelSurfaceMesh3d ExtractBoundarySurfaceIncremental()
     {
+        if (_cachedIncrementalSurface is not null)
+            return _cachedIncrementalSurface;
+
         var chunkCoordinates = _chunks.Keys.ToArray();
         Array.Sort(chunkCoordinates, GridCoordinate3iComparer.Instance);
         var vertices = new List<Vector3d>();
@@ -353,11 +357,12 @@ public sealed class SparseMaterialVoxelVolume3d
                 triangleNormals.Add(normal);
         }
 
-        return new VoxelSurfaceMesh3d(
+        _cachedIncrementalSurface = new VoxelSurfaceMesh3d(
             Array.AsReadOnly(vertices.ToArray()),
             Array.AsReadOnly(triangleIndices.ToArray()),
             Array.AsReadOnly(triangleMaterials.ToArray()),
             Array.AsReadOnly(triangleNormals.ToArray()));
+        return _cachedIncrementalSurface;
     }
 
     private VoxelSurfaceMesh3d ExtractBoundarySurfaceCore(GridCoordinate3i? onlyChunk)
@@ -495,6 +500,7 @@ public sealed class SparseMaterialVoxelVolume3d
     private void InvalidateSurfaceChunks(GridCoordinate3i voxel)
     {
         _cachedBoundarySurface = null;
+        _cachedIncrementalSurface = null;
         var chunk = GetChunkCoordinate(voxel);
         _cachedChunkSurfaces.Remove(chunk);
         var localX = PositiveRemainder(voxel.X, ChunkSize);
@@ -539,6 +545,7 @@ public sealed class SparseMaterialVoxelVolume3d
         _materialCounts.Clear();
         SolidVoxelCount = 0;
         _cachedBoundarySurface = null;
+        _cachedIncrementalSurface = null;
         _cachedChunkSurfaces.Clear();
     }
 
