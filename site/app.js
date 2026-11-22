@@ -1,11 +1,13 @@
 const view = document.querySelector("#view");
 const transitions = {
-  HOME: { OPEN_PROJECTILE: "PROJECTILE" },
-  PROJECTILE: { BACK: "HOME", INSPECT: "INSPECTOR", SELECT_SAMPLE: "PROJECTILE" },
-  INSPECTOR: { BACK: "PROJECTILE", SELECT_SAMPLE: "INSPECTOR" }
+  HOME: { OPEN_PROJECTILE: "PROJECTILE", INSPECT_FSM: "FSM" },
+  PROJECTILE: { BACK: "HOME", INSPECT: "INSPECTOR", SELECT_SAMPLE: "PROJECTILE", INSPECT_FSM: "FSM" },
+  INSPECTOR: { BACK: "PROJECTILE", SELECT_SAMPLE: "INSPECTOR", INSPECT_FSM: "FSM" },
+  FSM: { BACK: "RETURN" }
 };
-const routeFor = state => state.screen === "HOME" ? "#/home" : state.screen === "PROJECTILE" ? "#/experience/projectile" : "#/experience/projectile/evidence";
+const routeFor = state => state.screen === "HOME" ? "#/home" : state.screen === "PROJECTILE" ? "#/experience/projectile" : state.screen === "INSPECTOR" ? "#/experience/projectile/evidence" : "#/system/navigation";
 function parseRoute(hash) {
+  if (hash === "#/system/navigation") return {screen:"FSM", sample:0, returnScreen:"HOME"};
   if (hash === "#/experience/projectile/evidence") return {screen:"INSPECTOR", sample:0};
   if (hash === "#/experience/projectile") return {screen:"PROJECTILE", sample:0};
   return {screen:"HOME", sample:0};
@@ -17,13 +19,14 @@ function send(type, payload={}) {
   if (!next) return;
   if (type === "BACK") {
     if (history.state?.previous) { history.back(); return; }
-    state = {...state, ...payload, screen:next};
+    const destination = state.screen === "FSM" ? (state.returnScreen ?? "HOME") : next;
+    state = {...state, ...payload, screen:destination};
     history.replaceState({screen:state.screen,sample:state.sample}, "", routeFor(state));
     render();
     return;
   }
   const previous = state.screen;
-  state = {...state, ...payload, screen:next};
+  state = {...state, ...payload, screen:next, ...(type === "INSPECT_FSM" ? {returnScreen:previous} : {})};
   const route = routeFor(state);
   if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample,previous}, "", route);
   render();
@@ -82,9 +85,20 @@ function inspector() {
  document.querySelector("#return").addEventListener("click",()=>send("BACK"));
  document.querySelectorAll("[data-row]").forEach(row=>row.addEventListener("click",()=>{state={...state,sample:Number(row.dataset.row)};render();}));
 }
+function fsmInspector() {
+ const rows=Object.entries(transitions).flatMap(([from,actions])=>Object.entries(actions).map(([action,to])=>`<tr><td>${from}</td><td>${action}</td><td>${to==="RETURN"?"Previous screen":to}</td><td><span class="status">${to==="RETURN"?"HISTORY / FALLBACK": "DEFINED TRANSITION"}</span></td></tr>`)).join("");
+ const current=state.returnScreen??"HOME";
+ view.innerHTML=`
+ <div class="crumb"><a href="#/home" data-action="BACK">ATLAS</a> / SYSTEM / NAVIGATION FSM</div>
+ <div class="intro"><div><div class="kicker">Inspectable system</div><h2>Physics Pages navigation machine</h2><p>This is the actual client-side navigation transition map. It governs which screens can be reached and how the browser history returns to the prior screen.</p></div><span class="tag">LIVE FSM DEFINITION</span></div>
+ <div class="panel"><div class="section-head"><div><div class="kicker">Current state</div><h2>${state.screen}</h2></div><span class="tag">RETURN TARGET · ${current}</span></div><p class="muted">Route: <code>${location.hash||"#/home"}</code>. The FSM inspector is a read-only view of the transition definition; it does not simulate physical behavior.</p><div class="toolbar"><button class="button primary" id="fsm-back">← Return to previous screen</button><a class="button" href="#/home" data-action="BACK">Return to atlas</a></div></div>
+ <div class="panel"><div class="kicker">Transition table</div><h3>Allowed actions by state</h3><div style="overflow-x:auto"><table class="data-table"><thead><tr><th>From</th><th>Action</th><th>Destination</th><th>Semantics</th></tr></thead><tbody>${rows}</tbody></table></div><p class="notice">Actions absent from this table are rejected by the transition function. BACK uses browser history when a previous in-app state exists; otherwise it uses the declared fallback.</p></div>
+ <div class="panel"><div class="kicker">Architecture boundary</div><p class="muted">This machine controls presentation navigation only. Projectile measurements remain sourced from the checked-in Physics run record; this UI state machine is not a Physics solver or experiment executor.</p></div>`;
+ document.querySelector("#fsm-back").addEventListener("click",()=>send("BACK"));
+}
 function render(){
  document.querySelectorAll("nav [data-route]").forEach(a=>a.toggleAttribute("aria-current", (state.screen==="HOME"&&a.dataset.route==="home")||(state.screen!=="HOME"&&a.dataset.route==="experience")));
- if(state.screen==="HOME") home(); else if(state.screen==="PROJECTILE") projectile(); else inspector();
+ if(state.screen==="HOME") home(); else if(state.screen==="PROJECTILE") projectile(); else if(state.screen==="INSPECTOR") inspector(); else fsmInspector();
 }
 document.addEventListener("click",e=>{
  const action=e.target.closest("[data-action]")?.dataset.action;
