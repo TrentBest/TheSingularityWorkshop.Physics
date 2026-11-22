@@ -247,6 +247,58 @@ public sealed class SparseMaterialVoxelVolume3dTests
     }
 
     [Test]
+    public void ExtractBoundarySurface_SingleVoxelProducesSixOutwardFaces()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 2);
+        volume.SetMaterial(new GridCoordinate3i(0, 0, 0), 17);
+
+        var mesh = volume.ExtractBoundarySurface();
+
+        Assert.That(mesh.Vertices, Has.Count.EqualTo(8));
+        Assert.That(mesh.TriangleCount, Is.EqualTo(12));
+        Assert.That(mesh.TriangleIndices, Has.Count.EqualTo(36));
+        Assert.That(mesh.TriangleMaterialIds, Has.All.EqualTo(17));
+        Assert.That(mesh.TriangleNormals, Has.All.Matches<Vector3d>(n =>
+            Math.Abs(n.Magnitude - 1d) < 1e-12));
+        Assert.That(mesh.TriangleNormals.Select(n => (int)(n.X + n.Y + n.Z)).Distinct().Count(), Is.EqualTo(6));
+    }
+
+    [Test]
+    public void ExtractBoundarySurface_OmitsSharedFacesAcrossChunkBoundaries()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 2);
+        volume.SetMaterial(new GridCoordinate3i(1, 0, 0), 1);
+        volume.SetMaterial(new GridCoordinate3i(2, 0, 0), 2);
+
+        var mesh = volume.ExtractBoundarySurface();
+
+        Assert.That(volume.ChunkCount, Is.EqualTo(2));
+        Assert.That(mesh.TriangleCount, Is.EqualTo(20));
+        Assert.That(mesh.Vertices, Has.Count.EqualTo(12));
+        Assert.That(mesh.TriangleMaterialIds.Count(id => id == 1), Is.EqualTo(20));
+        Assert.That(mesh.TriangleMaterialIds.Count(id => id == 2), Is.EqualTo(20));
+    }
+
+    [Test]
+    public void ExtractBoundarySurface_EmitsCavityWallsAndIsDeterministic()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 0.5d, 2);
+        for (var z = 0; z < 3; z++)
+        for (var y = 0; y < 3; y++)
+        for (var x = 0; x < 3; x++)
+            volume.SetMaterial(new GridCoordinate3i(x, y, z), 5);
+        volume.SetEmpty(new GridCoordinate3i(1, 1, 1));
+
+        var first = volume.ExtractBoundarySurface();
+        var second = volume.ExtractBoundarySurface();
+
+        Assert.That(first.TriangleCount, Is.EqualTo(120));
+        Assert.That(first.Vertices, Is.EqualTo(second.Vertices));
+        Assert.That(first.TriangleIndices, Is.EqualTo(second.TriangleIndices));
+        Assert.That(first.TriangleMaterialIds, Is.EqualTo(second.TriangleMaterialIds));
+    }
+
+    [Test]
     public void Clear_ResetsOccupancyChunksAndMaterialCounts()
     {
         var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
