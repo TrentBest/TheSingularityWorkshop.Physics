@@ -18,7 +18,9 @@ on:
     paths:
       - "site/**"
       - "docs/experiments/projectile-trajectory.run.json"
+      - "docs/experiments/terrain-height-field.run.json"
       - "tools/ProjectileRunRecordGenerator/**"
+      - "tools/TerrainHeightFieldRunRecordGenerator/**"
       - "Physics/Experiments/ProjectileTrajectoryExperiment.cs"
       - ".github/workflows/physics-pages.yml"
   workflow_dispatch:
