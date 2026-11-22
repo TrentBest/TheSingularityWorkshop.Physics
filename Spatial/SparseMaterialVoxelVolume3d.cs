@@ -14,6 +14,7 @@ public sealed class SparseMaterialVoxelVolume3d
 {
     private readonly Dictionary<GridCoordinate3i, int[]> _chunks = new();
     private readonly Dictionary<int, long> _materialCounts = new();
+    private VoxelSurfaceMesh3d? _cachedBoundarySurface;
 
     /// <summary>Gets the world-space minimum corner of voxel (0,0,0).</summary>
     public Vector3d Origin { get; }
@@ -111,6 +112,7 @@ public sealed class SparseMaterialVoxelVolume3d
 
         materials[index] = materialId;
         _materialCounts[materialId] = GetMaterialVoxelCount(materialId) + 1;
+        _cachedBoundarySurface = null;
         return true;
     }
 
@@ -134,6 +136,7 @@ public sealed class SparseMaterialVoxelVolume3d
         if (IsChunkEmpty(materials))
             _chunks.Remove(chunkCoordinate);
 
+        _cachedBoundarySurface = null;
         return true;
     }
 
@@ -286,6 +289,15 @@ public sealed class SparseMaterialVoxelVolume3d
 
         return ApplyEdits(edits);
     }
+
+    /// <summary>Returns a cached boundary mesh, rebuilding it after the next volume mutation.</summary>
+    /// <remarks>
+    /// This cache avoids repeating a full extraction when the volume has not changed. It is not
+    /// an incremental chunk mesher: any changed voxel invalidates the complete cached mesh.
+    /// Use <see cref="ExtractBoundarySurface"/> as the uncached reference extraction.
+    /// </remarks>
+    public VoxelSurfaceMesh3d ExtractBoundarySurfaceCached() =>
+        _cachedBoundarySurface ??= ExtractBoundarySurface();
 
     /// <summary>Extracts the deterministic, outward-facing boundary triangles of the occupied voxels.</summary>
     /// <remarks>
@@ -443,6 +455,7 @@ public sealed class SparseMaterialVoxelVolume3d
         _chunks.Clear();
         _materialCounts.Clear();
         SolidVoxelCount = 0;
+        _cachedBoundarySurface = null;
     }
 
     private void DecrementMaterialCount(int materialId)
