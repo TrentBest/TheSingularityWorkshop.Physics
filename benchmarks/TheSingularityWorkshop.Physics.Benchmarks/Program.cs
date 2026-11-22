@@ -285,3 +285,60 @@ public class DeterministicCpuWorldContactScalingBenchmarks
             result.Diagnostics.MomentumResidualKilogramMetresPerSecond.Magnitude;
     }
 }
+
+
+/// <summary>
+/// Measures the discrete volumetric terrain surface extraction paths. The fixture
+/// contains many allocated chunks so localized edits can demonstrate chunk reuse.
+/// </summary>
+[MemoryDiagnoser]
+[BenchmarkCategory("PHY-VOLUMETRIC-TERRAIN-SURFACE")]
+public class VolumetricTerrainSurfaceBenchmarks
+{
+    private SparseMaterialVoxelVolume3d _volume = null!;
+    private bool _alternateMaterial;
+
+    [Params(8, 16)]
+    public int ChunkCountPerAxis { get; set; }
+
+    [GlobalSetup]
+    public void Setup()
+    {
+        const int chunkSize = 8;
+        _volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, chunkSize);
+        var extent = ChunkCountPerAxis * chunkSize;
+
+        for (var x = 0; x < extent; x++)
+        for (var y = 0; y < extent; y++)
+        for (var z = 0; z < extent; z++)
+        {
+            _volume.SetMaterial(new GridCoordinate3i(x, y, z), 1);
+        }
+
+        // Prime both caches outside the measured operation.
+        _volume.ExtractBoundarySurfaceCached();
+        _volume.ExtractBoundarySurfaceIncremental();
+    }
+
+    [Benchmark(Baseline = true)]
+    public int FullReferenceExtraction() =>
+        _volume.ExtractBoundarySurface().TriangleCount;
+
+    [Benchmark]
+    public int WholeMeshCachedExtraction() =>
+        _volume.ExtractBoundarySurfaceCached().TriangleCount;
+
+    [Benchmark]
+    public int IncrementalCachedExtraction() =>
+        _volume.ExtractBoundarySurfaceIncremental().TriangleCount;
+
+    [Benchmark]
+    public int IncrementalExtractionAfterLocalizedEdit()
+    {
+        _alternateMaterial = !_alternateMaterial;
+        _volume.SetMaterial(
+            new GridCoordinate3i(ChunkCountPerAxis * 4, ChunkCountPerAxis * 4, ChunkCountPerAxis * 4),
+            _alternateMaterial ? 2 : 1);
+        return _volume.ExtractBoundarySurfaceIncremental().TriangleCount;
+    }
+}
