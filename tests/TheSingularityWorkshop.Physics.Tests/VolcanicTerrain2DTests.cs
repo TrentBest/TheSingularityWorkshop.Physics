@@ -86,4 +86,65 @@ public sealed class VolcanicTerrain2DTests
 
         Assert.That(terrain.SampleElevation(1, 1), Is.EqualTo(0d));
     }
+
+    [Test]
+    public void Export_PreservesSnapshotAndExplicitMetadata()
+    {
+        var initial = Enumerable.Range(0, 12).Select(value => (double)value - 3d).ToArray();
+        var terrain = new VolcanicTerrain2D(4, 3, 2.5d, 4d, initial);
+        terrain.DepositEruption(1, 1, 2d, 20d);
+        var snapshot = terrain.SnapshotElevation();
+        var metadata = new VolcanicTerrain2DExportMetadata
+        {
+            DatasetId = "city-region-test",
+            Repository = "https://github.com/TrentBest/TheSingularityWorkshop.Physics",
+            Revision = "test-revision",
+            ModelVersion = "1",
+            RunId = "test-run-001",
+            CoordinateFrameId = "test-local-frame",
+            OriginX = 100d,
+            OriginY = 200d,
+            PositiveXAxis = "east",
+            PositiveYAxis = "north",
+            VerticalDatum = "local-zero",
+            PositiveVerticalDirection = "up"
+        };
+
+        var envelope = VolcanicTerrain2DExport.Create(terrain, metadata);
+        var json = VolcanicTerrain2DExport.Serialize(envelope);
+        using var document = System.Text.Json.JsonDocument.Parse(json);
+        var root = document.RootElement;
+
+        Assert.That(root.GetProperty("schema").GetString(), Is.EqualTo(VolcanicTerrain2DExport.Schema));
+        Assert.That(root.GetProperty("source").GetProperty("runId").GetString(), Is.EqualTo("test-run-001"));
+        Assert.That(root.GetProperty("coordinateFrame").GetProperty("origin")[0].GetDouble(), Is.EqualTo(100d));
+        Assert.That(root.GetProperty("grid").GetProperty("width").GetInt32(), Is.EqualTo(4));
+        Assert.That(root.GetProperty("grid").GetProperty("height").GetInt32(), Is.EqualTo(3));
+        Assert.That(root.GetProperty("elevations").EnumerateArray().Select(value => value.GetDouble()),
+            Is.EqualTo(snapshot));
+    }
+
+    [Test]
+    public void Export_RejectsNonFiniteCoordinateOrigin()
+    {
+        var terrain = new VolcanicTerrain2D(2, 2, 1d, 1d, new double[4]);
+        var metadata = new VolcanicTerrain2DExportMetadata
+        {
+            DatasetId = "dataset",
+            Repository = "repo",
+            Revision = "revision",
+            ModelVersion = "1",
+            RunId = "run",
+            CoordinateFrameId = "frame",
+            OriginX = double.NaN,
+            OriginY = 0d,
+            PositiveXAxis = "east",
+            PositiveYAxis = "north",
+            VerticalDatum = "datum",
+            PositiveVerticalDirection = "up"
+        };
+
+        Assert.Throws<ArgumentException>(() => VolcanicTerrain2DExport.Create(terrain, metadata));
+    }
+
 }
