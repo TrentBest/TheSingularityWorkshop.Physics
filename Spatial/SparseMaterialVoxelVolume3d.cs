@@ -176,6 +176,7 @@ public sealed class SparseMaterialVoxelVolume3d
 
         var changedCount = 0;
         var dirtyChunks = new HashSet<GridCoordinate3i>();
+        var affectedSurfaceChunks = new HashSet<GridCoordinate3i>();
         for (var i = 0; i < edits.Count; i++)
         {
             var edit = edits[i];
@@ -187,12 +188,37 @@ public sealed class SparseMaterialVoxelVolume3d
                 continue;
 
             changedCount++;
-            dirtyChunks.Add(GetChunkCoordinate(edit.Voxel));
+            var chunk = GetChunkCoordinate(edit.Voxel);
+            dirtyChunks.Add(chunk);
+            affectedSurfaceChunks.Add(chunk);
+
+            // A changed voxel on a chunk boundary can expose or hide faces owned by
+            // the voxel in the adjacent chunk. Only those face-neighbor chunks need invalidation.
+            var localX = PositiveRemainder(edit.Voxel.X, ChunkSize);
+            var localY = PositiveRemainder(edit.Voxel.Y, ChunkSize);
+            var localZ = PositiveRemainder(edit.Voxel.Z, ChunkSize);
+            if (localX == 0)
+                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X - 1, chunk.Y, chunk.Z));
+            if (localX == ChunkSize - 1)
+                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X + 1, chunk.Y, chunk.Z));
+            if (localY == 0)
+                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y - 1, chunk.Z));
+            if (localY == ChunkSize - 1)
+                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y + 1, chunk.Z));
+            if (localZ == 0)
+                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y, chunk.Z - 1));
+            if (localZ == ChunkSize - 1)
+                affectedSurfaceChunks.Add(new GridCoordinate3i(chunk.X, chunk.Y, chunk.Z + 1));
         }
 
         var orderedDirtyChunks = dirtyChunks.ToArray();
         Array.Sort(orderedDirtyChunks, GridCoordinate3iComparer.Instance);
-        return new SparseMaterialVoxelEditResult3d(changedCount, Array.AsReadOnly(orderedDirtyChunks));
+        var orderedSurfaceChunks = affectedSurfaceChunks.ToArray();
+        Array.Sort(orderedSurfaceChunks, GridCoordinate3iComparer.Instance);
+        return new SparseMaterialVoxelEditResult3d(
+            changedCount,
+            Array.AsReadOnly(orderedDirtyChunks),
+            Array.AsReadOnly(orderedSurfaceChunks));
     }
 
     /// <summary>Removes occupied voxels whose centers lie inside or on a spherical brush.</summary>
