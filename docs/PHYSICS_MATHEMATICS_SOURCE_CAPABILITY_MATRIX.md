@@ -57,6 +57,31 @@ The recursive tree contains both `Spatial/` and `Physics/Spatial/` folders. Insp
 
 **Decision deferred:** do not move files or rename namespaces as part of this inventory. First inspect project compile inclusion, public API consumers, serialization and cross-repository dependencies. Then choose a single coherent ownership convention (for example, all shared dimensional primitives under one spatial foundation with dimension-specific geometry capabilities above it). Any relocation must preserve public API compatibility or be explicitly versioned.
 
+## Focused Mathematics source review (2026-11-22)
+
+This review inspected the current implementations and focused tests for 2D/3D vectors, the 3×3 matrix primitive, scalar finite differences, composite Simpson quadrature, and Squirrel3. It is a source-contract review, not a complete numerical-analysis certification.
+
+### Findings
+
+| Family | Observed implementation contract | Evidence and limitation | Readiness |
+|---|---|---|---|
+| Scalar 2D/3D vectors | Immutable, finite-component, unit-agnostic values; exact equality; Euclidean operations; no frame or unit typing | Focused tests cover arithmetic, dot/cross products, normalization, invalid values, and selected overflow cases. Vector3d uses scaled magnitude/normalization to handle large finite inputs. Vector2d and Vector3d differ in overflow exception behavior and magnitude strategy; this should be reconciled or explicitly documented before a shared vector capability contract is frozen. | **Partial** |
+| Dense 3×3 matrix | Immutable finite row-major matrix; matrix-times-column-vector convention; determinant, transpose, product | Tests establish identity, transform convention, determinant, transpose, and selected overflow rejection. No inverse, decomposition, conditioning, or general matrix API is claimed. The source currently contains two adjacent XML summary comments on Multiply; remove the redundant one during cleanup. | **Partial** |
+| Vector3d batch operations | Caller-owned structure-of-arrays spans; allocation-free CPU Add, Scale, Dot; matching-index aliasing supported | Tests cover basic values, in-place scale, mismatched lengths, and non-finite scalar rejection. Unlike scalar Vector3d, the batch methods do not validate component inputs or arithmetic outputs for finiteness. This may be an intentional low-level throughput contract, but it must be explicit and tested before being composed as a scientific provider. No GPU execution is implemented. | **Partial** |
+| Finite differences | Scalar two-point central difference; optional Richardson refinement at h and h/2 | Tests compare against polynomial and sine derivatives, exercise invalid/non-finite paths, show a step-size tradeoff, and verify four function evaluations. The Richardson correction is explicitly an asymptotic indicator, not a rigorous bound; callers must provide a deterministic, sufficiently smooth function and choose a meaningful step. | **Present / bounded** |
+| Numerical quadrature | Composite Simpson rule on finite intervals with positive even interval count; optional doubled-grid Richardson refinement | Tests cover exact cubic integration, sine, reversed/zero-width intervals, invalid inputs, overflow, and an exponential integral comparison. The correction magnitude is not a rigorous error bound and depends on smoothness/asymptotic behavior. The implementation limits work to one million refined intervals. | **Present / bounded** |
+| Deterministic sampling | Squirrel3 32-bit deterministic hash, sequential stream, bounded integer selection, convenience methods, stream fork | Source documents deterministic seed/call-order behavior, intentional unsigned overflow, non-cryptographic use, and lack of thread safety. Existing tests should be assessed for known-answer vectors, range/unbiasedness properties, and any statistical claims before exposing this as a general random-sampling capability. Determinism alone is not statistical validation. | **Partial** |
+
+### Capability decomposition decision
+
+Do not combine these into one broad "Mathematics" provider. The current evidence suggests at least three coherent capability families, subject to contract completion:
+
+1. **Spatial linear algebra primitives:** scalar vectors, matrix transforms, and explicit frame/unit semantics. Keep scalar 2D/3D and batch execution as distinguishable execution surfaces under a coherent mathematical contract rather than assuming they have identical validation semantics.
+2. **Numerical calculus:** derivative estimation and quadrature are separate numerical methods with different smoothness assumptions, work models, and error indicators. They may share a numerical-methods ontology parent, but should retain independent capability contracts.
+3. **Deterministic sampling:** hash/random-access sampling and sequential stream generation need explicit reproducibility/version guarantees and separate statistical evidence.
+
+Before creating adapters, close the identified contract gaps, inspect the remaining public methods and tests, and add independent experiments where they provide evidence beyond unit tests. No new bundle IDs are assigned by this audit.
+
 ## Gaps before broad adapter expansion
 
 1. Complete source/test/theory/experiment mapping for all 21 observed source domains.
