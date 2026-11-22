@@ -6,6 +6,8 @@ const routeFor = routeForNavigationState;
 const parseRoute = parseNavigationRoute;
 let state = parseRoute(location.hash);
 let record;
+let terrainRecord;
+let terrainLoadError;
 function send(type, payload={}) {
   const next = resolveNavigationTransition(state.screen, type);
   if (!next) return;
@@ -13,17 +15,17 @@ function send(type, payload={}) {
     if (history.state?.previous) { history.back(); return; }
     const destination = state.screen === "FSM" ? (state.returnScreen ?? "HOME") : next;
     state = {...state, ...payload, screen:destination};
-    history.replaceState({screen:state.screen,sample:state.sample}, "", routeFor(state));
+    history.replaceState({screen:state.screen,sample:state.sample,terrainMode:state.terrainMode,terrainCell:state.terrainCell}, "", routeFor(state));
     render();
     return;
   }
   const previous = state.screen;
   state = {...state, ...payload, screen:next, ...(type === "INSPECT_FSM" ? {returnScreen:previous} : {})};
   const route = routeFor(state);
-  if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample,previous}, "", route);
+  if (location.hash !== route) history.pushState({screen:state.screen,sample:state.sample,terrainMode:state.terrainMode,terrainCell:state.terrainCell,previous}, "", route);
   render();
 }
-window.addEventListener("popstate", () => { state = {...parseRoute(location.hash), sample:history.state?.sample ?? 0}; render(); });
+window.addEventListener("popstate", () => { state = {...parseRoute(location.hash), sample:history.state?.sample ?? 0, terrainMode:history.state?.terrainMode ?? "edited", terrainCell:history.state?.terrainCell ?? 144}; render(); });
 window.addEventListener("hashchange", () => {
   const parsed = parseRoute(location.hash);
   if (parsed.screen !== state.screen) { state = parsed; render(); }
@@ -45,11 +47,12 @@ function home() {
   <div class="section-head"><div><div class="kicker">Choose a domain</div><h2>Explore the atlas</h2></div><p>Each doorway leads to a physical question. The status tells you whether the model is implemented, bounded, or still a research direction.</p></div>
   <div class="grid">
     <a class="tile" href="#/experience/projectile" data-action="OPEN_PROJECTILE"><span class="number">01 / MECHANICS</span><h3>Motion & trajectories</h3><p>Follow position and velocity through time. Inspect a recorded 3D projectile experiment.</p><span class="status">● WORKING EXPERIMENT</span></a>
-    <article class="tile"><span class="number">02 / GEOMETRY</span><h3>Shapes & space</h3><p>Explore boundaries, coordinates, transformations, and spatial relationships.</p><span class="status">◌ PRIMITIVES + LESSON RECORD</span></article>
-    <article class="tile"><span class="number">03 / THERMODYNAMICS</span><h3>Heat & energy</h3><p>Trace temperature and energy through bounded thermal models.</p><span class="status">◌ BOUNDED MODELS</span></article>
-    <article class="tile"><span class="number">04 / FLUIDS</span><h3>Water & flow</h3><p>Explore shallow-water fields, rainfall accumulation, and conservation evidence.</p><span class="status">◌ BOUNDED MODELS</span></article>
-    <article class="tile"><span class="number">05 / ACOUSTICS</span><h3>Waves & sound</h3><p>Compare direct and reflected paths in a declared room geometry.</p><span class="status">◌ ANALYTICAL MODELS</span></article>
-    <article class="tile"><span class="number">06 / MATERIALS</span><h3>Structure & matter</h3><p>Discover the path from physical properties to stress, deformation, and failure.</p><span class="status">◇ RESEARCH DOMAIN</span></article>
+    <a class="tile" href="#/experience/terrain" data-action="OPEN_TERRAIN"><span class="number">02 / GEOLOGY</span><h3>Terrain & landforms</h3><p>Inspect a Physics-generated height field, compare a bowl with a smooth elevation edit, and sample the actual grid.</p><span class="status">● GENERATED HEIGHT FIELD</span></a>
+    <article class="tile"><span class="number">03 / GEOMETRY</span><h3>Shapes & space</h3><p>Explore boundaries, coordinates, transformations, and spatial relationships.</p><span class="status">◌ PRIMITIVES + LESSON RECORD</span></article>
+    <article class="tile"><span class="number">04 / THERMODYNAMICS</span><h3>Heat & energy</h3><p>Trace temperature and energy through bounded thermal models.</p><span class="status">◌ BOUNDED MODELS</span></article>
+    <article class="tile"><span class="number">05 / FLUIDS</span><h3>Water & flow</h3><p>Explore shallow-water fields, rainfall accumulation, and conservation evidence.</p><span class="status">◌ BOUNDED MODELS</span></article>
+    <article class="tile"><span class="number">06 / ACOUSTICS</span><h3>Waves & sound</h3><p>Compare direct and reflected paths in a declared room geometry.</p><span class="status">◌ ANALYTICAL MODELS</span></article>
+    <article class="tile"><span class="number">07 / MATERIALS</span><h3>Structure & matter</h3><p>Discover the path from physical properties to stress, deformation, and failure.</p><span class="status">◇ RESEARCH DOMAIN</span></article>
   </div>
   <div class="panel"><div class="kicker">The learning loop</div><h2>Notice → Wonder → Predict → Observe → Explain</h2><p class="muted">A lesson should be approachable at first glance and inspectable all the way down: model identity, declared assumptions, source-backed samples, tests, and limitations.</p><div class="toolbar"><a class="button primary" href="#/experience/projectile" data-action="OPEN_PROJECTILE">Enter the first experiment →</a><a class="button" href="https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/PHYSICS_CAPABILITY_CATALOG.md">Capability catalog ↗</a></div></div>`;
 }
@@ -77,6 +80,59 @@ function inspector() {
  document.querySelector("#return").addEventListener("click",()=>send("BACK"));
  document.querySelectorAll("[data-row]").forEach(row=>row.addEventListener("click",()=>{state={...state,sample:Number(row.dataset.row)};render();}));
 }
+function terrainSvg() {
+ const definition=terrainRecord.definition;
+ const values=terrainRecord.samples[state.terrainMode==="base"?"baseElevations":"editedElevations"];
+ const min=Math.min(...values), max=Math.max(...values), span=max-min||1;
+ const halfWidth=18, halfHeight=9, heightScale=2.2, originX=350, originY=62;
+ const cells=values.map((value,index)=>{
+  const x=index%definition.width, y=Math.floor(index/definition.width);
+  const cx=originX+(x-y)*halfWidth;
+  const cy=originY+(x+y)*halfHeight-(value-min)*heightScale;
+  const t=(value-min)/span, hue=190-(t*145), light=32+(t*17);
+  const selected=index===state.terrainCell;
+  return `<polygon data-cell="${index}" points="${cx},${cy-8} ${cx+17},${cy} ${cx},${cy+8} ${cx-17},${cy}" fill="hsl(${hue},58%,${light}%)" stroke="${selected?"#f0c77a":"#0d1825"}" stroke-width="${selected?2.5:0.8}"><title>Cell (${x}, ${y}): ${value.toFixed(4)} m</title></polygon>`;
+ }).join("");
+ return `<svg viewBox="0 0 700 390" role="img" aria-label="Isometric projection of the Physics-generated terrain height samples">${cells}<text x="350" y="378" fill="#91a9b9" text-anchor="middle" font-size="11">17 × 17 recorded elevation samples · X varies fastest</text></svg>`;
+}
+function terrainProfileSvg() {
+ const definition=terrainRecord.definition;
+ const values=terrainRecord.samples[state.terrainMode==="base"?"baseElevations":"editedElevations"];
+ const row=Math.floor(definition.height/2), line=values.slice(row*definition.width,(row+1)*definition.width);
+ const min=Math.min(...line), max=Math.max(...line), span=max-min||1;
+ const x=i=>42+(i/(line.length-1))*556, y=v=>122-((v-min)/span)*88;
+ const points=line.map((v,i)=>`${x(i)},${y(v)}`).join(" ");
+ const dots=line.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="#7fe0d0"><title>X=${definition.origin.x+i*definition.cellWidth} m, elevation=${v.toFixed(4)} m</title></circle>`).join("");
+ return `<svg viewBox="0 0 640 150" role="img" aria-label="Centre-row elevation profile from the selected terrain record"><line x1="42" y1="122" x2="598" y2="122" stroke="#91a9b9"/><polyline points="${points}" fill="none" stroke="#7fe0d0" stroke-width="2.5" stroke-linejoin="round"/>${dots}<text x="42" y="143" fill="#91a9b9" font-size="10">West edge</text><text x="598" y="143" fill="#91a9b9" text-anchor="end" font-size="10">East edge</text><text x="320" y="14" fill="#91a9b9" text-anchor="middle" font-size="10">Centre row · elevation (m)</text></svg>`;
+}
+function terrain() {
+ if(!terrainRecord) {
+  view.innerHTML=`<div class="panel"><h2>Terrain record unavailable</h2><p class="muted">${terrainLoadError??"The checked-in terrain record could not be loaded."}</p><p class="muted">The site will not fabricate a replacement terrain field.</p></div>`;
+  return;
+ }
+ const d=terrainRecord.definition;
+ const values=terrainRecord.samples[state.terrainMode==="base"?"baseElevations":"editedElevations"];
+ const base=terrainRecord.samples.baseElevations;
+ const index=Math.max(0,Math.min(values.length-1,state.terrainCell??144));
+ const x=index%d.width, y=Math.floor(index/d.width);
+ const elevation=values[index], original=base[index];
+ const min=Math.min(...values), max=Math.max(...values);
+ const worldX=d.origin.x+x*d.cellWidth, worldY=d.origin.y+y*d.cellHeight;
+ view.innerHTML=`
+ <div class="crumb"><a href="#/home" data-action="BACK">ATLAS</a> / GEOLOGY / TERRAIN HEIGHT FIELD</div>
+ <div class="intro"><div><div class="kicker">Experience 02 · Geology / terrain authoring</div><h2>Shape the surface. Inspect the evidence.</h2><p>This is a rendered view of a reproducible Physics height-field record. Switch between the original parabolic bowl and the edited snapshot, then select any grid sample to inspect its actual elevation.</p></div><span class="tag">PHYSICS-GENERATED · 289 SAMPLES</span></div>
+ <div class="panel"><div class="section-head"><div><div class="kicker">Recorded terrain surface</div><h2>Isometric height field</h2></div><span class="tag">${d.width} × ${d.height} · ${d.cellWidth} m spacing</span></div>
+ <div class="toolbar"><button class="button ${state.terrainMode==="base"?"primary":""}" id="terrain-base">Original bowl</button><button class="button ${state.terrainMode==="edited"?"primary":""}" id="terrain-edited">Brush-edited surface</button><a class="button" href="./data/terrain-height-field.run.json" download>Download run record ↓</a></div>
+ <div class="plot-wrap">${terrainSvg()}</div>
+ <div class="plot-legend"><span><i class="dot"></i>Lower elevation</span><span style="color:var(--gold)">● Selected sample</span><span>Colour and height are mapped from recorded elevations</span></div></div>
+ <div class="inspector"><div class="panel"><div class="kicker">Selected grid sample</div><h3>Cell (${x}, ${y})</h3><div class="stats"><div class="stat"><span>Elevation</span><strong>${elevation.toFixed(3)} m</strong></div><div class="stat"><span>Brush change</span><strong>${(elevation-original>=0?"+":"")+(elevation-original).toFixed(3)} m</strong></div><div class="stat"><span>World X</span><strong>${worldX.toFixed(1)} m</strong></div><div class="stat"><span>World Y</span><strong>${worldY.toFixed(1)} m</strong></div></div><p class="muted">Record range: ${min.toFixed(3)}–${max.toFixed(3)} m. Click a diamond in the surface to inspect another sample.</p></div>
+ <div class="panel"><div class="kicker">Model and conventions</div><h3>Immutable 2D height field</h3><table class="data-table"><tr><td>Model</td><td>${terrainRecord.modelId}</td></tr><tr><td>Frame</td><td>${d.coordinateFrameId}</td></tr><tr><td>Vertical datum</td><td>${d.verticalDatum}</td></tr><tr><td>Positive vertical</td><td>${d.positiveVerticalDirection}</td></tr><tr><td>Storage</td><td>Row-major · X fastest</td></tr><tr><td>Base</td><td>Parabolic bowl</td></tr><tr><td>Edit</td><td>+2 m smooth radial brush</td></tr></table></div></div>
+ <div class="panel"><div class="kicker">Centre-row profile</div><h3>Elevation across the middle of the field</h3><div class="plot-wrap">${terrainProfileSvg()}</div></div>
+ <div class="panel"><div class="kicker">Scientific boundary</div><p class="muted">${terrainRecord.limitations.join(" ")}</p><p class="notice">This page visualizes recorded samples from TerrainHeightField2D. It does not run a terrain solver in the browser, infer geological history, or represent caves and overhangs.</p><div class="toolbar"><a class="button" href="https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/docs/TERRAIN_HEIGHT_FIELD_2D.md">Read the model contract ↗</a><a class="button" href="https://github.com/TrentBest/TheSingularityWorkshop.Physics/blob/development/tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs">Inspect tests ↗</a></div></div>`;
+ document.querySelector("#terrain-base").addEventListener("click",()=>{state={...state,terrainMode:"base"};render();});
+ document.querySelector("#terrain-edited").addEventListener("click",()=>{state={...state,terrainMode:"edited"};render();});
+ document.querySelectorAll("[data-cell]").forEach(cell=>cell.addEventListener("click",()=>{state={...state,terrainCell:Number(cell.dataset.cell)};render();}));
+}
 function fsmInspector() {
  const rows=Object.entries(transitions).flatMap(([from,actions])=>Object.entries(actions).map(([action,to])=>`<tr><td>${from}</td><td>${action}</td><td>${to==="RETURN"?"Previous screen":to}</td><td><span class="status">${to==="RETURN"?"HISTORY / FALLBACK": "DEFINED TRANSITION"}</span></td></tr>`)).join("");
  const current=state.returnScreen??"HOME";
@@ -89,12 +145,13 @@ function fsmInspector() {
  document.querySelector("#fsm-back").addEventListener("click",()=>send("BACK"));
 }
 function render(){
- document.querySelectorAll("nav [data-route]").forEach(a=>a.toggleAttribute("aria-current", (state.screen==="HOME"&&a.dataset.route==="home")||((state.screen==="PROJECTILE"||state.screen==="INSPECTOR")&&a.dataset.route==="experience")||(state.screen==="FSM"&&a.dataset.route==="system")));
- if(state.screen==="HOME") home(); else if(state.screen==="PROJECTILE") projectile(); else if(state.screen==="INSPECTOR") inspector(); else fsmInspector();
+ document.querySelectorAll("nav [data-route]").forEach(a=>a.toggleAttribute("aria-current", (state.screen==="HOME"&&a.dataset.route==="home")||((state.screen==="PROJECTILE"||state.screen==="INSPECTOR"||state.screen==="TERRAIN")&&a.dataset.route==="experience")||(state.screen==="FSM"&&a.dataset.route==="system")));
+ if(state.screen==="HOME") home(); else if(state.screen==="PROJECTILE") projectile(); else if(state.screen==="INSPECTOR") inspector(); else if(state.screen==="TERRAIN") terrain(); else fsmInspector();
 }
 document.addEventListener("click",e=>{
  const action=e.target.closest("[data-action]")?.dataset.action;
  if(action==="OPEN_PROJECTILE"){e.preventDefault();send(action);}
+ if(action==="OPEN_TERRAIN"){e.preventDefault();send(action);}
  if(action==="INSPECT_FSM"){e.preventDefault();send(action);}
  if(action==="BACK"){e.preventDefault();send(action);}
 });
@@ -104,6 +161,14 @@ async function start(){
   if(!response.ok) throw new Error(`Run record request failed: ${response.status}`);
   record=await response.json();
   if(!record.modelId||!Array.isArray(record.samples)||record.samples.length!==record.definition.stepCount+1) throw new Error("The run record failed its structural checks.");
+  try {
+   const terrainResponse=await fetch("./data/terrain-height-field.run.json");
+   if(!terrainResponse.ok) throw new Error(`Terrain record request failed: ${terrainResponse.status}`);
+   const loadedTerrain=await terrainResponse.json();
+   const expectedCells=loadedTerrain.definition.width*loadedTerrain.definition.height;
+   if(!loadedTerrain.modelId||loadedTerrain.samples.baseElevations.length!==expectedCells||loadedTerrain.samples.editedElevations.length!==expectedCells) throw new Error("The terrain record failed its structural checks.");
+   terrainRecord=loadedTerrain;
+  } catch(error) { terrainLoadError=String(error.message); }
   render();
  } catch(error) {
   view.innerHTML=`<div class="panel"><h2>Physics data unavailable</h2><p class="muted">${String(error.message)}</p><p class="muted">The site will not invent replacement measurements. Check the published run-record artifact and try again.</p></div>`;
