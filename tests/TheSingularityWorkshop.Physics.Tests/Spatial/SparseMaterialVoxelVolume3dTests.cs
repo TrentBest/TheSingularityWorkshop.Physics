@@ -342,6 +342,54 @@ public sealed class SparseMaterialVoxelVolume3dTests
     }
 
     [Test]
+    public void ExtractBoundarySurfaceCached_ReusesMeshUntilAnyMutation()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 2);
+        var firstVoxel = new GridCoordinate3i(0, 0, 0);
+        var secondVoxel = new GridCoordinate3i(2, 0, 0);
+        volume.SetMaterial(firstVoxel, 1);
+
+        var first = volume.ExtractBoundarySurfaceCached();
+        Assert.That(volume.ExtractBoundarySurfaceCached(), Is.SameAs(first));
+
+        volume.SetMaterial(secondVoxel, 2);
+        var afterSet = volume.ExtractBoundarySurfaceCached();
+        Assert.That(afterSet, Is.Not.SameAs(first));
+        Assert.That(afterSet.TriangleCount, Is.EqualTo(volume.ExtractBoundarySurface().TriangleCount));
+
+        volume.SetEmpty(firstVoxel);
+        var afterRemove = volume.ExtractBoundarySurfaceCached();
+        Assert.That(afterRemove, Is.Not.SameAs(afterSet));
+        Assert.That(afterRemove.TriangleCount, Is.EqualTo(volume.ExtractBoundarySurface().TriangleCount));
+
+        volume.Clear();
+        var afterClear = volume.ExtractBoundarySurfaceCached();
+        Assert.That(afterClear, Is.Not.SameAs(afterRemove));
+        Assert.That(afterClear.TriangleCount, Is.Zero);
+    }
+
+    [Test]
+    public void ExtractBoundarySurfaceCached_IsInvalidatedByBatchEditsAndSphereRemoval()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 2);
+        volume.SetMaterial(new GridCoordinate3i(0, 0, 0), 1);
+        var initial = volume.ExtractBoundarySurfaceCached();
+
+        volume.ApplyEdits(new[]
+        {
+            new MaterialVoxelEdit3d(new GridCoordinate3i(1, 0, 0), 2)
+        });
+        var afterBatch = volume.ExtractBoundarySurfaceCached();
+        Assert.That(afterBatch, Is.Not.SameAs(initial));
+        Assert.That(afterBatch.TriangleCount, Is.EqualTo(volume.ExtractBoundarySurface().TriangleCount));
+
+        volume.RemoveSphere(new Vector3d(0.5d, 0.5d, 0.5d), 0d);
+        var afterBrush = volume.ExtractBoundarySurfaceCached();
+        Assert.That(afterBrush, Is.Not.SameAs(afterBatch));
+        Assert.That(afterBrush.TriangleCount, Is.EqualTo(volume.ExtractBoundarySurface().TriangleCount));
+    }
+
+    [Test]
     public void Clear_ResetsOccupancyChunksAndMaterialCounts()
     {
         var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
