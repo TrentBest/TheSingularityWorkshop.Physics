@@ -17,7 +17,7 @@
 
 **Explore:** [Evidence-led Gallery](docs/GALLERY.md) · [Lenny and raWWar consumer-driven Physics roadmap](docs/CONSUMER_DRIVEN_PHYSICS_ROADMAP.md) · [Operation Sith branch reconciliation](docs/OPERATION_SITH_BRANCH_RECONCILIATION.md)
 
-**Enter the living Physics site:** [first Pages client](site/README.md) · [FSM-driven Pages architecture](docs/PHYSICS_PAGES_EXPERIENCE.md) · [implementation issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53) — a source-backed atlas and projectile evidence inspector are now implemented on development; publication remains gated.
+**Enter the living Physics site:** [first Pages client](site/README.md) · [FSM-driven Pages architecture](docs/PHYSICS_PAGES_EXPERIENCE.md) · [implementation issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53) — the source-backed atlas, projectile evidence inspector, generated terrain height-field experience, and navigation FSM inspector are implemented on development; publication remains gated.
 
 **Celestial mechanics:** [Newtonian gravity field and first fixed-step N-body integrator, units, limits, and validation gates](docs/CELESTIAL_MECHANICS_FOUNDATION.md) · [gravity-field evaluator](Physics/Astronomy/NewtonianGravityField.cs) · [orbital state](Physics/Astronomy/OrbitalBodyState.cs) · [velocity-Verlet stepper](Physics/Astronomy/NewtonianNBodyStepper.cs)
 
