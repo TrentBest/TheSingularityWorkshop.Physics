@@ -12,24 +12,38 @@ namespace TheSingularityWorkshop.Physics.Geology;
 /// </remarks>
 public sealed record VolcanicTerrain2DExportMetadata
 {
+    /// <summary>Stable identity of the exported terrain dataset.</summary>
     public required string DatasetId { get; init; }
+    /// <summary>Repository that owns the terrain model or experiment.</summary>
     public required string Repository { get; init; }
+    /// <summary>Source revision used to produce the terrain.</summary>
     public required string Revision { get; init; }
+    /// <summary>Version of the terrain model.</summary>
     public required string ModelVersion { get; init; }
+    /// <summary>Identifier of the experiment run that produced the terrain.</summary>
     public required string RunId { get; init; }
+    /// <summary>Identifier for the coordinate reference frame.</summary>
     public required string CoordinateFrameId { get; init; }
+    /// <summary>World-coordinate X value at the grid origin, in metres.</summary>
     public required double OriginX { get; init; }
+    /// <summary>World-coordinate Y value at the grid origin, in metres.</summary>
     public required double OriginY { get; init; }
+    /// <summary>Meaning and direction of the positive X axis.</summary>
     public required string PositiveXAxis { get; init; }
+    /// <summary>Meaning and direction of the positive Y axis.</summary>
     public required string PositiveYAxis { get; init; }
+    /// <summary>Vertical reference datum for elevation values.</summary>
     public required string VerticalDatum { get; init; }
+    /// <summary>Direction represented by increasing elevation values.</summary>
     public required string PositiveVerticalDirection { get; init; }
 }
 
 /// <summary>Creates the versioned, lossless interchange envelope for City terrain consumers.</summary>
 public static class VolcanicTerrain2DExport
 {
+    /// <summary>Schema identifier for the terrain height-field interchange format.</summary>
     public const string Schema = "singularity-physics.terrain-heightfield.v1";
+    /// <summary>Stable identifier of the volcanic terrain model.</summary>
     public const string Model = "geology.volcanic-terrain-2d";
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -38,6 +52,9 @@ public static class VolcanicTerrain2DExport
     };
 
     /// <summary>Builds a serializable export envelope from a defensive terrain snapshot.</summary>
+    /// <param name="terrain">Terrain field to export.</param>
+    /// <param name="metadata">Caller-owned provenance and coordinate conventions.</param>
+    /// <returns>A versioned interchange envelope containing the terrain snapshot.</returns>
     public static VolcanicTerrain2DExportEnvelope Create(
         VolcanicTerrain2D terrain,
         VolcanicTerrain2DExportMetadata metadata)
@@ -74,6 +91,8 @@ public static class VolcanicTerrain2DExport
     }
 
     /// <summary>Serializes an export envelope using the City interchange field names.</summary>
+    /// <param name="envelope">Interchange document to serialize.</param>
+    /// <returns>Indented JSON representation of the document.</returns>
     public static string Serialize(VolcanicTerrain2DExportEnvelope envelope)
     {
         ArgumentNullException.ThrowIfNull(envelope);
@@ -88,6 +107,13 @@ public static class VolcanicTerrain2DExport
 }
 
 /// <summary>Versioned Physics-to-City terrain interchange document.</summary>
+/// <param name="Schema">Versioned interchange schema identifier.</param>
+/// <param name="DatasetId">Stable identity of the exported dataset.</param>
+/// <param name="Source">Source repository, revision, model, and run provenance.</param>
+/// <param name="CoordinateFrame">Horizontal coordinate reference and grid origin.</param>
+/// <param name="Grid">Grid dimensions, cell spacing, and sample ordering.</param>
+/// <param name="Vertical">Elevation unit, datum, and positive direction.</param>
+/// <param name="Elevations">Row-major elevation samples, with X varying fastest.</param>
 public sealed record VolcanicTerrain2DExportEnvelope(
     string Schema,
     string DatasetId,
@@ -97,15 +123,38 @@ public sealed record VolcanicTerrain2DExportEnvelope(
     VolcanicTerrain2DExportVertical Vertical,
     double[] Elevations);
 
+/// <summary>Source provenance for an exported terrain dataset.</summary>
+/// <param name="Repository">Repository that owns the source.</param>
+/// <param name="Revision">Source revision identifier.</param>
+/// <param name="Model">Stable model identifier.</param>
+/// <param name="ModelVersion">Version of the source model.</param>
+/// <param name="RunId">Experiment run that produced the data.</param>
 public sealed record VolcanicTerrain2DExportSource(
     string Repository, string Revision, string Model, string ModelVersion, string RunId);
 
+/// <summary>Horizontal coordinate reference and origin for a terrain grid.</summary>
+/// <param name="Id">Coordinate frame identifier.</param>
+/// <param name="Units">Units used by the coordinate frame.</param>
+/// <param name="Origin">Two-dimensional world-coordinate origin.</param>
+/// <param name="XAxis">Meaning and positive direction of the X axis.</param>
+/// <param name="YAxis">Meaning and positive direction of the Y axis.</param>
 public sealed record VolcanicTerrain2DExportCoordinateFrame(
     string Id, string Units, double[] Origin, string XAxis, string YAxis);
 
+/// <summary>Dimensions, spacing, and sample-order conventions for a terrain grid.</summary>
+/// <param name="Width">Number of samples along X.</param>
+/// <param name="Height">Number of samples along Y.</param>
+/// <param name="CellWidth">Horizontal spacing between adjacent X samples.</param>
+/// <param name="CellHeight">Horizontal spacing between adjacent Y samples.</param>
+/// <param name="RowOrder">Ordering of rows in the serialized sample array.</param>
+/// <param name="SampleConvention">Convention locating samples within grid cells.</param>
 public sealed record VolcanicTerrain2DExportGrid(
     int Width, int Height, double CellWidth, double CellHeight,
     string RowOrder, string SampleConvention);
 
+/// <summary>Vertical measurement conventions for terrain elevations.</summary>
+/// <param name="Unit">Unit used for elevation values.</param>
+/// <param name="Datum">Vertical reference datum.</param>
+/// <param name="PositiveDirection">Direction represented by increasing elevation.</param>
 public sealed record VolcanicTerrain2DExportVertical(
     string Unit, string Datum, string PositiveDirection);
