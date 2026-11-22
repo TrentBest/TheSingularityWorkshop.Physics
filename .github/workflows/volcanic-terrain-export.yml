@@ -1,0 +1,65 @@
+name: Physics Volcanic Terrain Export
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    env:
+      PHYSICS_SOURCE_REVISION: ${{ github.sha }}
+      PHYSICS_RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Generate terrain from VolcanicTerrain2D
+        run: dotnet run --project samples/VolcanicTerrain2DExport/VolcanicTerrain2DExport.csproj --configuration Release -- /tmp/physics-volcanic-terrain.json
+
+      - name: Validate Physics-to-City interchange contract
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          import os
+          from pathlib import Path
+
+          data = json.loads(Path('/tmp/physics-volcanic-terrain.json').read_text(encoding='utf-8'))
+          assert data['schema'] == 'singularity-physics.terrain-heightfield.v1'
+          assert data['source']['repository'] == 'https://github.com/TrentBest/TheSingularityWorkshop.Physics'
+          assert data['source']['revision'] == os.environ['PHYSICS_SOURCE_REVISION']
+          assert data['source']['runId'] == os.environ['PHYSICS_RUN_ID']
+          assert data['source']['model'] == 'geology.volcanic-terrain-2d'
+          assert data['coordinateFrame']['id'] == 'physics-local-east-north-v1'
+          assert data['coordinateFrame']['units'] == 'metres'
+          assert data['coordinateFrame']['origin'] == [0, 0]
+          assert data['coordinateFrame']['xAxis'] == 'east'
+          assert data['coordinateFrame']['yAxis'] == 'north'
+          assert data['grid']['rowOrder'] == 'y-ascending; x-fastest'
+          assert data['grid']['sampleConvention'] == 'grid-index-origin'
+          assert data['grid']['width'] == 64 and data['grid']['height'] == 48
+          assert data['vertical'] == {'unit': 'metres', 'datum': 'model-base-elevation', 'positiveDirection': 'up'}
+          samples = data['elevations']
+          assert len(samples) == 64 * 48
+          assert all(math.isfinite(value) for value in samples)
+          assert max(samples) > min(samples)
+          print(f"Verified {len(samples)} finite Physics elevation samples and truthful local-frame provenance.")
+          PY
+
+      - name: Upload Physics terrain interchange artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-volcanic-terrain-heightfield
+          path: /tmp/physics-volcanic-terrain.json
+          if-no-files-found: error
