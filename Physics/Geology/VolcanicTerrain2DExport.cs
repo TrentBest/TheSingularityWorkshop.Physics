@@ -128,14 +128,6 @@ public static class VolcanicTerrain2DExport
 /// <param name="Grid">Grid dimensions, cell spacing, and sample ordering.</param>
 /// <param name="Vertical">Elevation unit, datum, and positive direction.</param>
 /// <param name="Elevations">Row-major elevation samples, with X varying fastest.</param>
-/// <summary>Versioned Physics-to-City terrain interchange document.</summary>
-/// <param name="Schema">Schema value.</param>
-/// <param name="DatasetId">DatasetId value.</param>
-/// <param name="Source">Source value.</param>
-/// <param name="CoordinateFrame">CoordinateFrame value.</param>
-/// <param name="Grid">Grid value.</param>
-/// <param name="Vertical">Vertical value.</param>
-/// <param name="Elevations">Elevations value.</param>
 public sealed record VolcanicTerrain2DExportEnvelope(
     string Schema,
     string DatasetId,
@@ -151,12 +143,6 @@ public sealed record VolcanicTerrain2DExportEnvelope(
 /// <param name="Model">Stable model identifier.</param>
 /// <param name="ModelVersion">Version of the source model.</param>
 /// <param name="RunId">Experiment run that produced the data.</param>
-/// <summary>Source repository and execution provenance.</summary>
-/// <param name="Repository">Repository value.</param>
-/// <param name="Revision">Revision value.</param>
-/// <param name="Model">Model value.</param>
-/// <param name="ModelVersion">ModelVersion value.</param>
-/// <param name="RunId">RunId value.</param>
 public sealed record VolcanicTerrain2DExportSource(
     string Repository, string Revision, string Model, string ModelVersion, string RunId);
 
@@ -166,12 +152,6 @@ public sealed record VolcanicTerrain2DExportSource(
 /// <param name="Origin">Two-dimensional world-coordinate origin.</param>
 /// <param name="XAxis">Meaning and positive direction of the X axis.</param>
 /// <param name="YAxis">Meaning and positive direction of the Y axis.</param>
-/// <summary>Horizontal coordinate frame and origin.</summary>
-/// <param name="Id">Id value.</param>
-/// <param name="Units">Units value.</param>
-/// <param name="Origin">Origin value.</param>
-/// <param name="XAxis">XAxis value.</param>
-/// <param name="YAxis">YAxis value.</param>
 public sealed record VolcanicTerrain2DExportCoordinateFrame(
     string Id, string Units, double[] Origin, string XAxis, string YAxis);
 
@@ -182,13 +162,6 @@ public sealed record VolcanicTerrain2DExportCoordinateFrame(
 /// <param name="CellHeight">Horizontal spacing between adjacent Y samples.</param>
 /// <param name="RowOrder">Ordering of rows in the serialized sample array.</param>
 /// <param name="SampleConvention">Convention locating samples within grid cells.</param>
-/// <summary>Regular heightfield dimensions and sample layout.</summary>
-/// <param name="Width">Width value.</param>
-/// <param name="Height">Height value.</param>
-/// <param name="CellWidth">CellWidth value.</param>
-/// <param name="CellHeight">CellHeight value.</param>
-/// <param name="RowOrder">RowOrder value.</param>
-/// <param name="SampleConvention">SampleConvention value.</param>
 public sealed record VolcanicTerrain2DExportGrid(
     int Width, int Height, double CellWidth, double CellHeight,
     string RowOrder, string SampleConvention);
@@ -197,9 +170,5 @@ public sealed record VolcanicTerrain2DExportGrid(
 /// <param name="Unit">Unit used for elevation values.</param>
 /// <param name="Datum">Vertical reference datum.</param>
 /// <param name="PositiveDirection">Direction represented by increasing elevation.</param>
-/// <summary>Vertical unit, datum, and positive direction.</summary>
-/// <param name="Unit">Unit value.</param>
-/// <param name="Datum">Datum value.</param>
-/// <param name="PositiveDirection">PositiveDirection value.</param>
 public sealed record VolcanicTerrain2DExportVertical(
     string Unit, string Datum, string PositiveDirection);
