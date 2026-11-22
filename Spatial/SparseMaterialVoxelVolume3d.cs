@@ -15,6 +15,7 @@ public sealed class SparseMaterialVoxelVolume3d
     private readonly Dictionary<GridCoordinate3i, int[]> _chunks = new();
     private readonly Dictionary<int, long> _materialCounts = new();
     private VoxelSurfaceMesh3d? _cachedBoundarySurface;
+    private readonly Dictionary<GridCoordinate3i, VoxelSurfaceMesh3d> _cachedChunkSurfaces = new();
 
     /// <summary>Gets the world-space minimum corner of voxel (0,0,0).</summary>
     public Vector3d Origin { get; }
@@ -112,7 +113,7 @@ public sealed class SparseMaterialVoxelVolume3d
 
         materials[index] = materialId;
         _materialCounts[materialId] = GetMaterialVoxelCount(materialId) + 1;
-        _cachedBoundarySurface = null;
+        InvalidateSurfaceChunks(voxel);
         return true;
     }
 
@@ -136,7 +137,7 @@ public sealed class SparseMaterialVoxelVolume3d
         if (IsChunkEmpty(materials))
             _chunks.Remove(chunkCoordinate);
 
-        _cachedBoundarySurface = null;
+        InvalidateSurfaceChunks(voxel);
         return true;
     }
 
@@ -305,11 +306,68 @@ public sealed class SparseMaterialVoxelVolume3d
     /// Each exposed voxel face becomes two triangles and retains the owning voxel's material ID.
     /// The output is a discrete block-face mesh, not a smoothed continuous isosurface.
     /// </remarks>
-    public VoxelSurfaceMesh3d ExtractBoundarySurface()
+    public VoxelSurfaceMesh3d ExtractBoundarySurface() => ExtractBoundarySurfaceCore(null);
+
+    /// <summary>Extracts the complete boundary mesh while reusing cached meshes for unchanged chunks.</summary>
+    /// <remarks>
+    /// Each cached chunk mesh evaluates its six face neighbors against the complete volume, so
+    /// shared faces and chunk seams remain correct. Mutations invalidate only the edited chunk and
+    /// face-adjacent chunk meshes. The returned aggregate mesh is recomposed on each call; use
+    /// <see cref="ExtractBoundarySurface"/> as the uncached correctness reference.
+    /// </remarks>
+    public VoxelSurfaceMesh3d ExtractBoundarySurfaceIncremental()
+    {
+        var chunkCoordinates = _chunks.Keys.ToArray();
+        Array.Sort(chunkCoordinates, GridCoordinate3iComparer.Instance);
+        var vertices = new List<Vector3d>();
+        var vertexIndices = new Dictionary<Vector3d, int>();
+        var triangleIndices = new List<int>();
+        var triangleMaterials = new List<int>();
+        var triangleNormals = new List<Vector3d>();
+
+        foreach (var chunkCoordinate in chunkCoordinates)
+        {
+            if (!_cachedChunkSurfaces.TryGetValue(chunkCoordinate, out var chunkMesh))
+            {
+                chunkMesh = ExtractBoundarySurfaceCore(chunkCoordinate);
+                _cachedChunkSurfaces.Add(chunkCoordinate, chunkMesh);
+            }
+
+            var remap = new int[chunkMesh.Vertices.Count];
+            for (var i = 0; i < chunkMesh.Vertices.Count; i++)
+            {
+                var position = chunkMesh.Vertices[i];
+                if (!vertexIndices.TryGetValue(position, out var index))
+                {
+                    index = vertices.Count;
+                    vertices.Add(position);
+                    vertexIndices.Add(position, index);
+                }
+                remap[i] = index;
+            }
+            foreach (var index in chunkMesh.TriangleIndices)
+                triangleIndices.Add(remap[index]);
+            foreach (var materialId in chunkMesh.TriangleMaterialIds)
+                triangleMaterials.Add(materialId);
+            foreach (var normal in chunkMesh.TriangleNormals)
+                triangleNormals.Add(normal);
+        }
+
+        return new VoxelSurfaceMesh3d(
+            Array.AsReadOnly(vertices.ToArray()),
+            Array.AsReadOnly(triangleIndices.ToArray()),
+            Array.AsReadOnly(triangleMaterials.ToArray()),
+            Array.AsReadOnly(triangleNormals.ToArray()));
+    }
+
+    private VoxelSurfaceMesh3d ExtractBoundarySurfaceCore(GridCoordinate3i? onlyChunk)
     {
         var occupied = new List<GridCoordinate3i>();
         foreach (var chunk in _chunks)
         {
+            if (onlyChunk.HasValue && chunk.Key != onlyChunk.Value)
+                continue;
+
             var chunkX = (long)chunk.Key.X * ChunkSize;
             var chunkY = (long)chunk.Key.Y * ChunkSize;
             var chunkZ = (long)chunk.Key.Z * ChunkSize;
@@ -434,6 +492,31 @@ public sealed class SparseMaterialVoxelVolume3d
         }
     }
 
+    private void InvalidateSurfaceChunks(GridCoordinate3i voxel)
+    {
+        _cachedBoundarySurface = null;
+        var chunk = GetChunkCoordinate(voxel);
+        _cachedChunkSurfaces.Remove(chunk);
+        var localX = PositiveRemainder(voxel.X, ChunkSize);
+        var localY = PositiveRemainder(voxel.Y, ChunkSize);
+        var localZ = PositiveRemainder(voxel.Z, ChunkSize);
+        if (localX == 0) RemoveChunkSurface((long)chunk.X - 1, chunk.Y, chunk.Z);
+        if (localX == ChunkSize - 1) RemoveChunkSurface((long)chunk.X + 1, chunk.Y, chunk.Z);
+        if (localY == 0) RemoveChunkSurface(chunk.X, (long)chunk.Y - 1, chunk.Z);
+        if (localY == ChunkSize - 1) RemoveChunkSurface(chunk.X, (long)chunk.Y + 1, chunk.Z);
+        if (localZ == 0) RemoveChunkSurface(chunk.X, chunk.Y, (long)chunk.Z - 1);
+        if (localZ == ChunkSize - 1) RemoveChunkSurface(chunk.X, chunk.Y, (long)chunk.Z + 1);
+
+        void RemoveChunkSurface(long x, long y, long z)
+        {
+            if (x is < int.MinValue or > int.MaxValue ||
+                y is < int.MinValue or > int.MaxValue ||
+                z is < int.MinValue or > int.MaxValue)
+                return;
+            _cachedChunkSurfaces.Remove(new GridCoordinate3i((int)x, (int)y, (int)z));
+        }
+    }
+
     private double SurfaceCoordinate(double origin, long index)
     {
         var coordinate = origin + (index * VoxelSize);
@@ -456,6 +539,7 @@ public sealed class SparseMaterialVoxelVolume3d
         _materialCounts.Clear();
         SolidVoxelCount = 0;
         _cachedBoundarySurface = null;
+        _cachedChunkSurfaces.Clear();
     }
 
     private void DecrementMaterialCount(int materialId)
