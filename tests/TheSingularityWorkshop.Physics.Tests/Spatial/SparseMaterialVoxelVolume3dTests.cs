@@ -1,0 +1,129 @@
+using NUnit.Framework;
+using TheSingularityWorkshop.Physics.Spatial;
+
+namespace TheSingularityWorkshop.Physics.Tests.Spatial;
+
+[TestFixture]
+public sealed class SparseMaterialVoxelVolume3dTests
+{
+    [Test]
+    public void Constructor_RejectsInvalidGridConfiguration()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, 0d));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, double.NaN));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 65));
+    }
+
+    [Test]
+    public void EmptyVolume_DoesNotAllocateChunksOrMaterialCounts()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 0.25d);
+
+        Assert.That(volume.ChunkCount, Is.Zero);
+        Assert.That(volume.SolidVoxelCount, Is.Zero);
+        Assert.That(volume.GetMaterialId(new GridCoordinate3i(0, 0, 0)), Is.Zero);
+        Assert.That(volume.GetMaterialVoxelCount(1), Is.Zero);
+        Assert.That(volume.SetEmpty(new GridCoordinate3i(0, 0, 0)), Is.False);
+    }
+
+    [Test]
+    public void SetMaterial_TracksOccupancyAndPerMaterialCounts()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 4);
+        var marble = new GridCoordinate3i(1, 2, 3);
+        var granite = new GridCoordinate3i(2, 2, 3);
+
+        Assert.That(volume.SetMaterial(marble, 10), Is.True);
+        Assert.That(volume.SetMaterial(marble, 10), Is.False);
+        Assert.That(volume.SetMaterial(granite, 20), Is.True);
+
+        Assert.That(volume.GetMaterialId(marble), Is.EqualTo(10));
+        Assert.That(volume.GetMaterialId(granite), Is.EqualTo(20));
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(2));
+        Assert.That(volume.GetMaterialVoxelCount(10), Is.EqualTo(1));
+        Assert.That(volume.GetMaterialVoxelCount(20), Is.EqualTo(1));
+        Assert.That(volume.ChunkCount, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void ReplacingMaterial_UpdatesCountsWithoutChangingOccupancy()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+        var voxel = new GridCoordinate3i(0, 0, 0);
+        volume.SetMaterial(voxel, 4);
+
+        Assert.That(volume.SetMaterial(voxel, 9), Is.True);
+
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(1));
+        Assert.That(volume.GetMaterialVoxelCount(4), Is.Zero);
+        Assert.That(volume.GetMaterialVoxelCount(9), Is.EqualTo(1));
+        Assert.That(volume.GetMaterialId(voxel), Is.EqualTo(9));
+    }
+
+    [Test]
+    public void NegativeVoxelCoordinates_UseFloorBasedChunkAddressing()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 4);
+        var negative = new GridCoordinate3i(-1, -4, -5);
+        var neighboring = new GridCoordinate3i(0, -4, -5);
+
+        volume.SetMaterial(negative, 3);
+        volume.SetMaterial(neighboring, 3);
+
+        Assert.That(volume.GetMaterialId(negative), Is.EqualTo(3));
+        Assert.That(volume.GetMaterialId(neighboring), Is.EqualTo(3));
+        Assert.That(volume.ChunkCount, Is.EqualTo(2));
+        Assert.That(volume.GetMaterialVoxelCount(3), Is.EqualTo(2));
+    }
+
+    [Test]
+    public void SetEmpty_ReleasesMaterialCountsAndLastChunk()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 4);
+        var voxel = new GridCoordinate3i(-1, 0, 0);
+        volume.SetMaterial(voxel, 12);
+
+        Assert.That(volume.SetEmpty(voxel), Is.True);
+        Assert.That(volume.SetEmpty(voxel), Is.False);
+        Assert.That(volume.SolidVoxelCount, Is.Zero);
+        Assert.That(volume.GetMaterialVoxelCount(12), Is.Zero);
+        Assert.That(volume.ChunkCount, Is.Zero);
+    }
+
+    [Test]
+    public void WorldMapping_UsesFloorAndIncludesOriginOffset()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(new Vector3d(10d, -2d, 4d), 0.5d, 8);
+
+        Assert.That(volume.WorldToVoxel(new Vector3d(9.999d, -2d, 4d)), Is.EqualTo(new GridCoordinate3i(-1, 0, 0)));
+        Assert.That(volume.WorldToVoxel(new Vector3d(10d, -2.001d, 4d)), Is.EqualTo(new GridCoordinate3i(0, -1, 0)));
+        Assert.That(volume.GetVoxelCenter(new GridCoordinate3i(2, 4, -2)), Is.EqualTo(new Vector3d(11.25d, 0.25d, 3.25d)));
+    }
+
+    [Test]
+    public void SetMaterial_RejectsReservedEmptyIdentityWithoutMutation()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+        var voxel = new GridCoordinate3i(0, 0, 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => volume.SetMaterial(voxel, 0));
+        Assert.That(volume.ChunkCount, Is.Zero);
+        Assert.That(volume.SolidVoxelCount, Is.Zero);
+    }
+
+    [Test]
+    public void Clear_ResetsOccupancyChunksAndMaterialCounts()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+        volume.SetMaterial(new GridCoordinate3i(0, 0, 0), 1);
+        volume.SetMaterial(new GridCoordinate3i(20, 0, 0), 2);
+
+        volume.Clear();
+
+        Assert.That(volume.SolidVoxelCount, Is.Zero);
+        Assert.That(volume.ChunkCount, Is.Zero);
+        Assert.That(volume.GetMaterialVoxelCount(1), Is.Zero);
+        Assert.That(volume.GetMaterialVoxelCount(2), Is.Zero);
+    }
+}
