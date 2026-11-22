@@ -11,7 +11,8 @@ Serve this directory over HTTP (for example, `python3 -m http.server 8000 --dire
 - **Atlas:** a small set of domain entry points with explicit implementation-status language.
 - **Projectile experience:** a recorded 3D point-projectile trajectory from the actual Physics generator.
 - **Evidence inspector:** selected sample state and the complete recorded sample table.
-- **Navigation FSM:** `HOME`, `PROJECTILE`, and `INSPECTOR`, with semantic transitions and hash-based browser navigation.
+- **Navigation FSM:** `HOME`, `PROJECTILE`, `INSPECTOR`, and `FSM`, with semantic transitions and hash-based browser navigation.
+- **FSM inspector:** the System navigation entry exposes the live transition table, current route, allowed actions, and history fallback behavior. It inspects the actual presentation state machine; it is not a Physics simulation.
 - **No browser-side solver:** the chart and inspector read the checked-in JSON record. They do not independently calculate physical outcomes.
 
 ## Evidence contract
