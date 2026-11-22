@@ -1,6 +1,6 @@
 # Physics and Mathematics Repository Inventory
 
-**Snapshot:** 2026-11-21 UTC  
+**Snapshot:** 2026-11-22 UTC  
 **Branch inspected:** development  
 **Purpose:** establish a factual starting point for [the Physics + Mathematics MicroBundle program](PHYSICS_AND_MATHEMATICS_MICROBUNDLE_ARCHITECTURE.md) tracked by [issue #56](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/56).
 
@@ -75,7 +75,7 @@ Three adapter implementations are present in the current source:
 
 The manifest for bundle 5203 was missing from the manifest tree even though its adapter and README entry existed. It has now been added. The MicroBundles README now links all three manifests.
 
-The three manifests have since been expanded under the versioned Physics MicroBundle manifest schema. They now declare ontology placement, capability inputs/outputs, model assumptions and exclusions, units/frame/time semantics where known, execution responsibilities, evidence status, and educational references. The schema and contract are documented in [the manifest contract](PHYSICS_MICROBUNDLE_MANIFEST_CONTRACT.md). A CI validator checks schema validity, unique bundle/provider IDs, capability-provider inclusion, and referenced-file existence. This remains descriptive metadata: it does not prove scientific validity or that a runtime provider was loaded. Runtime descriptor parity is a remaining validation gap.
+The three manifests have since been expanded under the versioned Physics MicroBundle manifest schema. They now declare ontology placement, capability inputs/outputs, model assumptions and exclusions, units/frame/time semantics where known, execution responsibilities, evidence status, and educational references. The schema and contract are documented in [the manifest contract](PHYSICS_MICROBUNDLE_MANIFEST_CONTRACT.md). CI validates schema correctness, unique bundle/provider IDs, capability-provider inclusion, referenced-file existence, and parity between each manifest and its matching runtime adapter: bundle ID, descriptor version, and provider-ID set. The source-to-adapter check currently uses a constrained C# regex rather than a full parser. This remains descriptive metadata: it does not prove scientific validity or that a runtime provider was loaded.
 
 The current adapters do not constitute a general physics simulation loop. Existing documentation correctly distinguishes contact evidence, a supplied-contact impulse response, and prescribed motion from a full collision/rigid-body/world solver.
 
@@ -132,6 +132,6 @@ A README or experiment description is not automatically a textbook chapter. A ru
 
 ## Current status
 
-The architecture chapter and umbrella issue are established. The three existing adapters have corresponding expanded manifests, a versioned schema, and a CI validation gate. The first source-to-capability matrix now records the three current vertical slices, candidate Mathematics/Mechanics/Spatial families, and the unresolved shared Spatial ownership question. Full domain coverage, runtime descriptor parity, textbook metadata, and ontology-driven laboratory catalog remain future work.
+The architecture chapter and umbrella issue are established. The three existing adapters have corresponding expanded manifests, a versioned schema, and a CI validation gate. The first source-to-capability matrix now records the three current vertical slices, candidate Mathematics/Mechanics/Spatial families, and the unresolved shared Spatial ownership question. Full domain coverage, textbook metadata, and the ontology-driven laboratory catalog remain future work. The latest verified Physics workflow passed the expanded manifest-to-adapter identity checks and the complete experiment/build/test/package pipeline.
 
 No master promotion, NuGet publication, Pages deployment, or branch deletion was performed.
