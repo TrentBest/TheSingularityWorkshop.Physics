@@ -1,6 +1,6 @@
 # Physics and Mathematics Source-to-Capability Coverage Matrix
 
-**Snapshot:** 2026-11-21 UTC  
+**Snapshot:** 2026-11-22 UTC  
 **Branch:** `development`  
 **Purpose:** connect concrete source to independently consumable capabilities and their evidence. This is an implementation audit, not a claim of scientific completeness.
 
