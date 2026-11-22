@@ -9,8 +9,8 @@ if (args.Length != 1)
 
 var revision = RequiredEnvironment("PHYSICS_SOURCE_REVISION");
 var runId = RequiredEnvironment("PHYSICS_RUN_ID");
-const int width = 64;
-const int height = 48;
+const int width = 24;
+const int height = 18;
 const double cellWidth = 10d;
 const double cellHeight = 10d;
 
@@ -27,7 +27,7 @@ for (var x = 0; x < width; x++)
 
 var terrain = new VolcanicTerrain2D(width, height, cellWidth, cellHeight, initial);
 var depositedVolume = 250_000d;
-var maximumRise = terrain.DepositEruption(width / 2, height / 2, 140d, depositedVolume);
+var maximumRise = terrain.DepositEruption(width / 2, height / 2, 60d, depositedVolume);
 var metadata = new VolcanicTerrain2DExportMetadata
 {
     DatasetId = $"physics-volcanic-terrain-2d-{revision[..12]}",
