@@ -13,40 +13,28 @@ namespace TheSingularityWorkshop.Physics.Geology;
 public sealed record VolcanicTerrain2DExportMetadata
 {
     /// <summary>Stable identity of the exported terrain dataset.</summary>
-    /// <summary>DatasetId supplied by the export caller.</summary>
     public required string DatasetId { get; init; }
     /// <summary>Repository that owns the terrain model or experiment.</summary>
-    /// <summary>Repository supplied by the export caller.</summary>
     public required string Repository { get; init; }
     /// <summary>Source revision used to produce the terrain.</summary>
-    /// <summary>Revision supplied by the export caller.</summary>
     public required string Revision { get; init; }
     /// <summary>Version of the terrain model.</summary>
-    /// <summary>ModelVersion supplied by the export caller.</summary>
     public required string ModelVersion { get; init; }
     /// <summary>Identifier of the experiment run that produced the terrain.</summary>
-    /// <summary>RunId supplied by the export caller.</summary>
     public required string RunId { get; init; }
     /// <summary>Identifier for the coordinate reference frame.</summary>
-    /// <summary>CoordinateFrameId supplied by the export caller.</summary>
     public required string CoordinateFrameId { get; init; }
     /// <summary>World-coordinate X value at the grid origin, in metres.</summary>
-    /// <summary>OriginX supplied by the export caller.</summary>
     public required double OriginX { get; init; }
     /// <summary>World-coordinate Y value at the grid origin, in metres.</summary>
-    /// <summary>OriginY supplied by the export caller.</summary>
     public required double OriginY { get; init; }
     /// <summary>Meaning and direction of the positive X axis.</summary>
-    /// <summary>PositiveXAxis supplied by the export caller.</summary>
     public required string PositiveXAxis { get; init; }
     /// <summary>Meaning and direction of the positive Y axis.</summary>
-    /// <summary>PositiveYAxis supplied by the export caller.</summary>
     public required string PositiveYAxis { get; init; }
     /// <summary>Vertical reference datum for elevation values.</summary>
-    /// <summary>VerticalDatum supplied by the export caller.</summary>
     public required string VerticalDatum { get; init; }
     /// <summary>Direction represented by increasing elevation values.</summary>
-    /// <summary>PositiveVerticalDirection supplied by the export caller.</summary>
     public required string PositiveVerticalDirection { get; init; }
 }
 
@@ -54,10 +42,8 @@ public sealed record VolcanicTerrain2DExportMetadata
 public static class VolcanicTerrain2DExport
 {
     /// <summary>Schema identifier for the terrain height-field interchange format.</summary>
-    /// <summary>Versioned Physics terrain interchange schema identifier.</summary>
     public const string Schema = "singularity-physics.terrain-heightfield.v1";
     /// <summary>Stable identifier of the volcanic terrain model.</summary>
-    /// <summary>Stable identifier for the source terrain model.</summary>
     public const string Model = "geology.volcanic-terrain-2d";
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
