@@ -390,6 +390,56 @@ public sealed class SparseMaterialVoxelVolume3dTests
     }
 
     [Test]
+    public void ExtractBoundarySurfaceIncremental_MatchesReferenceAcrossChunkEditsAndReusesUnchangedResult()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 2);
+        volume.SetMaterial(new GridCoordinate3i(1, 0, 0), 1);
+        volume.SetMaterial(new GridCoordinate3i(2, 0, 0), 2);
+        volume.SetMaterial(new GridCoordinate3i(4, 0, 0), 3);
+        volume.SetMaterial(new GridCoordinate3i(4, 1, 0), 3);
+
+        var first = volume.ExtractBoundarySurfaceIncremental();
+        AssertMeshesEquivalent(first, volume.ExtractBoundarySurface());
+        Assert.That(volume.ExtractBoundarySurfaceIncremental(), Is.SameAs(first));
+
+        // Removing a voxel on the seam invalidates both owner chunks, not the distant chunk.
+        volume.SetEmpty(new GridCoordinate3i(2, 0, 0));
+        var afterSeamEdit = volume.ExtractBoundarySurfaceIncremental();
+        Assert.That(afterSeamEdit, Is.Not.SameAs(first));
+        AssertMeshesEquivalent(afterSeamEdit, volume.ExtractBoundarySurface());
+        Assert.That(volume.ExtractBoundarySurfaceIncremental(), Is.SameAs(afterSeamEdit));
+
+        // Direct writes and batch/brush edits must also keep the chunk cache coherent.
+        volume.SetMaterial(new GridCoordinate3i(5, 0, 0), 4);
+        AssertMeshesEquivalent(volume.ExtractBoundarySurfaceIncremental(), volume.ExtractBoundarySurface());
+
+        volume.ApplyEdits(new[]
+        {
+            new MaterialVoxelEdit3d(new GridCoordinate3i(1, 0, 0), 0),
+            new MaterialVoxelEdit3d(new GridCoordinate3i(8, 0, 0), 5)
+        });
+        AssertMeshesEquivalent(volume.ExtractBoundarySurfaceIncremental(), volume.ExtractBoundarySurface());
+
+        volume.RemoveSphere(volume.GetVoxelCenter(new GridCoordinate3i(4, 0, 0)), 0d);
+        AssertMeshesEquivalent(volume.ExtractBoundarySurfaceIncremental(), volume.ExtractBoundarySurface());
+
+        volume.Clear();
+        var empty = volume.ExtractBoundarySurfaceIncremental();
+        Assert.That(empty.TriangleCount, Is.Zero);
+        AssertMeshesEquivalent(empty, volume.ExtractBoundarySurface());
+    }
+
+    private static void AssertMeshesEquivalent(VoxelSurfaceMesh3d actual, VoxelSurfaceMesh3d expected)
+    {
+        Assert.That(actual.TriangleCount, Is.EqualTo(expected.TriangleCount));
+        Assert.That(actual.TriangleMaterialIds.OrderBy(id => id), Is.EqualTo(expected.TriangleMaterialIds.OrderBy(id => id)));
+        Assert.That(actual.TriangleNormals.OrderBy(n => n.X).ThenBy(n => n.Y).ThenBy(n => n.Z),
+            Is.EqualTo(expected.TriangleNormals.OrderBy(n => n.X).ThenBy(n => n.Y).ThenBy(n => n.Z)));
+        Assert.That(actual.Vertices.OrderBy(v => v.X).ThenBy(v => v.Y).ThenBy(v => v.Z),
+            Is.EqualTo(expected.Vertices.OrderBy(v => v.X).ThenBy(v => v.Y).ThenBy(v => v.Z)));
+    }
+
+    [Test]
     public void Clear_ResetsOccupancyChunksAndMaterialCounts()
     {
         var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
