@@ -1,21 +1,13 @@
+import { navigationTransitions, parseNavigationRoute, resolveNavigationTransition, routeForNavigationState } from "./navigation-fsm.js";
+
 const view = document.querySelector("#view");
-const transitions = {
-  HOME: { OPEN_PROJECTILE: "PROJECTILE", INSPECT_FSM: "FSM" },
-  PROJECTILE: { BACK: "HOME", INSPECT: "INSPECTOR", SELECT_SAMPLE: "PROJECTILE", INSPECT_FSM: "FSM" },
-  INSPECTOR: { BACK: "PROJECTILE", SELECT_SAMPLE: "INSPECTOR", INSPECT_FSM: "FSM" },
-  FSM: { BACK: "RETURN" }
-};
-const routeFor = state => state.screen === "HOME" ? "#/home" : state.screen === "PROJECTILE" ? "#/experience/projectile" : state.screen === "INSPECTOR" ? "#/experience/projectile/evidence" : "#/system/navigation";
-function parseRoute(hash) {
-  if (hash === "#/system/navigation") return {screen:"FSM", sample:0, returnScreen:"HOME"};
-  if (hash === "#/experience/projectile/evidence") return {screen:"INSPECTOR", sample:0};
-  if (hash === "#/experience/projectile") return {screen:"PROJECTILE", sample:0};
-  return {screen:"HOME", sample:0};
-}
+const transitions = navigationTransitions;
+const routeFor = routeForNavigationState;
+const parseRoute = parseNavigationRoute;
 let state = parseRoute(location.hash);
 let record;
 function send(type, payload={}) {
-  const next = transitions[state.screen]?.[type];
+  const next = resolveNavigationTransition(state.screen, type);
   if (!next) return;
   if (type === "BACK") {
     if (history.state?.previous) { history.back(); return; }
