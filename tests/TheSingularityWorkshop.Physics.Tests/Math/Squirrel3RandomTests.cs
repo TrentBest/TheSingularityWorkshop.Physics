@@ -40,6 +40,21 @@ public sealed class Squirrel3RandomTests
     }
 
     [Test]
+    public void NextDouble_ScaledRangeNeverReturnsExclusiveUpperBoundAfterRounding()
+    {
+        // This seed's first sample is high enough that interpolation at this magnitude
+        // rounds to the upper endpoint unless the implementation corrects for it.
+        var random = new Squirrel3Random(2u);
+        const double minimum = 1e16;
+        const double maximum = 1e16 + 2d;
+
+        var value = random.NextDouble(minimum, maximum);
+
+        Assert.That(value, Is.GreaterThanOrEqualTo(minimum));
+        Assert.That(value, Is.LessThan(maximum));
+    }
+
+    [Test]
     public void NextInt_StaysWithinHalfOpenBounds()
     {
         var random = new Squirrel3Random(7u);
