@@ -68,7 +68,12 @@ jobs:
           PY
 
       - name: Check browser application JavaScript syntax
-        run: node --check site/app.js
+        run: |
+          node --check site/navigation-fsm.js
+          node --check site/app.js
+
+      - name: Test navigation FSM routes and transitions
+        run: node --test site/tests/*.test.mjs
 
       - name: Verify static site entry points and data
         run: |
