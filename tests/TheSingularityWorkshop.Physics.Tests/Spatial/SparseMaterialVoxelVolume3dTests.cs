@@ -13,6 +13,9 @@ public sealed class SparseMaterialVoxelVolume3dTests
         Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, double.NaN));
         Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d, 65));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(new Vector3d(double.NaN, 0d, 0d), 1d));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(new Vector3d(0d, double.PositiveInfinity, 0d), 1d));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMaterialVoxelVolume3d(new Vector3d(0d, 0d, double.NegativeInfinity), 1d));
     }
 
     [Test]
