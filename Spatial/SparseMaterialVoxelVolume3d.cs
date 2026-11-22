@@ -251,6 +251,149 @@ public sealed class SparseMaterialVoxelVolume3d
         return ApplyEdits(edits);
     }
 
+    /// <summary>Extracts the deterministic, outward-facing boundary triangles of the occupied voxels.</summary>
+    /// <remarks>
+    /// Shared faces between occupied voxels are omitted, including across chunk boundaries.
+    /// Each exposed voxel face becomes two triangles and retains the owning voxel's material ID.
+    /// The output is a discrete block-face mesh, not a smoothed continuous isosurface.
+    /// </remarks>
+    public VoxelSurfaceMesh3d ExtractBoundarySurface()
+    {
+        var occupied = new List<GridCoordinate3i>();
+        foreach (var chunk in _chunks)
+        {
+            var chunkX = (long)chunk.Key.X * ChunkSize;
+            var chunkY = (long)chunk.Key.Y * ChunkSize;
+            var chunkZ = (long)chunk.Key.Z * ChunkSize;
+            var materials = chunk.Value;
+
+            for (var z = 0; z < ChunkSize; z++)
+            for (var y = 0; y < ChunkSize; y++)
+            for (var x = 0; x < ChunkSize; x++)
+            {
+                var index = (z * ChunkSize * ChunkSize) + (y * ChunkSize) + x;
+                if (materials[index] == 0)
+                    continue;
+
+                var voxelX = chunkX + x;
+                var voxelY = chunkY + y;
+                var voxelZ = chunkZ + z;
+                if (voxelX is < int.MinValue or > int.MaxValue ||
+                    voxelY is < int.MinValue or > int.MaxValue ||
+                    voxelZ is < int.MinValue or > int.MaxValue)
+                    continue;
+
+                occupied.Add(new GridCoordinate3i((int)voxelX, (int)voxelY, (int)voxelZ));
+            }
+        }
+
+        occupied.Sort(GridCoordinate3iComparer.Instance);
+
+        var vertices = new List<Vector3d>();
+        var vertexIndices = new Dictionary<Vector3d, int>();
+        var triangleIndices = new List<int>();
+        var triangleMaterials = new List<int>();
+        var triangleNormals = new List<Vector3d>();
+
+        foreach (var voxel in occupied)
+        {
+            var materialId = GetMaterialId(voxel);
+            var x = (long)voxel.X;
+            var y = (long)voxel.Y;
+            var z = (long)voxel.Z;
+
+            if (!IsOccupied(x - 1, y, z))
+                AddFace(
+                    (x, y, z), (x, y, z + 1), (x, y + 1, z + 1), (x, y + 1, z),
+                    new Vector3d(-1d, 0d, 0d), materialId);
+            if (!IsOccupied(x + 1, y, z))
+                AddFace(
+                    (x + 1, y, z), (x + 1, y + 1, z), (x + 1, y + 1, z + 1), (x + 1, y, z + 1),
+                    new Vector3d(1d, 0d, 0d), materialId);
+            if (!IsOccupied(x, y - 1, z))
+                AddFace(
+                    (x, y, z), (x + 1, y, z), (x + 1, y, z + 1), (x, y, z + 1),
+                    new Vector3d(0d, -1d, 0d), materialId);
+            if (!IsOccupied(x, y + 1, z))
+                AddFace(
+                    (x, y + 1, z), (x, y + 1, z + 1), (x + 1, y + 1, z + 1), (x + 1, y + 1, z),
+                    new Vector3d(0d, 1d, 0d), materialId);
+            if (!IsOccupied(x, y, z - 1))
+                AddFace(
+                    (x, y, z), (x, y + 1, z), (x + 1, y + 1, z), (x + 1, y, z),
+                    new Vector3d(0d, 0d, -1d), materialId);
+            if (!IsOccupied(x, y, z + 1))
+                AddFace(
+                    (x, y, z + 1), (x + 1, y, z + 1), (x + 1, y + 1, z + 1), (x, y + 1, z + 1),
+                    new Vector3d(0d, 0d, 1d), materialId);
+        }
+
+        return new VoxelSurfaceMesh3d(
+            Array.AsReadOnly(vertices.ToArray()),
+            Array.AsReadOnly(triangleIndices.ToArray()),
+            Array.AsReadOnly(triangleMaterials.ToArray()),
+            Array.AsReadOnly(triangleNormals.ToArray()));
+
+        bool IsOccupied(long voxelX, long voxelY, long voxelZ)
+        {
+            if (voxelX is < int.MinValue or > int.MaxValue ||
+                voxelY is < int.MinValue or > int.MaxValue ||
+                voxelZ is < int.MinValue or > int.MaxValue)
+                return false;
+
+            return IsSolid(new GridCoordinate3i((int)voxelX, (int)voxelY, (int)voxelZ));
+        }
+
+        void AddFace(
+            (long X, long Y, long Z) a,
+            (long X, long Y, long Z) b,
+            (long X, long Y, long Z) c,
+            (long X, long Y, long Z) d,
+            Vector3d normal,
+            int faceMaterialId)
+        {
+            var ia = AddVertex(a);
+            var ib = AddVertex(b);
+            var ic = AddVertex(c);
+            var id = AddVertex(d);
+
+            triangleIndices.Add(ia);
+            triangleIndices.Add(ib);
+            triangleIndices.Add(ic);
+            triangleIndices.Add(ia);
+            triangleIndices.Add(ic);
+            triangleIndices.Add(id);
+            triangleMaterials.Add(faceMaterialId);
+            triangleMaterials.Add(faceMaterialId);
+            triangleNormals.Add(normal);
+            triangleNormals.Add(normal);
+        }
+
+        int AddVertex((long X, long Y, long Z) corner)
+        {
+            var position = new Vector3d(
+                SurfaceCoordinate(Origin.X, corner.X),
+                SurfaceCoordinate(Origin.Y, corner.Y),
+                SurfaceCoordinate(Origin.Z, corner.Z));
+
+            if (vertexIndices.TryGetValue(position, out var existing))
+                return existing;
+
+            var index = vertices.Count;
+            vertices.Add(position);
+            vertexIndices.Add(position, index);
+            return index;
+        }
+    }
+
+    private double SurfaceCoordinate(double origin, long index)
+    {
+        var coordinate = origin + (index * VoxelSize);
+        if (!double.IsFinite(coordinate))
+            throw new ArithmeticException("Voxel surface lies outside the finite world-coordinate range.");
+        return coordinate;
+    }
+
     /// <summary>Sets the voxel containing a world-space point to the specified material.</summary>
     public bool SetMaterialAt(Vector3d point, int materialId) =>
         SetMaterial(WorldToVoxel(point), materialId);
