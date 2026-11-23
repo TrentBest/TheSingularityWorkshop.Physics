@@ -269,3 +269,8 @@ This is an implementation roadmap, not a claim that these coupled solvers alread
 `GeologicalTimeInterval` now records geological age in years before present separately from monotonically increasing simulation elapsed seconds and a non-negative step index. Geological age decreases toward the present; simulation time increases. Equal geological start/end ages are valid for instantaneous events. This makes a million-year player-facing interval representable without implying that it is one solver iteration or the only clock in the system.
 
 `GeologicalEventRecord` captures a stable event/type identity, interval, source/result revision identities, model and algorithm identities/versions, JSON-object parameters, and a player-readable summary. The record is immutable metadata: it does not execute a process, prove that referenced revisions exist, or commit world state. A future coordinator must validate candidate outputs and referenced revisions before atomic commit. Focused tests cover clock direction, a one-million-year interval, instantaneous events, invalid clocks, and event provenance validation.
+
+
+## Source inventory and implementation status
+
+The exact source-to-capability audit is maintained in [Planetary world-generation source inventory](PLANETARY_WORLD_GENERATION_SOURCE_INVENTORY.md). It distinguishes existing orbital, terrain, fault, voxel, timeline, and timekeeping foundations from missing planetary interior, plate, stratigraphy, climate, erosion, sediment, and geological replay integrations. Consult it before introducing new types so existing foundations are reused rather than duplicated.
