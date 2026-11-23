@@ -42,13 +42,14 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 7. Retain generic checkpoints/events/replay primitives and geological event/time metadata.
 8. Represent local stratigraphic columns with material identity, elevation bounds, formation intervals, and event provenance.
 9. Arrange those columns on a regular, immutable XY sample grid and query them by integer grid coordinate.
+10. Bind every occupied sparse material voxel to a stratigraphic layer and original formation event through a complete, revision-bound immutable annotation map.
 
 ## Explicit gaps before a complete procedural planet
 
 - Planetary body definition that joins radius, mass, composition, rotation, internal energy/temperature, and orbital/radiative boundary conditions into a versioned initial-state record.
 - A validated planetary interior model: core/mantle/crust structure, heat sources and transport, material/rheology assumptions, and mantle dynamics or explicitly reduced approximations.
 - Lithosphere/plate state: plate geometry, thickness, density, motion, boundary conditions, and convergent/divergent/transform interaction. The current fault primitive is prescribed kinematics, not this solver.
-- A material-property catalogue, lateral stratigraphic correlation, process-derived layer creation, fault displacement of strata, and volumetric fault/intrusion cross-cutting relationships. The column grid provides regular samples only; it does not interpolate between columns, infer continuity, or deform strata.
+- A material-property catalogue, lateral stratigraphic correlation, process-derived layer creation, fault displacement of strata, and volumetric fault/intrusion cross-cutting relationships. The column grid provides regular samples only; it does not interpolate between columns, infer continuity, or deform strata. The new geological voxel-provenance map labels occupied voxels against an existing immutable volume revision but does not reconstruct geometry or simulate deformation.
 - Physical weathering, erosion, sediment transport, and deposition with water and solid-material budgets.
 - Atmospheric weather and long-term climate models with declared coupling to surface processes.
 - Hydrologic routing and groundwater/karst processes coupled to terrain and material changes.
@@ -62,13 +63,13 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 1. Finish the source inventory and canonical terrain query/authoring contract without duplicating existing APIs.
 2. Add an immutable geological revision/transaction boundary over existing terrain snapshots; test stale source revisions, validation rejection, and failure atomicity. (Initial in-memory 2D boundary now implemented in `GeologicalTerrainRevision2D.cs`; durable persistence and geological replay remain future work.)
 3. Connect prescribed fault events to an explicit terrain/stratigraphy representation while preserving layer provenance and clearly stating the kinematic limits. (The first finite-fault/column intersection query now identifies a cut layer; applying deformation and propagating it through a volume remain open.)
-4. Add a minimal layered-material column/volume contract before claiming strata or fault cross-cutting. (Immutable local columns and the regular sampled grid now exist in `StratigraphicColumn3d.cs` and `StratigraphicColumnGrid3d.cs`; continuous layer geometry, lateral correlation, and fault offsets remain open.)
+4. Add a minimal layered-material column/volume contract before claiming strata or fault cross-cutting. (Immutable local columns and the regular sampled grid now exist in `StratigraphicColumn3d.cs` and `StratigraphicColumnGrid3d.cs`; `GeologicalVoxelProvenance3d.cs` now binds complete layer/event annotations to an exact sparse material-volume revision. Continuous layer geometry, lateral correlation, and fault offsets remain open.)
 5. Build process-specific plate/interior, climate, hydrology, and sediment models as separate validated increments.
 6. Connect geological events to the existing timeline/checkpoint/replay infrastructure through a model-specific adapter.
 7. Only then compose a planetary history generator and accelerate measured bottlenecks on GPU.
 
 ## Evidence and limitations
 
-The existing terrain authoring API is documented in `docs/TERRAIN_HEIGHT_FIELD_2D.md` and tested by `tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs`. The 3D material-volume contract is documented in `docs/SPARSE_MATERIAL_VOXEL_VOLUME_3D.md`. The sampled column-grid contract is documented in `docs/STRATIGRAPHIC_COLUMN_GRIDS_3D.md`. Mountain extrusion is documented by its source and tests. Geological fault, event, revision-transaction, and stratigraphic-column primitives have focused tests.
+The existing terrain authoring API is documented in `docs/TERRAIN_HEIGHT_FIELD_2D.md` and tested by `tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs`. The 3D material-volume contract is documented in `docs/SPARSE_MATERIAL_VOXEL_VOLUME_3D.md`. The sampled column-grid contract is documented in `docs/STRATIGRAPHIC_COLUMN_GRIDS_3D.md`. The revision-bound voxel provenance contract is documented in `docs/GEOLOGICAL_VOXEL_PROVENANCE_3D.md`. Mountain extrusion is documented by its source and tests. Geological fault, event, revision-transaction, and stratigraphic-column primitives have focused tests.
 
 This inventory is deliberately conservative: a documented future capability is not an implemented solver, a geometric operation is not a physical process, and a renderable surface is not authoritative geological state.
