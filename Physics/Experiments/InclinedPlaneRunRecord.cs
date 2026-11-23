@@ -16,10 +16,14 @@ public sealed record InclinedPlaneRunRecord
     public string ModelId { get; init; } = "mechanics.frictionless-inclined-plane";
 
     /// <summary>Version of the model contract.</summary>
-    public string ModelVersion { get; init; } = "1";
+    public string ModelVersion { get; init; } = "2";
 
     /// <summary>Version of this serialized record schema.</summary>
-    public int SchemaVersion { get; init; } = 1;
+    public int SchemaVersion { get; init; } = 2;
+
+    /// <summary>Coordinate convention used by all force and acceleration vectors.</summary>
+    public string ForceVectorFrame { get; init; } =
+        "local incline frame: +X horizontal toward foot of incline; +Y vertically upward; +Z out of incline plane";
 
     /// <summary>Units used by the model.</summary>
     public IReadOnlyDictionary<string, string> Units { get; init; } =
