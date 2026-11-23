@@ -146,6 +146,14 @@ Weather is atmospheric state and forcing (for example pressure, temperature, hum
 
 This distinction also informs educational content: weather phenomena, climate, weathering, erosion, and geological formation deserve connected but distinct explanations and reference material. A weather event may trigger a flood or landslide; that does not make atmospheric weather the same model as the resulting geomorphic process.
 
+## Implemented first fault-kinematics contract
+
+The initial code slice is now present in `Physics/Geology/FaultKinematics3d.cs` with focused tests in `tests/TheSingularityWorkshop.Physics.Tests/Geology/FaultKinematics3dTests.cs`.
+
+It defines a caller-identified planar fault, explicit coordinate frame and linear unit, normalized strike and down-dip basis, oriented plane normal, explicit hanging-wall side, declared mechanism, and signed strike/dip slip components. The resulting hanging-wall displacement is a full 3D vector; the footwall is stationary in this prescribed block model. The contract does not infer handedness, stress regime, or fault sense, and it does not claim to model rupture or earthquake dynamics.
+
+Current limitations are intentional: the mathematical plane is infinite, the displacement is a discontinuous block offset, and there is no finite rupture patch, segmented/curved surface, distributed elastic deformation, layer intersection, or material-volume update yet. This is the shared kinematic foundation, not the finished fault system. CI validation is running for this first code increment.
+
 ## Expanded implementation program
 
 The sequence below is deliberately staged so that the first numerical models are useful without pretending to solve the entire planet.
