@@ -45,10 +45,8 @@ public sealed class GeologicalTerrainRevisionStore2DTests
         var source = new GeologicalTerrainRevision2D("r0", Terrain());
         Assert.Throws<ArgumentException>(() => Candidate(source, geologicalEvent: Event("other", "r1")));
         Assert.Throws<InvalidOperationException>(() => GeologicalTerrainCandidate2D.Create(
-            source, "r1", Event(), _ => Terrain(12d) is var t
-                ? new TerrainHeightField2D(2, 2, 1d, 1d, -1d, -1d, "local", "sea-level", "m", "up",
-                    new[] { 1d, 1d, 1d, 1d })
-                : t));
+            source, "r1", Event(), _ => new TerrainHeightField2D(2, 2, 1d, 1d, -1d, -1d, "local", "sea-level", "m", "up",
+                new[] { 1d, 1d, 1d, 1d })));
     }
 
     [Test]
