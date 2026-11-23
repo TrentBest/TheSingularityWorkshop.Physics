@@ -73,6 +73,24 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3dTests
     }
 
     [Test]
+    public void Deserialize_LoadsPublishedSyntheticVolumetricFixture()
+    {
+        var path = Path.Combine(
+            TestContext.CurrentContext.TestDirectory,
+            "Records",
+            "sparse-material-voxel-volume-example.json");
+        var json = File.ReadAllText(path);
+
+        var envelope = SparseMaterialVoxelVolumeEnvelope3d.Deserialize(json);
+
+        Assert.That(envelope.DatasetId, Is.EqualTo("dataset.example.sparse-volume"));
+        Assert.That(envelope.Snapshot.SolidVoxelCount, Is.EqualTo(8));
+        Assert.That(envelope.Snapshot.GetMaterialId(new GridCoordinate3i(1, 1, 1)), Is.EqualTo(1));
+        Assert.That(envelope.Snapshot.GetMaterialId(new GridCoordinate3i(2, 1, 1)), Is.Zero);
+        Assert.That(envelope.GenerationParametersJson, Does.Contain("\"synthetic\":true"));
+    }
+
+    [Test]
     public void Deserialize_RejectsUnsupportedSchemaAndSampleLimit()
     {
         var envelope = CreateEnvelope(
