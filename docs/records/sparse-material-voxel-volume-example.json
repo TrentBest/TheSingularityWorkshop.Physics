@@ -1,0 +1,43 @@
+{
+  "schema": "singularity-physics.sparse-material-voxel-volume.v1",
+  "regionId": "region.example.synthetic",
+  "datasetId": "dataset.example.sparse-volume",
+  "revisionId": "revision.example.1",
+  "coordinateFrameId": "frame.local.east-north-up",
+  "linearUnit": "m",
+  "axisConvention": "X=east;Y=north;Z=up",
+  "verticalDatum": "model-relative",
+  "verticalPositiveDirection": "up",
+  "materialCatalogId": "materials.example.v1",
+  "sourceRepository": "TrentBest/TheSingularityWorkshop.Physics",
+  "sourceRevision": "fixture-authored",
+  "modelId": "model.example.fixture",
+  "modelVersion": "1.0.0",
+  "algorithmId": "algorithm.fixed-block-fixture",
+  "algorithmVersion": "1.0.0",
+  "generationParameters": {
+    "purpose": "schema-and-import-fixture",
+    "synthetic": true,
+    "notGeologicalEvidence": true
+  },
+  "sourceRunId": "run.example.fixed-block.001",
+  "seed": null,
+  "gridConvention": "voxel-min-corner-origin; cubic-voxels; integer-x-y-z-index",
+  "origin": {
+    "x": -1.0,
+    "y": 2.0,
+    "z": 0.0
+  },
+  "voxelSize": 1.0,
+  "chunkSize": 4,
+  "samples": [
+    { "x": 0, "y": 0, "z": 0, "materialId": 1 },
+    { "x": 0, "y": 0, "z": 1, "materialId": 1 },
+    { "x": 0, "y": 1, "z": 0, "materialId": 1 },
+    { "x": 0, "y": 1, "z": 1, "materialId": 1 },
+    { "x": 1, "y": 0, "z": 0, "materialId": 1 },
+    { "x": 1, "y": 0, "z": 1, "materialId": 1 },
+    { "x": 1, "y": 1, "z": 0, "materialId": 1 },
+    { "x": 1, "y": 1, "z": 1, "materialId": 1 }
+  ]
+}
