@@ -21,6 +21,17 @@
       "bookPath": "docs/books/power-and-industrial-systems.md",
       "descriptorPath": "docs/books/power-and-industrial-systems.book.json",
       "coverPath": "docs/books/covers/power-and-industrial-systems.svg"
+    },
+    {
+      "id": "surps.domain.ocean-atmosphere-maritime-phenomena",
+      "title": "Ocean, Atmosphere, and Maritime Phenomena",
+      "category": "Domain",
+      "lod": 1,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/ocean-atmosphere-maritime-phenomena.md",
+      "descriptorPath": "docs/books/ocean-atmosphere-maritime-phenomena.book.json",
+      "coverPath": "docs/books/covers/ocean-atmosphere-maritime-phenomena.svg"
     }
   ],
   "providers": [
