@@ -1,0 +1,47 @@
+<!-- Asset role: Original SURPS LOD 1 domain sourcebook cover artwork for Nuclear Fission Facilities. -->
+<!-- Provenance: Authored for TheSingularityWorkshop.Physics; original vector composition; no external image assets. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" role="img" aria-labelledby="title desc">
+  <title id="title">Nuclear Fission Facilities</title>
+  <desc id="desc">An original educational illustration of a stylized reactor vessel, a conceptual atom motif, heat-transfer pipes, and an electrical generator connected to a grid.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101a34"/><stop offset="1" stop-color="#183d4d"/></linearGradient>
+    <linearGradient id="vessel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d5e3df"/><stop offset="1" stop-color="#759ca8"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#e7c982" stop-opacity=".65"/><stop offset="1" stop-color="#e7c982" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="1600" fill="#071425"/>
+  <rect x="42" y="42" width="1116" height="1516" rx="28" fill="url(#bg)" stroke="#9abcc0" stroke-width="3"/>
+  <circle cx="300" cy="390" r="240" fill="url(#glow)"/>
+  <g transform="translate(300 390)" fill="none" stroke="#e7c982" stroke-width="5">
+    <ellipse rx="165" ry="68"/><ellipse rx="165" ry="68" transform="rotate(60)"/><ellipse rx="165" ry="68" transform="rotate(-60)"/>
+    <circle r="24" fill="#e7c982" stroke="none"/>
+    <circle cx="165" cy="0" r="13" fill="#9ac9ce"/><circle cx="-82" cy="142" r="13" fill="#9ac9ce"/><circle cx="-82" cy="-142" r="13" fill="#9ac9ce"/>
+  </g>
+  <g transform="translate(710 610)">
+    <rect x="-150" y="-260" width="300" height="520" rx="110" fill="url(#vessel)" stroke="#e1ece7" stroke-width="8"/>
+    <path d="M-120-190H120M-120 190H120" stroke="#24495b" stroke-width="8"/>
+    <path d="M-80-140V140M-30-140V140M20-140V140M70-140V140" stroke="#274f60" stroke-width="12"/>
+    <path d="M-105-95H105M-105 0H105M-105 95H105" stroke="#e7c982" stroke-width="5" stroke-opacity=".8"/>
+    <path d="M0-260V-340M0 260V340" stroke="#d7e8e4" stroke-width="12"/>
+  </g>
+  <g fill="none" stroke="#e7c982" stroke-width="10" stroke-linecap="round">
+    <path d="M710 270V170H910V400"/>
+    <path d="M860 870V980H990V1070"/>
+    <path d="M560 870V980H360V1070"/>
+  </g>
+  <g transform="translate(990 1130)" stroke="#d7e8e4" stroke-width="7" fill="none">
+    <circle r="90"/><path d="M-120 0H120M0-120V120"/><path d="M-55-55L55 55M55-55L-55 55"/>
+  </g>
+  <g transform="translate(360 1130)" stroke="#d7e8e4" stroke-width="7" fill="none">
+    <rect x="-110" y="-85" width="220" height="170" rx="18"/>
+    <path d="M-65 0H65M0-55V55"/>
+    <path d="M-150-115H150M-150 115H150"/>
+  </g>
+  <g fill="none" stroke="#8fc1c5" stroke-width="4" stroke-opacity=".65">
+    <path d="M120 1300H1080M120 1360H1080"/>
+  </g>
+  <g fill="#f0ead7" text-anchor="middle" font-family="Georgia,serif">
+    <text x="600" y="1450" font-size="68" letter-spacing="7">NUCLEAR FISSION</text>
+    <text x="600" y="1510" font-size="42" letter-spacing="8">FACILITIES</text>
+  </g>
+  <text x="600" y="118" text-anchor="middle" fill="#e7c982" font-family="Arial,sans-serif" font-size="22" letter-spacing="6">THE SINGULARITY WORKSHOP</text>
+</svg>
