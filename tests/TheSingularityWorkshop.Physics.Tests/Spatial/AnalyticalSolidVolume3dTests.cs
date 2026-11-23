@@ -20,7 +20,7 @@ public sealed class AnalyticalSolidVolume3dTests
             materialId: 7,
             chunkSize: 2);
 
-        Assert.That(volume.SolidVoxelCount, Is.GreaterThan(0));
+        Assert.That(volume.SolidVoxelCount, Is.EqualTo(32));
         Assert.That(volume.GetMaterialId(new GridCoordinate3i(1, 1, 1)), Is.EqualTo(7));
         Assert.That(volume.GetMaterialId(new GridCoordinate3i(0, 0, 0)), Is.Zero);
         Assert.That(volume.GetMaterialId(new GridCoordinate3i(3, 3, 3)), Is.Zero);
@@ -61,5 +61,31 @@ public sealed class AnalyticalSolidVolume3dTests
         Assert.Throws<ArgumentOutOfRangeException>(() => AnalyticalSolidVolume3d.CreateEllipsoid(
             Vector3d.Zero, 1d, 10, 10, 10, Vector3d.Zero, new Vector3d(1d, 1d, 1d), 1,
             maximumCandidateVoxelCount: 999));
+    }
+
+    [Test]
+    public void PublishedAnalyticalFixture_MatchesTheGeneratorAndVersionedEnvelope()
+    {
+        var path = Path.Combine(
+            TestContext.CurrentContext.TestDirectory,
+            "Records",
+            "analytical-ellipsoid-volume-example.json");
+        var envelope = SparseMaterialVoxelVolumeEnvelope3d.Deserialize(File.ReadAllText(path));
+        var generated = AnalyticalSolidVolume3d.CreateEllipsoid(
+            envelope.Snapshot.Origin,
+            envelope.Snapshot.VoxelSize,
+            sizeX: 4,
+            sizeY: 4,
+            sizeZ: 4,
+            center: Vector3d.Zero,
+            semiAxes: new Vector3d(2d, 2d, 2d),
+            materialId: 1,
+            chunkSize: envelope.Snapshot.ChunkSize).CaptureSnapshot();
+
+        Assert.That(envelope.DatasetId, Is.EqualTo("terrain.ellipsoid.reference.v1"));
+        Assert.That(envelope.ModelId, Is.EqualTo("model.analytic-ellipsoid-solid"));
+        Assert.That(envelope.Snapshot.SolidVoxelCount, Is.EqualTo(32));
+        Assert.That(envelope.Snapshot.Samples, Is.EqualTo(generated.Samples));
+        Assert.That(envelope.GenerationParametersJson, Does.Contain("\"notGeologicalEvidence\":true"));
     }
 }
