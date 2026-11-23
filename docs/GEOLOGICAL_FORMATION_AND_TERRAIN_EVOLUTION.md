@@ -194,3 +194,71 @@ The sequence below is deliberately staged so that the first numerical models are
 `FaultKinematics3d` remains the infinite-plane prescribed block-displacement primitive. `FiniteFaultSegment3d` now bounds that prescription to a caller-sized rectangular footprint centred on the plane origin, aligned to the declared strike and down-dip basis. Its tests cover inclusive segment edges, both finite extents, hanging-wall-only displacement, and zero displacement outside the footprint, on the footwall, and on the plane.
 
 This is a geometric finite-footprint extension, not a finite-fault elastic solution. The rectangular edge has a discontinuous displacement boundary by design. Stress transfer, rupture propagation, curved/irregular surfaces, segment interaction, layered-crust response, and earthquake-cycle mechanics remain unimplemented. See [Finite fault segment 3D](FINITE_FAULT_SEGMENT_3D.md) for the precise contract and limitations.
+
+
+## Player-facing world creation: planetary history as a replayable simulation
+
+The intended world-creation experience begins before terrain exists. The player supplies or discovers a planetary system, watches its geological history unfold, and then explores the resulting surface and subsurface. The final world is not a random height map: it is a reproducible state reached through a sequence of modeled causes.
+
+### Stage 1 — Establish the planetary system
+
+Capture the star or stars and the planet's initial conditions before generating continents:
+
+- stellar identities and properties relevant to the planet's energy input;
+- orbital elements and relative position to each star, including multi-star configuration where supported;
+- planetary radius, mass, bulk composition, rotation, axial orientation, and initial thermal state;
+- atmosphere/ocean inventory and other initial reservoirs only where the chosen model has explicit quantities and units.
+
+These inputs establish boundary conditions and plausible ranges; they do not by themselves determine a unique climate or geological future. The model must state which stellar, orbital, tidal, radiative, and rotational effects it actually computes and which it approximates.
+
+### Stage 2 — Choose a tractable planetary representation
+
+Derive a declared simulation resolution from planetary scale and available material/initial-condition data. The first world-generation experience may simplify the surface into a manageable number of major plates and broad continental/oceanic regions. Record this as a model-resolution decision, with stable identities and a mapping back to the underlying spatial grid.
+
+Do not hard-code a universal continent count or imply that a simple formula predicts the real number of continents. Plate count, plate geometry, crustal composition, and continental regions are related but distinct. A planet may have oceanic lithosphere without a continent, and a continental region is not simply one plate.
+
+### Stage 3 — Evolve the interior and plate system
+
+Initialize core/mantle/crust thermal and compositional state, then evolve the lithosphere under the selected interior model. Plate interactions should be represented by relative motion and classified boundaries:
+
+- convergence can thicken and shorten crust, build mountain belts, and form subduction systems;
+- divergence can thin and separate lithosphere, form rifts, and create new oceanic crust/basins;
+- transform motion accommodates lateral relative movement and can accumulate fault loading.
+
+These are process families, not guaranteed one-step terrain stamps. The causal chain from interior forcing through plate motion, deformation, uplift/subsidence, and surface relief must remain inspectable. Begin with a clearly named reduced-order model if a full mantle/plate solver is not yet practical.
+
+### Stage 4 — Advance geological time at multiple resolutions
+
+A player-visible history step might summarize one million years, but that interval is not a universal numerical timestep. A million-year display interval may aggregate many internal steps, while abrupt events can trigger finer substeps. Mantle evolution, plate motion, climate statistics, river processes, and earthquake rupture operate on very different timescales.
+
+Each visible history checkpoint should be a durable, replayable snapshot with geological age and elapsed simulation time; model/algorithm versions and input revision; events and process summaries during the interval; before/after state identities and validation diagnostics; and a concise narrative suitable for the world-history timeline.
+
+The player should be able to scrub through these checkpoints, inspect a mountain belt as it forms, see an ocean basin open, and select an event to understand its cause and consequences. StoryBuilder can turn validated event records into narration and presentation; it must not invent physical events or alter Physics state.
+
+### Stage 5 — Catastrophes become permanent world history
+
+A large impact is a first-class geological event, not merely a cinematic effect. Its model may produce a crater cavity, uplifted rim, ejecta distribution, shocked or altered material where modeled, and downstream atmospheric/oceanic consequences only when those models exist. The event record links the crater and deposits to the impact, and later erosion or burial modifies them without erasing their provenance.
+
+The same pattern applies to major eruptions, caldera collapse, megafloods, glaciations, and mass-wasting events: a causal event record, physical state changes, persistent geological evidence, and a player-facing historical account. A dinosaur-extinction-scale scenario is an Earth-inspired scenario, not a universal outcome that every impact must produce.
+
+### Stage 6 — Let climate drive surface evolution
+
+Keep stellar/orbital forcing, atmospheric weather, long-term climate statistics, and geological weathering as separate contracts. Climate and weather patterns provide forcing to surface processes. Weathering alters exposed material; erosion removes and transports it; deposition stores it in new places.
+
+The terrain texture can be a GPU-resident acceleration representation for repeated local updates such as moisture, temperature exposure, erodibility, weathering progress, and sediment flux. Physics remains authoritative: define a CPU reference and deterministic input/output contract first, preserve material/water budgets, and make GPU results validate against declared tolerances. GPU texture values are not a substitute for stratigraphy or 3D solid state.
+
+Surface evolution must move material, not simply darken pixels or displace a height texture. Sediment removed from a mountain should be accounted for as transported, deposited, exported, or otherwise explicitly budgeted. Rivers, lakes, ponds, and groundwater require water storage/routing contracts; deposition can build deltas, fans, floodplains, and lake beds.
+
+### Stage 7 — Build the underground world from geology
+
+Caves, caverns, sinkholes, and connected underground passages belong to the same geological history as the surface. They require 3D solid/material representations, not a height field. Candidate processes include dissolution in soluble rock, fracture-controlled flow, lava tubes, and collapse; each needs its own assumptions and validation.
+
+The first dungeon-ready result should be a geological volume with stable connectivity, material identity, entrances, water state where modeled, and provenance explaining how each void formed. Game-specific dungeon dressing, encounters, traps, and authored rooms belong to consuming experiences. Physics supplies the physically derived spaces and their queryable geometry.
+
+### Architectural boundary
+
+The intended pipeline is:
+
+planetary system → initial interior → plate/continent representation → geological time steps → tectonic and catastrophic events → climate/weather forcing → weathering/erosion/transport/deposition → hydrology and 3D subsurface evolution → replayable world
+
+This is an implementation roadmap, not a claim that these coupled solvers already exist. Implement each stage as a separately testable Physics capability with explicit units, resolution, timescale, conservation rules, provenance, and limitations. The player-facing timeline and StoryBuilder narration consume validated event records; renderers and GPU kernels accelerate or display derived state without becoming the source of truth.
