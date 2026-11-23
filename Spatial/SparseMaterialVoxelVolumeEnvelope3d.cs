@@ -329,12 +329,12 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3d
             using var document = JsonDocument.Parse(value);
             if (document.RootElement.ValueKind != JsonValueKind.Object)
                 throw new ArgumentException("Generation parameters must be a JSON object.", nameof(value));
+
+            return JsonSerializer.Serialize(document.RootElement);
         }
         catch (JsonException exception)
         {
             throw new ArgumentException("Generation parameters must be valid JSON.", nameof(value), exception);
         }
-
-        return JsonSerializer.Serialize(document.RootElement);
     }
 }
