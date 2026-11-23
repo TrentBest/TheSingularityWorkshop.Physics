@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.Kinematics;
@@ -16,6 +17,7 @@ public readonly record struct ProjectileState(
     double ElapsedTime)
 {
     /// <summary>Returns true when the elapsed time is finite and non-negative.</summary>
+    [JsonIgnore]
     [JsonIgnore]
     public bool IsValid => double.IsFinite(ElapsedTime) && ElapsedTime >= 0d;
 }
