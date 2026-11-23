@@ -12,6 +12,7 @@
 - `Spatial/SparseMaterialVoxelVolumeSnapshot3d.cs` — immutable snapshot and occupied-voxel sample.
 - `Spatial/SparseMaterialVoxelVolumeEnvelope3d.cs` — required spatial identity, unit, datum, material-catalog, and provenance metadata around a snapshot; strict versioned JSON serialization/deserialization.
 - `docs/schemas/sparse-material-voxel-volume.v1.schema.json` — external JSON Schema for the v1 interchange payload.
+- `docs/records/sparse-material-voxel-volume-example.json` — small synthetic 2×2×2 fixture, loaded by the focused tests; it is not geological evidence or a terrain model.
 - `tests/TheSingularityWorkshop.Physics.Tests/Spatial/SparseMaterialVoxelVolume3dTests.cs` — ordering, query, geometry, immutability, and source-isolation tests.
 - `tests/TheSingularityWorkshop.Physics.Tests/Spatial/SparseMaterialVoxelVolumeEnvelope3dTests.cs` — metadata validation and snapshot/provenance preservation.
 
@@ -34,4 +35,4 @@ The source remains a discrete, cubic, integer-indexed voxel volume. Material IDs
 
 ## Next contract layer
 
-The next terrain integration increment is a reproducible analytically checkable volumetric fixture and a read-only City consumer adapter. The importer must validate the versioned payload and must not invent missing transforms or material properties. Height fields should be exposed as specialized/derived terrain representations where appropriate; they do not replace volumetric terrain for caves, overhangs, tunnels, and underground spaces.
+The next terrain integration increment is a reproducible analytically checkable Physics-generated volumetric fixture and a read-only City consumer adapter. The current checked-in 2×2×2 fixture validates interchange mechanics only; it is authored synthetic data, not output from a terrain generator. The importer must validate the versioned payload and must not invent missing transforms or material properties. Height fields should be exposed as specialized/derived terrain representations where appropriate; they do not replace volumetric terrain for caves, overhangs, tunnels, and underground spaces.
