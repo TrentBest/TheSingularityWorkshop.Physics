@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" role="img" aria-labelledby="title desc">
+  <title id="title">Power and Industrial Systems</title>
+  <desc id="desc">An original technical illustration of an industrial energy system: a generating station, turbine, electrical grid, battery storage, and connected factory represented as a coherent flow of energy.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101d2c"/>
+      <stop offset="1" stop-color="#263e4a"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f5a742"/>
+      <stop offset="1" stop-color="#f6df8b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1600" fill="url(#bg)"/>
+  <path d="M0 1110H1200" stroke="#718b91" stroke-width="3" opacity=".55"/>
+  <g fill="none" stroke="#b7c9c4" stroke-width="8" opacity=".8">
+    <path d="M110 1040V830h190v210M145 830V650h115v180M170 650V510h65v140"/>
+    <path d="M420 1040V760h240v280M465 760V620h150v140M500 620V480h80v140"/>
+    <path d="M790 1040V850h280v190M830 850V710h200v140"/>
+    <path d="M875 710V560h35v150M945 710V520h35v190"/>
+  </g>
+  <g fill="#f5a742" opacity=".85">
+    <path d="M165 510h75l-10-45h-55z"/>
+    <path d="M505 480h70l-10-48h-50z"/>
+    <path d="M870 560h45l-7-35h-31z"/>
+  </g>
+  <g fill="none" stroke="url(#glow)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M235 1165C330 1075 360 1075 465 1165S600 1255 705 1165 850 1075 965 1165"/>
+    <path d="M300 1145l30 20-30 20M660 1145l30 20-30 20M925 1145l30 20-30 20"/>
+  </g>
+  <g fill="#dce8df" stroke="#dce8df" stroke-width="5">
+    <rect x="135" y="1195" width="170" height="95" rx="10" fill="#263e4a"/>
+    <rect x="500" y="1195" width="170" height="95" rx="10" fill="#263e4a"/>
+    <rect x="865" y="1195" width="170" height="95" rx="10" fill="#263e4a"/>
+  </g>
+  <g fill="#f6df8b">
+    <path d="M205 1215l-28 38h26l-12 24 42-45h-28l12-17z"/>
+    <path d="M570 1215h30v56h-30zM610 1215h30v56h-30z"/>
+    <path d="M920 1220h60v12h-60zM920 1245h60v12h-60z"/>
+  </g>
+  <g fill="#eef4ef" font-family="Arial, Helvetica, sans-serif">
+    <text x="90" y="180" font-size="32" letter-spacing="9" opacity=".8">THE SINGULARITY WORKSHOP</text>
+    <text x="90" y="290" font-size="72" font-weight="700">POWER &amp;</text>
+    <text x="90" y="380" font-size="72" font-weight="700">INDUSTRIAL</text>
+    <text x="90" y="470" font-size="72" font-weight="700">SYSTEMS</text>
+    <text x="90" y="1400" font-size="28" letter-spacing="5" opacity=".8">ENERGY • MACHINES • FACILITIES • GRIDS</text>
+  </g>
+  <g fill="none" stroke="#eef4ef" stroke-width="3" opacity=".5">
+    <path d="M90 535H1110M90 1350H1110"/>
+    <circle cx="600" cy="1150" r="470" stroke-dasharray="12 22"/>
+  </g>
+</svg>
