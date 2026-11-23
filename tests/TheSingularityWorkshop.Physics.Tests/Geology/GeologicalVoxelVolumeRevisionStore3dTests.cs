@@ -10,9 +10,10 @@ public sealed class GeologicalVoxelVolumeRevisionStore3dTests
     private static SparseMaterialVoxelVolumeEnvelope3d CreateEnvelope(
         string revisionId,
         int materialId = 4,
-        GridCoordinate3i? voxel = null)
+        GridCoordinate3i? voxel = null,
+        double voxelSize = 0.5d)
     {
-        var volume = new SparseMaterialVoxelVolume3d(new Vector3d(-10d, 20d, -5d), 0.5d, 8);
+        var volume = new SparseMaterialVoxelVolume3d(new Vector3d(-10d, 20d, -5d), voxelSize, 8);
         volume.SetMaterial(voxel ?? new GridCoordinate3i(0, 0, 0), materialId);
         return new SparseMaterialVoxelVolumeEnvelope3d(
             volume.CaptureSnapshot(), "region", "dataset", revisionId,
@@ -65,7 +66,7 @@ public sealed class GeologicalVoxelVolumeRevisionStore3dTests
             GeologicalVoxelVolumeCandidate3d.Create(
                 source, resultEnvelope, resultProvenance, CreateEvent("revision-1", "wrong-result")));
 
-        var changedGrid = CreateEnvelope("revision-2", voxel: new GridCoordinate3i(1, 0, 0));
+        var changedGrid = CreateEnvelope("revision-2", voxelSize: 0.75d);
         Assert.Throws<InvalidOperationException>(() =>
             GeologicalVoxelVolumeCandidate3d.Create(
                 source, changedGrid, CreateProvenance(changedGrid), CreateEvent("revision-1", "revision-2")));
