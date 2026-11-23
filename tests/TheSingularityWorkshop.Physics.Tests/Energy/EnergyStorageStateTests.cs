@@ -65,6 +65,10 @@ public sealed class EnergyStorageStateTests
         Assert.That(result.StoredEnergyRemovedJoules, Is.EqualTo(5_555.555555555556d).Within(1e-9));
         Assert.That(result.StoredEnergyNotDeliveredAsOutputJoules, Is.EqualTo(555.555555555556d).Within(1e-9));
         Assert.That(result.FinalState.StoredEnergyJoules, Is.EqualTo(4_444.444444444444d).Within(1e-9));
+        Assert.That(result.FinalState.StoredEnergyJoules + result.StoredEnergyRemovedJoules,
+            Is.EqualTo(result.InitialState.StoredEnergyJoules).Within(1e-9));
+        Assert.That(result.DeliveredOutputEnergyJoules + result.StoredEnergyNotDeliveredAsOutputJoules,
+            Is.EqualTo(result.StoredEnergyRemovedJoules).Within(1e-9));
     }
 
     [Test]
