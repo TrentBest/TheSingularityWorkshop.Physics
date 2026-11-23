@@ -43,6 +43,17 @@
       "bookPath": "docs/books/batteries-and-energy-storage.md",
       "descriptorPath": "docs/books/batteries-and-energy-storage.book.json",
       "coverPath": "docs/books/covers/batteries-and-energy-storage.svg"
+    },
+    {
+      "id": "surps.domain.nuclear-fission-facilities",
+      "title": "Nuclear Fission Facilities",
+      "category": "Domain",
+      "lod": 1,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/nuclear-fission-facilities.md",
+      "descriptorPath": "docs/books/nuclear-fission-facilities.book.json",
+      "coverPath": "docs/books/covers/nuclear-fission-facilities.svg"
     }
   ],
   "providers": [
