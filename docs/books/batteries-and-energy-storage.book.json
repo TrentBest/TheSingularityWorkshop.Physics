@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "surps.domain.batteries-and-energy-storage",
+  "id": "physics.domain.batteries-and-energy-storage",
   "category": "Domain",
   "lod": 1,
   "title": "Batteries and Energy Storage",
