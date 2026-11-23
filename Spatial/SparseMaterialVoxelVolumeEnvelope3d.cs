@@ -287,7 +287,7 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3d
         public required string AlgorithmVersion { get; init; }
         public required JsonElement GenerationParameters { get; init; }
         public required string SourceRunId { get; init; }
-        public long? Seed { get; init; }
+        public required long? Seed { get; init; }
         public required string GridConvention { get; init; }
         public required SpatialVectorRecord Origin { get; init; }
         public required double VoxelSize { get; init; }
