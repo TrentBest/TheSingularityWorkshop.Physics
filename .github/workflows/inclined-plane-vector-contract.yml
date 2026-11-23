@@ -1,0 +1,30 @@
+name: Inclined Plane Vector Contract
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    env:
+      PHYSICS_SOURCE_REVISION: ${{ github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Generate actual inclined-plane model output
+        run: dotnet run --project tools/InclinedPlaneRunRecordGenerator/InclinedPlaneRunRecordGenerator.csproj --configuration Release -- /tmp/inclined-plane.run.json
+
+      - name: Validate scalar and vector mechanics
+        run: python3 tools/validate_inclined_plane_run_record.py /tmp/inclined-plane.run.json
