@@ -25,6 +25,12 @@ var grid = ElectricalGrid.Observe(
 
 This is a deterministic, ideal fixed-voltage DC accounting model. It implements Ohm's law and electrical power for enabled resistive loads, aggregates current and power, and flags demand above declared capacity. Load observations are sorted by stable ID so input enumeration order does not change presentation order.
 
+## Generic energy conversion ledger
+
+The first reusable conversion primitive is now implemented at [`EnergyConversion`](../Physics/Energy/EnergyConversion.cs). Given a declared constant input power, efficiency fraction, and duration, it reports useful output power, input energy, useful output energy, and energy not delivered as useful output. The focused tests verify boundary efficiencies, deterministic results, invalid inputs, overflow rejection, and closure of the declared energy ledger.
+
+This is intentionally technology-neutral. The remainder is **not automatically labelled heat**: a coal boiler, turbine, battery, motor, generator, and power-electronic converter have different loss and storage mechanisms. Technology-specific models must identify where energy goes and validate the conversion efficiency over a declared operating range. This primitive is an accounting boundary, not a machine simulator.
+
 It is intentionally **not yet** a complete circuit solver. Overload currently reports an energy-supply mismatch; it does not automatically reduce voltage, trip a breaker, shed loads, or simulate generator dynamics. The bus voltage remains the declared nominal voltage even when capacity is exceeded. That limitation is explicit so a UI cannot mistake a capacity warning for a solved brownout.
 
 ![Electrical-to-thermal coupling experiment: computed load power and resulting thermal accounting](experiments/electrical-thermal-coupling.svg)
