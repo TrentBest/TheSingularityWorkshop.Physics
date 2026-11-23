@@ -30,12 +30,14 @@ public sealed class MountainSolidVolume3dTests
 
         Assert.That(snapshot.Origin, Is.EqualTo(new Vector3d(9.5d, 19.5d, 0d)));
         Assert.That(snapshot.VoxelSize, Is.EqualTo(1d));
+        Assert.That(snapshot.SolidVoxelCount, Is.EqualTo(18));
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(0, 0, 0)), Is.EqualTo(7));
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(0, 0, 1)), Is.EqualTo(7));
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(0, 0, 2)), Is.Zero);
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(2, 1, 3)), Is.EqualTo(7));
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(2, 1, 4)), Is.Zero);
         Assert.That(result.CoordinateFrameId, Is.EqualTo("local-mountain"));
+        Assert.That(result.AxisConvention, Does.Contain("handedness=caller-declared-not-inferred"));
         Assert.That(result.VerticalDatum, Is.EqualTo("model-base"));
         Assert.That(result.AlgorithmId, Is.EqualTo(MountainSolidVolume3d.AlgorithmId));
         Assert.That(result.GenerationParametersJson, Does.Contain("\"topBoundaryMaximumQuantizationError\":0.5"));
