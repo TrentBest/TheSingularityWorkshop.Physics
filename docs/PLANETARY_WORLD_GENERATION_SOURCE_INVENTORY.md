@@ -55,7 +55,7 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 ## Implementation order
 
 1. Finish the source inventory and canonical terrain query/authoring contract without duplicating existing APIs.
-2. Add an immutable geological revision/transaction boundary over existing terrain snapshots; test stale source revisions, validation rejection, and failure atomicity.
+2. Add an immutable geological revision/transaction boundary over existing terrain snapshots; test stale source revisions, validation rejection, and failure atomicity. (Initial in-memory 2D boundary now implemented in `GeologicalTerrainRevision2D.cs`; durable persistence and geological replay remain future work.)
 3. Connect prescribed fault events to an explicit terrain/stratigraphy representation while preserving layer provenance and clearly stating the kinematic limits.
 4. Add a minimal layered-material column/volume contract before claiming strata or fault cross-cutting.
 5. Build process-specific plate/interior, climate, hydrology, and sediment models as separate validated increments.
