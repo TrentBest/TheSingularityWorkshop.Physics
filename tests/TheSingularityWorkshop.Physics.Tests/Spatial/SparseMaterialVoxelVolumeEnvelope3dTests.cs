@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Spatial;
 
@@ -44,6 +45,71 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3dTests
 
         Assert.That(envelope.Snapshot.GetMaterialId(new GridCoordinate3i(0, 0, 0)), Is.EqualTo(2));
         Assert.That(envelope.Snapshot.GetMaterialId(new GridCoordinate3i(1, 0, 0)), Is.Zero);
+    }
+
+    [Test]
+    public void SerializeAndDeserialize_RoundTripPreservesSpatialMetadataAndSamples()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(new Vector3d(-10d, 20d, -5d), 0.25d, chunkSize: 8);
+        volume.SetMaterial(new GridCoordinate3i(-2, 3, 4), 7);
+        volume.SetMaterial(new GridCoordinate3i(10, -4, 1), 12);
+        var original = CreateEnvelope(volume.CaptureSnapshot());
+
+        var json = original.Serialize();
+        var restored = SparseMaterialVoxelVolumeEnvelope3d.Deserialize(json);
+
+        Assert.That(json, Does.Contain(SparseMaterialVoxelVolumeEnvelope3d.SchemaId));
+        Assert.That(restored.RegionId, Is.EqualTo(original.RegionId));
+        Assert.That(restored.DatasetId, Is.EqualTo(original.DatasetId));
+        Assert.That(restored.RevisionId, Is.EqualTo(original.RevisionId));
+        Assert.That(restored.CoordinateFrameId, Is.EqualTo(original.CoordinateFrameId));
+        Assert.That(restored.AxisConvention, Is.EqualTo(original.AxisConvention));
+        Assert.That(restored.VerticalDatum, Is.EqualTo(original.VerticalDatum));
+        Assert.That(restored.GenerationParametersJson, Is.EqualTo(original.GenerationParametersJson));
+        Assert.That(restored.Snapshot.Origin, Is.EqualTo(original.Snapshot.Origin));
+        Assert.That(restored.Snapshot.VoxelSize, Is.EqualTo(original.Snapshot.VoxelSize));
+        Assert.That(restored.Snapshot.ChunkSize, Is.EqualTo(original.Snapshot.ChunkSize));
+        Assert.That(restored.Snapshot.Samples, Is.EqualTo(original.Snapshot.Samples));
+    }
+
+    [Test]
+    public void Deserialize_RejectsUnsupportedSchemaAndSampleLimit()
+    {
+        var envelope = CreateEnvelope(
+            new SparseMaterialVoxelVolume3d(new Vector3d(0d, 0d, 0d), 1d).CaptureSnapshot());
+        var json = envelope.Serialize();
+
+        Assert.Throws<ArgumentException>(() =>
+            SparseMaterialVoxelVolumeEnvelope3d.Deserialize(
+                json.Replace(SparseMaterialVoxelVolumeEnvelope3d.SchemaId, "unknown.schema", StringComparison.Ordinal)));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            SparseMaterialVoxelVolumeEnvelope3d.Deserialize(json, maximumSampleCount: -1));
+    }
+
+    [Test]
+    public void Deserialize_RejectsDuplicateVoxelCoordinates()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(new Vector3d(0d, 0d, 0d), 1d);
+        volume.SetMaterial(new GridCoordinate3i(0, 0, 0), 1);
+        var json = CreateEnvelope(volume.CaptureSnapshot()).Serialize();
+        var root = JsonNode.Parse(json)!;
+        var samples = root["samples"]!.AsArray();
+        samples.Add(samples[0]!.DeepClone());
+
+        Assert.Throws<ArgumentException>(() =>
+            SparseMaterialVoxelVolumeEnvelope3d.Deserialize(root.ToJsonString()));
+    }
+
+    [Test]
+    public void Deserialize_RejectsUnknownProperties()
+    {
+        var envelope = CreateEnvelope(
+            new SparseMaterialVoxelVolume3d(new Vector3d(0d, 0d, 0d), 1d).CaptureSnapshot());
+        var root = JsonNode.Parse(envelope.Serialize())!;
+        root["unexpected"] = true;
+
+        Assert.Throws<ArgumentException>(() =>
+            SparseMaterialVoxelVolumeEnvelope3d.Deserialize(root.ToJsonString()));
     }
 
     [Test]
