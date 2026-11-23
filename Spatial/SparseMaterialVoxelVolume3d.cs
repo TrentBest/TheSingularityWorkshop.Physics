@@ -538,6 +538,48 @@ public sealed class SparseMaterialVoxelVolume3d
     /// <summary>Returns the material ID at the voxel containing a world-space point.</summary>
     public int GetMaterialIdAt(Vector3d point) => GetMaterialId(WorldToVoxel(point));
 
+    /// <summary>Captures an immutable, deterministically ordered read snapshot of this volume.</summary>
+    /// <remarks>
+    /// The snapshot preserves the grid geometry and occupied material samples, but does not
+    /// assign coordinate-frame, unit, datum, georeferencing, or material-property semantics.
+    /// Those remain explicit responsibilities of the producer that owns this volume.
+    /// </remarks>
+    public SparseMaterialVoxelVolumeSnapshot3d CaptureSnapshot()
+    {
+        var samples = new List<MaterialVoxelSample3d>((int)Math.Min(SolidVoxelCount, int.MaxValue));
+        foreach (var chunk in _chunks)
+        {
+            var chunkX = (long)chunk.Key.X * ChunkSize;
+            var chunkY = (long)chunk.Key.Y * ChunkSize;
+            var chunkZ = (long)chunk.Key.Z * ChunkSize;
+            var materials = chunk.Value;
+
+            for (var z = 0; z < ChunkSize; z++)
+            for (var y = 0; y < ChunkSize; y++)
+            for (var x = 0; x < ChunkSize; x++)
+            {
+                var index = (z * ChunkSize * ChunkSize) + (y * ChunkSize) + x;
+                var materialId = materials[index];
+                if (materialId == 0)
+                    continue;
+
+                var voxelX = chunkX + x;
+                var voxelY = chunkY + y;
+                var voxelZ = chunkZ + z;
+                if (voxelX is < int.MinValue or > int.MaxValue ||
+                    voxelY is < int.MinValue or > int.MaxValue ||
+                    voxelZ is < int.MinValue or > int.MaxValue)
+                    continue;
+
+                samples.Add(new MaterialVoxelSample3d(
+                    new GridCoordinate3i((int)voxelX, (int)voxelY, (int)voxelZ),
+                    materialId));
+            }
+        }
+
+        return new SparseMaterialVoxelVolumeSnapshot3d(Origin, VoxelSize, ChunkSize, samples.ToArray());
+    }
+
     /// <summary>Removes all occupied chunks and resets all material counts.</summary>
     public void Clear()
     {
