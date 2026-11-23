@@ -54,6 +54,39 @@
       "bookPath": "docs/books/nuclear-fission-facilities.md",
       "descriptorPath": "docs/books/nuclear-fission-facilities.book.json",
       "coverPath": "docs/books/covers/nuclear-fission-facilities.svg"
+    },
+    {
+      "id": "physics.domain.geology",
+      "title": "Geology and Planetary Evolution",
+      "category": "Domain",
+      "lod": 1,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/geology-and-planetary-evolution.md",
+      "descriptorPath": "docs/books/geology-and-planetary-evolution.book.json",
+      "coverPath": "docs/books/covers/geology-and-planetary-evolution.svg"
+    },
+    {
+      "id": "physics.domain.weather-atmosphere",
+      "title": "Weather and Climate",
+      "category": "Domain",
+      "lod": 1,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/weather-and-climate.md",
+      "descriptorPath": "docs/books/weather-and-climate.book.json",
+      "coverPath": "docs/books/covers/weather-and-climate.svg"
+    },
+    {
+      "id": "physics.domain.geomorphology-surface-processes",
+      "title": "Geomorphology and Surface Processes",
+      "category": "Domain",
+      "lod": 2,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/geomorphology-and-surface-processes.md",
+      "descriptorPath": "docs/books/geomorphology-and-surface-processes.book.json",
+      "coverPath": "docs/books/covers/geomorphology-and-surface-processes.svg"
     }
   ],
   "providers": [
