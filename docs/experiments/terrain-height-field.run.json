@@ -1,7 +1,7 @@
 {
   "modelId": "geology.terrain-height-field-2d",
-  "modelVersion": "1.0.0",
-  "schemaVersion": 1,
+  "modelVersion": "1.1.0",
+  "schemaVersion": 2,
   "units": {
     "horizontal": "m",
     "elevation": "m"
@@ -31,7 +31,10 @@
       "centerX": -2,
       "centerY": 2,
       "radius": 3,
-      "delta": 2
+      "delta": 2,
+      "operationId": "terrain-height-field-demo/brush-001",
+      "algorithmVersion": "smoothstep-radial/1",
+      "authoringSourceId": "physics-terrain-height-field-learning-experience"
     }
   },
   "samples": {
@@ -626,5 +629,14 @@
   "limitations": [
     "A 2.5D height field cannot represent caves, overhangs, vertical faces, or multiple surface layers.",
     "The bowl and radial brush are geometric authoring operations, not a geological formation or erosion simulation."
-  ]
+  ],
+  "editSummary": {
+    "changedSampleCount": 25,
+    "changedRegion": {
+      "minX": -4,
+      "minY": 0,
+      "maxX": 0,
+      "maxY": 4
+    }
+  }
 }
