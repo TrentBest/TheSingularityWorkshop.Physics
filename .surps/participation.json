@@ -32,6 +32,17 @@
       "bookPath": "docs/books/ocean-atmosphere-maritime-phenomena.md",
       "descriptorPath": "docs/books/ocean-atmosphere-maritime-phenomena.book.json",
       "coverPath": "docs/books/covers/ocean-atmosphere-maritime-phenomena.svg"
+    },
+    {
+      "id": "surps.domain.batteries-and-energy-storage",
+      "title": "Batteries and Energy Storage",
+      "category": "Domain",
+      "lod": 1,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/batteries-and-energy-storage.md",
+      "descriptorPath": "docs/books/batteries-and-energy-storage.book.json",
+      "coverPath": "docs/books/covers/batteries-and-energy-storage.svg"
     }
   ],
   "providers": [
