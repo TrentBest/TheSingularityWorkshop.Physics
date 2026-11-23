@@ -66,12 +66,13 @@ The following are real bounded capabilities on the Physics development branch:
 
 - [ElectricalGrid](../../Physics/Electricity/ElectricalGrid.cs) observes ideal fixed-voltage DC resistive loads, computes current and power, aggregates demand, and reports declared capacity exceedance.
 - [EnergyConversion](../../Physics/Energy/EnergyConversion.cs) performs a deterministic, fixed-interval conversion ledger from declared input power and efficiency to useful output and energy not delivered as useful output. It does not claim the remainder is all heat or model a specific machine.
+- [ThermalPowerConversion](../../Physics/Energy/ThermalPowerConversion.cs) provides a bounded heat-to-shaft-to-electric energy ledger. It applies the Carnot upper bound for declared reservoir temperatures, a caller-declared cycle fraction, and generator efficiency; it reports rejected thermal energy, shaft work, electrical output, and energy not delivered electrically. It is not a working-fluid, turbine, boiler, or plant dynamics solver.
 - [Electrical-to-thermal coupling experiment](../../Physics/Experiments/ElectricalThermalCouplingExperiment.cs) connects a resistive electrical load's power to a bounded thermal-energy accounting experiment.
 - [Lumped thermal state](../../Physics/Thermodynamics/LumpedThermalState.cs) provides a declared constant-specific-heat thermal state.
 - [Thermal conduction](../../Physics/Thermodynamics/ThermalConduction.cs) provides a bounded one-dimensional conduction primitive.
 - [Phase-change thermal state](../../Physics/Thermodynamics/PhaseChangeThermalState.cs) models a declared equilibrium phase-change case.
 
-These are useful building blocks, not a plant simulator. In particular, the current electrical grid model does not solve feeder voltage drops, AC transients, generator dynamics, frequency response, automatic protection, or load shedding. The current thermal primitives do not by themselves model a boiler, steam cycle, reactor, or industrial process line.
+These are useful building blocks, not a plant simulator. In particular, the current electrical grid model does not solve feeder voltage drops, AC transients, generator dynamics, frequency response, automatic protection, or load shedding. The thermal conversion ledger is an idealized upper-bound accounting model, not a working-fluid cycle or a prediction of real-plant efficiency. The current thermal primitives do not by themselves model a boiler, steam cycle, reactor, or industrial process line.
 
 See [Electricity: from charge carriers to the Singularity Grid](../ELECTRICITY_AND_SINGULARITY_GRID.md) for the existing roadmap and explicit implementation boundaries.
 
@@ -131,7 +132,7 @@ Production throughput belongs to the composed process model. A fast machine cann
 
 1. Extend the electrical domain from ideal load aggregation to small validated DC networks.
 2. Add explicit power/energy ledgers and conversion efficiencies with declared boundaries.
-3. Build a generic thermal-to-shaft-to-electric conversion chain with conservation residuals.
+3. Extend the generic thermal-to-shaft-to-electric ledger with explicit conservation residuals and reference comparisons; current bounded accounting primitive is implemented.
 4. Add a generic thermal plant before technology-specific boiler or reactor specializations.
 5. Add bounded storage state and charge/discharge limits.
 6. Add renewable resource variability and grid dispatch as independent capabilities.
