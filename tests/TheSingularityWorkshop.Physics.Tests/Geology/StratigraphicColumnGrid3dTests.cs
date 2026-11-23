@@ -16,8 +16,8 @@ public sealed class StratigraphicColumnGrid3dTests
     {
         var columns = new[]
         {
-            Column("c00", 100d, 200d), Column("c10", 110d, 200d),
-            Column("c01", 100d, 220d), Column("c11", 110d, 220d)
+            Column("c00", 100d, 200d, datum: "sea-level"), Column("c10", 110d, 200d, datum: "sea-level"),
+            Column("c01", 100d, 220d, datum: "sea-level"), Column("c11", 110d, 220d, datum: "sea-level")
         };
 
         var grid = new StratigraphicColumnGrid3d(
