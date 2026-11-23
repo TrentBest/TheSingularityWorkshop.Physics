@@ -63,5 +63,15 @@
       "sourcePath": "Physics/MicroBundles/SurpsRulebookPhysics.cs",
       "integrationGuide": "docs/SURPS_RULEBOOK_PHYSICS_INTEGRATION.md"
     }
-  ]
+  ],
+  "rulebookCoordination": {
+    "authorityRepository": "TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem",
+    "authorityBranch": "development",
+    "masterBacklogPath": ".surps/rulebook-backlog.json",
+    "masterMapPath": "docs/rulebook-backlog/index.md",
+    "participationContractPath": "docs/SURPS_PARTICIPATION_CONTRACT.md",
+    "ownershipClaimTemplate": "https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.github/ISSUE_TEMPLATE/rulebook-owner-sign-in.yml",
+    "repositoryEnrollmentTemplate": "https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.github/ISSUE_TEMPLATE/surps-repository-participation.yml",
+    "policy": "SURPS is the canonical cross-repository registry. Physics retains ownership of physical laws, models, solvers, simulations, and Physics sourcebooks; SURPS composes those capabilities without duplicating them."
+  }
 }
