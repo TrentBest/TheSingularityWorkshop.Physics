@@ -59,9 +59,11 @@ public static class AnalyticalSolidVolume3d
         {
             candidateCount = checked(checked((long)sizeX * sizeY) * sizeZ);
         }
-        catch (OverflowException exception)
+        catch (OverflowException)
         {
-            throw new ArgumentOutOfRangeException(nameof(sizeX), "Grid candidate count exceeds the supported integer range.", exception);
+            throw new ArgumentOutOfRangeException(
+                nameof(sizeX),
+                "Grid candidate count exceeds the supported integer range.");
         }
 
         if (candidateCount > maximumCandidateVoxelCount)
