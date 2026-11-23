@@ -97,8 +97,7 @@ jobs:
       - name: Export inclined-plane run record from the Physics model
         run: dotnet run --project tools/InclinedPlaneRunRecordGenerator/InclinedPlaneRunRecordGenerator.csproj --configuration Release -- /tmp/inclined-plane.run.json
 
-      - name: Validate inclined-plane run record against analytical identities
-        run: |
+      - name: Validate inclined-plane run record against analytical identities        run: |
           python3 - <<'PY'
           import json
           import math
@@ -108,7 +107,7 @@ jobs:
           definition = record['definition']
           result = record['result']
           assert record['modelId'] == 'mechanics.frictionless-inclined-plane'
-          assert record['modelVersion'] == '1' and record['schemaVersion'] == 1
+          assert record['modelVersion'] == '2' and record['schemaVersion'] == 2
           assert definition['massKilograms'] == 1.0
           assert math.isclose(definition['angleRadians'], math.pi / 6, rel_tol=0, abs_tol=1e-15)
           assert definition['verticalDropMeters'] == 2.0
@@ -197,8 +196,7 @@ jobs:
           assert record['pointCount'] == len(record['points']) == 128
           bounds = record['bounds']
           assert bounds['convention'] == 'minimum-inclusive, maximum-exclusive'
-          for index, point in enumerate(record['points']):
-              assert point['index'] == index
+          for index, point in enumerate(record['points']):              assert point['index'] == index
               assert math.isfinite(point['x']) and math.isfinite(point['y'])
               assert bounds['minX'] <= point['x'] < bounds['maxX']
               assert bounds['minY'] <= point['y'] < bounds['maxY']
@@ -297,8 +295,7 @@ jobs:
           vertices = definition['vertices']
           assert record['modelId'] == 'geometry.polygon-construction-2d'
           assert record['status'] == 'computed-from-geometry-primitives'
-          assert len(vertices) == result['vertexCount'] == result['edgeCount'] == 5
-          twice_area = sum(vertices[i]['x'] * vertices[(i + 1) % 5]['y'] - vertices[i]['y'] * vertices[(i + 1) % 5]['x'] for i in range(5))
+          assert len(vertices) == result['vertexCount'] == result['edgeCount'] == 5          twice_area = sum(vertices[i]['x'] * vertices[(i + 1) % 5]['y'] - vertices[i]['y'] * vertices[(i + 1) % 5]['x'] for i in range(5))
           assert math.isclose(twice_area / 2, result['signedArea'], rel_tol=0, abs_tol=1e-12)
           assert result['winding'] == ('counter-clockwise' if twice_area > 0 else 'clockwise')
           assert result['isSimple'] is True
@@ -398,7 +395,6 @@ jobs:
 
       - name: Execute paired moving-train projectile experiment
         run: dotnet run --project tools/MovingTrainProjectileRunRecordGenerator/MovingTrainProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/moving-train-projectile.actual.json
-
       - name: Verify paired frame samples share time and preserve vertical motion
         run: |
           python3 - <<'PY'
@@ -497,8 +493,7 @@ jobs:
       - name: Verify committed contact response SVG matches actual resolver output
         run: diff -u docs/experiments/contact-impulse.svg /tmp/contact-impulse.actual.svg
 
-      - name: Verify contact response SVG against its run record
-        run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json docs/experiments/contact-impulse.svg --check
+      - name: Verify contact response SVG against its run record        run: python3 tools/render_contact_impulse.py /tmp/contact-impulse.actual.json docs/experiments/contact-impulse.svg --check
 
       - name: Execute free-field acoustic observation from the C# model
         run: dotnet run --project tools/AcousticObservationRunRecordGenerator/AcousticObservationRunRecordGenerator.csproj --configuration Release -- /tmp/acoustic-observation.actual.json
@@ -597,8 +592,7 @@ jobs:
           python3 tools/catalog_physics_run_records.py
           docs/experiments/acoustic-observation.run.json
           docs/experiments/first-order-room-reflection.run.json
-          docs/experiments/electrical-thermal-coupling.run.json
-          docs/experiments/thermal-conduction.run.json
+          docs/experiments/electrical-thermal-coupling.run.json          docs/experiments/thermal-conduction.run.json
           --output docs/experiments/run-record-catalog.md --check
 
       - name: Inspect four domains through the shared envelope
@@ -697,8 +691,7 @@ jobs:
           errors = [sample['actualAbsoluteError'] for sample in actual['samples']]
           assert min(range(len(errors)), key=errors.__getitem__) not in (0, len(errors) - 1)
           assert actual['samples'][0]['actualAbsoluteError'] > min(errors)
-          assert actual['samples'][-1]['actualAbsoluteError'] > min(errors)
-          assert all(actual['samples'][i]['step'] > actual['samples'][i+1]['step'] for i in range(11))
+          assert actual['samples'][-1]['actualAbsoluteError'] > min(errors)          assert all(actual['samples'][i]['step'] > actual['samples'][i+1]['step'] for i in range(11))
           print('Verified twelve actual C# Richardson estimates against the analytical cosine reference and committed sweep within floating-point tolerances.')
           PY
 
@@ -797,7 +790,6 @@ jobs:
 
       - name: Build Physics MicroBundles
         run: dotnet build TheSingularityWorkshop.Physics.MicroBundles.csproj --configuration Release --no-restore -p:UseLocalMicroBundleDomain=true
-
       - name: Test Physics MicroBundles
         run: dotnet test tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj --configuration Release --no-restore -p:UseLocalMicroBundleDomain=true
 
