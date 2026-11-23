@@ -8,7 +8,7 @@
     "physics-rulebook-provider",
     "sourcebook-publication"
   ],
-  "contributionSummary": "Owns physical laws, mathematical models, numerical methods, simulations, validation evidence, and Physics-domain sourcebook content. SURPS composition remains opt-in and does not become a Physics runtime dependency.",
+  "contributionSummary": "Owns physical laws, mathematical models, numerical methods, simulations, validation evidence, and seven Physics-domain sourcebooks, including planetary geology, weather/climate, and geomorphology. SURPS composition remains opt-in and does not become a Physics runtime dependency.",
   "cataloguePath": "docs/books/index.md",
   "books": [
     {
