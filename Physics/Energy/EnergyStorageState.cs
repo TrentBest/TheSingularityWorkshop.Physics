@@ -71,6 +71,7 @@ public readonly record struct EnergyStorageState(
             requestedInputEnergy,
             acceptedInputEnergy,
             storedEnergyIncrease,
+            acceptedInputEnergy - storedEnergyIncrease,
             energyNotAccepted);
     }
 
@@ -141,7 +142,8 @@ public readonly record struct EnergyStorageState(
 /// <param name="RequestedInputEnergyJoules">Energy requested at the input boundary, in joules.</param>
 /// <param name="AcceptedInputEnergyJoules">Input energy accepted within the power and capacity limits, in joules.</param>
 /// <param name="StoredEnergyIncreaseJoules">Energy added to the stored inventory, in joules.</param>
-/// <param name="InputEnergyNotAcceptedJoules">Requested input energy not accepted by the storage boundary; destination is not inferred.</param>
+/// <param name="InputEnergyNotStoredJoules">Accepted input energy not retained in the stored inventory; destination is not inferred.</param>
+/// <param name="InputEnergyNotAcceptedJoules">Requested input energy not accepted by the storage boundary due to power or capacity limits.</param>
 public sealed record EnergyStorageChargeResult(
     EnergyStorageState InitialState,
     EnergyStorageState FinalState,
@@ -150,6 +152,7 @@ public sealed record EnergyStorageChargeResult(
     double RequestedInputEnergyJoules,
     double AcceptedInputEnergyJoules,
     double StoredEnergyIncreaseJoules,
+    double InputEnergyNotStoredJoules,
     double InputEnergyNotAcceptedJoules);
 
 /// <summary>Immutable result of one bounded energy-storage discharge operation.</summary>
