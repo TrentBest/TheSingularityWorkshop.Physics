@@ -84,9 +84,9 @@ public static class MountainSolidVolume3d
             throw new ArgumentOutOfRangeException(nameof(maximumCandidateVoxelCount), "Mountain candidate count exceeds the supported integer range.");
         }
 
-        if (candidateCount > maximumCandidateVoxelCount)
+        if (candidateCount > Math.Min(maximumCandidateVoxelCount, int.MaxValue))
             throw new ArgumentOutOfRangeException(nameof(maximumCandidateVoxelCount),
-                $"Mountain generation requires {candidateCount} candidate voxels; the configured limit is {maximumCandidateVoxelCount}.");
+                $"Mountain generation requires {candidateCount} candidate voxels; the effective limit is {Math.Min(maximumCandidateVoxelCount, int.MaxValue)}.");
 
         // Shift the minimum-corner origin by half a voxel so voxel centres coincide exactly
         // with the height field's cell-centred horizontal samples.
@@ -135,7 +135,7 @@ public static class MountainSolidVolume3d
             revisionId,
             terrain.CoordinateFrameId,
             terrain.LinearUnit,
-            "X=east-or-declared-frame-X;Y=north-or-declared-frame-Y;Z=vertical",
+            "X=coordinate-frame-X;Y=coordinate-frame-Y;Z=declared-vertical-axis;handedness=caller-declared-not-inferred",
             terrain.VerticalDatum,
             terrain.PositiveVerticalDirection,
             materialCatalogId,
