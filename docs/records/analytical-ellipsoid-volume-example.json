@@ -1,0 +1,243 @@
+{
+  "schema": "singularity-physics.sparse-material-voxel-volume.v1",
+  "regionId": "region.analytical-reference",
+  "datasetId": "terrain.ellipsoid.reference.v1",
+  "revisionId": "revision.1",
+  "coordinateFrameId": "frame.local.east-north-up",
+  "linearUnit": "m",
+  "axisConvention": "X=east;Y=north;Z=up",
+  "verticalDatum": "model-relative",
+  "verticalPositiveDirection": "up",
+  "materialCatalogId": "materials.reference-rock.v1",
+  "sourceRepository": "TrentBest/TheSingularityWorkshop.Physics",
+  "sourceRevision": "1025e2d5e92a817080e1596cb7927d2b2b41532d",
+  "modelId": "model.analytic-ellipsoid-solid",
+  "modelVersion": "1.0.0",
+  "algorithmId": "voxel-center-ellipsoid-inclusion",
+  "algorithmVersion": "1.0.0",
+  "generationParameters": {
+    "shape": "ellipsoid",
+    "center": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "semiAxes": {
+      "x": 2,
+      "y": 2,
+      "z": 2
+    },
+    "gridDimensions": {
+      "x": 4,
+      "y": 4,
+      "z": 4
+    },
+    "occupancyRule": "voxel-center-inside-or-on-analytic-ellipsoid",
+    "synthetic": true,
+    "notGeologicalEvidence": true
+  },
+  "sourceRunId": "run.analytic-ellipsoid.4x4x4.v1",
+  "seed": null,
+  "gridConvention": "voxel-min-corner-origin; cubic-voxels; integer-x-y-z-index",
+  "origin": {
+    "x": -2,
+    "y": -2,
+    "z": -2
+  },
+  "voxelSize": 1,
+  "chunkSize": 2,
+  "samples": [
+    {
+      "x": 1,
+      "y": 1,
+      "z": 0,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 0,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 0,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 0,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 1,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 0,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 3,
+      "y": 1,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 3,
+      "y": 2,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 3,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "z": 2,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 1,
+      "z": 3,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "z": 3,
+      "materialId": 1
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "z": 3,
+      "materialId": 1
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "z": 3,
+      "materialId": 1
+    }
+  ]
+}
