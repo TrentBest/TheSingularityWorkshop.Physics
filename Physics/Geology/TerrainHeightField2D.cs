@@ -177,28 +177,87 @@ public sealed class TerrainHeightField2D
     /// Applies a deterministic smooth radial elevation edit and returns a new snapshot.
     /// Positive delta raises terrain; negative delta lowers it. No partial result is returned on failure.
     /// </summary>
-    public TerrainHeightField2D ApplyRadialBrush(double centerX, double centerY, double radius, double delta)
+    /// <summary>
+    /// Applies a deterministic smooth radial elevation edit and returns a new snapshot.
+    /// Positive delta raises terrain; negative delta lowers it. No partial result is returned on failure.
+    /// </summary>
+    public TerrainHeightField2D ApplyRadialBrush(double centerX, double centerY, double radius, double delta) =>
+        ApplyRadialBrushCore(centerX, centerY, radius, delta).Result;
+
+    /// <summary>
+    /// Applies a caller-identified brush operation and returns the new snapshot with its provenance
+    /// and the smallest sample-aligned dirty region.
+    /// </summary>
+    public TerrainHeightFieldEdit2D ApplyRadialBrush(TerrainRadialBrushOperation2D operation)
     {
-        RequireFinite(centerX, nameof(centerX)); RequireFinite(centerY, nameof(centerY));
-        if (!double.IsFinite(radius) || radius <= 0d) throw new ArgumentOutOfRangeException(nameof(radius));
+        ArgumentNullException.ThrowIfNull(operation);
+        RequireText(operation.OperationId, nameof(operation.OperationId));
+        RequireText(operation.AlgorithmVersion, nameof(operation.AlgorithmVersion));
+        RequireText(operation.AuthoringSourceId, nameof(operation.AuthoringSourceId));
+
+        var applied = ApplyRadialBrushCore(
+            operation.CenterX,
+            operation.CenterY,
+            operation.Radius,
+            operation.ElevationDelta);
+
+        return new TerrainHeightFieldEdit2D(
+            operation,
+            applied.Result,
+            applied.ChangedSampleCount,
+            applied.ChangedRegion);
+    }
+
+    private (TerrainHeightField2D Result, int ChangedSampleCount, TerrainChangedRegion2D? ChangedRegion)
+        ApplyRadialBrushCore(double centerX, double centerY, double radius, double delta)
+    {
+        RequireFinite(centerX, nameof(centerX));
+        RequireFinite(centerY, nameof(centerY));
+        if (!double.IsFinite(radius) || radius <= 0d)
+            throw new ArgumentOutOfRangeException(nameof(radius));
         RequireFinite(delta, nameof(delta));
+
         var next = (double[])_elevations.Clone();
+        var changedSampleCount = 0;
+        var minX = double.PositiveInfinity;
+        var minY = double.PositiveInfinity;
+        var maxX = double.NegativeInfinity;
+        var maxY = double.NegativeInfinity;
+
         for (var y = 0; y < Height; y++)
         for (var x = 0; x < Width; x++)
         {
-            var dx = OriginX + x * CellWidth - centerX;
-            var dy = OriginY + y * CellHeight - centerY;
+            var worldX = OriginX + x * CellWidth;
+            var worldY = OriginY + y * CellHeight;
+            var dx = worldX - centerX;
+            var dy = worldY - centerY;
             var distance = Math.Sqrt((dx * dx) + (dy * dy));
             if (distance >= radius) continue;
+
             var t = distance / radius;
             var weight = 1d - (t * t * (3d - (2d * t)));
-            var candidate = next[y * Width + x] + delta * weight;
+            var index = y * Width + x;
+            var candidate = next[index] + delta * weight;
             if (!double.IsFinite(candidate))
                 throw new ArithmeticException("Brush produced non-finite terrain; source snapshot remains unchanged.");
-            next[y * Width + x] = candidate;
+            if (candidate == next[index]) continue;
+
+            next[index] = candidate;
+            changedSampleCount++;
+            minX = Math.Min(minX, worldX);
+            minY = Math.Min(minY, worldY);
+            maxX = Math.Max(maxX, worldX);
+            maxY = Math.Max(maxY, worldY);
         }
-        return new(Width, Height, CellWidth, CellHeight, OriginX, OriginY,
+
+        var result = new TerrainHeightField2D(
+            Width, Height, CellWidth, CellHeight, OriginX, OriginY,
             CoordinateFrameId, VerticalDatum, LinearUnit, PositiveVerticalDirection, next);
+        TerrainChangedRegion2D? changedRegion = changedSampleCount == 0
+            ? null
+            : new TerrainChangedRegion2D(minX, minY, maxX, maxY);
+
+        return (result, changedSampleCount, changedRegion);
     }
 
     private int GetIndex(int x, int y)
