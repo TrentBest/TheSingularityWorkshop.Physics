@@ -177,10 +177,6 @@ public sealed class TerrainHeightField2D
     /// Applies a deterministic smooth radial elevation edit and returns a new snapshot.
     /// Positive delta raises terrain; negative delta lowers it. No partial result is returned on failure.
     /// </summary>
-    /// <summary>
-    /// Applies a deterministic smooth radial elevation edit and returns a new snapshot.
-    /// Positive delta raises terrain; negative delta lowers it. No partial result is returned on failure.
-    /// </summary>
     public TerrainHeightField2D ApplyRadialBrush(double centerX, double centerY, double radius, double delta) =>
         ApplyRadialBrushCore(centerX, centerY, radius, delta).Result;
 
