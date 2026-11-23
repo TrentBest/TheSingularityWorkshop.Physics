@@ -5,19 +5,28 @@ namespace TheSingularityWorkshop.Physics.Geology;
 /// <summary>Declared geological fault mechanism; this label does not infer a stress regime.</summary>
 public enum FaultMechanism3d
 {
+    /// <summary>No mechanism classification is asserted.</summary>
     Unclassified = 0,
+    /// <summary>Normal fault: hanging-wall motion is down relative to the footwall.</summary>
     Normal = 1,
+    /// <summary>Reverse fault: hanging-wall motion is up relative to the footwall.</summary>
     Reverse = 2,
+    /// <summary>Low-angle reverse fault.</summary>
     Thrust = 3,
+    /// <summary>Left-lateral strike-slip classification, declared by the caller.</summary>
     StrikeSlipLeftLateral = 4,
+    /// <summary>Right-lateral strike-slip classification, declared by the caller.</summary>
     StrikeSlipRightLateral = 5,
+    /// <summary>Fault motion with both strike-slip and dip-slip components.</summary>
     ObliqueSlip = 6
 }
 
 /// <summary>Which signed side of the oriented fault plane is the hanging wall.</summary>
 public enum FaultHangingWallSide3d
 {
+    /// <summary>The positive signed-distance side of the oriented plane.</summary>
     PositiveNormalSide = 1,
+    /// <summary>The negative signed-distance side of the oriented plane.</summary>
     NegativeNormalSide = -1
 }
 
