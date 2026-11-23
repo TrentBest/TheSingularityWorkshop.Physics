@@ -7,8 +7,8 @@ namespace TheSingularityWorkshop.Physics.Spatial;
 /// </summary>
 /// <remarks>
 /// The snapshot stores voxel occupancy/material IDs and grid geometry. This envelope adds the
-/// coordinate, unit, datum, material-catalog, identity, and generation provenance required for
-/// lossless interchange. It does not perform coordinate transforms, unit conversion, georeferencing,
+/// coordinate, unit, datum, material-catalog, identity, and generation provenance required to
+/// interpret and trace a spatial volume. It does not perform coordinate transforms, unit conversion, georeferencing,
 /// material-property lookup, resampling, meshing, or terrain interpretation. The declared axis
 /// convention and vertical datum are metadata, not executable transforms.
 /// </remarks>
