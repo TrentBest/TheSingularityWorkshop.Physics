@@ -35,15 +35,15 @@ These are candidate titles for future descriptor-backed books, not completed sou
 | Foundations of Physics | Measurement, units, frames, conservation, modeling, uncertainty | Existing theory and primitives across Physics |
 | Classical Mechanics | Motion, forces, work, energy, contact, mechanisms | Multiple bounded implementations |
 | Gravitation and Orbital Mechanics | Gravity fields, orbits, encounters, tides | Existing bounded astronomy models |
-| Thermodynamics and Heat Transfer | Thermal state, heat, phase change, engines, cycles | Partial thermal primitives |\n| Batteries and Energy Storage | Electrochemical storage, state of charge, limits, aging | Planned |
-| Electricity and Electrical Grids | Circuits, loads, networks, protection, dispatch | Ideal resistive load accounting |
+| Thermodynamics and Heat Transfer | Thermal state, heat, phase change, engines, cycles | Partial thermal primitives |
 | Batteries and Energy Storage | Electrochemical storage, state of charge, limits, aging | Planned |
+| Electricity and Electrical Grids | Circuits, loads, networks, protection, dispatch | Ideal resistive load accounting |
 | Thermal Power Stations | Coal, gas, steam cycles, turbines, generators, rejected heat | Planned |
 | Nuclear Fission Facilities | Educational reactor physics, thermal removal, conversion, residual heat, protective concepts | Planned educational model |
 | Hydroelectric and Water Power | Reservoirs, head, flow, turbines, generation | Planned |
 | Renewable Generation | Solar, wind, resource variability, conversion, storage | Planned |
 | Industrial Manufacturing | Process energy, machines, material transformation, throughput, automation | Planned |
-| Particle, Nuclear, and Collider Physics | Particle identity, collision kinematics, detectors, nuclear processes | Domain map and staged roadmap |\n| Ocean, Atmosphere, and Maritime Phenomena | Oceanography, weather, vessel physics, navigation, maritime hazards, evidence-led incident studies | Outline authored; physical models remain staged |
+| Particle, Nuclear, and Collider Physics | Particle identity, collision kinematics, detectors, nuclear processes | Domain map and staged roadmap |
 
 A candidate becomes a separate book when it has a clear scope, descriptor, cover, LOD assignment, chapters, and a traceable link to Physics evidence. Do not assign LOD by guesswork or imply planned models are implemented.
 
