@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "physics.domain.weather-and-climate",
+  "id": "physics.domain.weather-atmosphere",
   "category": "Domain",
   "lod": 1,
   "title": "Weather and Climate",
