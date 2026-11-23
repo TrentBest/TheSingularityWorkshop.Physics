@@ -10,18 +10,31 @@ namespace TheSingularityWorkshop.Physics.Geology;
 /// </remarks>
 public readonly record struct GeologicalTimeInterval
 {
+    /// <summary>Geological age at the beginning of the interval, measured in years before present.</summary>
     public double StartAgeYearsBeforePresent { get; }
+    /// <summary>Geological age at the end of the interval, measured in years before present.</summary>
     public double EndAgeYearsBeforePresent { get; }
+    /// <summary>Cumulative simulation elapsed time at the beginning of the interval, in seconds.</summary>
     public double SimulationStartSeconds { get; }
+    /// <summary>Cumulative simulation elapsed time at the end of the interval, in seconds.</summary>
     public double SimulationEndSeconds { get; }
+    /// <summary>Zero-based or caller-defined non-negative geological step identity.</summary>
     public long StepIndex { get; }
 
+    /// <summary>Gets the geological duration represented by this interval in years.</summary>
     /// <summary>Gets the geological duration represented by this interval in years.</summary>
     public double GeologicalDurationYears => StartAgeYearsBeforePresent - EndAgeYearsBeforePresent;
 
     /// <summary>Gets the elapsed execution duration represented by this interval in seconds.</summary>
+    /// <summary>Gets the elapsed execution duration represented by this interval in seconds.</summary>
     public double SimulationDurationSeconds => SimulationEndSeconds - SimulationStartSeconds;
 
+    /// <summary>Creates a validated geological interval with separate geological and simulation clocks.</summary>
+    /// <param name="startAgeYearsBeforePresent">Geological age at interval start.</param>
+    /// <param name="endAgeYearsBeforePresent">Geological age at interval end.</param>
+    /// <param name="simulationStartSeconds">Cumulative simulation seconds at interval start.</param>
+    /// <param name="simulationEndSeconds">Cumulative simulation seconds at interval end.</param>
+    /// <param name="stepIndex">Non-negative step identity.</param>
     public GeologicalTimeInterval(
         double startAgeYearsBeforePresent,
         double endAgeYearsBeforePresent,
@@ -64,18 +77,41 @@ public readonly record struct GeologicalTimeInterval
 /// </remarks>
 public sealed record GeologicalEventRecord
 {
+    /// <summary>Gets the stable identity of this event.</summary>
     public string EventId { get; }
+    /// <summary>Gets the stable event taxonomy identity.</summary>
     public string EventTypeId { get; }
+    /// <summary>Gets the geological and simulation interval occupied by this event.</summary>
     public GeologicalTimeInterval Time { get; }
+    /// <summary>Gets the immutable input world-state revision identity.</summary>
     public string SourceRevisionId { get; }
+    /// <summary>Gets the candidate/result world-state revision identity.</summary>
     public string ResultRevisionId { get; }
+    /// <summary>Gets the stable physical model identity.</summary>
     public string ModelId { get; }
+    /// <summary>Gets the physical model version.</summary>
     public string ModelVersion { get; }
+    /// <summary>Gets the stable algorithm identity.</summary>
     public string AlgorithmId { get; }
+    /// <summary>Gets the algorithm version.</summary>
     public string AlgorithmVersion { get; }
+    /// <summary>Gets the validated JSON-object parameters supplied to the event model.</summary>
     public string ParametersJson { get; }
+    /// <summary>Gets the concise human-readable event summary.</summary>
     public string Summary { get; }
 
+    /// <summary>Creates an immutable, validated geological event provenance record.</summary>
+    /// <param name="eventId">Stable event identity.</param>
+    /// <param name="eventTypeId">Stable event taxonomy identity.</param>
+    /// <param name="time">Geological and simulation interval for the event.</param>
+    /// <param name="sourceRevisionId">Input world-state revision identity.</param>
+    /// <param name="resultRevisionId">Candidate/result world-state revision identity.</param>
+    /// <param name="modelId">Physical model identity.</param>
+    /// <param name="modelVersion">Physical model version.</param>
+    /// <param name="algorithmId">Algorithm identity.</param>
+    /// <param name="algorithmVersion">Algorithm version.</param>
+    /// <param name="parametersJson">Validated JSON-object model parameters.</param>
+    /// <param name="summary">Human-readable event summary.</param>
     public GeologicalEventRecord(
         string eventId,
         string eventTypeId,
