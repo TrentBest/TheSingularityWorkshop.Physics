@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "surps.domain.nuclear-fission-facilities",
+  "id": "physics.domain.nuclear-fission-facilities",
   "category": "Domain",
   "lod": 1,
   "title": "Nuclear Fission Facilities",
