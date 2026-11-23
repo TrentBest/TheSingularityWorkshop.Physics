@@ -1,0 +1,59 @@
+<!-- Asset role: Original SURPS LOD 1 domain sourcebook cover artwork for Ocean, Atmosphere, and Maritime Phenomena. -->
+<!-- Provenance: Authored for TheSingularityWorkshop.Physics; original vector composition; no external image assets. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" role="img" aria-labelledby="title desc">
+  <title id="title">Ocean, Atmosphere, and Maritime Phenomena</title>
+  <desc id="desc">An original scientific illustration of a compass rose above layered ocean waves beneath a rotating storm system, with a research vessel crossing the water.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101b36"/>
+      <stop offset="1" stop-color="#365d78"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b6b83"/>
+      <stop offset="1" stop-color="#071b32"/>
+    </linearGradient>
+    <radialGradient id="storm">
+      <stop offset="0" stop-color="#d9e8e8" stop-opacity=".85"/>
+      <stop offset=".55" stop-color="#91b6c4" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#91b6c4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1600" fill="#081629"/>
+  <rect x="42" y="42" width="1116" height="1516" rx="28" fill="url(#sky)" stroke="#a5c9d2" stroke-width="3"/>
+  <circle cx="835" cy="430" r="350" fill="url(#storm)"/>
+  <g fill="none" stroke="#d7e8e9" stroke-opacity=".6" stroke-width="5">
+    <path d="M500 430c110-150 280-165 405-42 80 80 66 200-40 260"/>
+    <path d="M555 460c90-112 215-125 310-34 56 55 46 136-26 180"/>
+    <path d="M615 485c60-70 140-76 199-21 34 33 29 80-14 108"/>
+    <path d="M730 420c-80-35-145-5-175 60"/>
+  </g>
+  <g transform="translate(280 380)" stroke="#d7e8e9" fill="none">
+    <circle r="168" stroke-width="4"/>
+    <circle r="128" stroke-width="2" stroke-opacity=".65"/>
+    <path d="M0-190V190M-190 0H190M-134-134L134 134M134-134L-134 134" stroke-width="2" stroke-opacity=".65"/>
+    <path d="M0-148 28-20 0 0-28-20Z" fill="#e4c98a" stroke="#e4c98a"/>
+    <path d="M0 148-28 20 0 0 28 20Z" fill="#8fc4d0" stroke="#8fc4d0"/>
+    <circle r="12" fill="#e4c98a" stroke="none"/>
+    <g fill="#e6f0ed" stroke="none" font-family="Georgia,serif" font-size="26" text-anchor="middle">
+      <text y="-205">N</text><text y="225">S</text><text x="210" y="9">E</text><text x="-210" y="9">W</text>
+    </g>
+  </g>
+  <path d="M44 900 Q170 820 300 900T560 900T820 900T1156 900V1555H44Z" fill="url(#sea)"/>
+  <g fill="none" stroke="#a7d8df" stroke-width="5" stroke-opacity=".72">
+    <path d="M48 970q85-70 170 0t170 0 170 0 170 0 170 0 170 0 170 0"/>
+    <path d="M48 1080q85-70 170 0t170 0 170 0 170 0 170 0 170 0 170 0"/>
+    <path d="M48 1200q85-70 170 0t170 0 170 0 170 0 170 0 170 0 170 0"/>
+    <path d="M48 1330q85-70 170 0t170 0 170 0 170 0 170 0 170 0 170 0"/>
+  </g>
+  <g transform="translate(790 930)">
+    <path d="M-135 0H145L95 65H-90Z" fill="#e4e1d3" stroke="#102a3d" stroke-width="5"/>
+    <path d="M-15-120V0M-15-110L-105-12H-15Z" fill="#f0ead8" stroke="#102a3d" stroke-width="4"/>
+    <path d="M-5-95L100-12H-5Z" fill="#c8d9d7" stroke="#102a3d" stroke-width="4"/>
+    <path d="M-25 0V-150" stroke="#e4c98a" stroke-width="7"/>
+  </g>
+  <g fill="#f1ead7" text-anchor="middle">
+    <text x="600" y="1420" font-family="Georgia,serif" font-size="58" letter-spacing="4">OCEAN • ATMOSPHERE</text>
+    <text x="600" y="1490" font-family="Georgia,serif" font-size="44" letter-spacing="7">MARITIME PHENOMENA</text>
+  </g>
+  <text x="600" y="112" text-anchor="middle" fill="#e4c98a" font-family="Arial,sans-serif" font-size="22" letter-spacing="6">THE SINGULARITY WORKSHOP</text>
+</svg>
