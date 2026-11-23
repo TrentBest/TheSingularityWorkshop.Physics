@@ -2,13 +2,13 @@
 
 ![The Singularity Workshop animated moniker](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg)
 
-This repository participates in the Singularity Universal Roleplaying System (SURPS) as the authoritative owner of Physics-domain material. This page is the local implementation guide; **the SURPS repository is the single authority for cross-repository identity, participation, rulebook IDs, ownership claims, and the master backlog.**
+This repository participates in the Singularity Universal Roleplaying System (SURPS) as the authoritative owner of Physics-domain material. This page is the local implementation guide; the [canonical SURPS Repository Participation Standard](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/repository-participation.md) is the single authority for cross-repository structure, identity, participation, rulebook IDs, ownership claims, and the master backlog.
 
 ## Canonical coordination
 
 - [SURPS master rulebook map](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/rulebook-backlog/index.md)
 - [Machine-readable master registry](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.surps/rulebook-backlog.json)
-- [SURPS participation and ownership policy](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/books/index.md)
+- [Canonical repository participation standard](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/repository-participation.md)
 - [Rulebook owner sign-in template](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.github/ISSUE_TEMPLATE/rulebook-owner-sign-in.yml)
 - [Repository participation template](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.github/ISSUE_TEMPLATE/surps-repository-participation.yml)
 
