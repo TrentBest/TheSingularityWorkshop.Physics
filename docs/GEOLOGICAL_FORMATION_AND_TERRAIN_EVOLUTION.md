@@ -152,7 +152,7 @@ The initial code slice is now present in `Physics/Geology/FaultKinematics3d.cs` 
 
 It defines a caller-identified planar fault, explicit coordinate frame and linear unit, normalized strike and down-dip basis, oriented plane normal, explicit hanging-wall side, declared mechanism, and signed strike/dip slip components. The resulting hanging-wall displacement is a full 3D vector; the footwall is stationary in this prescribed block model. The contract does not infer handedness, stress regime, or fault sense, and it does not claim to model rupture or earthquake dynamics.
 
-Current limitations are intentional: the mathematical plane is infinite, the displacement is a discontinuous block offset, and there is no finite rupture patch, segmented/curved surface, distributed elastic deformation, layer intersection, or material-volume update yet. This is the shared kinematic foundation, not the finished fault system. CI validation is running for this first code increment.
+Current limitations are intentional: the mathematical plane is infinite, the displacement is a discontinuous block offset, and there is no distributed elastic deformation, layer displacement, or material-volume update yet. A separate finite-fault/column intersection query now records local cross-cutting geometry; see [Fault/stratigraphy cross-cutting intersection (3D)](FAULT_STRATIGRAPHIC_INTERSECTIONS_3D.md). This is the shared kinematic foundation, not the finished fault system. CI validation is running for this first code increment.
 
 ## Implemented stratigraphic column representation
 
@@ -160,7 +160,7 @@ The initial local stratigraphy contract is now present in `Physics/Geology/Strat
 
 A layer carries a stable identity, caller-defined material-catalogue ID, finite upper/lower elevation boundaries, an older-to-younger formation-age interval, and the event ID that formed or deposited it. A column identifies one horizontal sample location and declares its coordinate frame, vertical datum, linear unit, and positive vertical direction. Layers are ordered from highest to lowest elevation; overlap and impossible age ordering are rejected. Age gaps are retained as possible hiatuses.
 
-This is deliberately a local vertical stack, not yet a laterally correlated or fully volumetric stratigraphic model. Material IDs do not supply physical properties. The current fault kinematics contract does not yet offset these layers. The next increment should establish explicit fault/layer cross-cutting and displacement provenance before introducing a plate or rupture solver.
+This is deliberately a local vertical stack, not yet a laterally correlated or fully volumetric stratigraphic model. Material IDs do not supply physical properties. The current fault kinematics contract does not yet offset these layers. The first local cross-cutting query is implemented in `FaultStratigraphicIntersection3d.cs`: it identifies a layer cut by a finite fault plane at a sampled column while retaining material and formation-event provenance. It is a geometric query only; displacement of strata, neighboring-column continuity, and volumetric deformation remain future work before introducing a plate or rupture solver.
 
 ## Expanded implementation program
 
@@ -287,3 +287,10 @@ The exact source-to-capability audit is maintained in [Planetary world-generatio
 ## Immutable geological terrain revision boundary
 
 The first in-memory transaction layer now wraps the existing immutable height field: [Geological terrain revision transactions](GEOLOGICAL_TERRAIN_REVISION_TRANSACTIONS.md). A candidate must name its exact source and result revisions in its event record, preserve the source grid geometry and coordinate semantics, pass optional domain validation, and only then be offered to the revision store. The store uses optimistic source identity and a lock to reject stale competing candidates without changing current state. This is not yet durable persistence or geological event replay.
+
+
+## Implemented finite-fault/stratigraphic intersection query
+
+`FaultStratigraphicIntersection3d.TryIntersectColumn` intersects the finite fault plane with a vertical stratigraphic column when a unique point exists. It requires matching coordinate-frame and linear-unit identities, checks the finite strike/down-dip footprint, and reports a layer only when the intersection lies strictly inside its vertical interval. Interfaces and hiatuses are not arbitrarily assigned to a layer; vertical planes parallel to or coincident with the column have no unique point result.
+
+The immutable result retains fault, column, layer, material-catalogue, and original formation-event identities. Neither input is mutated, and no displacement is applied. This is the first local cross-cutting observation, not a faulted-strata deformation solver. See [Fault/stratigraphy cross-cutting intersection (3D)](FAULT_STRATIGRAPHIC_INTERSECTIONS_3D.md) and its focused tests.
