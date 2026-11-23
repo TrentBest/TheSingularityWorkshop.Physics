@@ -25,6 +25,7 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 | 3D solid/material storage | `Spatial/SparseVoxelVolume3d.cs`, `SparseMaterialVoxelVolume3d.cs`, `SparseMaterialVoxelVolumeSnapshot3d.cs`, `SparseMaterialVoxelVolumeEnvelope3d.cs` | Implemented sparse voxel and material snapshots with spatial/provenance envelope. Generic solid representation; material IDs are not rock properties. |
 | Analytic and height-field-derived solids | `Spatial/AnalyticalSolidVolume3d.cs`, `Physics/Geology/MountainSolidVolume3d.cs` | Implemented bounded analytic ellipsoid and a deterministic height-field-bounded mountain extrusion. Neither is a geological formation solver. |
 | Derived voxel surface | `Spatial/VoxelSurfaceMesh3d.cs` | Existing geometry extraction foundation. A derived mesh is presentation/geometry output, not authoritative physical state. |
+| Stratigraphic column representation | `Physics/Geology/StratigraphicColumn3d.cs` | Implemented immutable local vertical columns with material IDs, elevation bounds, formation-age intervals, and deposition/formation event provenance. Not a lateral 3D stratigraphic volume or a deformation/process solver. |
 | Geological time and event metadata | `Physics/Geology/GeologicalEventRecord.cs` | Implemented validated separation of geological age from elapsed simulation seconds and immutable event provenance metadata. Not yet an atomic world-state transaction or connected geological replay executor. |
 | Atmosphere, climate, hydrology, and terrain processes | `Physics/Hydrodynamics`, `Physics/Thermodynamics`, `Physics/Energy`; books and domain documents under `docs/books` and `docs` | Reusable neighboring physics foundations and documented domain contracts exist. A coupled planetary climate/weathering/erosion/sediment system is not implemented by those documents alone. |
 
@@ -36,14 +37,14 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 4. Apply deterministic localized elevation edits without mutating the source snapshot.
 5. Generate prescribed volcanic deposits and bounded 3D solid geometry.
 6. Represent a prescribed finite fault displacement.
-7. retain generic checkpoints/events/replay primitives and geological event/time metadata.
+7. Retain generic checkpoints/events/replay primitives and geological event/time metadata.\n8. Represent local stratigraphic columns with material identity, elevation bounds, formation intervals, and event provenance.
 
 ## Explicit gaps before a complete procedural planet
 
 - Planetary body definition that joins radius, mass, composition, rotation, internal energy/temperature, and orbital/radiative boundary conditions into a versioned initial-state record.
 - A validated planetary interior model: core/mantle/crust structure, heat sources and transport, material/rheology assumptions, and mantle dynamics or explicitly reduced approximations.
 - Lithosphere/plate state: plate geometry, thickness, density, motion, boundary conditions, and convergent/divergent/transform interaction. The current fault primitive is prescribed kinematics, not this solver.
-- Stratigraphic layers with material identity/properties, formation/deposition intervals, geometry, and provenance; plus explicit cross-cutting relationships for faults and intrusions.
+- A material-property catalogue, lateral stratigraphic correlation, process-derived layer creation, and explicit fault/intrusion cross-cutting relationships. The initial local column contract exists, but does not yet connect neighboring columns or deform strata.
 - Physical weathering, erosion, sediment transport, and deposition with water and solid-material budgets.
 - Atmospheric weather and long-term climate models with declared coupling to surface processes.
 - Hydrologic routing and groundwater/karst processes coupled to terrain and material changes.
@@ -57,13 +58,13 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 1. Finish the source inventory and canonical terrain query/authoring contract without duplicating existing APIs.
 2. Add an immutable geological revision/transaction boundary over existing terrain snapshots; test stale source revisions, validation rejection, and failure atomicity. (Initial in-memory 2D boundary now implemented in `GeologicalTerrainRevision2D.cs`; durable persistence and geological replay remain future work.)
 3. Connect prescribed fault events to an explicit terrain/stratigraphy representation while preserving layer provenance and clearly stating the kinematic limits.
-4. Add a minimal layered-material column/volume contract before claiming strata or fault cross-cutting.
+4. Add a minimal layered-material column/volume contract before claiming strata or fault cross-cutting. (Initial immutable local column and layer contracts now exist in `StratigraphicColumn3d.cs`; lateral correlation, 3D volume integration, and fault offsets remain open.)
 5. Build process-specific plate/interior, climate, hydrology, and sediment models as separate validated increments.
 6. Connect geological events to the existing timeline/checkpoint/replay infrastructure through a model-specific adapter.
 7. Only then compose a planetary history generator and accelerate measured bottlenecks on GPU.
 
 ## Evidence and limitations
 
-The existing terrain authoring API is documented in `docs/TERRAIN_HEIGHT_FIELD_2D.md` and tested by `tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs`. The 3D material-volume contract is documented in `docs/SPARSE_MATERIAL_VOXEL_VOLUME_3D.md`. Mountain extrusion is documented by its source and tests. Geological fault and event primitives have focused tests.
+The existing terrain authoring API is documented in `docs/TERRAIN_HEIGHT_FIELD_2D.md` and tested by `tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs`. The 3D material-volume contract is documented in `docs/SPARSE_MATERIAL_VOXEL_VOLUME_3D.md`. Mountain extrusion is documented by its source and tests. Geological fault, event, revision-transaction, and stratigraphic-column primitives have focused tests.
 
 This inventory is deliberately conservative: a documented future capability is not an implemented solver, a geometric operation is not a physical process, and a renderable surface is not authoritative geological state.
