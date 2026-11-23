@@ -65,6 +65,7 @@ Every model must declare its system boundary, units, initial conditions, assumpt
 The following are real bounded capabilities on the Physics development branch:
 
 - [ElectricalGrid](../../Physics/Electricity/ElectricalGrid.cs) observes ideal fixed-voltage DC resistive loads, computes current and power, aggregates demand, and reports declared capacity exceedance.
+- [EnergyConversion](../../Physics/Energy/EnergyConversion.cs) performs a deterministic, fixed-interval conversion ledger from declared input power and efficiency to useful output and energy not delivered as useful output. It does not claim the remainder is all heat or model a specific machine.
 - [Electrical-to-thermal coupling experiment](../../Physics/Experiments/ElectricalThermalCouplingExperiment.cs) connects a resistive electrical load's power to a bounded thermal-energy accounting experiment.
 - [Lumped thermal state](../../Physics/Thermodynamics/LumpedThermalState.cs) provides a declared constant-specific-heat thermal state.
 - [Thermal conduction](../../Physics/Thermodynamics/ThermalConduction.cs) provides a bounded one-dimensional conduction primitive.
