@@ -16,7 +16,7 @@ The experience uses `TheSingularityWorkshop.Physics.Geology.TerrainHeightField2D
 - Base shape: parabolic bowl with 20 m rim elevation, 8 m depth, centre (0 m, 0 m), and 8 m radius.
 - Edit: a smooth radial brush centred at (-2 m, 2 m), radius 3 m, with +2 m elevation delta.
 
-The run record preserves both the original and edited elevation arrays. The Pages view only projects those recorded values into an isometric SVG and a centre-row profile.
+The run record preserves both the original and edited elevation arrays, the stable brush operation ID, algorithm version, authoring-source identity, changed-sample count, and sample-aligned dirty region. The Pages view only projects those recorded values into an isometric SVG and a centre-row profile.
 
 ## What to inspect
 
