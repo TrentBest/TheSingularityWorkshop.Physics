@@ -1,0 +1,60 @@
+name: SURPS Enrollment
+
+on:
+  push:
+    branches: [development]
+    paths:
+      - ".surps/participation.json"
+      - "docs/books/**"
+      - "docs/assets/badges/surps-participation.svg"
+      - "README.md"
+      - "scripts/generate_surps_badge.py"
+      - ".github/workflows/surps-enrollment.yml"
+  pull_request:
+    branches: [development]
+    paths:
+      - ".surps/participation.json"
+      - "docs/books/**"
+      - "docs/assets/badges/surps-participation.svg"
+      - "README.md"
+      - "scripts/generate_surps_badge.py"
+      - ".github/workflows/surps-enrollment.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: surps-enrollment-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  enrollment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Generate and validate enrollment outputs
+        if: github.event_name == 'pull_request'
+        run: |
+          python scripts/generate_surps_badge.py
+          python scripts/generate_surps_badge.py --check
+      - name: Generate README badge and SVG
+        if: github.event_name == 'push'
+        run: python scripts/generate_surps_badge.py
+      - name: Commit generated enrollment outputs
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet -- README.md docs/assets/badges/surps-participation.svg; then
+            echo "SURPS enrollment outputs are current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md docs/assets/badges/surps-participation.svg
+          git commit -m "chore: refresh generated SURPS participation badge"
+          git push
