@@ -15,7 +15,12 @@ public sealed class EnergyStorageStateTests
         Assert.That(result.RequestedInputEnergyJoules, Is.EqualTo(10_000d));
         Assert.That(result.AcceptedInputEnergyJoules, Is.EqualTo(10_000d));
         Assert.That(result.StoredEnergyIncreaseJoules, Is.EqualTo(9_000d));
+        Assert.That(result.InputEnergyNotStoredJoules, Is.EqualTo(1_000d));
         Assert.That(result.InputEnergyNotAcceptedJoules, Is.Zero);
+        Assert.That(result.StoredEnergyIncreaseJoules + result.InputEnergyNotStoredJoules,
+            Is.EqualTo(result.AcceptedInputEnergyJoules));
+        Assert.That(result.AcceptedInputEnergyJoules + result.InputEnergyNotAcceptedJoules,
+            Is.EqualTo(result.RequestedInputEnergyJoules));
         Assert.That(result.FinalState.StoredEnergyJoules, Is.EqualTo(9_000d));
         Assert.That(result.FinalState.StateOfChargeFraction, Is.EqualTo(0.09d));
         Assert.That(initial.StoredEnergyJoules, Is.Zero);
@@ -31,6 +36,7 @@ public sealed class EnergyStorageStateTests
         Assert.That(result.RequestedInputEnergyJoules, Is.EqualTo(20_000d));
         Assert.That(result.AcceptedInputEnergyJoules, Is.EqualTo(5_000d));
         Assert.That(result.StoredEnergyIncreaseJoules, Is.EqualTo(4_500d));
+        Assert.That(result.InputEnergyNotStoredJoules, Is.EqualTo(500d));
         Assert.That(result.InputEnergyNotAcceptedJoules, Is.EqualTo(15_000d));
     }
 
