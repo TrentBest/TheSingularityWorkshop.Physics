@@ -57,7 +57,9 @@ public sealed class FaultStratigraphicIntersection3d
     /// <returns>True only when the plane crosses the interior of one layer inside the finite segment footprint.</returns>
     /// <remarks>
     /// The column's WorldX/WorldY and layer elevations are interpreted in the fault's coordinate
-    /// frame and linear unit. Coordinate-frame and unit identities must match exactly. A plane
+    /// frame and linear unit, with increasing elevation aligned to the positive Z axis. This
+    /// first contract does not support arbitrary vertical-axis orientations. Coordinate-frame
+    /// and unit identities must match exactly. A plane
     /// parallel to or coincident with the vertical column has no unique point intersection and
     /// returns false. A point on a layer boundary, in a stratigraphic gap, or outside the finite
     /// fault footprint also returns false. This method records no displacement.
