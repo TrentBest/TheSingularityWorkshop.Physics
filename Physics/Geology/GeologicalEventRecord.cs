@@ -22,10 +22,8 @@ public readonly record struct GeologicalTimeInterval
     public long StepIndex { get; }
 
     /// <summary>Gets the geological duration represented by this interval in years.</summary>
-    /// <summary>Gets the geological duration represented by this interval in years.</summary>
     public double GeologicalDurationYears => StartAgeYearsBeforePresent - EndAgeYearsBeforePresent;
 
-    /// <summary>Gets the elapsed execution duration represented by this interval in seconds.</summary>
     /// <summary>Gets the elapsed execution duration represented by this interval in seconds.</summary>
     public double SimulationDurationSeconds => SimulationEndSeconds - SimulationStartSeconds;
 
