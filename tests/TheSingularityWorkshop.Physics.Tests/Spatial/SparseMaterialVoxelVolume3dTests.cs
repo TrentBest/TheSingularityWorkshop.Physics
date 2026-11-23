@@ -459,6 +459,53 @@ public sealed class SparseMaterialVoxelVolume3dTests
     }
 
     [Test]
+    public void CaptureSnapshot_PreservesGridAndMaterialSamplesInStableOrder()
+    {
+        var origin = new Vector3d(-10d, 2d, 5d);
+        var volume = new SparseMaterialVoxelVolume3d(origin, 0.5d, 2);
+        volume.SetMaterial(new GridCoordinate3i(2, -1, 0), 7);
+        volume.SetMaterial(new GridCoordinate3i(-3, 4, 1), 2);
+        volume.SetMaterial(new GridCoordinate3i(2, -1, -2), 9);
+
+        var snapshot = volume.CaptureSnapshot();
+
+        Assert.That(snapshot.Origin, Is.EqualTo(origin));
+        Assert.That(snapshot.VoxelSize, Is.EqualTo(0.5d));
+        Assert.That(snapshot.ChunkSize, Is.EqualTo(2));
+        Assert.That(snapshot.SolidVoxelCount, Is.EqualTo(3));
+        Assert.That(snapshot.Samples.Select(sample => sample.Voxel), Is.EqualTo(new[]
+        {
+            new GridCoordinate3i(-3, 4, 1),
+            new GridCoordinate3i(2, -1, -2),
+            new GridCoordinate3i(2, -1, 0)
+        }));
+        Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(2, -1, -2)), Is.EqualTo(9));
+        Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(0, 0, 0)), Is.Zero);
+        Assert.That(snapshot.GetVoxelCenter(new GridCoordinate3i(2, -1, 0)),
+            Is.EqualTo(new Vector3d(-8.75d, 1.25d, 5.25d)));
+    }
+
+    [Test]
+    public void CaptureSnapshot_IsImmutableAndIndependentOfLaterVolumeEdits()
+    {
+        var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
+        var voxel = new GridCoordinate3i(0, 0, 0);
+        volume.SetMaterial(voxel, 3);
+
+        var snapshot = volume.CaptureSnapshot();
+        volume.SetMaterial(voxel, 4);
+        volume.SetMaterial(new GridCoordinate3i(1, 0, 0), 5);
+        volume.Clear();
+
+        Assert.That(snapshot.SolidVoxelCount, Is.EqualTo(1));
+        Assert.That(snapshot.GetMaterialId(voxel), Is.EqualTo(3));
+        Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(1, 0, 0)), Is.Zero);
+        Assert.Throws<NotSupportedException>(() =>
+            ((IList<MaterialVoxelSample3d>)snapshot.Samples)[0] =
+                new MaterialVoxelSample3d(voxel, 99));
+    }
+
+    [Test]
     public void Clear_ResetsOccupancyChunksAndMaterialCounts()
     {
         var volume = new SparseMaterialVoxelVolume3d(Vector3d.Zero, 1d);
