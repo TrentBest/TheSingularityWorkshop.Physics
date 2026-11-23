@@ -69,6 +69,6 @@ The checked-in SVG and generated Markdown summary remain the default example. CI
 - [SVG renderer source](../../tools/render_projectile_trajectory.py)
 - [Living theory and evidence contract](../LIVING_THEORY.md)
 
-The acceptance tests compare each solver sample with the analytical solution and check repeatability, invalid inputs, and serialization. The fixture represents a deterministic analytical example, not external measurements.
+The acceptance tests compare each solver sample with the analytical solution and check repeatability, invalid inputs, and serialization. The fixture represents a deterministic analytical example, not external measurements. The serialized state contains only position, velocity, and elapsed time; the computed `IsValid` guard is an in-memory validation helper and is intentionally excluded from the run-record schema.
 
 This model does **not** implement aerodynamic drag, spin, a launch mechanism, collisions, terrain intersection, or impact physics. It should not be interpreted as evidence of real-world flight accuracy.
