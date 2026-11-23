@@ -90,8 +90,11 @@ public sealed class EnergyStorageStateTests
         var initial = CreateState(storedEnergy: 25_000d);
         var first = initial.Charge(250d, 20d);
         var second = initial.Charge(250d, 20d);
+        var firstDischarge = initial.Discharge(100d, 10d);
+        var secondDischarge = initial.Discharge(100d, 10d);
 
         Assert.That(second, Is.EqualTo(first));
+        Assert.That(secondDischarge, Is.EqualTo(firstDischarge));
         Assert.That(initial.StoredEnergyJoules, Is.EqualTo(25_000d));
     }
 
