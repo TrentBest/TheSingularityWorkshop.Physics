@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "repository": "TrentBest/TheSingularityWorkshop.Physics",
+  "domain": "Physics",
+  "participationStatus": "active",
+  "contributionType": [
+    "domain-physics",
+    "physics-rulebook-provider",
+    "sourcebook-publication"
+  ],
+  "contributionSummary": "Owns physical laws, mathematical models, numerical methods, simulations, validation evidence, and Physics-domain sourcebook content. SURPS composition remains opt-in and does not become a Physics runtime dependency.",
+  "cataloguePath": "docs/books/index.md",
+  "books": [
+    {
+      "id": "surps.domain.power-and-industrial-systems",
+      "title": "Power and Industrial Systems",
+      "category": "Domain",
+      "lod": 1,
+      "version": "0.1.0",
+      "status": "draft",
+      "bookPath": "docs/books/power-and-industrial-systems.md",
+      "descriptorPath": "docs/books/power-and-industrial-systems.book.json",
+      "coverPath": "docs/books/covers/power-and-industrial-systems.svg"
+    }
+  ],
+  "providers": [
+    {
+      "id": "surps.rulebook.physics",
+      "status": "implemented",
+      "sourcePath": "Physics/MicroBundles/SurpsRulebookPhysics.cs",
+      "integrationGuide": "docs/SURPS_RULEBOOK_PHYSICS_INTEGRATION.md"
+    }
+  ]
+}
