@@ -12,7 +12,7 @@
   "cataloguePath": "docs/books/index.md",
   "books": [
     {
-      "id": "surps.domain.power-and-industrial-systems",
+      "id": "physics.domain.power-and-industrial-systems",
       "title": "Power and Industrial Systems",
       "category": "Domain",
       "lod": 1,
@@ -23,7 +23,7 @@
       "coverPath": "docs/books/covers/power-and-industrial-systems.svg"
     },
     {
-      "id": "surps.domain.ocean-atmosphere-maritime-phenomena",
+      "id": "physics.domain.ocean-atmosphere-maritime-phenomena",
       "title": "Ocean, Atmosphere, and Maritime Phenomena",
       "category": "Domain",
       "lod": 1,
@@ -34,7 +34,7 @@
       "coverPath": "docs/books/covers/ocean-atmosphere-maritime-phenomena.svg"
     },
     {
-      "id": "surps.domain.batteries-and-energy-storage",
+      "id": "physics.domain.batteries-and-energy-storage",
       "title": "Batteries and Energy Storage",
       "category": "Domain",
       "lod": 1,
@@ -45,7 +45,7 @@
       "coverPath": "docs/books/covers/batteries-and-energy-storage.svg"
     },
     {
-      "id": "surps.domain.nuclear-fission-facilities",
+      "id": "physics.domain.nuclear-fission-facilities",
       "title": "Nuclear Fission Facilities",
       "category": "Domain",
       "lod": 1,
