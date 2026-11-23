@@ -12,11 +12,12 @@ public sealed class FaultStratigraphicIntersection3dTests
         Vector3d? downDip = null,
         double halfStrike = 20d,
         double halfDownDip = 20d,
+        Vector3d? planeOrigin = null,
         string frame = "world",
         string unit = "m")
     {
         var kinematics = new FaultKinematics3d(
-            "fault-01", frame, unit, Vector3d.Zero,
+            "fault-01", frame, unit, planeOrigin ?? Vector3d.Zero,
             strike ?? new Vector3d(1d, 0d, 0d),
             downDip ?? new Vector3d(0d, 1d, 0d),
             FaultHangingWallSide3d.PositiveNormalSide,
@@ -39,7 +40,8 @@ public sealed class FaultStratigraphicIntersection3dTests
     {
         var fault = CreateFault(
             strike: new Vector3d(1d, 0d, 0d),
-            downDip: new Vector3d(0d, 1d, 1d));
+            downDip: new Vector3d(0d, 1d, 1d),
+            planeOrigin: new Vector3d(0d, 0d, 5d));
         var column = CreateColumn();
 
         var found = FaultStratigraphicIntersection3d.TryIntersectColumn(fault, column, out var result);
@@ -53,7 +55,7 @@ public sealed class FaultStratigraphicIntersection3dTests
             Assert.That(result.LayerId, Is.EqualTo("upper"));
             Assert.That(result.MaterialId, Is.EqualTo(4));
             Assert.That(result.FormationEventId, Is.EqualTo("deposit-upper"));
-            Assert.That(result.IntersectionPoint, Is.EqualTo(new Vector3d(0d, 0d, 0d)));
+            Assert.That(result.IntersectionPoint, Is.EqualTo(new Vector3d(0d, 0d, 5d)));
         });
     }
 
