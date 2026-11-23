@@ -115,6 +115,5 @@ public sealed class ProjectileTrajectoryExperimentTests
         Assert.That(firstJson, Does.Contain("\"coordinateFrame\": \"world, Z-up\""));
         Assert.That(firstJson, Does.Contain("\"samples\""));
         Assert.That(firstJson, Does.Not.Contain("\"isValid\""));
-        Assert.That(firstJson, Does.Not.Contain("\"isValid\""));
     }
 }
