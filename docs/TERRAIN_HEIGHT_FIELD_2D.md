@@ -23,7 +23,7 @@ These are geometric authoring operations, not claims about geological formation.
 
 ## Deliberate limits
 
-This is a 2.5D height field. It cannot encode caves, tunnels, overhangs, vertical faces, or multiple surface layers; those require the existing sparse volumetric representation and a future explicit height-field/volume bridge. The first brush is a radial elevation edit, not a material-aware tool, transaction log, undo system, chunked editor, or GPU implementation. Stable operation IDs, provenance history, dirty-region reports, material fields, chunk seams, and deterministic seeded regional generators remain future increments.
+This is a 2.5D height field. It cannot encode caves, tunnels, overhangs, vertical faces, or multiple surface layers; those require the existing sparse volumetric representation and a future explicit height-field/volume bridge. The identified radial-brush overload now accepts a stable caller-owned operation ID, algorithm version, and authoring-source identity. It returns an immutable result snapshot, changed-sample count, and the smallest sample-aligned dirty region. This is a deterministic operation receipt, not yet a persistent multi-operation history, deduplication ledger, undo system, material-aware tool, chunked editor, or GPU implementation. Material fields, chunk seams, and deterministic seeded regional generators remain future increments.
 
 The existing `VolcanicTerrain2D` remains the current volume-accounted prescribed-deposition model. It is not silently coupled to this new authoring field, and the fixed-bed shallow-water solver remains unchanged.
 
