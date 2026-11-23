@@ -36,6 +36,16 @@ An evidence-led domain outline covering oceanography, atmospheric science, vesse
 
 A domain outline for electrochemical and mechanical/thermal storage, cell-to-pack composition, grid and factory integration, energy accounting, and evidence-led safety boundaries. The generic Physics storage ledger is implemented; chemistry-specific models remain planned.
 
+### Nuclear Fission Facilities
+
+![SURPS Rulebook LOD 1](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg)
+
+![Nuclear Fission Facilities cover](covers/nuclear-fission-facilities.svg)
+
+[Read Nuclear Fission Facilities](nuclear-fission-facilities.md) · [Descriptor](nuclear-fission-facilities.book.json)
+
+A public-information educational outline for fission physics, delayed response, heat removal, thermal conversion, residual heat, and generic protective concepts. It explicitly excludes plant-specific operating procedures, setpoints, security details, and safety-critical training. No reactor simulator is claimed implemented.
+
 ## Planned book family
 
 These are candidate titles for future descriptor-backed books, not completed sourcebooks:
@@ -48,7 +58,7 @@ These are candidate titles for future descriptor-backed books, not completed sou
 | Thermodynamics and Heat Transfer | Thermal state, heat, phase change, engines, cycles | Partial thermal primitives |
 | Electricity and Electrical Grids | Circuits, loads, networks, protection, dispatch | Ideal resistive load accounting |
 | Thermal Power Stations | Coal, gas, steam cycles, turbines, generators, rejected heat | Planned |
-| Nuclear Fission Facilities | Educational reactor physics, thermal removal, conversion, residual heat, protective concepts | Planned educational model |
+
 | Hydroelectric and Water Power | Reservoirs, head, flow, turbines, generation | Planned |
 | Renewable Generation | Solar, wind, resource variability, conversion, storage | Planned |
 | Industrial Manufacturing | Process energy, machines, material transformation, throughput, automation | Planned |
