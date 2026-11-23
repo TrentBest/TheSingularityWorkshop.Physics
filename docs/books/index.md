@@ -46,7 +46,6 @@ These are candidate titles for future descriptor-backed books, not completed sou
 | Classical Mechanics | Motion, forces, work, energy, contact, mechanisms | Multiple bounded implementations |
 | Gravitation and Orbital Mechanics | Gravity fields, orbits, encounters, tides | Existing bounded astronomy models |
 | Thermodynamics and Heat Transfer | Thermal state, heat, phase change, engines, cycles | Partial thermal primitives |
-| Batteries and Energy Storage | Electrochemical storage, state of charge, limits, aging | Planned |
 | Electricity and Electrical Grids | Circuits, loads, networks, protection, dispatch | Ideal resistive load accounting |
 | Thermal Power Stations | Coal, gas, steam cycles, turbines, generators, rejected heat | Planned |
 | Nuclear Fission Facilities | Educational reactor physics, thermal removal, conversion, residual heat, protective concepts | Planned educational model |
