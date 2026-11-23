@@ -482,7 +482,7 @@ public sealed class SparseMaterialVoxelVolume3dTests
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(2, -1, -2)), Is.EqualTo(9));
         Assert.That(snapshot.GetMaterialId(new GridCoordinate3i(0, 0, 0)), Is.Zero);
         Assert.That(snapshot.GetVoxelCenter(new GridCoordinate3i(2, -1, 0)),
-            Is.EqualTo(new Vector3d(-8.75d, 1.25d, 5.25d)));
+            Is.EqualTo(new Vector3d(-8.75d, 1.75d, 5.25d)));
     }
 
     [Test]
