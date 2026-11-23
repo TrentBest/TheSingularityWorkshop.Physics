@@ -10,7 +10,7 @@
 
 `FaultStratigraphicIntersection3d.TryIntersectColumn`:
 
-- Requires exact coordinate-frame and linear-unit identity between the finite fault and sampled column.
+- Requires exact coordinate-frame and linear-unit identity between the finite fault and sampled column. The column's increasing elevation must align with positive Z in the fault frame; arbitrary vertical-axis orientations are not supported by this first contract.
 - Solves the plane equation along the column's vertical line when the plane has a non-negligible vertical normal component.
 - Requires the resulting point to lie within the finite segment's strike/down-dip footprint.
 - Reports a layer only when the point lies strictly inside its vertical interval. A point on a layer boundary is an interface intersection, not arbitrarily assigned to either layer. A point in a hiatus is not a layer intersection.
