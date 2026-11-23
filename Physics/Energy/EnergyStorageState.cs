@@ -62,6 +62,7 @@ public readonly record struct EnergyStorageState(
             throw new OverflowException("Charging energy accounting is outside finite double range.");
 
         var nextStoredEnergy = Math.Min(CapacityJoules, StoredEnergyJoules + storedEnergyIncrease);
+        var actualStoredEnergyIncrease = nextStoredEnergy - StoredEnergyJoules;
         var nextState = this with { StoredEnergyJoules = nextStoredEnergy };
         return new EnergyStorageChargeResult(
             this,
@@ -70,8 +71,8 @@ public readonly record struct EnergyStorageState(
             durationSeconds,
             requestedInputEnergy,
             acceptedInputEnergy,
-            storedEnergyIncrease,
-            acceptedInputEnergy - storedEnergyIncrease,
+            actualStoredEnergyIncrease,
+            acceptedInputEnergy - actualStoredEnergyIncrease,
             energyNotAccepted);
     }
 
@@ -106,6 +107,8 @@ public readonly record struct EnergyStorageState(
             throw new OverflowException("Discharging energy accounting is outside finite double range.");
 
         var nextStoredEnergy = Math.Max(0d, StoredEnergyJoules - storedEnergyRemoved);
+        var actualStoredEnergyRemoved = StoredEnergyJoules - nextStoredEnergy;
+        var actualStoredEnergyNotDeliveredAsOutput = actualStoredEnergyRemoved - deliveredOutputEnergy;
         var nextState = this with { StoredEnergyJoules = nextStoredEnergy };
         return new EnergyStorageDischargeResult(
             this,
@@ -114,9 +117,9 @@ public readonly record struct EnergyStorageState(
             durationSeconds,
             requestedOutputEnergy,
             deliveredOutputEnergy,
-            storedEnergyRemoved,
+            actualStoredEnergyRemoved,
             outputEnergyNotDelivered,
-            storedEnergyNotDeliveredAsOutput);
+            actualStoredEnergyNotDeliveredAsOutput);
     }
 
     private void EnsureValid()
