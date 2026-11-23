@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "physics.domain.geology-and-planetary-evolution",
+  "category": "Domain",
+  "lod": 1,
+  "title": "Geology and Planetary Evolution",
+  "version": "0.1.0",
+  "familyId": "planetary-geology",
+  "cover": "docs/books/covers/geology-and-planetary-evolution.svg",
+  "lodBadge": "https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg",
+  "publisher": "The Singularity Workshop",
+  "publisherMoniker": "https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg"
+}
