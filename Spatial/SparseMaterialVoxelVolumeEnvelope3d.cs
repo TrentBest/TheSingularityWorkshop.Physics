@@ -268,6 +268,7 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3d
 
     private sealed class SerializedEnvelope
     {
+        public SerializedEnvelope() { }
         public required string Schema { get; init; }
         public required string RegionId { get; init; }
         public required string DatasetId { get; init; }
@@ -296,6 +297,7 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3d
 
     private sealed class SpatialVectorRecord
     {
+        public SpatialVectorRecord() { }
         public double X { get; init; }
         public double Y { get; init; }
         public double Z { get; init; }
@@ -303,6 +305,7 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3d
 
     private sealed class MaterialVoxelRecord
     {
+        public MaterialVoxelRecord() { }
         public int X { get; init; }
         public int Y { get; init; }
         public int Z { get; init; }
