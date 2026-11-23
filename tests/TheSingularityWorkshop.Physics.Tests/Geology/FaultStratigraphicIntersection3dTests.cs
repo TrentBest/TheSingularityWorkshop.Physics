@@ -97,6 +97,23 @@ public sealed class FaultStratigraphicIntersection3dTests
     }
 
     [Test]
+    public void TryIntersectColumn_IncludesFiniteSegmentFootprintEdge()
+    {
+        var fault = CreateFault(
+            strike: new Vector3d(1d, 0d, 0d),
+            downDip: new Vector3d(0d, 1d, 1d),
+            halfStrike: 2d,
+            halfDownDip: 2d,
+            planeOrigin: new Vector3d(0d, 0d, 5d));
+        var edgeColumn = CreateColumn(x: 2d);
+
+        Assert.That(FaultStratigraphicIntersection3d.TryIntersectColumn(fault, edgeColumn, out var result), Is.True);
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.LayerId, Is.EqualTo("upper"));
+        Assert.That(result.IntersectionPoint, Is.EqualTo(new Vector3d(2d, 0d, 5d)));
+    }
+
+    [Test]
     public void TryIntersectColumn_ReturnsFalseForVerticalPlaneWithoutUniqueColumnIntersection()
     {
         var verticalFault = CreateFault(
