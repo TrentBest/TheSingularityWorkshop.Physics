@@ -26,6 +26,16 @@ A map of energy conversion, generation, storage, grids, manufacturing, and indus
 
 An evidence-led domain outline covering oceanography, atmospheric science, vessel physics, navigation, maritime hazards, and historical incident investigation. The Bermuda Triangle appears as a case study in evidence, uncertainty, and the boundary between documented history, interpretation, and fiction—not as an assumed physical anomaly.
 
+### Batteries and Energy Storage
+
+![SURPS Rulebook LOD 1](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg)
+
+![Batteries and Energy Storage cover](covers/batteries-and-energy-storage.svg)
+
+[Read Batteries and Energy Storage](batteries-and-energy-storage.md) · [Descriptor](batteries-and-energy-storage.book.json)
+
+A domain outline for electrochemical and mechanical/thermal storage, cell-to-pack composition, grid and factory integration, energy accounting, and evidence-led safety boundaries. The generic Physics storage ledger is implemented; chemistry-specific models remain planned.
+
 ## Planned book family
 
 These are candidate titles for future descriptor-backed books, not completed sourcebooks:
