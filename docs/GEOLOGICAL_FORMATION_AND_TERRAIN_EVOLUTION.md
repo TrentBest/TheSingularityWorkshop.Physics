@@ -86,6 +86,92 @@ Only couple models when the exchange variables and conservation behavior are exp
 - **Earthquake valley:** a fault event creates differential uplift/subsidence; slope failures and channel rerouting are subsequent processes with separate ledgers.
 - **Glaciated massif:** tectonic/volcanic formation creates the massif; ice erosion cuts cirques and valleys; transported sediment forms moraines and outwash.
 
+
+## Planetary-scale target: simulate the history, not just the final surface
+
+The long-term objective is a time-evolving geological model whose terrain is the accumulated consequence of a declared planetary history. A mountain range must be explainable through the interior and surface processes that built and modified it. The first volcano is one test case among many, not the scope of the system.
+
+The conceptual dependency chain is:
+
+1. **Planetary initial conditions and interior structure** — mass distribution, radius, gravity field, composition, thermal state, core/mantle/crust boundaries, and initial energy inventory.
+2. **Thermal and mantle dynamics** — internal heat sources and transport, mantle convection or explicitly reduced approximations, viscosity/rheology, buoyancy, and heat exchange.
+3. **Lithosphere and plate system** — plate geometry, thickness, density, motion, boundary conditions, and interactions at convergent, divergent, and transform boundaries.
+4. **Crustal deformation and fault systems** — distributed strain, folding, fault nucleation/geometry where modeled, slip, block rotation, uplift, subsidence, and accumulated displacement.
+5. **Discrete geological events** — earthquakes, after-slip, triggered failures, intrusions, eruptions, caldera collapse, impacts, and other abrupt state transitions.
+6. **Surface and hydrologic systems** — atmospheric weather and climate forcing, precipitation, runoff, rivers, groundwater, ice, wind, waves, sediment transport, and weathering.
+7. **Stratigraphy and geological memory** — deposited, displaced, altered, buried, exposed, and removed materials with age, provenance, and event history.
+
+This is a dependency architecture, not a claim that all seven levels already have solvers. Each level must have an independently testable model and an explicit exchange contract before coupling.
+
+### Planetary interior and heat
+
+Do not collapse "pressure from the core" into a single scalar pushing mountains upward. Core and mantle conditions establish a thermal and mechanical environment; the lithosphere responds through buoyancy, convection-driven tractions, plate boundary forces, gravitational potential energy, and rheology. Pressure, temperature, density, gravity, viscosity, and strain rate are distinct fields or constitutive quantities with units and spatial domains.
+
+A first implementation may use prescribed or reduced-order mantle forcing, but it must identify that approximation and its boundary conditions. A later continuum model can resolve more of the interior. The interface between levels should permit replacing a reduced model without rewriting terrain storage or geological event history.
+
+### Fault taxonomy and mechanics
+
+Fault names are not cosmetic labels. The fault model must preserve geometry, orientation, slip direction, displacement components, and the mechanical regime that produced the motion.
+
+- **Normal fault:** hanging wall moves down relative to footwall; commonly associated with extension. Include dip, strike, rake/slip vector, throw, heave, and block geometry.
+- **Reverse fault:** hanging wall moves up relative to footwall under shortening.
+- **Thrust fault:** a low-angle reverse fault. Treat dip as geometry, not as a separate displacement law; support ramps, flats, and linked segments when the representation allows them.
+- **Strike-slip fault:** predominantly horizontal motion along strike; distinguish left-lateral and right-lateral sense from the declared viewing/coordinate convention.
+- **Oblique-slip fault:** combines strike-slip and dip-slip components; preserve the full slip vector rather than forcing one category.
+- **Listric, segmented, branching, and curved faults:** require geometry beyond an infinite straight plane. Start with bounded planar segments, then add richer surfaces and network topology.
+- **Blind faults and buried faults:** may deform overlying strata without a surface trace; these require volumetric or layered representations rather than a surface-only line.
+- **Detachment faults and subduction interfaces:** are system-scale structures with coupled boundary conditions, not merely isolated stamps.
+
+A fault event should record the fault surface/segment identity, coordinate frame, dip/strike convention, hanging-wall definition, slip vector, event time or step, rupture extent, and the source of the displacement (prescribed kinematics or a dynamic solver). Distinguish **slip** along a fault from **throw** (vertical separation) and **heave** (horizontal separation). Never infer left/right lateral sense from an unqualified axis name.
+
+Earthquakes should ultimately emerge from or be driven by a fault-state model: stress/loading history, frictional or other constitutive law, failure criterion, rupture propagation assumptions, slip-rate history, and post-event response. A prescribed coseismic displacement is still valuable, but it is a kinematic event input—not an earthquake prediction.
+
+### Discrete time and geological history
+
+Use the API's discrete execution model deliberately:
+
+- A **geological step** has a declared start/end time, units, duration, and process schedule. Do not assume one universal timestep works for mantle evolution, earthquake rupture, river flow, and weather.
+- Each process consumes a specific immutable state revision and emits a candidate result, diagnostics, and a change set.
+- A coordinator commits a coupled step only when required process outputs validate. Failed steps leave the prior revision intact.
+- Processes can use different clocks: long thermal/tectonic intervals, shorter erosion/climate intervals, and very short rupture or flow intervals. Coupling requires explicit temporal aggregation or subcycling rules.
+- Every event is replayable from its inputs, algorithm version, initial revision, and random seed (if any). Randomness must be explicit and deterministic for reproducible runs.
+- Geological age, simulation elapsed time, and numerical step count are separate values. Never conflate a million-year model interval with a million iterations.
+- Preserve stratigraphic ordering and cross-cutting relationships: a fault can offset an older layer; an intrusion can cut through existing strata; erosion can truncate both; a later deposit can bury the erosional surface.
+
+The output is not just an elevation field. It is a geological state: terrain surface, solid volumes/layers, material properties, fault structures, thermal/mechanical fields when modeled, hydrologic state when coupled, and a provenance-bearing event history. Surface elevation is a query over that state.
+
+### Weather, climate, and weathering are different concerns
+
+Weather is atmospheric state and forcing (for example pressure, temperature, humidity, wind, cloud, and precipitation). Climate describes statistical behavior of weather over longer intervals. Weathering is the physical/chemical/biological alteration of exposed material. Erosion transports material; deposition stores it. Keep these contracts separate while allowing weather/climate to drive runoff, ice, wind erosion, and weathering models.
+
+This distinction also informs educational content: weather phenomena, climate, weathering, erosion, and geological formation deserve connected but distinct explanations and reference material. A weather event may trigger a flood or landslide; that does not make atmospheric weather the same model as the resulting geomorphic process.
+
+## Expanded implementation program
+
+The sequence below is deliberately staged so that the first numerical models are useful without pretending to solve the entire planet.
+
+1. **Canonical geological state and history:** define immutable state revisions, geological time, process/event records, coordinate and unit contracts, material/stratigraphic identity, and deterministic replay.
+2. **Fault geometry and kinematics:** implement a shared fault-surface/segment representation and explicit slip vector. Cover normal, reverse/thrust, strike-slip (both senses), and oblique slip with analytic displacement tests. Begin with prescribed kinematics and clearly label it.
+3. **Layered crust and volumetric deformation:** represent strata and material regions in 3D so faults can offset layers and blind faults can deform overburden. Preserve volume/material identity and event provenance.
+4. **Tectonic plate system:** represent plates and boundary segments with relative motion and boundary classification; derive or prescribe local deformation under stated assumptions.
+5. **Interior thermal/mechanical forcing:** introduce thermal state, gravity/density assumptions, reduced mantle forcing, and a replaceable solver boundary. Expand toward convection/rheology only with benchmarked numerical methods.
+6. **Earthquake cycle:** add loading, constitutive friction/failure, rupture and post-slip models as separate levels; validate against analytical and published benchmark problems before claiming predictive behavior.
+7. **Magmatic and volcanic systems:** distinguish intrusion, magma transport, eruption, lava/tephra emplacement, thermal evolution, and collapse. Retain the current volume-accounted cone as a geometric/deposition primitive.
+8. **Weather/climate forcing:** establish atmospheric forcing records and timescale-aware weather/climate inputs without coupling an atmospheric solver prematurely.
+9. **Surface-process suite:** weathering, slope failure, runoff, river incision, sediment transport/deposition, glaciation, wind, and coastal processes with explicit material and water budgets.
+10. **Coupled geological histories:** run proving scenarios over increasing time spans and resolutions; expose diagnostics, conservation residuals, uncertainty, and replayable state snapshots.
+
+### Validation expectations for the planetary model
+
+- Fault displacement tests must cover both sides of the fault, sign conventions, dip/strike/rake, slip/throw/heave relationships, segment endpoints, and displacement continuity where the chosen model promises it.
+- Plate motion tests must verify relative velocity and boundary classification without coordinate-frame ambiguity.
+- Interior models must declare and test units, equations of state or reduced constitutive assumptions, energy/heat budgets, boundary conditions, and numerical stability.
+- Earthquake models must distinguish loading, failure, rupture, and post-event response; compare against appropriate analytical or published benchmark cases.
+- Coupled steps must report mass, volume, energy, and material-accounting residuals for the quantities they actually model. Do not demand conservation of a quantity the model does not track; do not silently omit a tracked quantity.
+- Multi-timescale runs must test subcycling, event ordering, deterministic replay, and atomic commit on failure.
+- Geological histories must preserve relative ages, stratigraphic order, cross-cutting relations, and provenance through deformation and erosion.
+- Compare outputs with observed geological structures or published datasets before using terms such as realistic, calibrated, or predictive.
+
 ## Acceptance rules
 
 - Never describe a geometry stamp as a physical prediction.
