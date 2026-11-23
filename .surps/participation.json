@@ -72,6 +72,7 @@
     "participationContractPath": "docs/SURPS_PARTICIPATION_CONTRACT.md",
     "ownershipClaimTemplate": "https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.github/ISSUE_TEMPLATE/rulebook-owner-sign-in.yml",
     "repositoryEnrollmentTemplate": "https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.github/ISSUE_TEMPLATE/surps-repository-participation.yml",
-    "policy": "SURPS is the canonical cross-repository registry. Physics retains ownership of physical laws, models, solvers, simulations, and Physics sourcebooks; SURPS composes those capabilities without duplicating them."
+    "policy": "SURPS is the canonical cross-repository registry. Physics retains ownership of physical laws, models, solvers, simulations, and Physics sourcebooks; SURPS composes those capabilities without duplicating them.",
+    "canonicalParticipationStandardPath": "https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/repository-participation.md"
   }
 }
