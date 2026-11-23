@@ -29,7 +29,7 @@
 
 **Particle and nuclear physics:** [particle, nuclear, and collider physics domain map](docs/PARTICLE_NUCLEAR_AND_COLLIDER_PHYSICS.md) · [implementation roadmap #43](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/43) · [mathematics implementation roadmap #42](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/42)
 
-**SURPS collaboration standard:** [participation contract](docs/SURPS_PARTICIPATION_CONTRACT.md) · [central rulebook map](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/rulebook-backlog/index.md) · [machine-readable registry](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.surps/rulebook-backlog.json)
+**SURPS collaboration standard:** [canonical participation standard](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/repository-participation.md) · [Physics implementation guide](docs/SURPS_PARTICIPATION_CONTRACT.md) · [central rulebook map](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/rulebook-backlog/index.md) · [machine-readable registry](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/.surps/rulebook-backlog.json)
 
 **SURPS sourcebooks:** [Physics sourcebook catalogue](docs/books/index.md) · [Power and Industrial Systems — LOD 1](docs/books/power-and-industrial-systems.md) · [sourcebook implementation issue #61](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/61)
 
