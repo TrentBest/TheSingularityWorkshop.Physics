@@ -84,6 +84,13 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3dTests
                 json.Replace(SparseMaterialVoxelVolumeEnvelope3d.SchemaId, "unknown.schema", StringComparison.Ordinal)));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             SparseMaterialVoxelVolumeEnvelope3d.Deserialize(json, maximumSampleCount: -1));
+
+        var populated = new SparseMaterialVoxelVolume3d(new Vector3d(0d, 0d, 0d), 1d);
+        populated.SetMaterial(new GridCoordinate3i(0, 0, 0), 1);
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            SparseMaterialVoxelVolumeEnvelope3d.Deserialize(
+                CreateEnvelope(populated.CaptureSnapshot()).Serialize(),
+                maximumSampleCount: 0));
     }
 
     [Test]
