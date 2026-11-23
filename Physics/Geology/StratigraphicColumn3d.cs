@@ -1,7 +1,17 @@
 namespace TheSingularityWorkshop.Physics.Geology;
 
+/// <summary>An immutable layer with material identity, vertical extent, formation age, and event provenance.</summary>
+/// <remarks>Material IDs resolve through a caller-owned catalogue. Elevation ordering follows the column's declared vertical convention.</remarks>
 public sealed class StratigraphicLayer3d
 {
+    /// <summary>Creates a validated stratigraphic layer.</summary>
+    /// <param name="layerId">Stable identity within the stratigraphic dataset.</param>
+    /// <param name="materialId">Positive caller-defined material catalogue identity.</param>
+    /// <param name="topElevation">Higher elevation boundary in the declared vertical convention.</param>
+    /// <param name="bottomElevation">Lower elevation boundary in the declared vertical convention.</param>
+    /// <param name="formationStartAgeYearsBeforePresent">Older formation-age bound.</param>
+    /// <param name="formationEndAgeYearsBeforePresent">Younger formation-age bound.</param>
+    /// <param name="provenanceEventId">Identity of the event that formed or deposited the layer.</param>
     public StratigraphicLayer3d(string layerId, int materialId, double topElevation, double bottomElevation,
         double formationStartAgeYearsBeforePresent, double formationEndAgeYearsBeforePresent, string provenanceEventId)
     {
@@ -24,13 +34,21 @@ public sealed class StratigraphicLayer3d
         FormationEndAgeYearsBeforePresent = formationEndAgeYearsBeforePresent;
     }
 
+    /// <summary>Stable layer identity.</summary>
     public string LayerId { get; }
+    /// <summary>Positive caller-defined material catalogue identity.</summary>
     public int MaterialId { get; }
+    /// <summary>Upper elevation boundary.</summary>
     public double TopElevation { get; }
+    /// <summary>Lower elevation boundary.</summary>
     public double BottomElevation { get; }
+    /// <summary>Older formation-age bound in years before present.</summary>
     public double FormationStartAgeYearsBeforePresent { get; }
+    /// <summary>Younger formation-age bound in years before present.</summary>
     public double FormationEndAgeYearsBeforePresent { get; }
+    /// <summary>Identity of the formation or deposition event.</summary>
     public string ProvenanceEventId { get; }
+    /// <summary>Vertical thickness in the declared linear unit.</summary>
     public double Thickness => TopElevation - BottomElevation;
 
     private static string RequireText(string value, string parameterName)
@@ -49,6 +67,15 @@ public sealed class StratigraphicColumn3d
 {
     private readonly IReadOnlyList<StratigraphicLayer3d> _layers;
 
+    /// <summary>Creates a validated immutable vertical column.</summary>
+    /// <param name="columnId">Stable identity of this sampled column.</param>
+    /// <param name="worldX">Horizontal X coordinate.</param>
+    /// <param name="worldY">Horizontal Y coordinate.</param>
+    /// <param name="coordinateFrameId">Identity of the horizontal coordinate frame.</param>
+    /// <param name="verticalDatum">Declared vertical reference datum.</param>
+    /// <param name="linearUnit">Unit for horizontal coordinates and elevations.</param>
+    /// <param name="positiveVerticalDirection">Meaning of increasing elevation.</param>
+    /// <param name="layers">Layers ordered from highest to lowest elevation.</param>
     public StratigraphicColumn3d(string columnId, double worldX, double worldY, string coordinateFrameId,
         string verticalDatum, string linearUnit, string positiveVerticalDirection,
         IReadOnlyList<StratigraphicLayer3d> layers)
@@ -84,16 +111,27 @@ public sealed class StratigraphicColumn3d
         _layers = Array.AsReadOnly(copy);
     }
 
+    /// <summary>Stable column identity.</summary>
     public string ColumnId { get; }
+    /// <summary>Horizontal X coordinate of this column.</summary>
     public double WorldX { get; }
+    /// <summary>Horizontal Y coordinate of this column.</summary>
     public double WorldY { get; }
+    /// <summary>Horizontal coordinate-frame identity.</summary>
     public string CoordinateFrameId { get; }
+    /// <summary>Vertical reference datum.</summary>
     public string VerticalDatum { get; }
+    /// <summary>Linear unit for coordinates and elevations.</summary>
     public string LinearUnit { get; }
+    /// <summary>Declared direction represented by increasing elevation.</summary>
     public string PositiveVerticalDirection { get; }
+    /// <summary>Layers ordered from highest to lowest elevation.</summary>
     public IReadOnlyList<StratigraphicLayer3d> Layers => _layers;
+    /// <summary>Elevation of the highest represented boundary.</summary>
     public double TopElevation => _layers[0].TopElevation;
+    /// <summary>Elevation of the lowest represented boundary.</summary>
     public double BottomElevation => _layers[_layers.Count - 1].BottomElevation;
+    /// <summary>Sum of layer thicknesses, excluding any vertical gaps.</summary>
     public double TotalLayerThickness => _layers.Sum(layer => layer.Thickness);
 
     private static string RequireText(string value, string parameterName)
