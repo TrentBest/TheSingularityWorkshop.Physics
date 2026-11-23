@@ -154,6 +154,14 @@ It defines a caller-identified planar fault, explicit coordinate frame and linea
 
 Current limitations are intentional: the mathematical plane is infinite, the displacement is a discontinuous block offset, and there is no finite rupture patch, segmented/curved surface, distributed elastic deformation, layer intersection, or material-volume update yet. This is the shared kinematic foundation, not the finished fault system. CI validation is running for this first code increment.
 
+## Implemented stratigraphic column representation
+
+The initial local stratigraphy contract is now present in `Physics/Geology/StratigraphicColumn3d.cs`, with focused tests in `tests/TheSingularityWorkshop.Physics.Tests/Geology/StratigraphicColumn3dTests.cs`.
+
+A layer carries a stable identity, caller-defined material-catalogue ID, finite upper/lower elevation boundaries, an older-to-younger formation-age interval, and the event ID that formed or deposited it. A column identifies one horizontal sample location and declares its coordinate frame, vertical datum, linear unit, and positive vertical direction. Layers are ordered from highest to lowest elevation; overlap and impossible age ordering are rejected. Age gaps are retained as possible hiatuses.
+
+This is deliberately a local vertical stack, not yet a laterally correlated or fully volumetric stratigraphic model. Material IDs do not supply physical properties. The current fault kinematics contract does not yet offset these layers. The next increment should establish explicit fault/layer cross-cutting and displacement provenance before introducing a plate or rupture solver.
+
 ## Expanded implementation program
 
 The sequence below is deliberately staged so that the first numerical models are useful without pretending to solve the entire planet.
