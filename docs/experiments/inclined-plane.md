@@ -4,7 +4,7 @@
 
 A shallow ramp feels like an easier route, but it is also a longer route. For an ideal frictionless slider released from rest through the same vertical drop, every ramp angle gives the same final speed. The shallow ramp has less acceleration and more distance to cover, so it takes longer.
 
-This lesson connects the free-body diagram, Newton's second law, constant-acceleration kinematics, and conservation of mechanical energy. The model is executable and tested, and CI generates a versioned run record from its actual output. The interactive GUI laboratory is the next presentation slice.
+This lesson connects the free-body diagram, Newton's second law, constant-acceleration kinematics, and conservation of mechanical energy. The model is executable and tested, and CI generates a versioned run record from its actual output. The record includes scalar magnitudes and a coordinate-declared vector decomposition for the free-body diagram.
 
 ## Model boundary
 
@@ -61,6 +61,26 @@ a=g\sin\theta
 
 Mass cancels. In this ideal model, changing the body's mass changes the forces proportionally but does not change its acceleration.
 
+### Vector frame and free-body decomposition
+
+The serialized vectors use a local world frame with +X horizontal toward the foot of the incline, +Y vertically upward, and +Z out of the incline plane. The down-slope unit direction is \((\cos\theta,-\sin\theta,0)\); the outward surface-normal direction is \((\sin\theta,\cos\theta,0)\).
+
+\[
+\vec W=(0,-mg,0)
+\]
+
+\[
+\vec W_{\parallel}=mg\sin\theta(\cos\theta,-\sin\theta,0)
+\]
+
+\[
+\vec W_{\perp}=\vec W-\vec W_{\parallel}
+\qquad
+\vec N=-\vec W_{\perp}
+\]
+
+The run record stores all four vectors and the acceleration vector. The validator checks that parallel plus perpendicular gravity reconstructs weight, and that the normal reaction cancels the perpendicular gravity component. This gives a GUI consumer enough declared vector data to render a truthful free-body diagram without recalculating the physics.
+
 ## Travel time and final speed
 
 The body starts from rest and accelerates constantly over path length \(L\):
@@ -99,7 +119,7 @@ Notice what is absent from the final expression: the ramp angle and the mass. Fo
 
 ## Implementation and evidence
 
-The executable model is [InclinedPlaneSolver](../../Physics/Kinematics/InclinedPlaneSolver.cs), wrapped by [InclinedPlaneExperiment](../../Physics/Experiments/InclinedPlaneExperiment.cs). Its focused tests are in [InclinedPlaneSolverTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneSolverTests.cs) and [InclinedPlaneExperimentTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneExperimentTests.cs). The [versioned run record](../../Physics/Experiments/InclinedPlaneRunRecord.cs) preserves declared inputs, SI units, model identity, and actual model output. CI regenerates and checks the default record against the analytical identities.
+The executable model is [InclinedPlaneSolver](../../Physics/Kinematics/InclinedPlaneSolver.cs), wrapped by [InclinedPlaneExperiment](../../Physics/Experiments/InclinedPlaneExperiment.cs). Its focused tests are in [InclinedPlaneSolverTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneSolverTests.cs) and [InclinedPlaneExperimentTests](../../tests/TheSingularityWorkshop.Physics.Tests/InclinedPlaneExperimentTests.cs). The [versioned run record](../../Physics/Experiments/InclinedPlaneRunRecord.cs) preserves declared inputs, SI units, model identity, coordinate frame, force vectors, acceleration vector, and actual model output. Model and record schema version 2 explicitly identify the vector-valued contract.
 
 The current implementation is not a rolling model. A rolling body requires rotational inertia and a no-slip contact constraint; friction then supplies a torque even when there is no energy-dissipating slip. Sliding friction, static friction, rolling resistance, and air resistance are different model terms and must not be silently combined.
 
