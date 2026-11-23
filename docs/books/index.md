@@ -26,6 +26,26 @@ A map of energy conversion, generation, storage, grids, manufacturing, and indus
 
 An evidence-led domain outline covering oceanography, atmospheric science, vessel physics, navigation, maritime hazards, and historical incident investigation. The Bermuda Triangle appears as a case study in evidence, uncertainty, and the boundary between documented history, interpretation, and fiction—not as an assumed physical anomaly.
 
+### Geology and Planetary Evolution
+
+![SURPS Rulebook LOD 1](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg)
+
+![Geology and Planetary Evolution cover](covers/geology-and-planetary-evolution.svg)
+
+[Read Geology and Planetary Evolution](geology-and-planetary-evolution.md) · [Descriptor](geology-and-planetary-evolution.book.json)
+
+Planetary interiors, thermal history, mantle and lithosphere behavior, plate boundaries, fault systems, earthquakes, magmatism, stratigraphy, and geological time. The book defines the domain and validation contracts without claiming a complete planetary solver.
+
+### Weather and Climate
+
+![SURPS Rulebook LOD 1](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg)
+
+![Weather and Climate cover](covers/weather-and-climate.svg)
+
+[Read Weather and Climate](weather-and-climate.md) · [Descriptor](weather-and-climate.book.json)
+
+Atmospheric state, circulation, moisture, clouds, precipitation, storms, climate variability, extremes, and explicit weather forcing contracts. It distinguishes observations, forecasts, reanalysis, and synthetic scenarios.
+
 ### Batteries and Energy Storage
 
 ![SURPS Rulebook LOD 1](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg)
@@ -45,6 +65,18 @@ A domain outline for electrochemical and mechanical/thermal storage, cell-to-pac
 [Read Nuclear Fission Facilities](nuclear-fission-facilities.md) · [Descriptor](nuclear-fission-facilities.book.json)
 
 A public-information educational outline for fission physics, delayed response, heat removal, thermal conversion, residual heat, and generic protective concepts. It explicitly excludes plant-specific operating procedures, setpoints, security details, and safety-critical training. No reactor simulator is claimed implemented.
+
+## Specialist sourcebooks — LOD 2
+
+### Geomorphology and Surface Processes
+
+![SURPS Rulebook LOD 2](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-2.svg)
+
+![Geomorphology and Surface Processes cover](covers/geomorphology-and-surface-processes.svg)
+
+[Read Geomorphology and Surface Processes](geomorphology-and-surface-processes.md) · [Descriptor](geomorphology-and-surface-processes.book.json)
+
+A specialist treatment of weathering, hillslopes, mass movement, rivers, groundwater, karst, glaciers, wind, coasts, soils, sediment budgets, and landscape evolution. It explains how geological structure and atmospheric forcing become terrain details.
 
 ## Planned book family
 
