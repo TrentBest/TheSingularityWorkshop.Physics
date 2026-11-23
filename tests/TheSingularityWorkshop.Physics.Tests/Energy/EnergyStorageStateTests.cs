@@ -29,7 +29,7 @@ public sealed class EnergyStorageStateTests
     [Test]
     public void Charge_RespectsMaximumChargePower()
     {
-        var result = CreateState(storedEnergy: 0d).Charge(
+        var result = CreateState(storedEnergy: 0d, maximumChargePower: 500d).Charge(
             requestedInputPowerWatts: 2_000d,
             durationSeconds: 10d);
 
@@ -119,11 +119,14 @@ public sealed class EnergyStorageStateTests
         Assert.Throws<OverflowException>(() => state.Discharge(double.MaxValue, 2d));
     }
 
-    private static EnergyStorageState CreateState(double storedEnergy, double maximumDischargePower = 2_000d) =>
+    private static EnergyStorageState CreateState(
+        double storedEnergy,
+        double maximumChargePower = 2_000d,
+        double maximumDischargePower = 2_000d) =>
         new(
             StoredEnergyJoules: storedEnergy,
             CapacityJoules: 100_000d,
-            MaximumChargePowerWatts: 500d,
+            MaximumChargePowerWatts: maximumChargePower,
             MaximumDischargePowerWatts: maximumDischargePower,
             ChargeEfficiencyFraction: 0.9d,
             DischargeEfficiencyFraction: 0.9d);
