@@ -188,3 +188,9 @@ The sequence below is deliberately staged so that the first numerical models are
 - Preserve source snapshots; invalid operations fail atomically.
 - Record process parameters, algorithm versions, source revisions, units, bounds, and material/volume accounting.
 - Keep each process independently testable before coupling.
+
+## Current finite-fault implementation slice
+
+`FaultKinematics3d` remains the infinite-plane prescribed block-displacement primitive. `FiniteFaultSegment3d` now bounds that prescription to a caller-sized rectangular footprint centred on the plane origin, aligned to the declared strike and down-dip basis. Its tests cover inclusive segment edges, both finite extents, hanging-wall-only displacement, and zero displacement outside the footprint, on the footwall, and on the plane.
+
+This is a geometric finite-footprint extension, not a finite-fault elastic solution. The rectangular edge has a discontinuous displacement boundary by design. Stress transfer, rupture propagation, curved/irregular surfaces, segment interaction, layered-crust response, and earthquake-cycle mechanics remain unimplemented. See [Finite fault segment 3D](FINITE_FAULT_SEGMENT_3D.md) for the precise contract and limitations.
