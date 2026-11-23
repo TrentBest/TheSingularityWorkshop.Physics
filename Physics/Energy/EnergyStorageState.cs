@@ -101,8 +101,7 @@ public readonly record struct EnergyStorageState(
             !double.IsFinite(availableOutputEnergy) ||
             !double.IsFinite(deliveredOutputEnergy) ||
             !double.IsFinite(storedEnergyRemoved) ||
-            !double.IsFinite(outputEnergyNotDelivered) ||
-            !double.IsFinite(storedEnergyNotDeliveredAsOutput))
+            !double.IsFinite(outputEnergyNotDelivered))
             throw new OverflowException("Discharging energy accounting is outside finite double range.");
 
         var nextStoredEnergy = Math.Max(0d, StoredEnergyJoules - storedEnergyRemoved);
