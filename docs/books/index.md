@@ -16,6 +16,16 @@ Physics sourcebooks are owned by the Physics domain. They explain the physical s
 
 A map of energy conversion, generation, storage, grids, manufacturing, and industrial facilities. The first sourcebook is an outline linked to existing electrical and thermal capabilities; facility-level simulators remain staged work.
 
+### Ocean, Atmosphere, and Maritime Phenomena
+
+![SURPS Rulebook LOD 1](https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-1.svg)
+
+![Ocean, Atmosphere, and Maritime Phenomena cover](covers/ocean-atmosphere-maritime-phenomena.svg)
+
+[Read Ocean, Atmosphere, and Maritime Phenomena](ocean-atmosphere-maritime-phenomena.md) · [Descriptor](ocean-atmosphere-maritime-phenomena.book.json)
+
+An evidence-led domain outline covering oceanography, atmospheric science, vessel physics, navigation, maritime hazards, and historical incident investigation. The Bermuda Triangle appears as a case study in evidence, uncertainty, and the boundary between documented history, interpretation, and fiction—not as an assumed physical anomaly.
+
 ## Planned book family
 
 These are candidate titles for future descriptor-backed books, not completed sourcebooks:
@@ -25,7 +35,7 @@ These are candidate titles for future descriptor-backed books, not completed sou
 | Foundations of Physics | Measurement, units, frames, conservation, modeling, uncertainty | Existing theory and primitives across Physics |
 | Classical Mechanics | Motion, forces, work, energy, contact, mechanisms | Multiple bounded implementations |
 | Gravitation and Orbital Mechanics | Gravity fields, orbits, encounters, tides | Existing bounded astronomy models |
-| Thermodynamics and Heat Transfer | Thermal state, heat, phase change, engines, cycles | Partial thermal primitives |
+| Thermodynamics and Heat Transfer | Thermal state, heat, phase change, engines, cycles | Partial thermal primitives |\n| Batteries and Energy Storage | Electrochemical storage, state of charge, limits, aging | Planned |
 | Electricity and Electrical Grids | Circuits, loads, networks, protection, dispatch | Ideal resistive load accounting |
 | Batteries and Energy Storage | Electrochemical storage, state of charge, limits, aging | Planned |
 | Thermal Power Stations | Coal, gas, steam cycles, turbines, generators, rejected heat | Planned |
@@ -33,7 +43,7 @@ These are candidate titles for future descriptor-backed books, not completed sou
 | Hydroelectric and Water Power | Reservoirs, head, flow, turbines, generation | Planned |
 | Renewable Generation | Solar, wind, resource variability, conversion, storage | Planned |
 | Industrial Manufacturing | Process energy, machines, material transformation, throughput, automation | Planned |
-| Particle, Nuclear, and Collider Physics | Particle identity, collision kinematics, detectors, nuclear processes | Domain map and staged roadmap |
+| Particle, Nuclear, and Collider Physics | Particle identity, collision kinematics, detectors, nuclear processes | Domain map and staged roadmap |\n| Ocean, Atmosphere, and Maritime Phenomena | Oceanography, weather, vessel physics, navigation, maritime hazards, evidence-led incident studies | Outline authored; physical models remain staged |
 
 A candidate becomes a separate book when it has a clear scope, descriptor, cover, LOD assignment, chapters, and a traceable link to Physics evidence. Do not assign LOD by guesswork or imply planned models are implemented.
 
