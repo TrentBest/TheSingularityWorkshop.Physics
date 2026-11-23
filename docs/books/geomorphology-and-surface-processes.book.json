@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "physics.domain.geomorphology-and-surface-processes",
+  "category": "Domain",
+  "lod": 2,
+  "title": "Geomorphology and Surface Processes",
+  "version": "0.1.0",
+  "familyId": "planetary-geology",
+  "cover": "docs/books/covers/geomorphology-and-surface-processes.svg",
+  "lodBadge": "https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/development/docs/assets/rulebook-lod-2.svg",
+  "publisher": "The Singularity Workshop",
+  "publisherMoniker": "https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/moniker.svg"
+}
