@@ -88,6 +88,7 @@ This is the first Physics milestone directly shaped by Gestures' Stateful IK req
 
 - [x] Implement a deterministic, volume-accounted volcanic deposition primitive for a terrain height field ([geology model](GEOLOGY_VOLCANIC_TERRAIN.md)); tectonics, magma dynamics, cooling, and erosion remain future work.
 - [x] Add an immutable, explicitly framed 2D terrain height field with bilinear queries, finite-difference normals, plane/ramp/bowl fixtures, and deterministic radial elevation editing ([terrain height field](TERRAIN_HEIGHT_FIELD_2D.md)); material-aware editing, operation provenance, chunking, and 3D coupling remain future work.
+- [x] Add immutable, deterministically ordered read snapshots for sparse material voxel volumes, preserving grid geometry and caller-defined material samples without inventing unit/frame semantics ([3D material volume snapshots](SPARSE_MATERIAL_VOXEL_VOLUME_3D.md)); world/region metadata, provenance, durable revisions, and City interchange remain future work.
 
 - [x] Add bounded two-body thermal conduction with explicit conductivity validity, area, path length, timestep, energy accounting, and an overshoot guard ([thermal conduction](experiments/thermal-conduction.md)).
 - [ ] Add spatial heat transfer with explicit boundary conditions and validate it against finer-grid/reference solutions.
