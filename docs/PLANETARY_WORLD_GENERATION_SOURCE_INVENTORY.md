@@ -25,7 +25,8 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 | 3D solid/material storage | `Spatial/SparseVoxelVolume3d.cs`, `SparseMaterialVoxelVolume3d.cs`, `SparseMaterialVoxelVolumeSnapshot3d.cs`, `SparseMaterialVoxelVolumeEnvelope3d.cs` | Implemented sparse voxel and material snapshots with spatial/provenance envelope. Generic solid representation; material IDs are not rock properties. |
 | Analytic and height-field-derived solids | `Spatial/AnalyticalSolidVolume3d.cs`, `Physics/Geology/MountainSolidVolume3d.cs` | Implemented bounded analytic ellipsoid and a deterministic height-field-bounded mountain extrusion. Neither is a geological formation solver. |
 | Derived voxel surface | `Spatial/VoxelSurfaceMesh3d.cs` | Existing geometry extraction foundation. A derived mesh is presentation/geometry output, not authoritative physical state. |
-| Stratigraphic column representation | `Physics/Geology/StratigraphicColumn3d.cs` | Implemented immutable local vertical columns with material IDs, elevation bounds, formation-age intervals, and deposition/formation event provenance. Not a lateral 3D stratigraphic volume or a deformation/process solver. |\n| Fault/stratigraphy cross-cutting query | `Physics/Geology/FaultStratigraphicIntersection3d.cs` | Implemented geometric intersection of a finite prescribed fault plane with a sampled vertical column; identifies a strictly intersected layer and retains its material and formation-event identity. Does not offset strata or model deformation. |
+| Stratigraphic column representation | `Physics/Geology/StratigraphicColumn3d.cs` | Implemented immutable local vertical columns with material IDs, elevation bounds, formation-age intervals, and deposition/formation event provenance. Not a lateral 3D stratigraphic volume or a deformation/process solver. 
+| Fault/stratigraphy cross-cutting query | `Physics/Geology/FaultStratigraphicIntersection3d.cs` | Implemented geometric intersection of a finite prescribed fault plane with a sampled vertical column; identifies a strictly intersected layer and retains its material and formation-event identity. Does not offset strata or model deformation. |
 | Geological time and event metadata | `Physics/Geology/GeologicalEventRecord.cs` | Implemented validated separation of geological age from elapsed simulation seconds and immutable event provenance metadata. Not yet an atomic world-state transaction or connected geological replay executor. |
 | Atmosphere, climate, hydrology, and terrain processes | `Physics/Hydrodynamics`, `Physics/Thermodynamics`, `Physics/Energy`; books and domain documents under `docs/books` and `docs` | Reusable neighboring physics foundations and documented domain contracts exist. A coupled planetary climate/weathering/erosion/sediment system is not implemented by those documents alone. |
 
@@ -37,7 +38,8 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 4. Apply deterministic localized elevation edits without mutating the source snapshot.
 5. Generate prescribed volcanic deposits and bounded 3D solid geometry.
 6. Represent a prescribed finite fault displacement.
-7. Retain generic checkpoints/events/replay primitives and geological event/time metadata.\n8. Represent local stratigraphic columns with material identity, elevation bounds, formation intervals, and event provenance.
+7. Retain generic checkpoints/events/replay primitives and geological event/time metadata.
+8. Represent local stratigraphic columns with material identity, elevation bounds, formation intervals, and event provenance.
 
 ## Explicit gaps before a complete procedural planet
 
