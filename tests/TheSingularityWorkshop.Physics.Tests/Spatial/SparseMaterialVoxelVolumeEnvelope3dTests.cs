@@ -87,7 +87,7 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3dTests
         Assert.That(envelope.Snapshot.SolidVoxelCount, Is.EqualTo(8));
         Assert.That(envelope.Snapshot.GetMaterialId(new GridCoordinate3i(1, 1, 1)), Is.EqualTo(1));
         Assert.That(envelope.Snapshot.GetMaterialId(new GridCoordinate3i(2, 1, 1)), Is.Zero);
-        Assert.That(envelope.GenerationParametersJson, Does.Contain("\"synthetic\": true"));
+        Assert.That(envelope.GenerationParametersJson, Does.Contain("\"synthetic\":true"));
     }
 
     [Test]
