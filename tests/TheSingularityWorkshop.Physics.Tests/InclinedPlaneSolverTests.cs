@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using TheSingularityWorkshop.Physics.Kinematics;
+using TheSingularityWorkshop.Physics.Spatial;
 
 namespace TheSingularityWorkshop.Physics.Tests;
 
@@ -25,6 +26,32 @@ public sealed class InclinedPlaneSolverTests
             Is.EqualTo(Math.Sqrt(2d * 1.5d / Gravity) / 0.5d).Within(1e-12));
         Assert.That(result.FinalSpeedMetersPerSecond,
             Is.EqualTo(Math.Sqrt(2d * Gravity * 1.5d)).Within(1e-12));
+    }
+
+    [Test]
+    public void Calculate_EmitsConsistentVectorForceDecomposition()
+    {
+        const double mass = 2d;
+        var angle = Math.PI / 6d;
+        var result = InclinedPlaneSolver.Calculate(mass, angle, 1.5d, Gravity);
+        var vectors = result.ForceVectors;
+
+        AssertVector(vectors.WeightNewtons, 0d, -mass * Gravity, 0d);
+        AssertVector(vectors.ParallelGravityNewtons + vectors.PerpendicularGravityNewtons,
+            vectors.WeightNewtons.X, vectors.WeightNewtons.Y, vectors.WeightNewtons.Z);
+        AssertVector(vectors.PerpendicularGravityNewtons + vectors.NormalForceNewtons,
+            0d, 0d, 0d);
+
+        var expectedParallelMagnitude = mass * Gravity * Math.Sin(angle);
+        Assert.That(vectors.ParallelGravityNewtons.Magnitude,
+            Is.EqualTo(expectedParallelMagnitude).Within(1e-12));
+        Assert.That(vectors.NormalForceNewtons.Magnitude,
+            Is.EqualTo(result.NormalForceNewtons).Within(1e-12));
+        AssertVector(
+            vectors.AccelerationMetersPerSecondSquared,
+            result.AccelerationMetersPerSecondSquared * Math.Cos(angle),
+            -result.AccelerationMetersPerSecondSquared * Math.Sin(angle),
+            0d);
     }
 
     [Test]
@@ -67,6 +94,7 @@ public sealed class InclinedPlaneSolverTests
         Assert.That(result.NormalForceNewtons, Is.EqualTo(0d).Within(1e-12));
         Assert.That(result.AccelerationMetersPerSecondSquared, Is.EqualTo(Gravity).Within(1e-12));
         Assert.That(result.PathLengthMeters, Is.EqualTo(1d).Within(1e-12));
+        Assert.That(result.ForceVectors.NormalForceNewtons.Magnitude, Is.EqualTo(0d).Within(1e-12));
     }
 
     [TestCase(0d, Math.PI / 4d, 1d, Gravity)]
@@ -86,5 +114,12 @@ public sealed class InclinedPlaneSolverTests
     {
         Assert.Throws<ArgumentOutOfRangeException>(
             () => InclinedPlaneSolver.Calculate(mass, angle, drop, gravity));
+    }
+
+    private static void AssertVector(Vector3d actual, double x, double y, double z)
+    {
+        Assert.That(actual.X, Is.EqualTo(x).Within(1e-12));
+        Assert.That(actual.Y, Is.EqualTo(y).Within(1e-12));
+        Assert.That(actual.Z, Is.EqualTo(z).Within(1e-12));
     }
 }
