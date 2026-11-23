@@ -335,6 +335,6 @@ public sealed class SparseMaterialVoxelVolumeEnvelope3d
             throw new ArgumentException("Generation parameters must be valid JSON.", nameof(value), exception);
         }
 
-        return value;
+        return JsonSerializer.Serialize(document.RootElement);
     }
 }
