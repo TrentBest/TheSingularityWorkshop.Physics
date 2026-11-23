@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Physics/development/docs/schemas/sparse-material-voxel-volume.v1.schema.json",
+  "title": "Singularity Physics Sparse Material Voxel Volume v1",
+  "description": "Versioned, provenance-bearing interchange envelope for an immutable sparse material voxel volume.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "regionId",
+    "datasetId",
+    "revisionId",
+    "coordinateFrameId",
+    "linearUnit",
+    "axisConvention",
+    "verticalDatum",
+    "verticalPositiveDirection",
+    "materialCatalogId",
+    "sourceRepository",
+    "sourceRevision",
+    "modelId",
+    "modelVersion",
+    "algorithmId",
+    "algorithmVersion",
+    "generationParameters",
+    "sourceRunId",
+    "seed",
+    "gridConvention",
+    "origin",
+    "voxelSize",
+    "chunkSize",
+    "samples"
+  ],
+  "properties": {
+    "schema": { "const": "singularity-physics.sparse-material-voxel-volume.v1" },
+    "regionId": { "type": "string", "minLength": 1 },
+    "datasetId": { "type": "string", "minLength": 1 },
+    "revisionId": { "type": "string", "minLength": 1 },
+    "coordinateFrameId": { "type": "string", "minLength": 1 },
+    "linearUnit": { "type": "string", "minLength": 1 },
+    "axisConvention": { "type": "string", "minLength": 1 },
+    "verticalDatum": { "type": "string", "minLength": 1 },
+    "verticalPositiveDirection": { "type": "string", "minLength": 1 },
+    "materialCatalogId": { "type": "string", "minLength": 1 },
+    "sourceRepository": { "type": "string", "minLength": 1 },
+    "sourceRevision": { "type": "string", "minLength": 1 },
+    "modelId": { "type": "string", "minLength": 1 },
+    "modelVersion": { "type": "string", "minLength": 1 },
+    "algorithmId": { "type": "string", "minLength": 1 },
+    "algorithmVersion": { "type": "string", "minLength": 1 },
+    "generationParameters": { "type": "object" },
+    "sourceRunId": { "type": "string", "minLength": 1 },
+    "seed": { "type": ["integer", "null"] },
+    "gridConvention": {
+      "const": "voxel-min-corner-origin; cubic-voxels; integer-x-y-z-index"
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "voxelSize": { "type": "number", "exclusiveMinimum": 0 },
+    "chunkSize": { "type": "integer", "minimum": 1, "maximum": 64 },
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["x", "y", "z", "materialId"],
+        "properties": {
+          "x": { "type": "integer" },
+          "y": { "type": "integer" },
+          "z": { "type": "integer" },
+          "materialId": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}
