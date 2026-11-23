@@ -7,7 +7,7 @@ namespace TheSingularityWorkshop.Physics.Tests.Geology;
 public sealed class StratigraphicColumnGrid3dTests
 {
     private static StratigraphicColumn3d Column(string id, double x, double y,
-        string frame = "world", string datum = "sea-level", string unit = "m", string direction = "up") =>
+        string frame = "world", string datum = "datum", string unit = "m", string direction = "up") =>
         new(id, x, y, frame, datum, unit, direction,
             new[] { new StratigraphicLayer3d($"{id}-layer", 1, 10d, 0d, 20d, 10d, $"{id}-event") });
 
@@ -101,6 +101,6 @@ public sealed class StratigraphicColumnGrid3dTests
         Assert.Throws<ArgumentException>(() =>
             new StratigraphicColumnGrid3d(2, 1, double.MaxValue, 1d, double.MaxValue, 0d,
                 "world", "datum", "m", "up",
-                new[] { Column("c0", double.MaxValue, 0d), Column("c1", double.PositiveInfinity, 0d) }));
+                new[] { Column("c0", double.MaxValue, 0d), Column("c1", 0d, 0d) }));
     }
 }
