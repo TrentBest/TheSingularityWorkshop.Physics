@@ -126,7 +126,8 @@ The browser should inspect canonical generated data or a recorded model result. 
 
 - Implemented: `TerrainHeightField2D`, deterministic plane/ramp/bowl generation, bilinear sampling, surface normals, smooth radial edits, and a generated 17 × 17 Pages run record.
 - Implemented separately: volume-accounted idealized volcanic deposition over a 2D height field.
-- Not implemented by those capabilities: a 3D mountain solid, caves/overhangs, geological stratigraphy, excavation, material removal accounting in 3D, rock mechanics, structural safety, or an explorable mountain fortress.
+- Implemented on `development`: `MountainSolidVolume3d.Generate` extrudes a declared height-field exterior down to an explicit base using a bounded sparse material-voxel volume. Horizontal voxel centres align with height-field samples; vertical occupancy is decided at voxel centres; the maximum top-boundary quantization error is half a voxel. It emits the existing versioned spatial-volume envelope with generator parameters and provenance.
+- The first mountain generator is deterministic geometric mass with one caller-supplied material ID. It does not implement geological stratigraphy, cave carving, excavation ledgers, material property models, rock mechanics, structural safety, or an explorable mountain fortress. The height field remains the exterior authority; the 3D solid is the occupancy/material representation beneath it.
 
 References:
 - [Terrain height-field implementation](../Physics/Geology/TerrainHeightField2D.cs)
