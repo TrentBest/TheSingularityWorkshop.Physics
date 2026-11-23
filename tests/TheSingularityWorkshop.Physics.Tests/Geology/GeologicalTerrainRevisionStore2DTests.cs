@@ -50,6 +50,19 @@ public sealed class GeologicalTerrainRevisionStore2DTests
     }
 
     [Test]
+    public void Create_TransformationFailureLeavesSourceAndStoreUnchanged()
+    {
+        var source = new GeologicalTerrainRevision2D("r0", Terrain());
+        var store = new GeologicalTerrainRevisionStore2D(source);
+
+        Assert.Throws<ArithmeticException>(() => GeologicalTerrainCandidate2D.Create(
+            source, "r1", Event(), _ => throw new ArithmeticException("synthetic model failure")));
+
+        Assert.That(store.Current, Is.SameAs(source));
+        Assert.That(source.Terrain.SampleCell(1, 1), Is.EqualTo(10d));
+    }
+
+    [Test]
     public void Create_RejectsDomainValidationWithoutMutatingSource()
     {
         var source = new GeologicalTerrainRevision2D("r0", Terrain());
