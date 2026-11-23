@@ -4,13 +4,14 @@
 
 **Implemented:** immutable, deterministic read snapshots of sparse material voxel storage, plus a provenance-bearing spatial envelope that binds a snapshot to stable region/dataset/revision identities, coordinate-frame and axis declarations, linear units, vertical datum/direction, material-catalog identity, and source/model/algorithm/run provenance.
 
-**Not yet implemented by this contract:** coordinate transforms, georeferencing, material definitions/properties, durable storage or JSON interchange, edit journals, density/fractional occupancy, sparse streaming, and a City-side volumetric importer.
+**Not yet implemented by this contract:** coordinate transforms, georeferencing, material definitions/properties, durable storage, edit journals, density/fractional occupancy, sparse streaming, and a City-side volumetric importer.
 
 ## Source
 
 - `Spatial/SparseMaterialVoxelVolume3d.cs` — mutable sparse chunked material storage and `CaptureSnapshot()`.
 - `Spatial/SparseMaterialVoxelVolumeSnapshot3d.cs` — immutable snapshot and occupied-voxel sample.
-- `Spatial/SparseMaterialVoxelVolumeEnvelope3d.cs` — required spatial identity, unit, datum, material-catalog, and provenance metadata around a snapshot.
+- `Spatial/SparseMaterialVoxelVolumeEnvelope3d.cs` — required spatial identity, unit, datum, material-catalog, and provenance metadata around a snapshot; strict versioned JSON serialization/deserialization.
+- `docs/schemas/sparse-material-voxel-volume.v1.schema.json` — external JSON Schema for the v1 interchange payload.
 - `tests/TheSingularityWorkshop.Physics.Tests/Spatial/SparseMaterialVoxelVolume3dTests.cs` — ordering, query, geometry, immutability, and source-isolation tests.
 - `tests/TheSingularityWorkshop.Physics.Tests/Spatial/SparseMaterialVoxelVolumeEnvelope3dTests.cs` — metadata validation and snapshot/provenance preservation.
 
@@ -29,8 +30,8 @@ The snapshot provides deterministic material lookup and voxel-center conversion 
 
 ## Numerical and representation limits
 
-The source remains a discrete, cubic, integer-indexed voxel volume. Material IDs are caller-defined identities, not material properties. The snapshot and envelope are in-memory read contracts, not a serialized interchange format, durable checkpoint, transaction log, or claim that producer-supplied IDs are globally unique. Consumers must preserve source samples and metadata; any transform, resampling, surface extraction, or mesh is a separately identified derived product. It does not smooth the block-face surface or add fractional occupancy.
+The source remains a discrete, cubic, integer-indexed voxel volume. Material IDs are caller-defined identities, not material properties. The snapshot and envelope support a versioned JSON interchange payload with schema ID `singularity-physics.sparse-material-voxel-volume.v1`. `Serialize()` emits the canonical payload; `Deserialize()` rejects unknown properties, unsupported schema/grid conventions, non-finite geometry, invalid material IDs, duplicate voxel coordinates, and payloads above its configurable occupied-sample limit (default five million). The companion JSON Schema is published at `docs/schemas/sparse-material-voxel-volume.v1.schema.json`. This is not a durable checkpoint or transaction log, and producer-supplied IDs are not asserted to be globally unique. Consumers must preserve source samples and metadata; any transform, resampling, surface extraction, or mesh is a separately identified derived product. It does not smooth the block-face surface or add fractional occupancy.
 
 ## Next contract layer
 
-The next terrain integration increment is a reproducible analytically checkable volumetric fixture and a versioned serialization contract suitable for read-only consumer import. A City-side importer must remain a separate consumer-owned adapter and must not invent missing transforms or material properties. Height fields should be exposed as specialized/derived terrain representations where appropriate; they do not replace volumetric terrain for caves, overhangs, tunnels, and underground spaces.
+The next terrain integration increment is a reproducible analytically checkable volumetric fixture and a read-only City consumer adapter. The importer must validate the versioned payload and must not invent missing transforms or material properties. Height fields should be exposed as specialized/derived terrain representations where appropriate; they do not replace volumetric terrain for caves, overhangs, tunnels, and underground spaces.
