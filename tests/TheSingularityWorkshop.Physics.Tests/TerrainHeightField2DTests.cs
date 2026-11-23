@@ -52,6 +52,30 @@ public sealed class TerrainHeightField2DTests
     }
 
     [Test]
+    public void RadialBrushOperation_PreservesIdentityProvenanceAndDirtyRegion()
+    {
+        var source = Plane();
+        var operation = new TerrainRadialBrushOperation2D(
+            OperationId: "terrain-demo/brush-001",
+            AlgorithmVersion: "smoothstep-radial/1",
+            AuthoringSourceId: "physics-terrain-height-field-learning-experience",
+            CenterX: 104d,
+            CenterY: -14d,
+            Radius: 3.1d,
+            ElevationDelta: 2d);
+
+        var edit = source.ApplyRadialBrush(operation);
+
+        Assert.That(edit.Operation, Is.EqualTo(operation));
+        Assert.That(edit.ChangedSampleCount, Is.EqualTo(5));
+        Assert.That(edit.ChangedRegion, Is.EqualTo(new TerrainChangedRegion2D(102d, -17d, 106d, -11d)));
+        Assert.That(source.SampleCell(2, 2), Is.EqualTo(10d));
+        Assert.That(edit.Result.SampleCell(2, 2), Is.EqualTo(12d));
+        Assert.That(edit.Result.SnapshotElevations(),
+            Is.EqualTo(source.ApplyRadialBrush(104d, -14d, 3.1d, 2d).SnapshotElevations()));
+    }
+
+    [Test]
     public void Constructor_RejectsNonFiniteSamplesAndWrongSampleCount()
     {
         Assert.Throws<ArgumentException>(() => new TerrainHeightField2D(2, 2, 1d, 1d, 0d, 0d,
