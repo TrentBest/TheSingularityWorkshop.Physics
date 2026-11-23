@@ -24,7 +24,7 @@ public sealed class InclinedPlaneExperimentTests
     }
 
     [Test]
-    public void RunRecord_SerializesVersionedInputsUnitsAndActualOutput()
+    public void RunRecord_SerializesVersionedInputsUnitsVectorsAndActualOutput()
     {
         var result = InclinedPlaneExperiment.Run(
             new InclinedPlaneExperimentDefinition(1d, Math.PI / 4d, 2d));
@@ -35,13 +35,25 @@ public sealed class InclinedPlaneExperimentTests
 
         Assert.That(root.GetProperty("modelId").GetString(),
             Is.EqualTo("mechanics.frictionless-inclined-plane"));
-        Assert.That(root.GetProperty("modelVersion").GetString(), Is.EqualTo("1"));
-        Assert.That(root.GetProperty("schemaVersion").GetInt32(), Is.EqualTo(1));
+        Assert.That(root.GetProperty("modelVersion").GetString(), Is.EqualTo("2"));
+        Assert.That(root.GetProperty("schemaVersion").GetInt32(), Is.EqualTo(2));
+        Assert.That(root.GetProperty("forceVectorFrame").GetString(),
+            Is.EqualTo("local incline frame: +X horizontal toward foot of incline; +Y vertically upward; +Z out of incline plane"));
         Assert.That(root.GetProperty("definition").GetProperty("verticalDropMeters").GetDouble(),
             Is.EqualTo(2d));
         Assert.That(root.GetProperty("result").GetProperty("finalSpeedMetersPerSecond").GetDouble(),
             Is.EqualTo(Math.Sqrt(2d * 9.80665d * 2d)).Within(1e-12));
         Assert.That(root.GetProperty("units").GetProperty("angle").GetString(), Is.EqualTo("rad"));
+
+        var vectors = root.GetProperty("result").GetProperty("forceVectors");
+        var weight = vectors.GetProperty("weightNewtons");
+        Assert.That(weight.GetProperty("x").GetDouble(), Is.EqualTo(0d));
+        Assert.That(weight.GetProperty("y").GetDouble(), Is.EqualTo(-9.80665d).Within(1e-12));
+        Assert.That(weight.GetProperty("z").GetDouble(), Is.EqualTo(0d));
+        Assert.That(vectors.GetProperty("parallelGravityNewtons").GetProperty("x").GetDouble(),
+            Is.GreaterThan(0d));
+        Assert.That(vectors.GetProperty("normalForceNewtons").GetProperty("y").GetDouble(),
+            Is.GreaterThan(0d));
     }
 
     [Test]
