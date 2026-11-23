@@ -28,7 +28,7 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 | Stratigraphic column representation | `Physics/Geology/StratigraphicColumn3d.cs` | Implemented immutable local vertical columns with material IDs, elevation bounds, formation-age intervals, and deposition/formation event provenance. A column alone does not imply lateral continuity. |
 | Sampled 3D stratigraphic grid | `Physics/Geology/StratigraphicColumnGrid3d.cs` | Implemented immutable regular XY sampling of vertical columns with shared spatial conventions, row-major ordering, and strict sample-position validation. This is a sampled dataset, not a continuous solid or interpolated layer-surface model. |
 | Fault/stratigraphy cross-cutting query | `Physics/Geology/FaultStratigraphicIntersection3d.cs` | Implemented geometric intersection of a finite prescribed fault plane with a sampled vertical column; identifies a strictly intersected layer and retains its material and formation-event identity. Does not offset strata or model deformation. |
-| Geological time and event metadata | `Physics/Geology/GeologicalEventRecord.cs` | Implemented validated separation of geological age from elapsed simulation seconds and immutable event provenance metadata. Not yet an atomic world-state transaction or connected geological replay executor. |
+| Geological time, events, and voxel-volume transactions | `Physics/Geology/GeologicalEventRecord.cs`, `GeologicalVoxelVolumeRevision3d.cs` | Implemented separate geological/simulation clocks, immutable event metadata, and an in-memory optimistic transaction that commits a sparse material envelope and its complete voxel-provenance map as one revision. Not durable persistence or a geological replay executor. |
 | Atmosphere, climate, hydrology, and terrain processes | `Physics/Hydrodynamics`, `Physics/Thermodynamics`, `Physics/Energy`; books and domain documents under `docs/books` and `docs` | Reusable neighboring physics foundations and documented domain contracts exist. A coupled planetary climate/weathering/erosion/sediment system is not implemented by those documents alone. |
 
 ## What the current foundations can already do
@@ -43,6 +43,7 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 8. Represent local stratigraphic columns with material identity, elevation bounds, formation intervals, and event provenance.
 9. Arrange those columns on a regular, immutable XY sample grid and query them by integer grid coordinate.
 10. Bind every occupied sparse material voxel to a stratigraphic layer and original formation event through a complete, revision-bound immutable annotation map.
+11. Commit a new sparse material-volume envelope and its complete provenance map atomically through an optimistic in-memory geological revision store.
 
 ## Explicit gaps before a complete procedural planet
 
@@ -53,7 +54,7 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 - Physical weathering, erosion, sediment transport, and deposition with water and solid-material budgets.
 - Atmospheric weather and long-term climate models with declared coupling to surface processes.
 - Hydrologic routing and groundwater/karst processes coupled to terrain and material changes.
-- A geological state transaction that verifies the source revision, produces a candidate revision, validates it, and commits atomically; failed candidates must leave source state unchanged.
+- Durable geological revision persistence, multi-branch history, and a replay adapter that maps validated event records to deterministic model execution and checkpoints. The initial in-memory 2D terrain transaction and 3D voxel-envelope/provenance atomic commit boundaries now exist; neither is durable persistence or a replay engine.
 - A geological replay adapter that maps validated event records to deterministic model execution and checkpoints.
 - 3D cave/void generation from declared geological processes. Generic voxel storage can represent void/solid geometry, but it does not create caves geologically.
 - GPU acceleration only after a deterministic CPU reference, parity tolerances, and material/water accounting are established.
@@ -61,7 +62,7 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 ## Implementation order
 
 1. Finish the source inventory and canonical terrain query/authoring contract without duplicating existing APIs.
-2. Add an immutable geological revision/transaction boundary over existing terrain snapshots; test stale source revisions, validation rejection, and failure atomicity. (Initial in-memory 2D boundary now implemented in `GeologicalTerrainRevision2D.cs`; durable persistence and geological replay remain future work.)
+2. Add immutable geological revision/transaction boundaries over existing terrain and voxel snapshots; test stale source revisions, validation rejection, and failure atomicity. (The in-memory 2D terrain store and 3D voxel-envelope/provenance store now exist; durable persistence and geological replay remain future work.)
 3. Connect prescribed fault events to an explicit terrain/stratigraphy representation while preserving layer provenance and clearly stating the kinematic limits. (The first finite-fault/column intersection query now identifies a cut layer; applying deformation and propagating it through a volume remain open.)
 4. Add a minimal layered-material column/volume contract before claiming strata or fault cross-cutting. (Immutable local columns and the regular sampled grid now exist in `StratigraphicColumn3d.cs` and `StratigraphicColumnGrid3d.cs`; `GeologicalVoxelProvenance3d.cs` now binds complete layer/event annotations to an exact sparse material-volume revision. Continuous layer geometry, lateral correlation, and fault offsets remain open.)
 5. Build process-specific plate/interior, climate, hydrology, and sediment models as separate validated increments.
@@ -70,6 +71,6 @@ The sequence is a dependency map, not a requirement that every subsystem use the
 
 ## Evidence and limitations
 
-The existing terrain authoring API is documented in `docs/TERRAIN_HEIGHT_FIELD_2D.md` and tested by `tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs`. The 3D material-volume contract is documented in `docs/SPARSE_MATERIAL_VOXEL_VOLUME_3D.md`. The sampled column-grid contract is documented in `docs/STRATIGRAPHIC_COLUMN_GRIDS_3D.md`. The revision-bound voxel provenance contract is documented in `docs/GEOLOGICAL_VOXEL_PROVENANCE_3D.md`. Mountain extrusion is documented by its source and tests. Geological fault, event, revision-transaction, and stratigraphic-column primitives have focused tests.
+The existing terrain authoring API is documented in `docs/TERRAIN_HEIGHT_FIELD_2D.md` and tested by `tests/TheSingularityWorkshop.Physics.Tests/TerrainHeightField2DTests.cs`. The 3D material-volume contract is documented in `docs/SPARSE_MATERIAL_VOXEL_VOLUME_3D.md`. The sampled column-grid contract is documented in `docs/STRATIGRAPHIC_COLUMN_GRIDS_3D.md`. The revision-bound voxel provenance contract is documented in `docs/GEOLOGICAL_VOXEL_PROVENANCE_3D.md`; the atomic envelope/provenance transaction is documented in `docs/GEOLOGICAL_VOXEL_VOLUME_REVISION_TRANSACTIONS_3D.md`. Mountain extrusion is documented by its source and tests. Geological fault, event, revision-transaction, and stratigraphic-column primitives have focused tests.
 
 This inventory is deliberately conservative: a documented future capability is not an implemented solver, a geometric operation is not a physical process, and a renderable surface is not authoritative geological state.
