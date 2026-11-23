@@ -294,3 +294,10 @@ The first in-memory transaction layer now wraps the existing immutable height fi
 `FaultStratigraphicIntersection3d.TryIntersectColumn` intersects the finite fault plane with a vertical stratigraphic column when a unique point exists. It requires matching coordinate-frame and linear-unit identities, checks the finite strike/down-dip footprint, and reports a layer only when the intersection lies strictly inside its vertical interval. Interfaces and hiatuses are not arbitrarily assigned to a layer; vertical planes parallel to or coincident with the column have no unique point result.
 
 The immutable result retains fault, column, layer, material-catalogue, and original formation-event identities. Neither input is mutated, and no displacement is applied. This is the first local cross-cutting observation, not a faulted-strata deformation solver. See [Fault/stratigraphy cross-cutting intersection (3D)](FAULT_STRATIGRAPHIC_INTERSECTIONS_3D.md) and its focused tests.
+
+
+## Implemented geological voxel provenance mapping
+
+`GeologicalVoxelProvenance3d` binds every occupied voxel in one immutable `SparseMaterialVoxelVolumeEnvelope3d` revision to a stable stratigraphic layer identity and original formation/deposition event identity. It reuses the existing sparse material volume; it does not duplicate voxel storage or infer geological geometry. Construction rejects incomplete coverage, duplicate coordinates, empty voxels, missing identities, and material IDs that disagree with the snapshot. The exact envelope is retained so dataset, revision, coordinate frame, units, datum, and material-catalogue identity remain attached to the annotations.
+
+This closes the per-voxel provenance gap only. It does not assign layers from continuous surfaces, reconstruct folds, propagate faults through a volume, or model depositional/erosional processes. See [Geological voxel provenance (3D)](GEOLOGICAL_VOXEL_PROVENANCE_3D.md) and its focused tests.
