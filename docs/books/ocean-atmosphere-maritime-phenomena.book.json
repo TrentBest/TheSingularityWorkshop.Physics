@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "surps.domain.ocean-atmosphere-maritime-phenomena",
+  "id": "physics.domain.ocean-atmosphere-maritime-phenomena",
   "category": "Domain",
   "lod": 1,
   "title": "Ocean, Atmosphere, and Maritime Phenomena",
