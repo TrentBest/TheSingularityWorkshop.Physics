@@ -152,7 +152,7 @@ The initial code slice is now present in `Physics/Geology/FaultKinematics3d.cs` 
 
 It defines a caller-identified planar fault, explicit coordinate frame and linear unit, normalized strike and down-dip basis, oriented plane normal, explicit hanging-wall side, declared mechanism, and signed strike/dip slip components. The resulting hanging-wall displacement is a full 3D vector; the footwall is stationary in this prescribed block model. The contract does not infer handedness, stress regime, or fault sense, and it does not claim to model rupture or earthquake dynamics.
 
-Current limitations are intentional: the mathematical plane is infinite, the displacement is a discontinuous block offset, and there is no distributed elastic deformation, layer displacement, or material-volume update yet. A separate finite-fault/column intersection query now records local cross-cutting geometry; see [Fault/stratigraphy cross-cutting intersection (3D)](FAULT_STRATIGRAPHIC_INTERSECTIONS_3D.md). This is the shared kinematic foundation, not the finished fault system. CI validation is running for this first code increment.
+Current limitations are intentional: the mathematical plane is infinite, the displacement is a discontinuous block offset, and there is no distributed elastic deformation, layer displacement, or material-volume update yet. A separate finite-fault/column intersection query now records local cross-cutting geometry; see [Fault/stratigraphy cross-cutting intersection (3D)](FAULT_STRATIGRAPHIC_INTERSECTIONS_3D.md). This is the shared kinematic foundation, not the finished fault system. The current connector view does not expose a confirming build result for this code slice.
 
 ## Implemented stratigraphic column representation
 
