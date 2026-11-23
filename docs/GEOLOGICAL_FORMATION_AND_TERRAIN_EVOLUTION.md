@@ -262,3 +262,10 @@ The intended pipeline is:
 planetary system → initial interior → plate/continent representation → geological time steps → tectonic and catastrophic events → climate/weather forcing → weathering/erosion/transport/deposition → hydrology and 3D subsurface evolution → replayable world
 
 This is an implementation roadmap, not a claim that these coupled solvers already exist. Implement each stage as a separately testable Physics capability with explicit units, resolution, timescale, conservation rules, provenance, and limitations. The player-facing timeline and StoryBuilder narration consume validated event records; renderers and GPU kernels accelerate or display derived state without becoming the source of truth.
+
+
+## Implemented geological time and event provenance contract
+
+`GeologicalTimeInterval` now records geological age in years before present separately from monotonically increasing simulation elapsed seconds and a non-negative step index. Geological age decreases toward the present; simulation time increases. Equal geological start/end ages are valid for instantaneous events. This makes a million-year player-facing interval representable without implying that it is one solver iteration or the only clock in the system.
+
+`GeologicalEventRecord` captures a stable event/type identity, interval, source/result revision identities, model and algorithm identities/versions, JSON-object parameters, and a player-readable summary. The record is immutable metadata: it does not execute a process, prove that referenced revisions exist, or commit world state. A future coordinator must validate candidate outputs and referenced revisions before atomic commit. Focused tests cover clock direction, a one-million-year interval, instantaneous events, invalid clocks, and event provenance validation.
