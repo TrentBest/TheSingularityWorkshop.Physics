@@ -31,6 +31,10 @@ These are distinct capabilities because their inputs, outputs, assumptions, and 
 - 5203 is prescribed kinematics, not force-driven dynamics or collision handling.
 - None owns a world-step loop or logical clock.
 
+## Physics sourcebook family
+
+The descriptor-backed sourcebook catalogue now begins at [`docs/books/index.md`](books/index.md). Its first book is [Power and Industrial Systems — LOD 1](books/power-and-industrial-systems.md), with an original cover and a descriptor using the shared SURPS LOD badge. The book maps batteries, grids, thermal and nuclear educational plants, renewables, hydroelectric generation, and manufacturing while explicitly separating existing Physics capabilities from planned models. Candidate specialist books remain planned until their own scopes, LODs, covers, descriptors, chapters, and evidence are ready.
+
 ## Physics rulebook family
 
 Physics is much larger than this first capability slice. The SURPS-facing catalog should grow as a family of focused rulebooks, each linked to its authoritative Physics models, theory, experiments, tests, and evidence. Initial subject divisions to develop include:
