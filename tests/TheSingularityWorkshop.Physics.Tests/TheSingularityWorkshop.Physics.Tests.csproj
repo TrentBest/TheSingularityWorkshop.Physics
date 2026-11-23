@@ -25,5 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="../../TheSingularityWorkshop.Physics.csproj" />
     <None Include="../../docs/records/cpu-world-two-sphere-reference.json" Link="Records/cpu-world-two-sphere-reference.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../docs/records/sparse-material-voxel-volume-example.json" Link="Records/sparse-material-voxel-volume-example.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
