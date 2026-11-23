@@ -25,17 +25,22 @@ var baseTerrain = TerrainHeightField2D.CreateBowl(
     centerX: 0d,
     centerY: 0d,
     radius: 8d);
-var editedTerrain = baseTerrain.ApplyRadialBrush(
-    centerX: -2d,
-    centerY: 2d,
-    radius: 3d,
-    delta: 2d);
+var brushOperation = new TerrainRadialBrushOperation2D(
+    OperationId: "terrain-height-field-demo/brush-001",
+    AlgorithmVersion: "smoothstep-radial/1",
+    AuthoringSourceId: "physics-terrain-height-field-learning-experience",
+    CenterX: -2d,
+    CenterY: 2d,
+    Radius: 3d,
+    ElevationDelta: 2d);
+var edit = baseTerrain.ApplyRadialBrush(brushOperation);
+var editedTerrain = edit.Result;
 
 var record = new
 {
     modelId = "geology.terrain-height-field-2d",
-    modelVersion = "1.0.0",
-    schemaVersion = 1,
+    modelVersion = "1.1.0",
+    schemaVersion = 2,
     units = new { horizontal = "m", elevation = "m" },
     definition = new
     {
@@ -50,7 +55,23 @@ var record = new
         baseOperation = "parabolic-bowl",
         bowl = new { rimElevation = 20d, depth = 8d, centerX = 0d, centerY = 0d, radius = 8d },
         editOperation = "smooth-radial-elevation-brush",
-        brush = new { centerX = -2d, centerY = 2d, radius = 3d, delta = 2d }
+        brush = new
+        {
+            centerX = brushOperation.CenterX,
+            centerY = brushOperation.CenterY,
+            radius = brushOperation.Radius,
+            delta = brushOperation.ElevationDelta,
+            operationId = brushOperation.OperationId,
+            algorithmVersion = brushOperation.AlgorithmVersion,
+            authoringSourceId = brushOperation.AuthoringSourceId
+        }
+    },
+    editSummary = new
+    {
+        changedSampleCount = edit.ChangedSampleCount,
+        changedRegion = edit.ChangedRegion is { } region
+            ? new { minX = region.MinX, minY = region.MinY, maxX = region.MaxX, maxY = region.MaxY }
+            : null
     },
     samples = new
     {
