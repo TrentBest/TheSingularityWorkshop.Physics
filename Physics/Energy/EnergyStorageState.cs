@@ -96,7 +96,6 @@ public readonly record struct EnergyStorageState(
         var deliveredOutputEnergy = Math.Min(powerLimitedOutputEnergy, availableOutputEnergy);
         var storedEnergyRemoved = Math.Min(StoredEnergyJoules, deliveredOutputEnergy / DischargeEfficiencyFraction);
         var outputEnergyNotDelivered = requestedOutputEnergy - deliveredOutputEnergy;
-        var storedEnergyNotDeliveredAsOutput = storedEnergyRemoved - deliveredOutputEnergy;
 
         if (!double.IsFinite(powerLimitedOutputEnergy) ||
             !double.IsFinite(availableOutputEnergy) ||
@@ -108,7 +107,7 @@ public readonly record struct EnergyStorageState(
 
         var nextStoredEnergy = Math.Max(0d, StoredEnergyJoules - storedEnergyRemoved);
         var actualStoredEnergyRemoved = StoredEnergyJoules - nextStoredEnergy;
-        var actualStoredEnergyNotDeliveredAsOutput = actualStoredEnergyRemoved - deliveredOutputEnergy;
+        var actualStoredEnergyNotDeliveredAsOutput = Math.Max(0d, actualStoredEnergyRemoved - deliveredOutputEnergy);
         var nextState = this with { StoredEnergyJoules = nextStoredEnergy };
         return new EnergyStorageDischargeResult(
             this,
