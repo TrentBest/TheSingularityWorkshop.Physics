@@ -274,3 +274,8 @@ This is an implementation roadmap, not a claim that these coupled solvers alread
 ## Source inventory and implementation status
 
 The exact source-to-capability audit is maintained in [Planetary world-generation source inventory](PLANETARY_WORLD_GENERATION_SOURCE_INVENTORY.md). It distinguishes existing orbital, terrain, fault, voxel, timeline, and timekeeping foundations from missing planetary interior, plate, stratigraphy, climate, erosion, sediment, and geological replay integrations. Consult it before introducing new types so existing foundations are reused rather than duplicated.
+
+
+## Immutable geological terrain revision boundary
+
+The first in-memory transaction layer now wraps the existing immutable height field: [Geological terrain revision transactions](GEOLOGICAL_TERRAIN_REVISION_TRANSACTIONS.md). A candidate must name its exact source and result revisions in its event record, preserve the source grid geometry and coordinate semantics, pass optional domain validation, and only then be offered to the revision store. The store uses optimistic source identity and a lock to reject stale competing candidates without changing current state. This is not yet durable persistence or geological event replay.
