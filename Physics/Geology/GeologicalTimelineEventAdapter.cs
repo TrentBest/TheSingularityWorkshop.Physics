@@ -26,9 +26,7 @@ public static class GeologicalTimelineEventAdapter
         PropertyNameCaseInsensitive = false
     };
 
-    /// <summary>
-    /// Encodes a validated geological event as an ordered timeline event at its geological step index.
-    /// </summary>
+    /// <summary>Encodes a validated geological event as a timeline event at its geological step index.</summary>
     /// <param name="sequence">Strictly increasing sequence position within the containing history segment.</param>
     /// <param name="geologicalEvent">Immutable geological event provenance to encode.</param>
     /// <returns>A timeline event whose tick is the event's geological step index.</returns>
@@ -36,8 +34,25 @@ public static class GeologicalTimelineEventAdapter
     {
         ArgumentNullException.ThrowIfNull(geologicalEvent);
 
+        var eventData = new GeologicalEventData(
+            geologicalEvent.EventId,
+            geologicalEvent.EventTypeId,
+            geologicalEvent.Time.StartAgeYearsBeforePresent,
+            geologicalEvent.Time.EndAgeYearsBeforePresent,
+            geologicalEvent.Time.SimulationStartSeconds,
+            geologicalEvent.Time.SimulationEndSeconds,
+            geologicalEvent.Time.StepIndex,
+            geologicalEvent.SourceRevisionId,
+            geologicalEvent.ResultRevisionId,
+            geologicalEvent.ModelId,
+            geologicalEvent.ModelVersion,
+            geologicalEvent.AlgorithmId,
+            geologicalEvent.AlgorithmVersion,
+            geologicalEvent.ParametersJson,
+            geologicalEvent.Summary);
+
         string payload = JsonSerializer.Serialize(
-            new GeologicalEventPayload(PayloadSchemaVersion, geologicalEvent),
+            new GeologicalEventPayload(PayloadSchemaVersion, eventData),
             SerializerOptions);
 
         return new TimelineEvent(sequence, geologicalEvent.Time.StepIndex, EventKind, payload);
@@ -67,11 +82,52 @@ public static class GeologicalTimelineEventAdapter
         if (payload is null || payload.SchemaVersion != PayloadSchemaVersion || payload.Event is null)
             throw new ArgumentException("Geological timeline payload has an unsupported or incomplete schema.", nameof(timelineEvent));
 
-        if (payload.Event.Time.StepIndex != timelineEvent.Tick)
+        GeologicalEventData data = payload.Event;
+        if (data.StepIndex != timelineEvent.Tick)
             throw new ArgumentException("Timeline tick must equal the geological event step index.", nameof(timelineEvent));
 
-        return payload.Event;
+        try
+        {
+            return new GeologicalEventRecord(
+                data.EventId,
+                data.EventTypeId,
+                new GeologicalTimeInterval(
+                    data.StartAgeYearsBeforePresent,
+                    data.EndAgeYearsBeforePresent,
+                    data.SimulationStartSeconds,
+                    data.SimulationEndSeconds,
+                    data.StepIndex),
+                data.SourceRevisionId,
+                data.ResultRevisionId,
+                data.ModelId,
+                data.ModelVersion,
+                data.AlgorithmId,
+                data.AlgorithmVersion,
+                data.ParametersJson,
+                data.Summary);
+        }
+        catch (ArgumentException exception)
+        {
+            throw new ArgumentException("Geological timeline event fields do not satisfy the event contract.", nameof(timelineEvent), exception);
+        }
     }
 
-    private sealed record GeologicalEventPayload(int SchemaVersion, GeologicalEventRecord Event);
+    private sealed record GeologicalEventPayload(int SchemaVersion, GeologicalEventData Event);
+
+    private sealed record GeologicalEventData(
+        string EventId,
+        string EventTypeId,
+        double StartAgeYearsBeforePresent,
+        double EndAgeYearsBeforePresent,
+        double SimulationStartSeconds,
+        double SimulationEndSeconds,
+        long StepIndex,
+        string SourceRevisionId,
+        string ResultRevisionId,
+        string ModelId,
+        string ModelVersion,
+        string AlgorithmId,
+        string AlgorithmVersion,
+        string ParametersJson,
+        string Summary);
 }
