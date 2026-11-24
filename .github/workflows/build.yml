@@ -68,6 +68,11 @@ jobs:
               { repository: "TrentBest/TheSingularityWorkshop.Experiences", checkoutSha: $experiencesSha }
             ]')"
           [[ "$checkout_sha" == "$SOURCE_SHA" ]]
+          {
+            echo "checkout_sha=$checkout_sha"
+            echo "dependency_checkouts_json=$dependencies"
+            echo "pull_request_json=$pull_request"
+          } >> "$GITHUB_OUTPUT"
           jq -n             --arg repository "$REPOSITORY"             --arg sourceRef "$SOURCE_REF"             --arg sourceSha "$SOURCE_SHA"             --argjson runId "$RUN_ID"             --argjson runAttempt "$RUN_ATTEMPT"             --arg workflowRef "$WORKFLOW_REF"             --arg workflowSha "$WORKFLOW_SHA"             --arg eventName "$EVENT_NAME"             --arg eventRef "$EVENT_REF"             --arg eventSha "$EVENT_SHA"             --arg checkoutSha "$checkout_sha"             --argjson pullRequest "$pull_request"             --argjson dependencies "$dependencies"             '{
               schema: "ciai.workflow-provenance.v1",
               repository: $repository,
@@ -910,7 +915,7 @@ jobs:
           PHYSICS_SOURCE_SHA: ${{ env.PHYSICS_SOURCE_REVISION }}
           PHYSICS_SOURCE_REF: ${{ github.event_name == 'pull_request' && format('refs/heads/{0}', github.event.pull_request.head.ref) || github.ref }}
           PHYSICS_CHECKOUT_REF: ${{ github.event_name == 'pull_request' && format('refs/heads/{0}', github.event.pull_request.head.ref) || github.ref }}
-          PHYSICS_CHECKOUT_SHA: ${{ env.PHYSICS_SOURCE_REVISION }}
+          PHYSICS_CHECKOUT_SHA: ${{ steps.provenance.outputs.checkout_sha }}
           PHYSICS_WORKFLOW_REF: ${{ github.workflow_ref }}
           PHYSICS_WORKFLOW_SHA: ${{ github.workflow_sha }}
           PHYSICS_RUN_ID: ${{ github.run_id }}
@@ -918,9 +923,8 @@ jobs:
           PHYSICS_EVENT_NAME: ${{ github.event_name }}
           PHYSICS_EVENT_REF: ${{ github.ref }}
           PHYSICS_EVENT_SHA: ${{ github.sha }}
-          PHYSICS_PULL_REQUEST_JSON: ${{ toJSON(github.event.pull_request || null) }}
-          PHYSICS_DEPENDENCY_CHECKOUTS_JSON: >-
-            [{"repository":"TrentBest/TheSingularityWorkshop.MicroBundleDomain","checkoutSha":"captured-in-provenance"},{"repository":"TrentBest/TheSingularityWorkshop.Experiences","checkoutSha":"captured-in-provenance"}]
+          PHYSICS_PULL_REQUEST_JSON: ${{ steps.provenance.outputs.pull_request_json }}
+          PHYSICS_DEPENDENCY_CHECKOUTS_JSON: ${{ steps.provenance.outputs.dependency_checkouts_json }}
           PHYSICS_STEP_OUTCOMES_JSON: >-
             {"validate_microbundles":"${{ steps.validate_microbundles.outcome }}","build_microbundles":"${{ steps.build_microbundles.outcome }}","test_microbundles":"${{ steps.test_microbundles.outcome }}","package_microbundles":"${{ steps.package_microbundles.outcome }}","test_physics_solution":"${{ steps.test_physics_solution.outcome }}","package_core":"${{ steps.package_core.outcome }}","package_adapter":"${{ steps.package_adapter.outcome }}"}
         run: python3 tools/create_development_capability_evidence.py
