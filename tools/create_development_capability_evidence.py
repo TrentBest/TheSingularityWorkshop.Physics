@@ -176,7 +176,7 @@ evidence = {
     "workflow": workflow,
     "checkout": checkout,
     "pullRequest": pull_request,
-    "requiredJobs": [{"name": "test", "workflowPath": workflow_path}],
+    "requiredJobs": [{"jobKey": "physics-development-capability", "name": "test", "workflowPath": workflow_path}],
     "requiredStepIds": required_steps,
     "stepOutcomes": required_step_outcomes,
     "requiredArtifacts": sorted(required_artifact_kinds),
