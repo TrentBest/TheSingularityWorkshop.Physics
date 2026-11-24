@@ -16,3 +16,26 @@ main{width:min(1180px,90vw);margin:0 auto}.hero{padding:clamp(58px,9vw,112px) 0 
 .hero-layout{display:grid;grid-template-columns:minmax(0,.92fr) minmax(360px,1.08fr);align-items:center;gap:clamp(22px,4vw,54px);max-width:none;padding-top:clamp(46px,7vw,82px)}
 .hero-copy-block{min-width:0}.hero-art{margin:0;min-width:0}.hero-art img{display:block;width:100%;height:auto;border:1px solid #53758a;border-radius:18px;box-shadow:0 24px 70px #050d1680}.hero-art figcaption{margin:10px 4px 0;color:#8199aa;font:10px 'DM Mono',monospace;line-height:1.5}
 @media(max-width:900px){.hero-layout{grid-template-columns:1fr}.hero-copy-block{max-width:790px}.hero-art{max-width:720px}.hero-layout .hero-copy{max-width:650px}}
+
+
+/* Evidence-led landing gallery, adapted from the GUI showcase pattern. */
+.atlas-heading{margin-top:12px}
+.showcase-section{margin:54px 0 34px}
+.showcase-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.showcase-card{overflow:hidden;background:linear-gradient(155deg,#1b2d40,#122131);border:1px solid var(--line);border-radius:16px}
+.showcase-preview{min-height:230px;display:flex;align-items:center;justify-content:center;padding:16px;background:#0d1825;border-bottom:1px solid var(--line);overflow:hidden}
+.showcase-preview svg{display:block;width:100%;height:auto;max-height:280px}
+.trajectory-preview .plot-legend{display:none}
+.terrain-preview svg{max-height:300px}
+.showcase-body{padding:22px}
+.showcase-body h3{font-size:21px;margin:10px 0}
+.proof-note,.limit-note{margin-top:12px;padding:11px 13px;border-left:2px solid var(--cyan);background:#0d1b29;color:var(--muted);font-size:12px;line-height:1.65}
+.limit-note{border-left-color:var(--gold)}
+.proof-note strong{color:var(--cyan)}.limit-note strong{color:var(--gold)}
+.visitor-paths{margin:30px 0}
+.path{display:flex;flex-direction:column;align-items:flex-start}
+.path a{margin-top:auto;padding-top:14px}
+.showcase-card,.path,.tile{transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease}
+.showcase-card:hover,.path:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:0 18px 42px #0004}
+@media(max-width:760px){.showcase-grid{grid-template-columns:1fr}.showcase-preview{min-height:180px}}
+@media(prefers-reduced-motion:reduce){.showcase-card,.path,.tile{transition:none}}
