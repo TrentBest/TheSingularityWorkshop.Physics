@@ -45,6 +45,14 @@ jobs:
         with:
           node-version: 22
 
+      - name: Check browser application JavaScript syntax
+        run: |
+          node --check site/navigation-fsm.js
+          node --check site/app.js
+
+      - name: Test navigation FSM routes and transitions
+        run: node --test site/tests/*.test.mjs
+
       - name: Reproduce projectile run from Physics
         run: dotnet run --project tools/ProjectileRunRecordGenerator/ProjectileRunRecordGenerator.csproj --configuration Release -- /tmp/projectile-trajectory.actual.json
 
@@ -75,14 +83,6 @@ jobs:
         run: |
           dotnet run --project tools/TerrainHeightFieldRunRecordGenerator/TerrainHeightFieldRunRecordGenerator.csproj --configuration Release -- docs/experiments/terrain-height-field.run.json --check
           dotnet run --project tools/TerrainHeightFieldRunRecordGenerator/TerrainHeightFieldRunRecordGenerator.csproj --configuration Release -- site/data/terrain-height-field.run.json --check
-
-      - name: Check browser application JavaScript syntax
-        run: |
-          node --check site/navigation-fsm.js
-          node --check site/app.js
-
-      - name: Test navigation FSM routes and transitions
-        run: node --test site/tests/*.test.mjs
 
       - name: Verify static site entry points and data
         run: |
