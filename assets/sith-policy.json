@@ -6,12 +6,13 @@
     "master"
   ],
   "actual_branches": [
+    "adp/development-capability-evidence",
     "development",
     "master"
   ],
-  "branch_count": 2,
-  "status": "COMPLIANT",
-  "evaluated_at": "2026-11-23T14:45:58Z",
-  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/45197682698",
-  "triggering_commit": "9e89db27eac4045a810485a8e1eeabc717de79ef"
+  "branch_count": 3,
+  "status": "NON-COMPLIANT",
+  "evaluated_at": "2026-11-24T14:55:49Z",
+  "workflow_run": "https://github.com/TrentBest/TheSingularityWorkshop.Physics/actions/runs/45419526564",
+  "triggering_commit": "c5b7fcd0da77e0acb20f112d12292d95df33a182"
 }
