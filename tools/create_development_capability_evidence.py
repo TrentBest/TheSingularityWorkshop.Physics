@@ -103,6 +103,7 @@ evidence = {
     "schema": "ciai.development-capability-evidence.v1",
     "evidenceContract": "ciai.development-capability-evidence.v1",
     "providerRepository": env("PHYSICS_REPOSITORY"),
+    "artifactName": "physics-development-capability-" + env("PHYSICS_RUN_ID") + "-" + env("PHYSICS_RUN_ATTEMPT"),
     "capability": {
         "id": "physics.kinematics.prescribed-motion.v1",
         "version": "1",
