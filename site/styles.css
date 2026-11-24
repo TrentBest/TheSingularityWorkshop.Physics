@@ -39,3 +39,5 @@ main{width:min(1180px,90vw);margin:0 auto}.hero{padding:clamp(58px,9vw,112px) 0 
 .showcase-card:hover,.path:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:0 18px 42px #0004}
 @media(max-width:760px){.showcase-grid{grid-template-columns:1fr}.showcase-preview{min-height:180px}}
 @media(prefers-reduced-motion:reduce){.showcase-card,.path,.tile{transition:none}}
+
+.acoustic-preview img{display:block;width:100%;height:auto;max-height:280px;object-fit:contain;border-radius:8px}
