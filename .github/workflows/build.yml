@@ -14,10 +14,13 @@ jobs:
   test:
     runs-on: ubuntu-24.04
     env:
-      PHYSICS_SOURCE_REVISION: ${{ github.sha }}
+      PHYSICS_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
 
       - name: Checkout MicroBundleDomain development source
         uses: actions/checkout@v7
@@ -25,6 +28,7 @@ jobs:
           repository: TrentBest/TheSingularityWorkshop.MicroBundleDomain
           ref: development
           path: MicroBundleDomain
+          persist-credentials: false
 
       - name: Checkout generic MicroBundle packer
         uses: actions/checkout@v7
@@ -32,11 +36,70 @@ jobs:
           repository: TrentBest/TheSingularityWorkshop.Experiences
           ref: development
           path: Experiences
+          persist-credentials: false
+
+      - name: Create exact Physics workflow provenance
+        id: provenance
+        shell: bash
+        env:
+          REPOSITORY: ${{ github.repository }}
+          SOURCE_SHA: ${{ env.PHYSICS_SOURCE_REVISION }}
+          SOURCE_REF: ${{ github.event_name == 'pull_request' && format('refs/heads/{0}', github.event.pull_request.head.ref) || github.ref }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_SHA: ${{ github.workflow_sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_REF: ${{ github.ref }}
+          EVENT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p TestResults/provenance
+          checkout_sha="$(git rev-parse HEAD)"
+          microbundle_domain_sha="$(git -C MicroBundleDomain rev-parse HEAD)"
+          experiences_sha="$(git -C Experiences rev-parse HEAD)"
+          pull_request="$(jq -c 'if .pull_request then {
+            number: .pull_request.number,
+            head: { ref: .pull_request.head.ref, sha: .pull_request.head.sha },
+            base: { ref: .pull_request.base.ref, sha: .pull_request.base.sha }
+          } else null end' "$GITHUB_EVENT_PATH")"
+          dependencies="$(jq -cn             --arg microBundleDomainSha "$microbundle_domain_sha"             --arg experiencesSha "$experiences_sha"             '[
+              { repository: "TrentBest/TheSingularityWorkshop.MicroBundleDomain", checkoutSha: $microBundleDomainSha },
+              { repository: "TrentBest/TheSingularityWorkshop.Experiences", checkoutSha: $experiencesSha }
+            ]')"
+          [[ "$checkout_sha" == "$SOURCE_SHA" ]]
+          {
+            echo "checkout_sha=$checkout_sha"
+            echo "dependency_checkouts_json=$dependencies"
+            echo "pull_request_json=$pull_request"
+          } >> "$GITHUB_OUTPUT"
+          jq -n             --arg repository "$REPOSITORY"             --arg sourceRef "$SOURCE_REF"             --arg sourceSha "$SOURCE_SHA"             --argjson runId "$RUN_ID"             --argjson runAttempt "$RUN_ATTEMPT"             --arg workflowRef "$WORKFLOW_REF"             --arg workflowSha "$WORKFLOW_SHA"             --arg eventName "$EVENT_NAME"             --arg eventRef "$EVENT_REF"             --arg eventSha "$EVENT_SHA"             --arg checkoutSha "$checkout_sha"             --argjson pullRequest "$pull_request"             --argjson dependencies "$dependencies"             '{
+              schema: "ciai.workflow-provenance.v1",
+              repository: $repository,
+              runId: $runId,
+              runAttempt: $runAttempt,
+              workflow: { ref: $workflowRef, sha: $workflowSha, path: ".github/workflows/build.yml" },
+              event: { name: $eventName, ref: $eventRef, sha: $eventSha, pullRequest: $pullRequest },
+              candidate: { ref: $sourceRef, sha: $sourceSha },
+              checkout: { ref: $sourceRef, sha: $checkoutSha },
+              dependencyCheckouts: $dependencies
+            }' > TestResults/provenance/workflow-provenance.json
+          jq -e             --arg repo "$REPOSITORY"             --arg sha "$SOURCE_SHA"             --arg checkout "$checkout_sha"             '.schema == "ciai.workflow-provenance.v1" and
+             .repository == $repo and
+             .candidate.sha == $sha and
+             .checkout.sha == $checkout and
+             .workflow.path == ".github/workflows/build.yml" and
+             (.workflow.sha | test("^[0-9a-fA-F]{40}$")) and
+             (.runId > 0) and (.runAttempt > 0) and
+             (.dependencyCheckouts | length == 2)'             TestResults/provenance/workflow-provenance.json >/dev/null
+          echo "Provenance created for Physics candidate $SOURCE_SHA, run $RUN_ID attempt $RUN_ATTEMPT."
 
       - name: Validate Physics MicroBundle manifests
+        id: validate_microbundles
         run: |
           python3 -m pip install --disable-pip-version-check jsonschema==4.23.0
           python3 tools/validate_physics_microbundles.py
+          python3 -m py_compile tools/create_development_capability_evidence.py
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
@@ -796,12 +859,16 @@ jobs:
         run: dotnet restore tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj -p:UseLocalMicroBundleDomain=true
 
       - name: Build Physics MicroBundles
+        id: build_microbundles
         run: dotnet build TheSingularityWorkshop.Physics.MicroBundles.csproj --configuration Release --no-restore -p:UseLocalMicroBundleDomain=true
 
       - name: Test Physics MicroBundles
-        run: dotnet test tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj --configuration Release --no-restore -p:UseLocalMicroBundleDomain=true
+        id: test_microbundles
+        continue-on-error: true
+        run: dotnet test tests/MicroBundles/TheSingularityWorkshop.Physics.MicroBundles.Tests.csproj --configuration Release --no-restore -p:UseLocalMicroBundleDomain=true --logger "trx;LogFileName=physics-microbundles.trx" --results-directory ./TestResults/MicroBundles
 
       - name: Package Physics MicroBundles for repository ingestion
+        id: package_microbundles
         run: |
           dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5201 1.0.0 ./artifacts/physics-sphere-sphere-contact.mbundle
           dotnet run --project Experiences/tools/PackMicroBundle/PackMicroBundle.csproj --configuration Release -- bin/Release/net10.0/TheSingularityWorkshop.Physics.MicroBundles.dll 5202 1.0.0 ./artifacts/physics-normal-impulse-response.mbundle
@@ -823,12 +890,16 @@ jobs:
           PY
 
       - name: Test with coverage
-        run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
+        id: test_physics_solution
+        continue-on-error: true
+        run: dotnet test TheSingularityWorkshop.Physics.sln --configuration Release --no-restore --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults/Physics --logger "trx;LogFileName=physics-tests.trx"
 
       - name: Verify core package can be created
+        id: package_core
         run: dotnet pack TheSingularityWorkshop.Physics.csproj --configuration Release --no-restore --output ./artifacts
 
       - name: Verify MicroBundle adapter package can be created
+        id: package_adapter
         run: dotnet pack TheSingularityWorkshop.Physics.MicroBundles.csproj --configuration Release --no-restore --output ./artifacts -p:UseLocalMicroBundleDomain=true
 
       - name: Upload package artifact
@@ -836,3 +907,93 @@ jobs:
         with:
           name: physics-nuget-package
           path: ./artifacts/*
+
+      - name: Create development-capability evidence envelope
+        id: create_capability_evidence
+        if: always()
+        env:
+          PHYSICS_REPOSITORY: ${{ github.repository }}
+          PHYSICS_SOURCE_SHA: ${{ env.PHYSICS_SOURCE_REVISION }}
+          PHYSICS_SOURCE_REF: ${{ github.event_name == 'pull_request' && format('refs/heads/{0}', github.event.pull_request.head.ref) || github.ref }}
+          PHYSICS_CHECKOUT_REF: ${{ github.event_name == 'pull_request' && format('refs/heads/{0}', github.event.pull_request.head.ref) || github.ref }}
+          PHYSICS_CHECKOUT_SHA: ${{ steps.provenance.outputs.checkout_sha }}
+          PHYSICS_WORKFLOW_REF: ${{ github.workflow_ref }}
+          PHYSICS_WORKFLOW_SHA: ${{ github.workflow_sha }}
+          PHYSICS_RUN_ID: ${{ github.run_id }}
+          PHYSICS_RUN_ATTEMPT: ${{ github.run_attempt }}
+          PHYSICS_EVENT_NAME: ${{ github.event_name }}
+          PHYSICS_EVENT_REF: ${{ github.ref }}
+          PHYSICS_EVENT_SHA: ${{ github.sha }}
+          PHYSICS_PULL_REQUEST_JSON: ${{ steps.provenance.outputs.pull_request_json }}
+          PHYSICS_DEPENDENCY_CHECKOUTS_JSON: ${{ steps.provenance.outputs.dependency_checkouts_json }}
+          PHYSICS_STEP_OUTCOMES_JSON: >-
+            {"validate_microbundles":"${{ steps.validate_microbundles.outcome }}","build_microbundles":"${{ steps.build_microbundles.outcome }}","test_microbundles":"${{ steps.test_microbundles.outcome }}","package_microbundles":"${{ steps.package_microbundles.outcome }}","test_physics_solution":"${{ steps.test_physics_solution.outcome }}","package_core":"${{ steps.package_core.outcome }}","package_adapter":"${{ steps.package_adapter.outcome }}"}
+        run: python3 tools/create_development_capability_evidence.py
+      - name: Upload Physics MicroBundle TRX and provenance for CiAi
+        id: upload_microbundle_trx
+        if: always() && hashFiles('TestResults/ciai/microbundle/results.trx') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-microbundle-test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          path: TestResults/ciai/microbundle/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload Physics solution TRX and provenance for CiAi
+        id: upload_physics_trx
+        if: always() && hashFiles('TestResults/ciai/physicsSolution/results.trx') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-solution-test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          path: TestResults/ciai/physicsSolution/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload Physics development-capability evidence
+        id: upload_capability_evidence
+        if: always() && hashFiles('TestResults/development-capability/evidence.json') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-development-capability-${{ github.run_id }}-${{ github.run_attempt }}
+          path: TestResults/development-capability/**
+          if-no-files-found: error
+          retention-days: 14
+      - name: Summarize Physics development capability
+        if: always()
+        shell: bash
+        env:
+          EVIDENCE_STATUS: ${{ steps.create_capability_evidence.outcome }}
+          MICRO_BUNDLE_TESTS: ${{ steps.test_microbundles.outcome }}
+          PHYSICS_TESTS: ${{ steps.test_physics_solution.outcome }}
+        run: |
+          {
+            echo "## Physics development-capability evidence"
+            echo
+            echo "- Capability: physics.kinematics.prescribed-motion.v1"
+            echo "- Candidate SHA: ${{ env.PHYSICS_SOURCE_REVISION }}"
+            echo "- Evidence envelope generation: $EVIDENCE_STATUS"
+            echo "- MicroBundle tests: $MICRO_BUNDLE_TESTS"
+            echo "- Physics solution tests: $PHYSICS_TESTS"
+            echo "- This is a development capability artifact, not a NuGet publication or release."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Fail closed when required capability evidence is incomplete
+        if: always()
+        shell: bash
+        env:
+          VALIDATE: ${{ steps.validate_microbundles.outcome }}
+          BUILD: ${{ steps.build_microbundles.outcome }}
+          MICRO_BUNDLE_TESTS: ${{ steps.test_microbundles.outcome }}
+          PACKAGE_MICROBUNDLES: ${{ steps.package_microbundles.outcome }}
+          PHYSICS_TESTS: ${{ steps.test_physics_solution.outcome }}
+          PACKAGE_CORE: ${{ steps.package_core.outcome }}
+          PACKAGE_ADAPTER: ${{ steps.package_adapter.outcome }}
+          EVIDENCE: ${{ steps.create_capability_evidence.outcome }}
+          UPLOAD: ${{ steps.upload_capability_evidence.outcome }}
+          UPLOAD_MICRO_BUNDLE_TRX: ${{ steps.upload_microbundle_trx.outcome }}
+          UPLOAD_PHYSICS_TRX: ${{ steps.upload_physics_trx.outcome }}
+        run: |
+          set -euo pipefail
+          for result in "$VALIDATE" "$BUILD" "$MICRO_BUNDLE_TESTS" "$PACKAGE_MICROBUNDLES" "$PHYSICS_TESTS" "$PACKAGE_CORE" "$PACKAGE_ADAPTER" "$EVIDENCE" "$UPLOAD_MICRO_BUNDLE_TRX" "$UPLOAD_PHYSICS_TRX" "$UPLOAD"; do
+            if [ "$result" != "success" ]; then
+              echo "::error::Physics development-capability evidence did not satisfy every required step."
+              exit 1
+            fi
+          done
