@@ -51,6 +51,49 @@ public sealed class GeologicalTimelineEventAdapterTests
         Assert.Throws<ArgumentException>(() => GeologicalTimelineEventAdapter.Decode(timelineEvent));
     }
 
+
+    [Test]
+    public void GeologicalEvent_CanBeDecodedThroughValidatedTimelineReplay()
+    {
+        GeologicalEventRecord original = MakeEvent(stepIndex: 12);
+        TimelineEvent encoded = GeologicalTimelineEventAdapter.Encode(sequence: 0, original);
+        var checkpoint = new PhysicsCheckpoint(
+            "checkpoint/start",
+            "reality/earth",
+            "timeline/main",
+            tick: 0,
+            "checkpoint-schema-1",
+            "geology-model-1",
+            new byte[] { 4 });
+        TimelineBranch root = TimelineBranch.CreateRoot("timeline/main", "reality/earth")
+            .WithHeadTick(12);
+        var lineage = new TimelineLineage(new[] { root });
+        var plan = new TimelineReplayPlan(
+            lineage,
+            checkpoint,
+            targetTick: 12,
+            requiredSchemaVersion: "checkpoint-schema-1",
+            requiredModelVersion: "geology-model-1");
+        TimelineReplayInterval interval = plan.CopyIntervals().Single();
+        var history = new TimelineHistorySegment(checkpoint, new[] { encoded }, throughTick: 12);
+        var segment = new TimelineReplaySegment(plan, interval, history);
+
+        GeologicalEventRecord? appliedEvent = null;
+        int reconstructedState = TimelineReplayExecutor.Reconstruct(
+            segment,
+            targetTick: 12,
+            restore: saved => saved.CopyStatePayload()[0],
+            applyEvent: (state, item) =>
+            {
+                appliedEvent = GeologicalTimelineEventAdapter.Decode(item);
+                return state + 100;
+            },
+            advance: (state, fromTick, toTick) => state + checked((int)(toTick - fromTick)));
+
+        Assert.That(reconstructedState, Is.EqualTo(116));
+        Assert.That(appliedEvent, Is.EqualTo(original));
+    }
+
     private static GeologicalEventRecord MakeEvent(long stepIndex) =>
         new(
             "event/erosion-001",
