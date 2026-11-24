@@ -172,3 +172,4 @@ print(json.dumps({
 
 if status != "satisfied":
     print("Development capability evidence is not satisfied; the workflow must fail closed.")
+    raise SystemExit(1)
