@@ -929,6 +929,24 @@ jobs:
           PHYSICS_STEP_OUTCOMES_JSON: >-
             {"validate_microbundles":"${{ steps.validate_microbundles.outcome }}","build_microbundles":"${{ steps.build_microbundles.outcome }}","test_microbundles":"${{ steps.test_microbundles.outcome }}","package_microbundles":"${{ steps.package_microbundles.outcome }}","test_physics_solution":"${{ steps.test_physics_solution.outcome }}","package_core":"${{ steps.package_core.outcome }}","package_adapter":"${{ steps.package_adapter.outcome }}"}
         run: python3 tools/create_development_capability_evidence.py
+      - name: Upload Physics MicroBundle TRX and provenance for CiAi
+        id: upload_microbundle_trx
+        if: always() && hashFiles('TestResults/ciai/microbundle/results.trx') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-microbundle-test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          path: TestResults/ciai/microbundle/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload Physics solution TRX and provenance for CiAi
+        id: upload_physics_trx
+        if: always() && hashFiles('TestResults/ciai/physicsSolution/results.trx') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: physics-solution-test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          path: TestResults/ciai/physicsSolution/*
+          if-no-files-found: error
+          retention-days: 14
       - name: Upload Physics development-capability evidence
         id: upload_capability_evidence
         if: always() && hashFiles('TestResults/development-capability/evidence.json') != ''
@@ -969,9 +987,11 @@ jobs:
           PACKAGE_ADAPTER: ${{ steps.package_adapter.outcome }}
           EVIDENCE: ${{ steps.create_capability_evidence.outcome }}
           UPLOAD: ${{ steps.upload_capability_evidence.outcome }}
+          UPLOAD_MICRO_BUNDLE_TRX: ${{ steps.upload_microbundle_trx.outcome }}
+          UPLOAD_PHYSICS_TRX: ${{ steps.upload_physics_trx.outcome }}
         run: |
           set -euo pipefail
-          for result in "$VALIDATE" "$BUILD" "$MICRO_BUNDLE_TESTS" "$PACKAGE_MICROBUNDLES" "$PHYSICS_TESTS" "$PACKAGE_CORE" "$PACKAGE_ADAPTER" "$EVIDENCE" "$UPLOAD"; do
+          for result in "$VALIDATE" "$BUILD" "$MICRO_BUNDLE_TESTS" "$PACKAGE_MICROBUNDLES" "$PHYSICS_TESTS" "$PACKAGE_CORE" "$PACKAGE_ADAPTER" "$EVIDENCE" "$UPLOAD_MICRO_BUNDLE_TRX" "$UPLOAD_PHYSICS_TRX" "$UPLOAD"; do
             if [ "$result" != "success" ]; then
               echo "::error::Physics development-capability evidence did not satisfy every required step."
               exit 1
