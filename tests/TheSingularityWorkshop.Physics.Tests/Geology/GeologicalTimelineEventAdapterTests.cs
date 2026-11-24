@@ -86,9 +86,9 @@ public sealed class GeologicalTimelineEventAdapterTests
             applyEvent: (state, item) =>
             {
                 appliedEvent = GeologicalTimelineEventAdapter.Decode(item);
-                return state + 100;
+                return checked((byte)(state + 100));
             },
-            advance: (state, fromTick, toTick) => state + checked((int)(toTick - fromTick)));
+            advance: (state, fromTick, toTick) => checked((byte)(state + (toTick - fromTick))));
 
         Assert.That(reconstructedState, Is.EqualTo(116));
         Assert.That(appliedEvent, Is.EqualTo(original));
