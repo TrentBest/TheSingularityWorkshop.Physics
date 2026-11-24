@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import struct
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -77,6 +78,18 @@ for kind, relative, archive_name in expected_files:
         })
 
 present_kinds = {item["kind"] for item in artifacts}
+source_files_complete = len(source_file_evidence) == len(source_files)
+bundle_path = OUT / "physics-prescribed-kinematic-motion.mbundle"
+bundle_integrity_valid = False
+if bundle_path.is_file() and bundle_path.stat().st_size >= 20:
+    magic, schema_version, bundle_id, assembly_size = struct.unpack("<4sIQI", bundle_path.read_bytes()[:20])
+    bundle_integrity_valid = (
+        magic == b"FSMB"
+        and schema_version == 1
+        and bundle_id == 5203
+        and assembly_size == bundle_path.stat().st_size - 20
+        and assembly_size > 0
+    )
 required_artifact_kinds = {"microbundle", "microbundleTests", "physicsTests", "workflowProvenance"}
 artifacts_complete = required_artifact_kinds.issubset(present_kinds)
 steps_passed = all(required_step_outcomes[name] == "success" for name in required_steps)
@@ -97,7 +110,7 @@ identity_valid = (
     and len(dependencies) == 2
     and all(re.fullmatch(r"[0-9a-fA-F]{40}", item.get("checkoutSha", "")) for item in dependencies)
 )
-status = "satisfied" if steps_passed and artifacts_complete and identity_valid else ("blocked" if steps_failed or not identity_valid else "incomplete")
+status = "satisfied" if steps_passed and artifacts_complete and identity_valid and source_files_complete and bundle_integrity_valid else ("blocked" if steps_failed or not identity_valid or (bundle_path.is_file() and not bundle_integrity_valid) else "incomplete")
 
 workflow_path = ".github/workflows/build.yml"
 workflow = {
@@ -144,6 +157,8 @@ evidence = {
     "stepOutcomes": required_step_outcomes,
     "requiredArtifacts": sorted(required_artifact_kinds),
     "artifactsComplete": artifacts_complete,
+    "sourceFilesComplete": source_files_complete,
+    "bundleIntegrityValid": bundle_integrity_valid,
     "identityValid": identity_valid,
     "artifacts": artifacts,
     "sourceFiles": source_file_evidence,
