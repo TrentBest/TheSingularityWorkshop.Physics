@@ -1,6 +1,6 @@
 # Physics Pages Experience
 
-**Status:** static client, projectile evidence inspector, terrain height-field experience, and navigation FSM inspector implemented on `development`; automated checks are being expanded, while browser validation and publication remain outstanding. Work is tracked by [issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53).
+**Status:** static client, projectile evidence inspector, terrain height-field experience, acoustic evidence card, and navigation FSM inspector implemented on `development`; automated checks are being expanded, while browser validation and publication remain outstanding. Work is tracked by [issue #53](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/53).
 
 ## The visitor experience
 
@@ -113,8 +113,9 @@ The initial static client now lives in `site/`. Its landing page follows the evi
 - `site/app.js` consumes the pure navigation machine in `site/navigation-fsm.js`; implemented states are `HOME`, `PROJECTILE`, `INSPECTOR`, `TERRAIN`, and `FSM`. Browser hash/history navigation uses the same route parser, and `site/tests/navigation-fsm.test.mjs` checks deep links, route mappings, valid transitions, and rejected actions.
 - `site/data/terrain-height-field.run.json` is generated from `TerrainHeightField2D`; the terrain experience compares the original bowl and a smooth radial brush edit, renders the recorded grid as an isometric SVG, and exposes per-cell values and a centre-row profile. The browser does not regenerate terrain.
 - `site/data/projectile-trajectory.run.json` is the checked-in copy of the canonical projectile fixture. The browser reads and visualizes recorded samples; it does not recalculate the trajectory.
+- `site/data/acoustic-observation.run.json` and `site/data/acoustic-observation.svg` expose the actual `FreeFieldAcoustics.Observe` output as a source-backed gallery card. The Pages workflow compares the site record with fresh C# generator output and both SVGs with a fresh render. This is a propagation-metadata observation, not generated audio.
 - The sample selector changes the inspected record index, and the evidence inspector exposes position, velocity, units, model/schema identity, timestep, frame, and all recorded samples.
-- `.github/workflows/physics-pages.yml` reproduces the run with the actual .NET generator, compares the generated output with both canonical and site fixtures, checks JavaScript syntax, and packages the static site. Deployment is restricted to an explicit `workflow_dispatch` on `development`.
+- `.github/workflows/physics-pages.yml` reproduces projectile, terrain, and acoustic evidence with their actual .NET generators, compares generated output with canonical/site fixtures, checks JavaScript syntax and navigation tests, and packages the static site. Deployment is restricted to an explicit `workflow_dispatch` on `development`.
 
 **Current boundary:** this is a first working implementation slice, not yet a published Pages deployment or a complete Physics atlas. The checked-in projectile record does not currently contain a unique run ID or source revision, so the site deliberately does not invent either. Provenance enrichment belongs in a future versioned run-record contract. The terrain record identifies its Physics source, focused test, and generator path; neither record claims an unrecorded source commit. Browser/device validation and the actual Pages deployment remain outstanding.
 
