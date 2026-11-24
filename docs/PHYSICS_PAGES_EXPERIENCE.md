@@ -107,7 +107,7 @@ Use the Learning Center Pages workflow as a reference: check out exact source re
 
 ## First implementation slice
 
-The initial static client now lives in `site/`:
+The initial static client now lives in `site/`. Its landing page follows the evidence-led showcase pattern established in GUI: an explorable domain atlas, source-backed artifact previews, explicit proof/limitation statements, and separate visitor paths for exploration, study, and contribution.
 
 - `site/index.html` and `site/styles.css` provide the Pages-hosted shell and responsive presentation.
 - `site/app.js` consumes the pure navigation machine in `site/navigation-fsm.js`; implemented states are `HOME`, `PROJECTILE`, `INSPECTOR`, `TERRAIN`, and `FSM`. Browser hash/history navigation uses the same route parser, and `site/tests/navigation-fsm.test.mjs` checks deep links, route mappings, valid transitions, and rejected actions.
