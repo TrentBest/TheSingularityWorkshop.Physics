@@ -84,6 +84,10 @@ Cancellation between steps is represented by not committing another requested sa
 
 Focused NUnit tests cover both motion profiles, translation and orientation-only samples, endpoint rest, analytical linear/angular acceleration, explicit acceleration unavailability at constant-velocity endpoints, speed/acceleration-limit rejection, deterministic replay, render-sampling independence, fixed-step schedule validation, requested-versus-achieved separation, arrival tolerances, forged-sample rejection, and immutable interruption state. Separate MicroBundle tests verify provider metadata, typed contract exposure, fixed-step evaluation, and commit validation.
 
+## CiAi development capability identity
+
+This bounded capability is registered as `physics.kinematics.prescribed-motion.v1` (capability version `1`). Its repository-ingestion MicroBundle is bundle ID `5203`, version `0.1.0-alpha.1`. The Physics CI evidence lane emits `ciai.development-capability-evidence.v1` with the exact candidate source SHA, workflow definition/run/attempt, dependency checkout SHAs, TRX test results, and MicroBundle digest. This is a development capability candidate, not a published NuGet package or release; CiAi must independently verify the artifact digest, exact workflow/job identity, source checkout, and policy before a consumer may use it.
+
 ## Related contracts
 
 - [Motion-driven interaction pipeline](MOTION_DRIVEN_INTERACTION_PIPELINE.md)
