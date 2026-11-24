@@ -8,6 +8,10 @@ on:
       - "site/**"
       - "docs/experiments/projectile-trajectory.run.json"
       - "docs/experiments/terrain-height-field.run.json"
+      - "docs/experiments/acoustic-observation.run.json"
+      - "docs/experiments/acoustic-observation.svg"
+      - "tools/AcousticObservationRunRecordGenerator/**"
+      - "tools/render_acoustic_observation.py"
       - "tools/ProjectileRunRecordGenerator/**"
       - "tools/TerrainHeightFieldRunRecordGenerator/**"
       - "Physics/Experiments/ProjectileTrajectoryExperiment.cs"
@@ -79,6 +83,30 @@ jobs:
           print("PASS: Pages data is byte-independent JSON-equivalent to the canonical and freshly generated Physics run.")
           PY
 
+      - name: Reproduce acoustic observation from Physics
+        run: |
+          dotnet run --project tools/AcousticObservationRunRecordGenerator/AcousticObservationRunRecordGenerator.csproj --configuration Release -- /tmp/acoustic-observation.actual.json
+          python3 tools/render_acoustic_observation.py /tmp/acoustic-observation.actual.json /tmp/acoustic-observation.actual.svg
+
+      - name: Validate acoustic source, Pages data, and rendered evidence agree
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          canonical = json.loads(Path("docs/experiments/acoustic-observation.run.json").read_text(encoding="utf-8"))
+          published = json.loads(Path("site/data/acoustic-observation.run.json").read_text(encoding="utf-8"))
+          generated = json.loads(Path("/tmp/acoustic-observation.actual.json").read_text(encoding="utf-8"))
+          assert canonical == published, "The Pages acoustic record differs from the canonical experiment fixture."
+          assert canonical == generated, "The canonical acoustic fixture differs from current Physics generator output."
+          assert canonical["modelId"] == "acoustics.free-field-point-source-observation"
+          assert canonical["observation"]["distanceMeters"] == 5
+          print("PASS: acoustic Pages data matches the canonical and freshly generated Physics observation.")
+          PY
+          cmp docs/experiments/acoustic-observation.svg /tmp/acoustic-observation.actual.svg
+          cmp docs/experiments/acoustic-observation.svg site/data/acoustic-observation.svg
+          echo "PASS: canonical and Pages acoustic SVGs match freshly rendered model output."
+
       - name: Validate terrain record against TerrainHeightField2D generator
         run: |
           dotnet run --project tools/TerrainHeightFieldRunRecordGenerator/TerrainHeightFieldRunRecordGenerator.csproj --configuration Release -- docs/experiments/terrain-height-field.run.json --check
@@ -91,6 +119,8 @@ jobs:
           test -s site/app.js
           test -s site/data/projectile-trajectory.run.json
           test -s site/data/terrain-height-field.run.json
+          test -s site/data/acoustic-observation.run.json
+          test -s site/data/acoustic-observation.svg
           grep -q 'type="module" src="./app.js"' site/index.html
           echo "PASS: Physics Pages static entry points are present."
 
