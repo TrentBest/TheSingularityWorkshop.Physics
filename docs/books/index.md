@@ -4,6 +4,12 @@
 
 Physics sourcebooks are owned by the Physics domain. They explain the physical subject, connect theory to authoritative implementation, and distinguish implemented capabilities from research plans. SURPS owns cross-domain rulebook semantics and catalogue composition; it does not duplicate Physics solvers.
 
+## SURPS living rulebook and behavior-adapter standard
+
+This repository adopts the shared SURPS [Living Rulebook and Experience Standard](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/living-rulebook-standard.md) and [Behavior Model and Adapters](https://github.com/TrentBest/TheSingularityWorkshop.SingularityUniversalRoleplayingSystem/blob/development/docs/behavior-and-adapters.md). Physics owns physical behavior, quantities, simulation, and evidence. Its tabletop procedures must be calibrated from validated Physics behavior; its digital adapter binds live world state to Physics-owned providers.
+
+The standard requires a big-picture-first guide, concise Player path, deep Game Master/Workshop path, living pictures for major concepts, worked demonstrations for mechanics, and honest status labels. The tabletop adapter is derived from underlying behavior during workshop calibration; the digital adapter uses compiled behavior with live state. Neither is a separate source of truth. Adoption work: [repository issue](https://github.com/TrentBest/TheSingularityWorkshop.Physics/issues/63).
+
 ## Domain sourcebooks — LOD 1
 
 ### Power and Industrial Systems
