@@ -77,6 +77,30 @@ for kind, relative, archive_name in expected_files:
             "sizeBytes": destination.stat().st_size,
         })
 
+test_result_artifacts = []
+provenance_source = ROOT / "TestResults/provenance/workflow-provenance.json"
+for kind, trx_source, artifact_name in [
+    ("microbundle", ROOT / "TestResults/MicroBundles/physics-microbundles.trx",
+     f"physics-microbundle-test-results-{env('PHYSICS_RUN_ID')}-{env('PHYSICS_RUN_ATTEMPT')}"),
+    ("physicsSolution", ROOT / "TestResults/Physics/physics-tests.trx",
+     f"physics-solution-test-results-{env('PHYSICS_RUN_ID')}-{env('PHYSICS_RUN_ATTEMPT')}"),
+]:
+    if trx_source.is_file() and provenance_source.is_file():
+        archive_directory = ROOT / "TestResults" / "ciai" / kind
+        archive_directory.mkdir(parents=True, exist_ok=True)
+        trx_destination = archive_directory / "results.trx"
+        provenance_destination = archive_directory / "provenance.json"
+        shutil.copy2(trx_source, trx_destination)
+        shutil.copy2(provenance_source, provenance_destination)
+        test_result_artifacts.append({
+            "kind": kind,
+            "artifactName": artifact_name,
+            "trxSha256": sha256(trx_destination),
+            "trxSizeBytes": trx_destination.stat().st_size,
+            "provenanceSha256": sha256(provenance_destination),
+            "archiveEntries": ["results.trx", "provenance.json"],
+        })
+
 present_kinds = {item["kind"] for item in artifacts}
 source_files_complete = len(source_file_evidence) == len(source_files)
 bundle_path = OUT / "physics-prescribed-kinematic-motion.mbundle"
@@ -110,7 +134,7 @@ identity_valid = (
     and len(dependencies) == 2
     and all(re.fullmatch(r"[0-9a-fA-F]{40}", item.get("checkoutSha", "")) for item in dependencies)
 )
-status = "satisfied" if steps_passed and artifacts_complete and identity_valid and source_files_complete and bundle_integrity_valid else ("blocked" if steps_failed or not identity_valid or (bundle_path.is_file() and not bundle_integrity_valid) else "incomplete")
+status = "satisfied" if steps_passed and artifacts_complete and identity_valid and source_files_complete and bundle_integrity_valid and len(test_result_artifacts) == 2 else ("blocked" if steps_failed or not identity_valid or (bundle_path.is_file() and not bundle_integrity_valid) else "incomplete")
 
 workflow_path = ".github/workflows/build.yml"
 workflow = {
@@ -161,6 +185,7 @@ evidence = {
     "bundleIntegrityValid": bundle_integrity_valid,
     "identityValid": identity_valid,
     "artifacts": artifacts,
+    "testResultArtifacts": test_result_artifacts,
     "sourceFiles": source_file_evidence,
     "microBundle": {
         "bundleId": 5203,
