@@ -30,9 +30,9 @@ if not re.fullmatch(r"[0-9a-f]{40}", source_sha):
     raise SystemExit("PHYSICS_SOURCE_SHA must be a full lowercase 40-character commit SHA.")
 
 try:
-    step_outcomes = json.loads(env("PHYSICS_STEP_OUTCOMES_JSON", "{}"))
-    pull_request = json.loads(env("PHYSICS_PULL_REQUEST_JSON", "null"))
-    dependencies = json.loads(env("PHYSICS_DEPENDENCY_CHECKOUTS_JSON", "[]"))
+    step_outcomes = json.loads(env("PHYSICS_STEP_OUTCOMES_JSON") or "{}")
+    pull_request = json.loads(env("PHYSICS_PULL_REQUEST_JSON") or "null")
+    dependencies = json.loads(env("PHYSICS_DEPENDENCY_CHECKOUTS_JSON") or "[]")
 except json.JSONDecodeError as exception:
     raise SystemExit(f"Invalid JSON workflow evidence input: {exception}") from exception
 
@@ -81,22 +81,38 @@ required_artifact_kinds = {"microbundle", "microbundleTests", "physicsTests", "w
 artifacts_complete = required_artifact_kinds.issubset(present_kinds)
 steps_passed = all(required_step_outcomes[name] == "success" for name in required_steps)
 steps_failed = any(required_step_outcomes[name] == "failure" for name in required_steps)
-status = "satisfied" if steps_passed and artifacts_complete else ("blocked" if steps_failed else "incomplete")
+checkout_sha = env("PHYSICS_CHECKOUT_SHA")
+source_ref = env("PHYSICS_SOURCE_REF")
+checkout_ref = env("PHYSICS_CHECKOUT_REF")
+workflow_sha = env("PHYSICS_WORKFLOW_SHA")
+run_id = int(env("PHYSICS_RUN_ID", "0"))
+run_attempt = int(env("PHYSICS_RUN_ATTEMPT", "0"))
+identity_valid = (
+    checkout_sha == source_sha
+    and bool(source_ref)
+    and checkout_ref == source_ref
+    and re.fullmatch(r"[0-9a-fA-F]{40}", workflow_sha) is not None
+    and run_id > 0
+    and run_attempt > 0
+    and len(dependencies) == 2
+    and all(re.fullmatch(r"[0-9a-fA-F]{40}", item.get("checkoutSha", "")) for item in dependencies)
+)
+status = "satisfied" if steps_passed and artifacts_complete and identity_valid else ("blocked" if steps_failed or not identity_valid else "incomplete")
 
 workflow_path = ".github/workflows/build.yml"
 workflow = {
     "path": workflow_path,
     "ref": env("PHYSICS_WORKFLOW_REF"),
     "sha": env("PHYSICS_WORKFLOW_SHA"),
-    "runId": int(env("PHYSICS_RUN_ID", "0")),
-    "runAttempt": int(env("PHYSICS_RUN_ATTEMPT", "0")),
+    "runId": run_id,
+    "runAttempt": run_attempt,
     "eventName": env("PHYSICS_EVENT_NAME"),
     "eventRef": env("PHYSICS_EVENT_REF"),
     "eventSha": env("PHYSICS_EVENT_SHA"),
 }
 checkout = {
-    "ref": env("PHYSICS_CHECKOUT_REF"),
-    "sha": env("PHYSICS_CHECKOUT_SHA"),
+    "ref": checkout_ref,
+    "sha": checkout_sha,
     "dependencies": dependencies,
 }
 evidence = {
@@ -117,7 +133,7 @@ evidence = {
     },
     "candidate": {
         "id": f"{env('PHYSICS_REPOSITORY')}@{source_sha}",
-        "sourceRef": env("PHYSICS_SOURCE_REF"),
+        "sourceRef": source_ref,
         "sourceSha": source_sha,
     },
     "workflow": workflow,
@@ -128,6 +144,7 @@ evidence = {
     "stepOutcomes": required_step_outcomes,
     "requiredArtifacts": sorted(required_artifact_kinds),
     "artifactsComplete": artifacts_complete,
+    "identityValid": identity_valid,
     "artifacts": artifacts,
     "sourceFiles": source_file_evidence,
     "microBundle": {
