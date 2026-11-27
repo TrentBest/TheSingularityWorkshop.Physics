@@ -27,6 +27,6 @@ The current record has no unique run ID or source-revision field. The client doe
 
 ## Deployment
 
-`.github/workflows/physics-pages.yml` builds and validates the static artifact on development changes and pull requests. Deployment occurs only when the workflow is manually dispatched against `development`. No automatic deployment from `master` is configured.
+`.github/workflows/physics-pages.yml` builds and validates the static artifact on relevant development pushes and pull requests. A successful push build on `development` delegates deployment to the pinned CiAi reusable workflow; pull requests validate without publishing. Manual dispatch remains available for recovery. No automatic deployment from `master` is configured.
 
 The first release should wait for successful CI, browser validation, confirmation of the repository's Pages settings, and explicit deployment authorization.
