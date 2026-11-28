@@ -29,4 +29,4 @@ The current record has no unique run ID or source-revision field. The client doe
 
 `.github/workflows/physics-pages.yml` builds and validates the static artifact on relevant development pushes and pull requests. A successful push build on `development` delegates deployment to the pinned CiAi reusable workflow; pull requests validate without publishing. Manual dispatch remains available for recovery. No automatic deployment from `master` is configured.
 
-The first release should wait for successful CI, browser validation, confirmation of the repository's Pages settings, and explicit deployment authorization.
+The maintainer authorized the first Pages rollout on 2026-11-28. The workflow's build and evidence checks are the publication gate; after it completes, verify the repository's Pages settings and inspect the live site before declaring the rollout operational.
